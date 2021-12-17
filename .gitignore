@@ -1,3 +1,6 @@
+.git/
+.idea/
+.gitattributes
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
