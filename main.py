@@ -3494,7 +3494,7 @@ def handle_query(call):
 
     elif call.data.startswith('donate'):
         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                  text='Один погон коштує 50 гривень. Для отримання погонів скиньте на карту потрібну'
+                                  text='Один погон коштує 25 гривень. Для отримання погонів скиньте на карту потрібну'
                                        ' суму і введіть боту в пп \n/donated <будь-яке повідомлення>'
                                        '\nНарахування погонів триватиме до 24 годин.')
 
