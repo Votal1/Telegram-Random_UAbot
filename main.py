@@ -2641,7 +2641,7 @@ def inventory(message):
             rep = invent()
         else:
             rep = None
-        if int(inv[0]) == 1 or int(inv[0]) == 14:
+        if int(inv[0]) == 1 or int(inv[0]) == 14 or int(inv[0]) == 2:
             m1 = '\nМіцність: 1'
         elif int(inv[0]) == 16:
             m1 = '\nМіцність: ∞'
@@ -3674,51 +3674,53 @@ def handle_query(call):
                 if cl == 1 or cl == 11 or cl == 21:
                     if int(r.hget(uid, 'weapon')) == 11:
                         r.hincrby(uid, 's_weapon', 5)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 11)
                         r.hset(uid, 's_weapon', 5)
                 elif cl == 2 or cl == 12 or cl == 22:
                     if int(r.hget(uid, 'weapon')) == 12:
                         r.hincrby(uid, 's_weapon', 25)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 12)
                         r.hset(uid, 's_weapon', 25)
                 elif cl == 3 or cl == 13 or cl == 23:
                     if int(r.hget(uid, 'weapon')) == 13:
                         r.hincrby(uid, 's_weapon', 3)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 13)
                         r.hset(uid, 's_weapon', 3)
                 elif cl == 4 or cl == 14 or cl == 24:
                     if int(r.hget(uid, 'weapon')) == 14:
                         r.hincrby(uid, 's_weapon', 1)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 14)
                         r.hset(uid, 's_weapon', 1)
                 elif cl == 5 or cl == 15 or cl == 25:
                     if int(r.hget(uid, 'weapon')) == 15:
                         r.hincrby(uid, 's_weapon', 30)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2 and int(r.hget(uid, 'defense')) != 2 \
+                            and int(r.hget(uid, 'defense')) != 10:
                         r.hset(uid, 'weapon', 15)
                         r.hset(uid, 's_weapon', 30)
                         r.hset(uid, 'defense', 15)
                 elif cl == 6 or cl == 16 or cl == 26:
                     if int(r.hget(uid, 'defense')) == 16:
                         r.hincrby(uid, 's_defense', 10)
-                    else:
+                    elif int(r.hget(uid, 'defense')) != 2 and int(r.hget(uid, 'defense')) != 10:
                         r.hset(uid, 'defense', 16)
                         r.hset(uid, 's_defense', 10)
                 elif cl == 7 or cl == 17 or cl == 27:
                     if int(r.hget(uid, 'weapon')) == 17:
                         r.hincrby(uid, 's_weapon', 8)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2 and int(r.hget(uid, 'defense')) != 2 and \
+                            int(r.hget(uid, 'defense')) != 10:
                         r.hset(uid, 'weapon', 17)
                         r.hset(uid, 's_weapon', 8)
                         r.hset(uid, 'defense', 17)
                 elif cl == 8 or cl == 18 or cl == 28:
                     if int(r.hget(uid, 'weapon')) == 18:
                         r.hincrby(uid, 's_weapon', 2)
-                    else:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 18)
                         r.hset(uid, 's_weapon', 2)
                 else:
@@ -3728,19 +3730,25 @@ def handle_query(call):
                 bot.edit_message_text('\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).',
                                       call.message.chat.id, call.message.id)
                 if cl == 6 or cl == 16 or cl == 26:
-                    r.hset(uid, 'defense', 1)
+                    if int(r.hget(uid, 'defense')) != 0:
+                        r.hset(uid, 'defense', 1)
                 else:
-                    r.hset(uid, 'weapon', 1)
-                    r.hset(uid, 'defense', 1)
+                    if int(r.hget(uid, 'weapon')) != 0:
+                        r.hset(uid, 'weapon', 1)
+                    if int(r.hget(uid, 'defense')) != 0:
+                        r.hset(uid, 'defense', 1)
             elif ran == [4]:
                 bot.edit_message_text('\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).'
                                       '\n\U0001F4B5 + 4', call.message.chat.id, call.message.id)
                 r.hincrby(uid, 'money', 4)
             elif ran == [5]:
-                bot.edit_message_text('\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.',
+                bot.edit_message_text('\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n\U0001F6E1 +7',
                                       call.message.chat.id, call.message.id)
-                r.hset(uid, 'defense', 9)
-                r.hset(uid, 's_defense', 7)
+                if int(r.hget(uid, 'defense')) == 0:
+                    r.hset(uid, 'defense', 9)
+                    r.hset(uid, 's_defense', 7)
+                elif int(r.hget(uid, 'defense')) != 1 and int(r.hget(uid, 'defense')) != 10:
+                    r.hincrby(uid, 's_defense', 7)
             elif ran == [6]:
                 bot.edit_message_text('\U0001f535 Знайдено: \U0001F4B5 50 гривень.',
                                       call.message.chat.id, call.message.id)
@@ -3757,7 +3765,8 @@ def handle_query(call):
                 bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
                                       call.message.chat.id, call.message.id)
                 if int(r.hget(uid, 'intellect')) < 20:
-                    r.hset(uid, 'defense', 10)
+                    if int(r.hget(uid, 'defense')) != 2:
+                        r.hset(uid, 'defense', 10)
             elif ran == [10]:
                 bot.edit_message_text('\U0001f7e3 Дивно, але в цьому пакунку знайдено тютюн та люльку...'
                                       '\n\u2620\uFE0F +5', call.message.chat.id, call.message.id)
