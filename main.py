@@ -3733,9 +3733,9 @@ def handle_query(call):
                     if int(r.hget(uid, 'defense')) != 0:
                         r.hset(uid, 'defense', 1)
                 else:
-                    if int(r.hget(uid, 'weapon')) != 0:
+                    if int(r.hget(uid, 'weapon')) == 0:
                         r.hset(uid, 'weapon', 1)
-                    if int(r.hget(uid, 'defense')) != 0:
+                    if int(r.hget(uid, 'defense')) == 0:
                         r.hset(uid, 'defense', 1)
             elif ran == [4]:
                 bot.edit_message_text('\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).'
