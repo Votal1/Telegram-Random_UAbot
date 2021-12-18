@@ -3744,10 +3744,10 @@ def handle_query(call):
             elif ran == [5]:
                 bot.edit_message_text('\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n\U0001F6E1 +7',
                                       call.message.chat.id, call.message.id)
-                if int(r.hget(uid, 'defense')) == 0:
+                if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1:
                     r.hset(uid, 'defense', 9)
                     r.hset(uid, 's_defense', 7)
-                elif int(r.hget(uid, 'defense')) != 1 and int(r.hget(uid, 'defense')) != 10:
+                elif int(r.hget(uid, 'defense')) != 10:
                     r.hincrby(uid, 's_defense', 7)
             elif ran == [6]:
                 bot.edit_message_text('\U0001f535 Знайдено: \U0001F4B5 50 гривень.',
