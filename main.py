@@ -123,10 +123,10 @@ def prepare_to_fight(uid, fn, q):
         stats = str("\n\n\U0001F3F7 " + names[name] + ' ' + icons[c] +
                     '\n\U0001F4AA ' + str(s) +
                     ' \U0001F9E0 ' + str(i) +
-                    ' \U0001F54A : ' + str(bd) +
-                    '\n\n@Random_UAbot <- отримати русака')
+                    ' \U0001F54A ' + str(bd) +
+                    '\n\n\u2744\uFE0F @Random_UAbot <- отримати русака')
 
-        return fn + ' починає битву русаків!' + query + stats
+        return '\u2744\uFE0F ' + fn + ' починає битву русаків!' + query + stats
 
 
 def fight(uid1, uid2, un1, un2):
@@ -553,7 +553,7 @@ def fight(uid1, uid2, un1, un2):
     else:
         win = random.choices(['1', '2'], weights=[chance1, chance2])
 
-    info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + names[name1] + ' ' + icons[c1] +
+    info = str('\u2744\uFE0F ' + un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + names[name1] + ' ' + icons[c1] +
                ' | ' + names[name2] + ' ' + icons[c2] +
                '\n\U0001F4AA ' + str(s1) + ' | ' + str(s2) +
                '\n\U0001F9E0 ' + str(i1) + ' | ' + str(i2) +
@@ -1313,8 +1313,9 @@ def goods():
 def donate_goods():
     markup = types.InlineKeyboardMarkup()
     items = {'TF2_heavy - 1 погон': 'tf2', 'Слов`янин Рікардо - 1 погон': 'ricardo',
-             'Преміум-фото класу - 1 погон': 'premium', 'Настоянка глоду - 1 погон': 'glid',
-             'Курс перекваліфікації - 2 погони': 'course', 'Велике будівництво - 3 погони': 'fast_cellar'}
+             'Преміум-фото класу - 1 погон': 'premium', '40 пакунків - 1 погон': '40_packs',
+             'Настоянка глоду - 1 погон': 'glid', 'Курс перекваліфікації - 2 погони': 'course',
+             'Велике будівництво - 3 погони': 'fast_cellar'}
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
@@ -1373,6 +1374,14 @@ def invent():
 def unpack():
     markup = types.InlineKeyboardMarkup()
     items = {'Так': 'unpack'}
+    for key, value in items.items():
+        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
+    return markup
+
+
+def boost():
+    markup = types.InlineKeyboardMarkup()
+    items = {'Отримати подарунок': 'boost'}
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
@@ -1661,6 +1670,10 @@ def handle_help(message):
                           "Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n"
                           "Щоб взяти русака напиши команду \n/donbass\nВсі команди - /commands\nДетальна інформація про"
                           " русаків -\nhttps://t.me/randomuanews/4")
+    if message.from_user.id == 456514639:
+        bot.send_message(-1001508218205, 'З Днем Святого Миколая!\n\n'
+                                         'Щоб ваші русаки менше хворіли, краще працювали та більше перемагали!\n\n'
+                                         '(Зайдіть на канал, щоб отримати подарунок)', reply_markup=boost())
 
 
 @bot.message_handler(commands=['links'])
@@ -2192,7 +2205,9 @@ def donate_shop(message):
                          'Хеві з ТФ2, слов`янина Рікардо (Увага! Ці фото зникнуть в момент вибору класу), або на преміу'
                          'м фото свого класу(Кадиров, Обеме, Горшок, Тесак, Захарченко, Дерек, Янукович, Petya).\n'
                          '\U0001F943 Настоянка глоду - буст для новачків. Якщо в русака менше 400 сили і 5 інтелекту, '
-                         'то настоянка моментально додасть 400 сили і 4 інтелекту.\n\U0001F393 Курс перекваліфікації - '
+                         'то настоянка моментально додасть 400 сили і 4 інтелекту.\n'
+                         '\U0001F4E6 40 Донбаських пакунків\n'
+                         '\U0001F393 Курс перекваліфікації - '
                          'дозволяє русаку наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал найви'
                          'щого рівня (покупка доступна до етапу 2. Купівля будівельних матеріалів).',
                          reply_markup=donate_goods())
@@ -3516,6 +3531,17 @@ def handle_query(call):
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('40_packs'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'packs', 40)
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Ви успішно замовили 40 донбаських пакунків')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Недостатньо погонів на рахунку')
+
     elif call.data.startswith('premium'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and int(r.hget(call.from_user.id, 'class')) > 0:
             r.hincrby(call.from_user.id, 'strap', -1)
@@ -3642,8 +3668,8 @@ def handle_query(call):
                 bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                       call.message.chat.id, call.message.id)
             elif ran == [2]:
-                bot.edit_message_text('\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку! ' +
-                                      icons[cl], call.message.chat.id, call.message.id)
+                bot.edit_message_text('\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку '
+                                      '(класове спорядження)! ' + icons[cl], call.message.chat.id, call.message.id)
                 if cl == 1 or cl == 11 or cl == 21:
                     if int(r.hget(uid, 'weapon')) == 11:
                         r.hincrby(uid, 's_weapon', 5)
@@ -3773,6 +3799,39 @@ def handle_query(call):
                 r.hincrby(uid, 'strap', 1)
         else:
             bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id, call.message.id)
+
+    elif call.data.startswith('boost'):
+        if r.hexists(call.from_user.id, 'gift1') == 0:
+            if bot.get_chat_member(call.message.chat.id, call.from_user.id).status == 'left':
+                r.hincrby(call.from_user.id, 'packs', 5)
+                r.hset(call.from_user.id, 'gift1', 1)
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Дякую за інтерес проявлений до бота! '
+                                               'Буду вдячний за його поширення.\n\n'
+                                               '\U0001F4E6 Отримано 5 пакунків\n\n'
+                                               'Підпишись на канал щоб отримати більше!')
+            else:
+                r.hincrby(call.from_user.id, 'packs', 10)
+                r.hset(call.from_user.id, 'gift1', 2)
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Дякую за інтерес проявлений до бота! '
+                                               'Буду вдячний за його поширення.\n\n'
+                                               '\U0001F4E6 Отримано 10 пакунків')
+        else:
+            if int(r.hget(call.from_user.id, 'gift1')) == 1:
+                if bot.get_chat_member(call.message.chat.id, call.from_user.id).status != 'left':
+                    r.hincrby(call.from_user.id, 'packs', 5)
+                    r.hset(call.from_user.id, 'gift1', 2)
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Дякую за інтерес проявлений до бота! '
+                                                   'Буду вдячний за його поширення.\n\n'
+                                                   '\U0001F4E6 Отримано 5 пакунків')
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Підпишись на канал, щоб отримати більше подарунків.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Ти вже забрав свої пакунки.')
 
 
 @bot.message_handler()
