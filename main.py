@@ -335,7 +335,7 @@ def fight(uid1, uid2, un1, un2):
         if int(r.hget(uid2, 's_weapon')) <= 0:
             r.hset(uid2, 'weapon', 0)
     elif weapon2 == 15:
-        s2 = int(s2 * 1.5)
+        s2 = int(s2 * 1.75)
         weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...'
         r.hincrby(uid2, 's_weapon', -1)
         if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -397,7 +397,7 @@ def fight(uid1, uid2, un1, un2):
                                                              ' обезсилений, але запам`ятав тактику ворога.'
                 r.hset(uid1, 'defense', 0)
     elif weapon1 == 15:
-        s1 = int(s1 * 1.5)
+        s1 = int(s1 * 1.75)
         defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
         r.hincrby(uid1, 's_weapon', -1)
         if int(r.hget(uid1, 's_weapon')) <= 0:
@@ -920,7 +920,7 @@ def tournament(uid1, uid2, un1, un2, mid):
             if int(r.hget(uid2, 's_weapon')) <= 0:
                 r.hset(uid2, 'weapon', 0)
         elif weapon2 == 15:
-            s2 = int(s2 * 1.5)
+            s2 = int(s2 * 1.75)
             weapon = ' \U0001F5E1'
             r.hincrby(uid2, 's_weapon', -1)
             if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -962,7 +962,7 @@ def tournament(uid1, uid2, un1, un2, mid):
                 r.hset(uid1, 'defense', 0)
                 r.hincrby(uid1, 'money', 4)
         elif weapon1 == 15:
-            s1 = int(s1 * 1.5)
+            s1 = int(s1 * 1.75)
             defense = ' \U0001F5E1'
             r.hincrby(uid1, 's_weapon', -1)
             if int(r.hget(uid1, 's_weapon')) <= 0:
