@@ -525,7 +525,7 @@ def fight(uid1, uid2, un1, un2):
             if shot == [1]:
                 ran = random.randint(5, 10)
                 meat += '\n\U0001fa96 ' + names[name1] + ' +1 \U0001fa78 | ' + names[name2] + ' +' + \
-                        str(ran) + ' \U0001F4AA\n'
+                        str(ran) + ' \U0001fa78\n'
                 r.hincrby(uid1, 'injure', 1)
                 r.hincrby(uid2, 'injure', ran)
     if c2 == 15 or c2 == 25:
@@ -538,7 +538,7 @@ def fight(uid1, uid2, un1, un2):
             if shot == [1]:
                 ran = random.randint(5, 10)
                 meat += '\n\U0001fa96 ' + names[name2] + ' +1 \U0001fa78 | ' + names[name1] + ' +' + \
-                        str(ran) + ' \U0001F4AA\n'
+                        str(ran) + ' \U0001fa78\n'
                 r.hincrby(uid2, 'injure', 1)
                 r.hincrby(uid1, 'injure', ran)
 
@@ -1121,7 +1121,7 @@ def tournament(uid1, uid2, un1, un2, mid):
 
         if loop == 0:
             info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' + icons[c1] +
-                       ' | ' +inj2 + names[name2] + ' ' + icons[c2] +
+                       ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
                        '\n\U0001F4AA ' + stats11[0].decode() + ' | ' + stats22[0].decode() +
                        '\n\U0001F9E0 ' + stats11[1].decode() + ' | ' + stats22[1].decode() +
                        '\n\U0001F54A ' + stats11[2].decode() + ' | ' + stats22[2].decode() + '\n\n')
