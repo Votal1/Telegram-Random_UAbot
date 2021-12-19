@@ -85,7 +85,7 @@ def prepare_to_fight(uid, fn, q):
         bd = int(stats[4])
 
         if int(r.hget(uid, 'injure')) > 0:
-            s, s1, i, bd = injure(uid)
+            s, s1, i, bd = injure(uid, False)
 
         if c == 3:
             s = random.randint(10, 1000)
@@ -141,7 +141,7 @@ def fight(uid1, uid2, un1, un2):
     weapon1, weapon2 = int(stats1[2]), int(stats2[2])
     defense1, defense2 = int(stats1[3]), int(stats2[3])
 
-    hach1, hach2, hach, worker, meat, cop, fsb = 0, 0, '', '', '', '', ''
+    hach1, hach2, hach, worker, meat, cop, fsb, inj1, inj2 = 0, 0, '', '', '', '', '', '', ''
     if c1 == 1 or c1 == 11 or c1 == 21:
         if weapon2 == 0:
             hach1 = 1
@@ -286,9 +286,11 @@ def fight(uid1, uid2, un1, un2):
     bd1, bd2 = int(stats11[2]), int(stats22[2])
 
     if int(r.hget(uid1, 'injure')) > 0:
-        s1, s11, i1, bd1 = injure(uid1)
+        s1, s11, i1, bd1 = injure(uid1, True)
+        inj1 = '\U0001fa78 '
     if int(r.hget(uid2, 'injure')) > 0:
-        s2, s22, i2, bd2 = injure(uid2)
+        s2, s22, i2, bd2 = injure(uid2, True)
+        inj2 = '\U0001fa78 '
 
     if weapon2 == 11:
         s1 = int(s1 / 2)
@@ -557,8 +559,8 @@ def fight(uid1, uid2, un1, un2):
     else:
         win = random.choices(['1', '2'], weights=[chance1, chance2])
 
-    info = str('\u2744\uFE0F ' + un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + names[name1] + ' ' + icons[c1] +
-               ' | ' + names[name2] + ' ' + icons[c2] +
+    info = str('\u2744\uFE0F ' + un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' +
+               icons[c1] + ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
                '\n\U0001F4AA ' + str(s1) + ' | ' + str(s2) +
                '\n\U0001F9E0 ' + str(i1) + ' | ' + str(i2) +
                '\n\U0001F54A ' + str(bd1) + ' | ' + str(bd2)) + weapon + defense
@@ -773,7 +775,7 @@ def tournament(uid1, uid2, un1, un2, mid):
         weapon1, weapon2 = int(stats1[2]), int(stats2[2])
         defense1, defense2 = int(stats1[3]), int(stats2[3])
 
-        hach1, hach2, meat = 0, 0, ''
+        hach1, hach2, meat, inj1, inj2 = 0, 0, '', '', ''
         if c1 == 1 or c1 == 11 or c1 == 21:
             if weapon2 == 0:
                 hach1 = 1
@@ -869,9 +871,11 @@ def tournament(uid1, uid2, un1, un2, mid):
         bd2 = int(stats22[2])
 
         if int(r.hget(uid1, 'injure')) > 0:
-            s1, s11, i1, bd1 = injure(uid1)
+            s1, s11, i1, bd1 = injure(uid1, True)
+            inj1 = '\U0001fa78 '
         if int(r.hget(uid2, 'injure')) > 0:
-            s2, s22, i2, bd2 = injure(uid2)
+            s2, s22, i2, bd2 = injure(uid2, True)
+            inj2 = '\U0001fa78 '
 
         if weapon2 == 11:
             s1 = int(s1 / 2)
@@ -1116,8 +1120,8 @@ def tournament(uid1, uid2, un1, un2, mid):
             win = random.choices(['1', '2'], weights=[chance1, chance2])
 
         if loop == 0:
-            info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + names[name1] + ' ' + icons[c1] +
-                       ' | ' + names[name2] + ' ' + icons[c2] +
+            info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' + icons[c1] +
+                       ' | ' +inj2 + names[name2] + ' ' + icons[c2] +
                        '\n\U0001F4AA ' + stats11[0].decode() + ' | ' + stats22[0].decode() +
                        '\n\U0001F9E0 ' + stats11[1].decode() + ' | ' + stats22[1].decode() +
                        '\n\U0001F54A ' + stats11[2].decode() + ' | ' + stats22[2].decode() + '\n\n')
@@ -1445,9 +1449,10 @@ def intellect(value, uid):
             r.hset(uid, 'intellect', 1)
 
 
-def injure(uid):
+def injure(uid, fi):
     stats = r.hmget(uid, 'strength', 'intellect', 'spirit')
-    r.hincrby(uid, 'injure', -1)
+    if fi:
+        r.hincrby(uid, 'injure', -1)
     return int(int(stats[0])*(1/3)), int(int(stats[0])*(1/3)), int(int(stats[1])*(1/3)), int(int(stats[2])*(1/3))
 
 
@@ -2250,7 +2255,7 @@ def war(cid, location, big_battle):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member))
+                s, s1, i, bd = injure(int(member), True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2383,7 +2388,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member))
+                s, s1, i, bd = injure(int(member), True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2405,7 +2410,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member))
+                s, s1, i, bd = injure(int(member), True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -3815,7 +3820,8 @@ def handle_query(call):
                 if cl != 6 or cl != 16 or cl != 26:
                     bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
                                           'РПГ-7 і одну гранату до нього [Атака, міцність=1] - завдає ворогу важке пор'
-                                          'анення (віднімає половину сили, 3 інтелекту та бойовий дух і спорядження).',
+                                          'анення (віднімає бойовий дух і спорядження, його сила, інтелект та '
+                                          'бойовий дух впадуть втричі на 200 боїв).',
                                           call.message.chat.id, call.message.id)
                     r.hset(uid, 'weapon', 2)
                     r.hset(uid, 's_weapon', 1)
