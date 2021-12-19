@@ -335,7 +335,7 @@ def fight(uid1, uid2, un1, un2):
         if int(r.hget(uid2, 's_weapon')) <= 0:
             r.hset(uid2, 'weapon', 0)
     elif weapon2 == 15:
-        s2 = int(s2 * 2.25)
+        s2 = int(s2 * 1.5)
         weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...'
         r.hincrby(uid2, 's_weapon', -1)
         if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -346,20 +346,18 @@ def fight(uid1, uid2, un1, un2):
             weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав ' \
                               'важкі поранення.'
             r.hset(uid2, 'spirit', 0)
-            intellect(-3, uid2)
             r.hset(uid2, 'weapon', 0)
             r.hset(uid2, 'defense', 0)
+            r.hincrby(uid2, 'injure', 100)
             if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...' \
                           + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                             ' важкі поранення, як і ' + names[name1] + '.'
                 r.hset(uid1, 'spirit', 0)
-                r.hset(uid1, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
-                intellect(-3, uid1)
                 if c1 != 6 and c1 != 16 and c1 != 26:
                     r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
-            r.hset(uid2, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
+                r.hincrby(uid1, 'injure', 100)
     elif defense2 == 16:
         s1 = int(s1 * 0.8)
         weapon = '\n\n\U0001F5E1 ' + names[name2] + ' атакує, прикрившись поліцейським щитом.'
@@ -399,7 +397,7 @@ def fight(uid1, uid2, un1, un2):
                                                              ' обезсилений, але запам`ятав тактику ворога.'
                 r.hset(uid1, 'defense', 0)
     elif weapon1 == 15:
-        s1 = int(s1 * 2.25)
+        s1 = int(s1 * 1.5)
         defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
         r.hincrby(uid1, 's_weapon', -1)
         if int(r.hget(uid1, 's_weapon')) <= 0:
@@ -410,20 +408,18 @@ def fight(uid1, uid2, un1, un2):
             defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                                 ' важкі поранення.'
             r.hset(uid1, 'spirit', 0)
-            intellect(-3, uid1)
             r.hset(uid1, 'weapon', 0)
             r.hset(uid1, 'defense', 0)
+            r.hincrby(uid1, 'injure', 100)
             if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
                 defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...' \
                           + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                             ' важкі поранення, як і ' + names[name2] + '.'
                 r.hset(uid2, 'spirit', 0)
-                r.hset(uid2, 'strength', int(int(r.hget(uid2, 'strength')) / 2))
-                intellect(-3, uid2)
                 if c2 != 6 and c2 != 16 and c2 != 26:
                     r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
-            r.hset(uid1, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
+                r.hincrby(uid2, 'injure', 100)
     elif defense1 == 16:
         s2 = int(s2 * 0.8)
         defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'
@@ -521,26 +517,30 @@ def fight(uid1, uid2, un1, un2):
 
     if c1 == 15 or c1 == 25:
         ch = int(r.hget(uid1, 'childs'))
-        if ch > 15:
-            ch = 15
-        s1 = int(s1 * (1 + 0.05 * ch))
+        if ch > 20:
+            ch = 20
+        s1 = int(s1 * (1 + 0.025 * ch))
         if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300 and int(r.hget(uid2, 'strength')) >= 30:
-            shot = random.choices([1, 0], weights=[20, 80])
+            shot = random.choices([1, 0], weights=[10, 90])
             if shot == [1]:
-                meat += '\n\U0001fa96 ' + names[name1] + ' -10 \U0001F4AA | ' + names[name2] + ' -20 \U0001F4AA\n'
-                r.hincrby(uid1, 'strength', -10)
-                r.hincrby(uid2, 'strength', -20)
+                ran = random.randint(5, 10)
+                meat += '\n\U0001fa96 ' + names[name1] + ' +1 \U0001fa78 | ' + names[name2] + ' +' + \
+                        str(ran) + ' \U0001F4AA\n'
+                r.hincrby(uid1, 'injure', 1)
+                r.hincrby(uid2, 'injure', ran)
     if c2 == 15 or c2 == 25:
         ch = int(r.hget(uid2, 'childs'))
-        if ch > 15:
-            ch = 15
-        s2 = int(s2 * (1 + 0.05 * ch))
+        if ch > 20:
+            ch = 20
+        s2 = int(s2 * (1 + 0.025 * ch))
         if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300 and int(r.hget(uid1, 'strength')) >= 30:
-            shot = random.choices([1, 0], weights=[20, 80])
+            shot = random.choices([1, 0], weights=[10, 90])
             if shot == [1]:
-                meat += '\n\U0001fa96 ' + names[name2] + ' -10 \U0001F4AA | ' + names[name1] + ' -20 \U0001F4AA\n'
-                r.hincrby(uid2, 'strength', -10)
-                r.hincrby(uid1, 'strength', -20)
+                ran = random.randint(5, 10)
+                meat += '\n\U0001fa96 ' + names[name2] + ' +1 \U0001fa78 | ' + names[name1] + ' +' + \
+                        str(ran) + ' \U0001F4AA\n'
+                r.hincrby(uid2, 'injure', 1)
+                r.hincrby(uid1, 'injure', ran)
 
     chance1 = s1 * (1 + 0.1 * i1) * (1 + 0.01 * (bd1 * 0.01))
     chance2 = s2 * (1 + 0.1 * i2) * (1 + 0.01 * (bd2 * 0.01))
@@ -920,7 +920,7 @@ def tournament(uid1, uid2, un1, un2, mid):
             if int(r.hget(uid2, 's_weapon')) <= 0:
                 r.hset(uid2, 'weapon', 0)
         elif weapon2 == 15:
-            s2 = int(s2 * 2.25)
+            s2 = int(s2 * 1.5)
             weapon = ' \U0001F5E1'
             r.hincrby(uid2, 's_weapon', -1)
             if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -930,17 +930,16 @@ def tournament(uid1, uid2, un1, un2, mid):
             if ran == [2]:
                 weapon = weapon + ' \u2620\uFE0F'
                 r.hset(uid2, 'spirit', 0)
-                intellect(-3, uid2)
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
+                r.hincrby(uid2, 'injure', 100)
                 if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
                     meat = ' \u2620\uFE0F'
                     r.hset(uid1, 'spirit', 0)
-                    r.hset(uid1, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
-                    intellect(-3, uid1)
-                    r.hset(uid1, 'weapon', 0)
+                    if c1 != 6 and c1 != 16 and c1 != 26:
+                        r.hset(uid1, 'weapon', 0)
                     r.hset(uid1, 'defense', 0)
-                r.hset(uid2, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
+                    r.hincrby(uid1, 'injure', 100)
         elif defense2 == 16:
             s1 = int(s1 * 0.8)
             weapon = ' \U0001F5E1'
@@ -963,7 +962,7 @@ def tournament(uid1, uid2, un1, un2, mid):
                 r.hset(uid1, 'defense', 0)
                 r.hincrby(uid1, 'money', 4)
         elif weapon1 == 15:
-            s1 = int(s1 * 2.25)
+            s1 = int(s1 * 1.5)
             defense = ' \U0001F5E1'
             r.hincrby(uid1, 's_weapon', -1)
             if int(r.hget(uid1, 's_weapon')) <= 0:
@@ -973,17 +972,16 @@ def tournament(uid1, uid2, un1, un2, mid):
             if ran == [2]:
                 defense = defense + ' \u2620\uFE0F'
                 r.hset(uid1, 'spirit', 0)
-                intellect(-3, uid1)
                 r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
+                r.hincrby(uid1, 'injure', 100)
                 if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
                     meat = ' \u2620\uFE0F'
                     r.hset(uid2, 'spirit', 0)
-                    r.hset(uid2, 'strength', int(int(r.hget(uid2, 'strength')) / 2))
-                    intellect(-3, uid2)
-                    r.hset(uid2, 'weapon', 0)
+                    if c2 != 6 and c2 != 16 and c2 != 26:
+                        r.hset(uid2, 'weapon', 0)
                     r.hset(uid2, 'defense', 0)
-                r.hset(uid1, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
+                    r.hincrby(uid2, 'injure', 100)
         elif defense1 == 16:
             s2 = int(s2 * 0.8)
             defense = ' \U0001F6E1'
@@ -1081,26 +1079,28 @@ def tournament(uid1, uid2, un1, un2, mid):
 
         if c1 == 15 or c1 == 25:
             ch = int(r.hget(uid1, 'childs'))
-            if ch > 15:
-                ch = 15
-            s1 = int(s1 * (1 + 0.05 * ch))
+            if ch > 20:
+                ch = 20
+            s1 = int(s1 * (1 + 0.025 * ch))
             if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300 and int(r.hget(uid2, 'strength')) >= 30:
-                shot = random.choices([1, 0], weights=[20, 80])
+                shot = random.choices([1, 0], weights=[10, 90])
                 if shot == [1]:
-                    meat += ' \U0001fa96'
-                    r.hincrby(uid1, 'strength', -10)
-                    r.hincrby(uid2, 'strength', -20)
+                    ran = random.randint(5, 10)
+                    meat += '\U0001fa96'
+                    r.hincrby(uid1, 'injure', 1)
+                    r.hincrby(uid2, 'injure', ran)
         if c2 == 15 or c2 == 25:
             ch = int(r.hget(uid2, 'childs'))
-            if ch > 15:
-                ch = 15
-            s2 = int(s2 * (1 + 0.05 * ch))
+            if ch > 20:
+                ch = 20
+            s2 = int(s2 * (1 + 0.025 * ch))
             if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300 and int(r.hget(uid1, 'strength')) >= 30:
-                shot = random.choices([1, 0], weights=[20, 80])
+                shot = random.choices([1, 0], weights=[10, 90])
                 if shot == [1]:
+                    ran = random.randint(5, 10)
                     meat += ' \U0001fa96'
-                    r.hincrby(uid2, 'strength', -10)
-                    r.hincrby(uid1, 'strength', -20)
+                    r.hincrby(uid2, 'injure', 1)
+                    r.hincrby(uid1, 'injure', ran)
 
         chance1 = s1 * (1 + 0.1 * i1) * (1 + 0.01 * (bd1 * 0.01))
         chance2 = s2 * (1 + 0.1 * i2) * (1 + 0.01 * (bd2 * 0.01))
@@ -2053,10 +2053,9 @@ def classes(message):
                               'перед початком бою показує випадкові характеристики.\n\n'
                               'Язичник \U0001F5FF - вдвічі збільшує максимальний бойовий дух. При перемозі отримує'
                               ' втричі більше бойового духу, але при поразці вдвічі більше втрачає.\n\n'
-                              'Гарматне м`ясо \U0001fa96 - +125% до шансу до перемоги, якщо є зброя. Можливість '
-                              'придбати найсильнішу зброю в мандрівного торговця. 2% шанс отримати важке поранення в '
-                              'бою від зброї (зменшує силу на половину, інтелект на 3, бойовий дух до 0, втрачає '
-                              'зброю і броню).\n\n'
+                              'Гарматне м`ясо \U0001fa96 - +50% сили в бою, якщо є АК-47 (зброя, яку можна придбати в '
+                              'мандрівного торговця). 2% шанс отримати поранення в бою від АК-47 (втрачає весь бойовий'
+                              ' дух, зброю, захист, на 100 боїв втричі зменшує силу, інтелект та бойовий дух).\n\n'
                               'Мусор \U0001F46E - має постійну зброю, яка перед боєм ігнорує бойовий дух двох сторін.'
                               ' Якщо є захист, ігнорує лише бойовий дух ворога.\n\n'
                               'Малорос \U0001F921 - моментально віднімає 2 інтелекту. При жертві віднімає у всіх'
@@ -2087,8 +2086,8 @@ def classes_2(message):
                               'Скінхед \U0001F5FF\U0001F5FF - подвоєний бойовий дух в боях з хачами. При поразці не'
                               ' втрачає вдвічі більше бойового духу. Тепер замість купівлі дрина буде видана зброя з '
                               'аналогічним ефектом - Бита [Атака, міцність=3].\n\n'
-                              'Орк \U0001fa96\U0001fa96 - додає +5% сили на бій за кожне з`їдене немовля '
-                              '(максимум 75%).\n\n'
+                              'Орк \U0001fa96\U0001fa96 - додає +2.5% сили на бій за кожне з`їдене немовля '
+                              '(максимум 50%).\n\n'
                               'Силовик \U0001F46E\U0001F46E - ігнорує інтелект. Додає +15% сили за кожне марно'
                               ' втрачене очко інтелекту. Здібність не діє проти інших мусорів.\n\n'
                               'Кремлебот \U0001F921\U0001F921 - +60 гривень і онуляє рахунок мухоморів. При жертві'
@@ -2118,8 +2117,9 @@ def classes_3(message):
                               'Збільшує силу на 20% якщо у ворога менше трофеїв. Збільшує бойовий дух на 1% за '
                               'кожен трофей (максимум 50%).\n\n'
                               'Герой Новоросії \U0001fa96\U0001fa96\U0001fa96 - якщо більше ніж 300 сили: '
-                              'обидва русаки можуть отримати важке поранення (якщо в героя є АК-47), з шансом 20% '
-                              'герой втрачає 10 сили, а ворог 20.\n\n'
+                              'обидва русаки можуть отримати поранення на 100 боїв (якщо в героя є АК-47), з шансом 10%'
+                              ' в бою герой і ворог отримають невелике поранення (герой: +1 \U0001fa78, ворог +5-10'
+                              '\U0001fa78).\n\n'
                               'Товариш майор \U0001F46E\U0001F46E\U0001F46E - 20% шанс вилучити в ворога зброю при '
                               'захисті і захист при атаці і отримати щит або підняти його міцність на 10 (не діє проти'
                               ' інших мусорів).\n\n'
