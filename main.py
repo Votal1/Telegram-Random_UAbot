@@ -2762,8 +2762,8 @@ def swap(message):
                         'weapon2', 's_weapon2', 'defense2', 's_defense2', 'mushrooms2', 'class2', 'photo2')
             r.hset(message.from_user.id, 'name2', a[0], {'strength2': a[1], 'intellect2': a[2], 'spirit2': a[3],
                                                          'weapon2': a[4], 's_weapon2': a[5], 'defense2': a[6],
-                                                         's_defense2': a[7],
-                                                         'mushrooms2': a[8], 'class2': a[9], 'photo2': a[10]})
+                                                         's_defense2': a[7], 'mushrooms2': a[8], 'class2': a[9],
+                                                         'photo2': a[10]})
             r.hset(message.from_user.id, 'name', b[0], {'strength': b[1], 'intellect': b[2], 'spirit': b[3],
                                                         'weapon': b[4], 's_weapon': b[5], 'defense': b[6],
                                                         's_defense': b[7],
@@ -2826,6 +2826,8 @@ def handle_query(call):
             r.hset(call.from_user.id, 'photo', 0)
             r.hset(call.from_user.id, 'mushrooms', 0)
             r.hset(call.from_user.id, 'packs', 0)
+            r.hset(call.from_user.id, 'injure', 0)
+            r.hset(call.from_user.id, 'hp', 0)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
                 if call.message.chat.type != 'private':
@@ -3191,7 +3193,7 @@ def handle_query(call):
                        {'strength2': random.randint(10, 50),
                         'intellect2': int(random.choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
-                        'mushrooms2': 0, 'class2': 0, 'photo2': 0})
+                        'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 0})
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='У вас немає русака.')
@@ -3604,7 +3606,7 @@ def handle_query(call):
                        {'strength2': random.randint(10, 50),
                         'intellect2': int(random.choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
-                        'mushrooms2': 0, 'class2': 0, 'photo2': 0})
+                        'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 0})
                 r.hset(call.from_user.id, 'time22', 0)
                 r.hset(call.from_user.id, 'time23', 0)
                 bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
