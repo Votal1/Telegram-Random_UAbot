@@ -84,6 +84,9 @@ def prepare_to_fight(uid, fn, q):
         i = int(stats[3])
         bd = int(stats[4])
 
+        if int(r.hget(uid, 'injure')) > 0:
+            s, s1, i, bd = injure(uid)
+
         if c == 3:
             s = random.randint(10, 1000)
             i = random.randint(1, 10)
@@ -864,6 +867,11 @@ def tournament(uid1, uid2, un1, un2, mid):
         i2 = int(stats22[1])
         bd1 = int(stats11[2])
         bd2 = int(stats22[2])
+
+        if int(r.hget(uid1, 'injure')) > 0:
+            s1, s11, i1, bd1 = injure(uid1)
+        if int(r.hget(uid2, 'injure')) > 0:
+            s2, s22, i2, bd2 = injure(uid2)
 
         if weapon2 == 11:
             s1 = int(s1 / 2)
@@ -1746,21 +1754,22 @@ def donbass(message):
 @bot.message_handler(commands=['rusak'])
 def my_rusak(message):
     try:
+        cl, inj = '', ''
         name = int(r.hget(message.from_user.id, 'name'))
         name = names[name]
         c = int(r.hget(message.from_user.id, 'class'))
-        if c == 0:
-            cl = ''
-        else:
+        if c != 0:
             cl = '\n' + icons[c] + ' Клас: ' + class_name[c]
         try:
             r_photo = photos[int(r.hget(message.from_user.id, 'photo'))]
         except:
             r_photo = photos[0]
-        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit')
+        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure')
+        if int(stats[3]) > 0:
+            inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + cl
+                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + cl + inj
         bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
@@ -2236,10 +2245,12 @@ def war(cid, location, big_battle):
     fighters = {}
     for member in everyone:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            if int(stats[5]) > 0:
+                s, s1, i, bd = injure(int(member))
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2367,10 +2378,12 @@ def great_war(cid1, cid2, a, b):
     chance2 = 0
     for member in a:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            if int(stats[5]) > 0:
+                s, s1, i, bd = injure(int(member))
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2387,10 +2400,12 @@ def great_war(cid1, cid2, a, b):
             continue
     for member in b:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            if int(stats[5]) > 0:
+                s, s1, i, bd = injure(int(member))
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2764,17 +2779,17 @@ def swap(message):
     try:
         if int(r.hget(message.from_user.id, 's3')) >= 4 and r.hexists(message.from_user.id, 'name') == 1:
             a = r.hmget(message.from_user.id, 'name', 'strength', 'intellect', 'spirit',
-                        'weapon', 's_weapon', 'defense', 's_defense', 'mushrooms', 'class', 'photo')
-            b = r.hmget(message.from_user.id, 'name2', 'strength2', 'intellect2', 'spirit2',
-                        'weapon2', 's_weapon2', 'defense2', 's_defense2', 'mushrooms2', 'class2', 'photo2')
+                        'weapon', 's_weapon', 'defense', 's_defense', 'mushrooms', 'class', 'photo', 'injure', 'hp')
+            b = r.hmget(message.from_user.id, 'name2', 'strength2', 'intellect2', 'spirit2', 'weapon2', 's_weapon2',
+                        'defense2', 's_defense2', 'mushrooms2', 'class2', 'photo2', 'injure2', 'hp2')
             r.hset(message.from_user.id, 'name2', a[0], {'strength2': a[1], 'intellect2': a[2], 'spirit2': a[3],
                                                          'weapon2': a[4], 's_weapon2': a[5], 'defense2': a[6],
                                                          's_defense2': a[7], 'mushrooms2': a[8], 'class2': a[9],
-                                                         'photo2': a[10]})
+                                                         'photo2': a[10], 'injure2': a[11], 'hp2': a[12]})
             r.hset(message.from_user.id, 'name', b[0], {'strength': b[1], 'intellect': b[2], 'spirit': b[3],
                                                         'weapon': b[4], 's_weapon': b[5], 'defense': b[6],
-                                                        's_defense': b[7],
-                                                        'mushrooms': b[8], 'class': b[9], 'photo': b[10]})
+                                                        's_defense': b[7], 'mushrooms': b[8], 'class': b[9],
+                                                        'photo': b[10], 'injure': b[11], 'hp': b[12]})
             if r.hexists(message.from_user.id, 'time22') == 1:
                 a1 = r.hget(message.from_user.id, 'time')
                 b1 = r.hget(message.from_user.id, 'time22')
