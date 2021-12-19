@@ -276,14 +276,16 @@ def fight(uid1, uid2, un1, un2):
 
     stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit')
     stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit')
-    s1 = int(stats11[0])
-    s2 = int(stats22[0])
+    s1, s2 = int(stats11[0]), int(stats22[0])
     s11 = s1
     s22 = s2
-    i1 = int(stats11[1])
-    i2 = int(stats22[1])
-    bd1 = int(stats11[2])
-    bd2 = int(stats22[2])
+    i1, i2 = int(stats11[1]), int(stats22[1])
+    bd1, bd2 = int(stats11[2]), int(stats22[2])
+
+    if int(r.hget(uid1, 'injure')) > 0:
+        s1, s11, i1, bd1 = injure(uid1)
+    if int(r.hget(uid2, 'injure')) > 0:
+        s2, s22, i2, bd2 = injure(uid2)
 
     if weapon2 == 11:
         s1 = int(s1 / 2)
@@ -368,9 +370,8 @@ def fight(uid1, uid2, un1, un2):
             r.hset(uid2, 'defense', 0)
     elif weapon2 == 2 and defense1 != 2:
         weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
+        r.hincrby(uid1, 'injure', 200)
         r.hset(uid1, 'spirit', 0)
-        r.hset(uid1, 'strength', int(int(r.hget(uid1, 'strength')) / 2))
-        intellect(-3, uid1)
         if c1 != 6 and c1 != 16 and c1 != 26:
             r.hset(uid1, 'weapon', 0)
         r.hset(uid1, 'defense', 0)
@@ -1434,6 +1435,12 @@ def intellect(value, uid):
         r.hincrby(uid, 'intellect', value)
         if int(r.hget(uid, 'intellect')) <= 0:
             r.hset(uid, 'intellect', 1)
+
+
+def injure(uid):
+    stats = r.hmget(uid, 'strength', 'intellect', 'spirit')
+    r.hincrby(uid, 'injure', -1)
+    return int(int(stats[0])*(1/3)), int(int(stats[0])*(1/3)), int(int(stats[1])*(1/3)), int(int(stats[2])*(1/3))
 
 
 def pastLife():
