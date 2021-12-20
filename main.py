@@ -871,10 +871,10 @@ def tournament(uid1, uid2, un1, un2, mid):
         bd2 = int(stats22[2])
 
         if int(r.hget(uid1, 'injure')) > 0:
-            s1, s11, i1, bd1 = injure(uid1, True)
+            s1, s11, i1, bd1 = injure(uid1, False)
             inj1 = '\U0001fa78 '
         if int(r.hget(uid2, 'injure')) > 0:
-            s2, s22, i2, bd2 = injure(uid2, True)
+            s2, s22, i2, bd2 = injure(uid2, False)
             inj2 = '\U0001fa78 '
 
         if weapon2 == 11:
@@ -1120,6 +1120,10 @@ def tournament(uid1, uid2, un1, un2, mid):
             win = random.choices(['1', '2'], weights=[chance1, chance2])
 
         if loop == 0:
+            if int(r.hget(uid1, 'injure')) > 0:
+                injure(uid1, True)
+            if int(r.hget(uid2, 'injure')) > 0:
+                injure(uid2, True)
             info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' + icons[c1] +
                        ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
                        '\n\U0001F4AA ' + stats11[0].decode() + ' | ' + stats22[0].decode() +
@@ -1690,10 +1694,6 @@ def handle_help(message):
                           "Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n"
                           "Щоб взяти русака напиши команду \n/donbass\nВсі команди - /commands\nДетальна інформація про"
                           " русаків -\nhttps://t.me/randomuanews/4")
-    if message.from_user.id == 456514639:
-        bot.send_message(-1001508218205, 'З Днем Святого Миколая!\n\n'
-                                         'Щоб ваші русаки менше хворіли, краще працювали та більше перемагали!\n\n'
-                                         '(Зайдіть на канал, щоб отримати подарунок)', reply_markup=boost())
 
 
 @bot.message_handler(commands=['links'])
