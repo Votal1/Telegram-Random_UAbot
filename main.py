@@ -71,6 +71,8 @@ photos = ['https://i.ibb.co/rGd7L5n/rusnya.jpg',
           'https://i.ibb.co/QDHLRPp/4.png', 'https://i.ibb.co/GntBLKG/5.png', 'https://i.ibb.co/b1jN3GC/6.png',
           'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png']
 
+sudoers = [456514639, 634799543, 379620096]
+
 
 def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
@@ -2498,7 +2500,8 @@ def battle(message):
 @bot.message_handler(commands=['war'])
 def war_battle(message):
     if message.chat.type != 'private' and bot.get_chat_members_count(message.chat.id) >= 10 \
-            and '@' not in message.chat.title:
+            and '@' not in message.chat.title \
+            and str(bot.get_chat_member(message.chat.id, 1875637724).can_send_messages) != 'False':
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
                 bot.delete_message(message.chat.id, message.id)
@@ -2570,8 +2573,9 @@ def war_battle(message):
 
 @bot.message_handler(commands=['crash'])
 def crash(message):
-    if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
-            bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
+    if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' \
+            or bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True \
+            or message.from_user.id in sudoers:
         r.hdel('war_battle' + str(message.chat.id), 'start')
         r.hdel('battles', message.chat.id)
         for member in r.smembers('fighters_2' + str(message.chat.id)):
@@ -2860,6 +2864,7 @@ def handle_query(call):
             r.hset(call.from_user.id, 'photo', 0)
             r.hset(call.from_user.id, 'mushrooms', 0)
             r.hset(call.from_user.id, 'packs', 0)
+            r.hset(call.from_user.id, 'opened', 0)
             r.hset(call.from_user.id, 'injure', 0)
             r.hset(call.from_user.id, 'hp', 0)
             try:
@@ -3698,6 +3703,7 @@ def handle_query(call):
                 r.hincrby(uid, 'packs', -1)
             else:
                 r.hincrby(uid, 'money', -20)
+            r.hincrby(uid, 'opened', 1)
 
             ran = random.choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                                  weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
