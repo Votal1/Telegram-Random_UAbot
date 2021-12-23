@@ -1161,10 +1161,12 @@ def get_rusak():
     return name, strength, mind
 
 
-def feed_rusak():
+def feed_rusak(uid):
     success = int(random.choice(['1', '1', '1', '1', '0']))
     strength = random.randint(1, 30)
-    mind = int(random.choice(['1', '0', '0', '0', '0']))
+    mind = 0
+    if int(r.hget(uid, 'intellect')) < 20:
+        mind = int(random.choice(['1', '0', '0', '0', '0']))
     bd = int(random.choice(['1', '0', '0']))
     return success, strength, mind, bd
 
@@ -1793,8 +1795,8 @@ def feed(message):
         except:
             pass
         if not date.today().day == int(r.hget(message.from_user.id, 'time')):
-            fr = feed_rusak()
             r.hset(message.from_user.id, 'time', date.today().day)
+            fr = feed_rusak(message.from_user.id)
             r.hincrby(message.from_user.id, 'eat', 1)
             success = fr[0]
             cl = int(r.hget(message.from_user.id, 'class'))
@@ -1811,19 +1813,19 @@ def feed(message):
                 except:
                     r.hincrby(message.from_user.id, 'strength', fr[1])
                     ran = fr[1]
-                name = int(r.hget(message.from_user.id, 'name'))
-                name = names[name]
-                add = ''
-                add2 = ''
+                emoji = random.choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
+                              ' смачно поїв.\n\nСила зросла на ' + str(ran) + '.\n'
                 if fr[2] == 1:
-                    add = 'Інтелект збільшився на 1. '
+                    msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, message.from_user.id)
                 if fr[3] == 1:
-                    add2 = 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
+                    msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
                     spirit(1000, message.from_user.id, int(r.hget(message.from_user.id, 'class')), fi=False)
-                emoji = random.choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                bot.reply_to(message, emoji + ' Твій ' + name + ' смачно поїв.\n\nСила зросла на '
-                             + str(ran) + '.\n' + add + add2)
+                    bot.send_photo(message.chat.id, photo='https://i.ibb.co/bK2LrSD/feed.jpg',
+                                   caption=msg, reply_to_message_id=message.id)
+                else:
+                    bot.reply_to(message, msg)
             else:
                 bot.reply_to(message, '\U0001F9A0 Твій русак сьогодні захворів. Сили від їжі не прибавилось.')
         elif date.today().day == int(r.hget(message.from_user.id, 'time')):
@@ -1853,15 +1855,18 @@ def mine(message):
                     if cl == 2 or cl == 12 or cl == 22:
                         money = money * 3
                     r.hincrby(message.from_user.id, 'money', money)
-                    name = int(r.hget(message.from_user.id, 'name'))
-                    name = names[name]
-                    add = ''
+                    msg = '\u26CF Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
+                          ' успішно відпрацював зміну на соляній шахті.\n\n\U0001F4B5 ' \
+                          'Зароблено гривень: ' + str(money) + '.'
                     if ms[2] == 1:
-                        add = 'Русак сьогодні працював з новітніми технологіями, інтелект збільшився на 1. '
-                        intellect(1, message.from_user.id)
-                    bot.reply_to(message, '\u26CF Твій ' + name + ' успішно відпрацював зміну на соляній шахті.\n\n'
-                                                                  '\U0001F4B5 Зароблено гривень:'
-                                                                  ' ' + str(money) + '.\n' + add)
+                        msg += '\nРусак сьогодні працював з новітніми технологіями.\n'
+                        if int(r.hget(message.from_user.id, 'intellect')) < 20:
+                            msg += '\U0001F9E0 +1'
+                            intellect(1, message.from_user.id)
+                        else:
+                            msg += '\U0001F4B5 +20'
+                            r.hincrby(message.from_user.id, 'money', 20)
+                    bot.reply_to(message, msg)
                 else:
                     if cl == 2 or cl == 12 or cl == 22:
                         msg = '\U0001F37A Твій роботяга втік з-під нагляду. Його знайшли п`яним біля шахти.\n\u2622 +5'
@@ -3791,11 +3796,14 @@ def handle_query(call):
                                       call.message.chat.id, call.message.id)
                 r.hincrby(uid, 'deaths', 1)
             elif ran == [9]:
-                bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
-                                      call.message.chat.id, call.message.id)
                 if int(r.hget(uid, 'intellect')) < 20:
+                    bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
+                                          call.message.chat.id, call.message.id)
                     if int(r.hget(uid, 'defense')) != 2:
                         r.hset(uid, 'defense', 10)
+                else:
+                    bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
+                                          call.message.chat.id, call.message.id)
             elif ran == [10]:
                 bot.edit_message_text('\U0001f7e3 Дивно, але в цьому пакунку знайдено тютюн та люльку...'
                                       '\n\u2620\uFE0F +5', call.message.chat.id, call.message.id)
