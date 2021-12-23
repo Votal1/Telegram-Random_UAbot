@@ -2501,7 +2501,8 @@ def battle(message):
 def war_battle(message):
     if message.chat.type != 'private' and bot.get_chat_members_count(message.chat.id) >= 10 \
             and '@' not in message.chat.title \
-            and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False':
+            and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False'\
+            and message.chat.id != -1001646765307:
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
                 bot.delete_message(message.chat.id, message.id)
