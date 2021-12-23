@@ -1965,13 +1965,7 @@ def shop(message):
         if r.hexists(message.from_user.id, 'childs') == 0:
             bot.reply_to(message, 'У тебе ще не було русаків.\n\nРусака можна отримати, сходивши на /donbass')
         else:
-            stats = r.hmget(message.from_user.id, 'wins', 'deaths', 'childs', 'vodka', 'money', 'trophy')
-            bot.reply_to(message, text='\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
-                                       '\n\u2620\uFE0F Принесено в жертву русаків: ' + stats[1].decode() +
-                                       '\n\U0001F476 З`їдено немовлят: ' + stats[2].decode() +
-                                       '\n\u2622 Випито горілки: ' + stats[3].decode() +
-                                       '\n\U0001F3C5 Кількість трофеїв: ' + stats[5].decode() +
-                                       '\n\n\U0001F4B5 Гривні: ' + stats[4].decode() +
+            bot.reply_to(message, text='\U0001F4B5 Гривні: ' + r.hget(message.from_user.id, 'money').decode() +
                                        '\n\nОсь опис товарів, які можна придбати:\n\n\u2622 '
                                        'Горілка "Козаки" - збільшує русаку бойовий дух на 10-70.\n\U0001F5E1 '
                                        'Колючий дрин [Атака]- зменшує перед боєм бойовий дух ворогу, якщо атакувати'
@@ -1993,6 +1987,31 @@ def shop(message):
                                        'а кількість жертв збільшиться на 5)', reply_markup=goods())
     else:
         bot.reply_to(message, 'Цю команду необхідно писати в пп боту.')
+
+
+@bot.message_handler(commands=['passport'])
+def passport(message):
+    if r.hexists(message.from_user.id, 'wins') == 1:
+        stats = r.hmget(message.from_user.id, 'wins', 'trophy', 'deaths', 'childs', 'vodka', 'opened')
+        sk = r.hmget(message.from_user.id, 's1', 's2', 's3')
+        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2])) * 100 / 20)
+        ac = 0
+        acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
+                      'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13')
+        for a in acs:
+            try:
+                ac += int(a)
+            except:
+                pass
+        bot.reply_to(message, '\U0001F4DC ' + message.from_user.first_name +
+                              '\n\n\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
+                              '\n\U0001F3C5 Кількість трофеїв: ' + stats[1].decode() +
+                              '\n\u2620\uFE0F Вбито русаків: ' + stats[2].decode() +
+                              '\n\U0001F476 З`їдено немовлят: ' + stats[3].decode() +
+                              '\n\u2622 Випито горілки: ' + stats[4].decode() +
+                              '\n\U0001F4B5 Відкрито пакунків: ' + stats[5].decode() +
+                              '\n\u26CF Скіли: ' + str(skill) + '%' +
+                              '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 26)) + '%')
 
 
 @bot.message_handler(commands=['woman'])
@@ -3124,7 +3143,8 @@ def handle_query(call):
                                    '/ltop - топ цього чату\n'
                                    '/gtop - глобальний топ\n'
                                    '/itop - яке я місце в топі?\n'
-                                   '/ctop - топ чатів\n\n'
+                                   '/ctop - топ чатів\n'
+                                   '/passport - твої характеристикиn\n\n'
                                    'Русаки:\n'
                                    '/donbass - взяти русака\n'
                                    '/rusak - характеристики твого русака\n'
