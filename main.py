@@ -2669,6 +2669,7 @@ def achievements(message):
             if int(r.hget(message.from_user.id, 'deaths')) >= 15 and int(r.hget(message.from_user.id, 'childs')) >= 15:
                 r.hset(message.from_user.id, 'ac12', 1)
 
+        ac = ['ac1', 'ac2', 'ac3', 'ac4', 'ac5', 'ac6', 'ac7', 'ac10', 'ac11', 'ac8', 'ac9', 'ac13', 'ac12']
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
                       'ac6', 'ac7', 'ac10', 'ac11', 'ac8', 'ac9', 'ac13', 'ac12')
 
@@ -2682,7 +2683,7 @@ def achievements(message):
                 new_a = new_a + 1
                 new = 'Отримано нові досягнення!\n\U0001F476 + ' + str(new_a) + '\n'
                 r.hincrby(message.from_user.id, 'childs', 1)
-                r.hset(message.from_user.id, 'ac' + str(number), 2)
+                r.hset(message.from_user.id, ac[number], 2)
                 reply += full_list[number] + '\n'
             elif ac.decode() == '2':
                 reply += full_list[number] + '\n'
