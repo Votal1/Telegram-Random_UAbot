@@ -2603,10 +2603,11 @@ def achievements(message):
         full_list = ['', '\u26AA Хто не з нами, той нехай йде собі до сраки', '\u26AA І москаля нема, немає москаля',
                      '\u26AA Моя фамілія Залупа', '\u26AA Наливай, куме, горілки стаканчик',
                      '\u26AA Бігає по полю весело кабанчик', '\U0001f535 Геніальний розум, великий чоловік',
-                     '\U0001f535 Гордо і достойно ти живеш свій вік', '\U0001f7e3 Ніколи не плач на радість орді',
-                     '\U0001f7e3 Ворога знищено, як був наказ', '\U0001f535 Зараз розберемося, кому належить вулиця',
-                     '\U0001f535 Ах лента за лентою набої подавай', '\U0001f534 Кривавий пастор',
-                     '\U0001f7e3 Я заводжу хімікат, розпочинаю атентат']
+                     '\U0001f535 Гордо і достойно ти живеш свій вік',
+                     '\U0001f535 Зараз розберемося, кому належить вулиця',
+                     '\U0001f535 Ах лента за лентою набої подавай', '\U0001f7e3 Ніколи не плач на радість орді',
+                     '\U0001f7e3 Ворога знищено, як був наказ', '\U0001f7e3 Я заводжу хімікат, розпочинаю атентат',
+                     '\U0001f534 Кривавий пастор']
 
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
                       'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13')
@@ -2621,7 +2622,7 @@ def achievements(message):
             if int(r.hget(message.from_user.id, 'eat')) >= 15:
                 r.hset(message.from_user.id, 'ac5', 1)
         if isinstance(acs[5], type(None)):
-            if int(r.hget(message.from_user.id, 'intellect')) >= 10:
+            if int(r.hget(message.from_user.id, 'intellect')) >= 20:
                 r.hset(message.from_user.id, 'ac6', 1)
         if isinstance(acs[6], type(None)):
             if int(r.hget(message.from_user.id, 'strength')) >= 1000:
@@ -2643,7 +2644,7 @@ def achievements(message):
                 r.hset(message.from_user.id, 'ac12', 1)
 
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
-                      'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13')
+                      'ac6', 'ac7', 'ac10', 'ac11', 'ac8', 'ac9', 'ac13', 'ac12')
 
         reply = '\u2B50 Досягнення ' + message.from_user.first_name + ':\n\n'
         new, new_a, number = '', 0, 1
