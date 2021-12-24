@@ -2513,18 +2513,18 @@ def battle(message):
                 except:
                     pass
                 r.hdel('battle' + str(message.chat.id), 'start')
-                for member in r.smembers('fighters' + str(message.chat.id)):
-                    r.srem('fighters' + str(message.chat.id), member)
+                for mem in r.smembers('fighters' + str(message.chat.id)):
+                    r.srem('fighters' + str(message.chat.id), mem)
                 bot.delete_message(message.chat.id, message.id)
 
 
 @bot.message_handler(commands=['war'])
 def war_battle(message):
-    banned = [-1001646765307, -1001475102262]
+    banned = [-1001646765307, -1001475102262, -714355096, 557298328, 530769095, 470411500, 1767253195]
     if message.chat.type != 'private' and bot.get_chat_members_count(message.chat.id) >= 10 \
             and '@' not in message.chat.title \
             and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False'\
-            and message.chat.id not in banned:
+            and message.chat.id not in banned and message.from_user.id not in banned:
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
                 bot.delete_message(message.chat.id, message.id)
