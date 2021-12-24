@@ -2011,7 +2011,7 @@ def passport(message):
                               '\n\u2620\uFE0F Вбито русаків: ' + stats[2].decode() +
                               '\n\U0001F476 З`їдено немовлят: ' + stats[3].decode() +
                               '\n\u2622 Випито горілки: ' + stats[4].decode() +
-                              '\n\U0001F4B5 Відкрито пакунків: ' + stats[5].decode() +
+                              '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() +
                               '\n\u26CF Скіли: ' + str(skill) + '%' +
                               '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 26)) + '%')
 
@@ -2520,10 +2520,11 @@ def battle(message):
 
 @bot.message_handler(commands=['war'])
 def war_battle(message):
+    banned = [-1001646765307, -1001475102262]
     if message.chat.type != 'private' and bot.get_chat_members_count(message.chat.id) >= 10 \
             and '@' not in message.chat.title \
             and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False'\
-            and message.chat.id != -1001646765307:
+            and message.chat.id not in banned:
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
                 bot.delete_message(message.chat.id, message.id)
