@@ -1268,14 +1268,15 @@ def itop(uid, cid, chat):
         rating = {}
         for member in everyone:
             try:
-                stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'username')
+                stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy', 'username')
                 s = int(stats[0])
                 i = int(stats[1])
                 w = int(stats[2])
                 d = int(stats[3])
                 c = int(stats[4])
-                line = stats[5].decode()
-                rate = s + i * 10 + w + d * 30 + c * 88
+                t = int(stats[5])
+                line = stats[6].decode()
+                rate = s + i * 10 + w + t * 20 + d * 30 + c * 88
                 rating.update({line: rate})
             except:
                 continue
@@ -2176,7 +2177,7 @@ def merchant(message):
                                         'на бій на 30%. Після зношення повертаються 4 гривні.\n\U0001F344 '
                                         'Мухомор королівський [Захист, міцність=1, ціна=60] - якщо у ворога більший '
                                         'інтелект, додає +1 інтелекту (не діє проти фокусників). На бій зменшує свою '
-                                        'силу на 50%. Макимальна кількість покупок на русака - 3.\n\n'
+                                        'силу на 50%. Максимальна кількість покупок на русака - 3.\n\n'
                                         '\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій '
                                         'на 50%.\n\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=12] - збільшує '
                                         'силу, інтелект і бойовий дух на 10%.\n\U0001F52E Колода з кіоску [Атака, міцні'
