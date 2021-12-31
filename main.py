@@ -2696,7 +2696,7 @@ def achievements(message):
         print(e)
 
 
-@bot.message_handler(commands='i')
+@bot.message_handler(commands=['i'])
 def inventory(message):
     try:
         inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 's_weapon', 's_defense')
@@ -2722,7 +2722,8 @@ def inventory(message):
         else:
             m2 = '\nМіцність: ' + inv[4].decode()
         bot.reply_to(message, '\U0001F5E1 Зброя: ' + weapons[int(inv[0])] + m1 +
-                     '\n\U0001F6E1 Захист: ' + defenses[int(inv[1])] + m2, reply_markup=rep)
+                     '\n\U0001F6E1 Захист: ' + defenses[int(inv[1])] + m2 + '\n\U0001F9EA Допомога: [Порожньо]',
+                     reply_markup=rep)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
