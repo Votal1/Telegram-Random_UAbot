@@ -40,7 +40,7 @@ weapons = ['', 'Колючий дрин', 'РПГ-7', '', 'Бита', '', '', ''
 defenses = ['', 'Колючий щит', 'Бронежилет вагнерівця', '', '', '', '', '', '', 'Уламок бронетехніки',
             'Мухомор королівський', '', '', '', '', 'АК-47', 'Поліцейський щит', 'Прапор новоросії', '']
 
-support = ['', 'Аптечка']
+supports = ['', 'Аптечка']
 
 photos = ['https://i.ibb.co/rGd7L5n/rusnya.jpg',
 
@@ -282,6 +282,17 @@ def fight(uid1, uid2, un1, un2):
             r.hincrby(uid2, 'spirit', -int(int(r.hget(uid2, 'spirit')) / chance))
         r.hset(uid1, 'defense', 0)
         defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
+
+    if int(r.hget(uid1, 'support')) == 1:
+        hp(4, uid1)
+        r.hincrby(uid1, 's_support', -1)
+        if int(r.hget(uid1, 's_support')) <= 0:
+            r.hset(uid1, 'support', 0)
+    if int(r.hget(uid2, 'support')) == 1:
+        hp(4, uid2)
+        r.hincrby(uid2, 's_support', -1)
+        if int(r.hget(uid2, 's_support')) <= 0:
+            r.hset(uid2, 'support', 0)
 
     stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp')
     stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp')
@@ -1332,7 +1343,7 @@ def ctop(sett):
 def goods():
     markup = types.InlineKeyboardMarkup()
     items = {'Горілка "Козаки" - 2 грн': 'vodka', 'Колючий дрин - 7 грн': 'weapon', 'Колючий щит - 8 грн': 'defense',
-             'Трофейний паспорт - 10 грн': 'passport', 'Утеплена будка - 30 грн': 'cabin',
+             'Аптечка - 1 грн': 'aid_kit', 'Трофейний паспорт - 10 грн': 'passport', 'Утеплена будка - 30 грн': 'cabin',
              'Жінка - 150 грн': 'woman', 'Тютюн та люлька - 1 жінка': 'pipe'}
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
@@ -1457,7 +1468,7 @@ def vodka(uid, cl):
 def intellect(value, uid):
     if value > 0:
         r.hincrby(uid, 'intellect', value)
-        if int(r.hget(uid, 'intellect')) >= 21:
+        if int(r.hget(uid, 'intellect')) > 20:
             r.hset(uid, 'intellect', 20)
     if value < 0:
         r.hincrby(uid, 'intellect', value)
@@ -1470,6 +1481,17 @@ def injure(uid, fi):
     if fi:
         r.hincrby(uid, 'injure', -1)
     return int(int(stats[0])*(1/3)), int(int(stats[0])*(1/3)), int(int(stats[1])*(1/3)), int(int(stats[2])*(1/3))
+
+
+def hp(value, uid):
+    if value > 0:
+        r.hincrby(uid, 'hp', value)
+        if int(r.hget(uid, 'hp')) > 100:
+            r.hset(uid, 'hp', 100)
+    if value < 0:
+        r.hincrby(uid, 'hp', value)
+        if int(r.hget(uid, 'hp')) < 0:
+            r.hset(uid, 'hp', 0)
 
 
 def pastLife():
@@ -1985,9 +2007,10 @@ def shop(message):
                                        'якщо бойовий дух ворога менший за 300, обнуляє, якщо від 300 до 1000, '
                                        'зменшує на 1000, якщо'
                                        ' від 1000 до 2500 і зменшує на 20/30/40%, якщо бойовий дух більше 2500).'
-                                       '\n\U0001F6E1 Колючий '
-                                       'щит [Захист] - працює так само як дрин, тільки знижує бойовий дух тому, '
-                                       'хто атакує.'
+                                       '\n\U0001F6E1 Колючий щит [Захист] - працює так само як дрин, тільки знижує '
+                                       'бойовий дух тому, хто атакує.'
+                                       '\n\U0001F9EA Аптечка [Допомога, міцність=5] - збільшує здоров`я на 5 і на '
+                                       '4 кожного бою.'
                                        '\n\U0001F4B3 Трофейний паспорт - поміняє ім`я русака на інше, випадкове.'
                                        '\n\U0001F3DA '
                                        'Утеплена будка - 15 додаткової сили при кожному годуванні русака '
@@ -2708,7 +2731,7 @@ def achievements(message):
 @bot.message_handler(commands=['i'])
 def inventory(message):
     try:
-        inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 's_weapon', 's_defense')
+        inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 's_weapon', 's_defense', 's_support')
         if int(inv[0]) != 0 or int(inv[1]) != 0:
             rep = invent()
         else:
@@ -2730,9 +2753,14 @@ def inventory(message):
             m2 = '[Порожньо]'
         else:
             m2 = '\nМіцність: ' + inv[4].decode()
+
+        #if int(inv[2]) == 0:
+        #    m3 = '[Порожньо]'
+        #else:
+        #    m3 = '\nМіцність: ' + inv[4].decode()
         bot.reply_to(message, '\U0001F5E1 Зброя: ' + weapons[int(inv[0])] + m1 +
-                     '\n\U0001F6E1 Захист: ' + defenses[int(inv[1])] + m2 + '\n\U0001F9EA Допомога: [Порожньо]',
-                     reply_markup=rep)
+                     '\n\U0001F6E1 Захист: ' + defenses[int(inv[1])] + m2 + '\n\U0001F9EA Допомога: ' +
+                     supports[int(inv[2])], reply_markup=rep)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
@@ -2896,6 +2924,7 @@ def handle_query(call):
             r.hset(call.from_user.id, 'support', 0)
             r.hset(call.from_user.id, 's_weapon', 0)
             r.hset(call.from_user.id, 's_defense', 0)
+            r.hset(call.from_user.id, 's_support', 0)
             r.hset(call.from_user.id, 'photo', 0)
             r.hset(call.from_user.id, 'mushrooms', 0)
             r.hset(call.from_user.id, 'packs', 0)
@@ -2936,48 +2965,55 @@ def handle_query(call):
         uid1 = cdata[1]
         un1 = cdata[0]
         if call.from_user.id != int(uid1):
-            try:
-                q = cdata[2].split()
-                diff = int(q[1])
-                uid2 = call.from_user.id
-                if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
-                        int(r.hget(uid1, 'strength')) + diff:
-                    un2 = call.from_user.first_name
-                    bot.edit_message_text(text=fight(uid1, uid2, un1, un2), inline_message_id=call.inline_message_id)
-                else:
-                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                              text='Твій русак не підходить по силі для цього бою.')
-            except:
+            if int(r.hget(call.from_user.id, 'hp')) > 0:
                 try:
+                    q = cdata[2].split()
+                    diff = int(q[1])
                     uid2 = call.from_user.id
-                    un2 = call.from_user.first_name
-                    if cdata[2] == 'tournament':
-                        try:
-                            q = cdata[3].split()
-                            if q[1][1:] == call.from_user.username:
-                                tournament(uid1, uid2, un1, un2, call.inline_message_id)
-                            else:
-                                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                          text='Цей бій не для тебе.')
-                        except:
-                            tournament(uid1, uid2, un1, un2, call.inline_message_id)
-                    elif cdata[2] == 'private':
-                        try:
-                            q = cdata[3].split()
-                            if q[1][1:] == call.from_user.username:
-                                bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
-                                                      inline_message_id=call.inline_message_id)
-                            else:
-                                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                          text='Цей бій не для тебе.')
-                        except:
-                            print(1/0)
+                    if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
+                            int(r.hget(uid1, 'strength')) + diff:
+                        un2 = call.from_user.first_name
+                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
+                                              inline_message_id=call.inline_message_id)
                     else:
-                        print(1/0)
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Твій русак не підходить по силі для цього бою.')
                 except:
-                    uid2 = call.from_user.id
-                    un2 = call.from_user.first_name
-                    bot.edit_message_text(text=fight(uid1, uid2, un1, un2), inline_message_id=call.inline_message_id)
+                    try:
+                        uid2 = call.from_user.id
+                        un2 = call.from_user.first_name
+                        if cdata[2] == 'tournament':
+                            try:
+                                q = cdata[3].split()
+                                if q[1][1:] == call.from_user.username:
+                                    tournament(uid1, uid2, un1, un2, call.inline_message_id)
+                                else:
+                                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                              text='Цей бій не для тебе.')
+                            except:
+                                tournament(uid1, uid2, un1, un2, call.inline_message_id)
+                        elif cdata[2] == 'private':
+                            try:
+                                q = cdata[3].split()
+                                if q[1][1:] == call.from_user.username:
+                                    bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
+                                                          inline_message_id=call.inline_message_id)
+                                else:
+                                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                              text='Цей бій не для тебе.')
+                            except:
+                                print(1/0)
+                        else:
+                            print(1/0)
+                    except:
+                        uid2 = call.from_user.id
+                        un2 = call.from_user.first_name
+                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
+                                              inline_message_id=call.inline_message_id)
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='\U0001fac0 Русак лежить весь в крові (він не може '
+                                               'битись поки не поїсть, або не полікується).')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти хочеш атакувати свого русака'
                                                                                        ', але розумієш, що він зараз ма'
@@ -3301,8 +3337,6 @@ def handle_query(call):
                                       text='Недостатньо коштів на рахунку')
 
     elif call.data.startswith('weapon'):
-        if r.hexists(call.from_user.id, 'weapon') == 0:
-            r.hset(call.from_user.id, 'weapon', 0)
         if int(r.hget(call.from_user.id, 'weapon')) == 0:
             if int(r.hget(call.from_user.id, 'money')) >= 7:
                 r.hincrby(call.from_user.id, 'money', -7)
@@ -3323,8 +3357,6 @@ def handle_query(call):
                                       text='У вас вже є зброя')
 
     elif call.data.startswith('defense'):
-        if r.hexists(call.from_user.id, 'defense') == 0:
-            r.hset(call.from_user.id, 'defense', 0)
         if int(r.hget(call.from_user.id, 'defense')) == 0:
             if int(r.hget(call.from_user.id, 'money')) >= 8:
                 r.hincrby(call.from_user.id, 'money', -8)
@@ -3337,6 +3369,23 @@ def handle_query(call):
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='У вас вже є захисне спорядження')
+
+    elif call.data.startswith('aid_kit'):
+        if r.hexists(call.from_user.id, 's_support') == 0:
+            r.hset(call.from_user.id, 's_support', 0)
+        if int(r.hget(call.from_user.id, 'support')) == 0:
+            if int(r.hget(call.from_user.id, 'money')) >= 1:
+                r.hincrby(call.from_user.id, 'money', -1)
+                r.hset(call.from_user.id, 'support', 1)
+                r.hset(call.from_user.id, 's_support', 5)
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Ви успішно купили аптечку')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Недостатньо коштів на рахунку')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='У вас вже є допоміжне спорядження')
 
     elif call.data.startswith('passport'):
         if int(r.hget(call.from_user.id, 'money')) >= 10:
