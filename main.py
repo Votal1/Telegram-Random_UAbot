@@ -2892,7 +2892,7 @@ def handle_query(call):
             r.hset(call.from_user.id, 'packs', 0)
             r.hset(call.from_user.id, 'opened', 0)
             r.hset(call.from_user.id, 'injure', 0)
-            r.hset(call.from_user.id, 'hp', 0)
+            r.hset(call.from_user.id, 'hp', 100)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
                 if call.message.chat.type != 'private':
@@ -3259,7 +3259,7 @@ def handle_query(call):
                        {'strength2': random.randint(10, 50),
                         'intellect2': int(random.choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
-                        'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 0})
+                        'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100})
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='У вас немає русака.')
@@ -3672,7 +3672,7 @@ def handle_query(call):
                        {'strength2': random.randint(10, 50),
                         'intellect2': int(random.choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
-                        'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 0})
+                        'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100})
                 r.hset(call.from_user.id, 'time22', 0)
                 r.hset(call.from_user.id, 'time23', 0)
                 bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
