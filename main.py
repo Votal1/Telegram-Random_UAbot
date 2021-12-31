@@ -2760,13 +2760,13 @@ def inventory(message):
         else:
             m2 = '\nМіцність: ' + inv[4].decode()
 
-        #if int(inv[2]) == 0:
-        #    m3 = '[Порожньо]'
-        #else:
-        #    m3 = '\nМіцність: ' + inv[4].decode()
+        if int(inv[2]) == 0:
+            m3 = '[Порожньо]'
+        else:
+            m3 = '\nМіцність: ' + inv[5].decode()
         bot.reply_to(message, '\U0001F5E1 Зброя: ' + weapons[int(inv[0])] + m1 +
                      '\n\U0001F6E1 Захист: ' + defenses[int(inv[1])] + m2 + '\n\U0001F9EA Допомога: ' +
-                     supports[int(inv[2])], reply_markup=rep)
+                     supports[int(inv[2])] + m3, reply_markup=rep)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
@@ -2976,50 +2976,54 @@ def handle_query(call):
         un1 = cdata[0]
         if call.from_user.id != int(uid1):
             if int(r.hget(call.from_user.id, 'hp')) > 0:
-                try:
-                    q = cdata[2].split()
-                    diff = int(q[1])
-                    uid2 = call.from_user.id
-                    if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
-                            int(r.hget(uid1, 'strength')) + diff:
-                        un2 = call.from_user.first_name
-                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
-                                              inline_message_id=call.inline_message_id)
-                    else:
-                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                  text='Твій русак не підходить по силі для цього бою.')
-                except:
+                if int(r.hget(uid1, 'hp')) > 0:
                     try:
+                        q = cdata[2].split()
+                        diff = int(q[1])
                         uid2 = call.from_user.id
-                        un2 = call.from_user.first_name
-                        if cdata[2] == 'tournament':
-                            try:
-                                q = cdata[3].split()
-                                if q[1][1:] == call.from_user.username:
-                                    tournament(uid1, uid2, un1, un2, call.inline_message_id)
-                                else:
-                                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                              text='Цей бій не для тебе.')
-                            except:
-                                tournament(uid1, uid2, un1, un2, call.inline_message_id)
-                        elif cdata[2] == 'private':
-                            try:
-                                q = cdata[3].split()
-                                if q[1][1:] == call.from_user.username:
-                                    bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
-                                                          inline_message_id=call.inline_message_id)
-                                else:
-                                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                              text='Цей бій не для тебе.')
-                            except:
-                                print(1/0)
+                        if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
+                                int(r.hget(uid1, 'strength')) + diff:
+                            un2 = call.from_user.first_name
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
+                                                  inline_message_id=call.inline_message_id)
                         else:
-                            print(1/0)
+                            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                      text='Твій русак не підходить по силі для цього бою.')
                     except:
-                        uid2 = call.from_user.id
-                        un2 = call.from_user.first_name
-                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
-                                              inline_message_id=call.inline_message_id)
+                        try:
+                            uid2 = call.from_user.id
+                            un2 = call.from_user.first_name
+                            if cdata[2] == 'tournament':
+                                try:
+                                    q = cdata[3].split()
+                                    if q[1][1:] == call.from_user.username:
+                                        tournament(uid1, uid2, un1, un2, call.inline_message_id)
+                                    else:
+                                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                  text='Цей бій не для тебе.')
+                                except:
+                                    tournament(uid1, uid2, un1, un2, call.inline_message_id)
+                            elif cdata[2] == 'private':
+                                try:
+                                    q = cdata[3].split()
+                                    if q[1][1:] == call.from_user.username:
+                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
+                                                              inline_message_id=call.inline_message_id)
+                                    else:
+                                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                  text='Цей бій не для тебе.')
+                                except:
+                                    print(1/0)
+                            else:
+                                print(1/0)
+                        except:
+                            uid2 = call.from_user.id
+                            un2 = call.from_user.first_name
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2),
+                                                  inline_message_id=call.inline_message_id)
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='\U0001fac0 Зараз цей русак не може битись.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='\U0001fac0 Русак лежить весь в крові (він не може '
