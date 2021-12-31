@@ -408,6 +408,9 @@ def fight(uid1, uid2, un1, un2):
                                                     '\n\U0001F54A +1000'
         r.hincrby(uid1, 'n_packs', 1)
         spirit(1000, uid2, c2, False)
+        r.hincrby(uid1, 's_weapon', -1)
+        if int(r.hget(uid1, 's_weapon')) <= 0:
+            r.hset(uid1, 'weapon', 0)
 
     if defense1 == 9:
         s1 = int(s1 * 1.3)
