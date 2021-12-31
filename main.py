@@ -279,8 +279,8 @@ def fight(uid1, uid2, un1, un2):
         r.hset(uid1, 'defense', 0)
         defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
 
-    stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit')
-    stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit')
+    stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp')
+    stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp')
     s1, s2 = int(stats11[0]), int(stats22[0])
     s11 = s1
     s22 = s2
@@ -659,7 +659,8 @@ def fight(uid1, uid2, un1, un2):
 
         if weapon1 == 15:
             meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1, 5)
-
+        r.hincrby(uid2, 'hp', -1)
+        info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)'
         win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
                        '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента стільки ж втрачає.' +
                        hach + worker + meat + cop + pag + fsb + hack)
@@ -756,6 +757,8 @@ def fight(uid1, uid2, un1, un2):
 
         if weapon2 == 15:
             meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5)
+        r.hincrby(uid2, 'hp', -1)
+        info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode()
         win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                        '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента стільки ж втрачає.' +
                        hach + worker + meat + cop + pag + fsb + hack)
