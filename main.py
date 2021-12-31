@@ -40,6 +40,8 @@ weapons = ['', 'Колючий дрин', 'РПГ-7', '', 'Бита', '', '', ''
 defenses = ['', 'Колючий щит', 'Бронежилет вагнерівця', '', '', '', '', '', '', 'Уламок бронетехніки',
             'Мухомор королівський', '', '', '', '', 'АК-47', 'Поліцейський щит', 'Прапор новоросії', '']
 
+support = ['', 'Аптечка']
+
 photos = ['https://i.ibb.co/rGd7L5n/rusnya.jpg',
 
           'https://i.ibb.co/qmkDFTP/1.jpg', 'https://i.ibb.co/hDsXjZb/2.jpg', 'https://i.ibb.co/NNmfy50/3.jpg',
@@ -77,7 +79,7 @@ sudoers = [456514639, 634799543, 379620096]
 def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
         return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
-    else:
+    elif int(r.hget(uid, 'hp')) > 0:
         stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')
         name = int(stats[0])
         c = int(stats[1])
@@ -132,6 +134,8 @@ def prepare_to_fight(uid, fn, q):
                     '\n\n\u2744\uFE0F @Random_UAbot <- отримати русака')
 
         return '\u2744\uFE0F ' + fn + ' починає битву русаків!' + query + stats
+    else:
+        return '\U0001fac0 Русак лежить весь в крові (він не може битись поки не поїсть, або не полікується).'
 
 
 def fight(uid1, uid2, un1, un2):
@@ -757,7 +761,7 @@ def fight(uid1, uid2, un1, un2):
 
         if weapon2 == 15:
             meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5)
-        r.hincrby(uid2, 'hp', -1)
+        r.hincrby(uid1, 'hp', -1)
         info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode()
         win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                        '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента стільки ж втрачає.' +
@@ -1805,6 +1809,7 @@ def feed(message):
             pass
         if not date.today().day == int(r.hget(message.from_user.id, 'time')):
             r.hset(message.from_user.id, 'time', date.today().day)
+            r.hset(message.from_user.id, 'hp', 100)
             fr = feed_rusak(message.from_user.id)
             r.hincrby(message.from_user.id, 'eat', 1)
             success = fr[0]
