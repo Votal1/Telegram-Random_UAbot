@@ -1411,7 +1411,7 @@ def battle_button_3():
 
 def invent():
     markup = types.InlineKeyboardMarkup()
-    items = {'Викинути зброю': 'drop_w', 'Викинути захист': 'drop_d'}
+    items = {'Викинути зброю': 'drop_w', 'Викинути захист': 'drop_d', 'Викинути допомогу': 'drop_s'}
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
@@ -2738,7 +2738,7 @@ def achievements(message):
 def inventory(message):
     try:
         inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 's_weapon', 's_defense', 's_support')
-        if int(inv[0]) != 0 or int(inv[1]) != 0:
+        if int(inv[0]) != 0 or int(inv[1]) != 0 or int(inv[2]) != 0:
             rep = invent()
         else:
             rep = None
@@ -3795,6 +3795,16 @@ def handle_query(call):
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='В твого русака нема захисного спорядження')
+
+    elif call.data.startswith('drop_s') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        if int(r.hget(call.from_user.id, 'support')) != 0:
+            r.hset(call.from_user.id, 'support', 0)
+            r.hset(call.from_user.id, 's_support', 0)
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Русак викинув допоміжне спорядження')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='В твого русака нема допоміжного спорядження')
 
     elif call.data.startswith('unpack') and call.from_user.id == call.message.reply_to_message.from_user.id:
         uid = call.from_user.id
