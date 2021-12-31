@@ -33,14 +33,14 @@ class_name = ['', 'Хач', 'Роботяга', 'Фокусник', 'Язичн�
               '', '', 'Гроза Кавказу', 'П`яний майстер', 'Некромант', 'Білий вождь', 'Герой Донбасу', 'Товариш майор',
               'Агент ФСБ', 'Black Hat']
 
-weapons = ['', 'Колючий дрин', 'РПГ-7', '', 'Бита', '', '', '', '', '', '',
+weapons = ['', 'Колючий дрин', 'РПГ-7', 'Посох Діда Мороза', 'Бита', '', '', '', '', '', '',
            'Травмат', 'Діамантове кайло', 'Колода з кіоску', 'Сокира Перуна',
            'АК-47', 'Гумова палиця', 'Прапор новоросії', 'Експлойт']
 
 defenses = ['', 'Колючий щит', 'Бронежилет вагнерівця', '', '', '', '', '', '', 'Уламок бронетехніки',
             'Мухомор королівський', '', '', '', '', 'АК-47', 'Поліцейський щит', 'Прапор новоросії', '']
 
-supports = ['', 'Аптечка']
+supports = ['', 'Аптечка', '', 'Совєтскоє шампанскоє']
 
 photos = ['https://i.ibb.co/rGd7L5n/rusnya.jpg',
 
@@ -403,6 +403,11 @@ def fight(uid1, uid2, un1, un2):
         r.hset(uid1, 'defense', 0)
         r.hset(uid2, 'weapon', 0)
         r.hset(uid2, 's_weapon', 0)
+    elif weapon2 == 3:
+        weapon = '\n\n\U0001F381 ' + names[name2] + ' прийшов на бій з посохом Діда Мороза і вручив ворогу подарунок!' \
+                                                    '\n\U0001F54A +1000'
+        r.hincrby(uid1, 'n_packs', 1)
+        spirit(1000, uid2, c2, False)
 
     if defense1 == 9:
         s1 = int(s1 * 1.3)
@@ -681,10 +686,25 @@ def fight(uid1, uid2, un1, un2):
         if weapon1 == 15:
             meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1, 5)
         hp(-1, uid2)
+        bottle = ''
+        if int(r.hget(uid1, 'support')) == 3:
+            bottle = '\n\U0001F37E ' + names[name1] + ' випив шампанського, а ' + names[name2] + \
+                     ' сів на пляшку.\n\u2622 +5'
+            r.hincrby(uid1, 'vodka', 5)
+            r.hincrby(uid1, 's_support', -1)
+            if int(r.hget(uid1, 's_support')) <= 0:
+                r.hset(uid1, 'support', 0)
+        elif int(r.hget(uid2, 'support')) == 3:
+            bottle = '\n\U0001F37E ' + names[name1] + ' випив шампанського, а ' + names[name2] + \
+                     ' сів на пляшку.\n\u2622 +5'
+            r.hincrby(uid1, 'vodka', 5)
+            r.hincrby(uid2, 's_support', -1)
+            if int(r.hget(uid2, 's_support')) <= 0:
+                r.hset(uid2, 'support', 0)
         info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)'
         win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
                        '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента стільки ж втрачає.' +
-                       hach + worker + meat + cop + pag + fsb + hack)
+                       hach + worker + meat + cop + pag + fsb + hack + bottle)
         return info + win_info
     elif win == ['2']:
         if s22 / s11 > 2:
@@ -779,10 +799,25 @@ def fight(uid1, uid2, un1, un2):
         if weapon2 == 15:
             meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5)
         hp(-1, uid1)
+        bottle = ''
+        if int(r.hget(uid2, 'support')) == 3:
+            bottle = '\n\U0001F37E ' + names[name2] + ' випив шампанського, а ' + names[name1] + \
+                     ' сів на пляшку.\n\u2622 +5'
+            r.hincrby(uid2, 'vodka', 5)
+            r.hincrby(uid2, 's_support', -1)
+            if int(r.hget(uid2, 's_support')) <= 0:
+                r.hset(uid2, 'support', 0)
+        elif int(r.hget(uid1, 'support')) == 3:
+            bottle = '\n\U0001F37E ' + names[name2] + ' випив шампанського, а ' + names[name1] + \
+                     ' сів на пляшку.\n\u2622 +5'
+            r.hincrby(uid2, 'vodka', 5)
+            r.hincrby(uid1, 's_support', -1)
+            if int(r.hget(uid1, 's_support')) <= 0:
+                r.hset(uid1, 'support', 0)
         info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode()
         win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                        '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента стільки ж втрачає.' +
-                       hach + worker + meat + cop + pag + fsb + hack)
+                       hach + worker + meat + cop + pag + fsb + hack + bottle)
         return info + win_info
 
 
@@ -3822,6 +3857,104 @@ def handle_query(call):
                 n_packs = 1
         if n_packs == 1:
             r.hincrby(uid, 'n_packs', -1)
+            r.hincrby(uid, 'opened', 1)
+
+            ran = random.choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                 weights=[20, 15, 14, 13, 12, 10, 5, 4, 3, 2, 1, 1])
+            if ran == [1]:
+                msg = '\u26AA В пакунку була загадкова цукерка. Русак її з`їв...'
+                ran2 = random.randint(1, 5)
+                if ran2 == 1:
+                    r.hincrby(uid, 'strength', 1)
+                    msg += '\n\U0001F4AA +1'
+                elif ran2 == 2:
+                    intellect(1, uid)
+                    msg += '\n\U0001F9E0 +1'
+                elif ran2 == 3:
+                    spirit(1, uid, cl, False)
+                    msg += '\n\U0001F54A +1'
+                elif ran2 == 4:
+                    r.hincrby(uid, 'injure', 1)
+                    msg += '\n\U0001fa78 +1'
+                elif ran2 == 5:
+                    hp(1, uid)
+                    msg += '\n\U0001fac0 +1'
+                bot.edit_message_text(msg, call.message.chat.id, call.message.id)
+            elif ran == [2]:
+                spirit(2000, uid, cl, False)
+                bot.edit_message_text('\u26AA В цьому пакунку лежить торбинка мандаринів.\n\U0001F54A +2000',
+                                      call.message.chat.id, call.message.id)
+            elif ran == [3]:
+                spirit(1000, uid, cl, False)
+                msg = '\u26AA В цьому пакунку знайдено дві упаковки бенгальських вогнів.\n\U0001F54A +1000'
+                if r.hexists(uid, 'name2') == 1:
+                    msg += ' \U0001F54A +1000'
+                    r.hincrby(uid, 'spirit2', 1000)
+                    if int(r.hget(uid, 'class2')) == 4 or int(r.hget(uid, 'class2')) == 14 or \
+                            int(r.hget(uid, 'class2')) == 24:
+                        if int(r.hget(uid, 'spirit2')) > 20000:
+                            r.hset(uid, 'spirit2', 20000)
+                    elif int(r.hget(uid, 'spirit2')) > 10000:
+                        r.hset(uid, 'spirit2', 10000)
+                bot.edit_message_text(msg, call.message.chat.id, call.message.id)
+            elif ran == [4]:
+                r.hincrby(uid, 'money', 40)
+                bot.edit_message_text('\u26AA Знайдено новорічну листівку з невеликим вкладенням.\n\U0001F4B5 +40',
+                                      call.message.chat.id, call.message.id)
+            elif ran == [5]:
+                if int(r.hget(uid, 'support')) == 3:
+                    r.hincrby(uid, 'r_support', 5)
+                else:
+                    r.hset(uid, 'support', 3)
+                    r.hset(uid, 'r_support', 5)
+                bot.edit_message_text('\U0001f535 В пакунку лежить Совєтскоє Шампанскоє. '
+                                      'Його можна застосувати в боях...',
+                                      call.message.chat.id, call.message.id)
+            elif ran == [6]:
+                r.hincrby(uid, 'strength', 10)
+                bot.edit_message_text('\U0001f535 В пакунку лежить Тульський пряник.\n\U0001F4AA +10',
+                                      call.message.chat.id, call.message.id)
+            elif ran == [7]:
+                r.hincrby(uid, 'money', 100)
+                bot.edit_message_text('\U0001f535 В цьому новорічному подарунку знайдено багато грошей.'
+                                      '\n\U0001F4B5 +100',
+                                      call.message.chat.id, call.message.id)
+            elif ran == [8]:
+                msg = '\U0001f7e3 Пакунок виявився доволі важким, адже там цілий ящик мандаринів!'
+                if int(r.hget(uid, 'intellect')) >= 20:
+                    spirit(5000, uid, cl, False)
+                    msg += '\n\U0001F54A +5000'
+                else:
+                    intellect(1, uid)
+                    msg += '\n\U0001F9E0 +1'
+                bot.edit_message_text(msg, call.message.chat.id, call.message.id)
+            elif ran == [9]:
+                r.hset(uid, 'time', 0)
+                emoji = random.choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                bot.edit_message_text('\U0001f7e3 В цьому широкому пакунку знаходиться тазік олів`є. Русак також отри'
+                                      'мав невелику порцію.\n' + emoji + ' +1', call.message.chat.id, call.message.id)
+            elif ran == [10]:
+                r.hincrby(uid, 'money', 400)
+                bot.edit_message_text('\U0001f7e3 В цьому пакунку знайдено велиику заначку.'
+                                      '\n\U0001F4B5 +400', call.message.chat.id, call.message.id)
+            elif ran == [11]:
+                for member in r.smembers(call.message.chat.id):
+                    spirit(2000, int(member), int(r.hget(int(member), 'class')), False)
+                bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено феєрверк. Після його запуску всі русаки '
+                                      'чату насолоджувались видовищем.\n\U0001F54A +2000',
+                                      call.message.chat.id, call.message.id)
+            elif ran == [12]:
+                if cl != 6 and cl != 16 and cl != 26:
+                    r.hset(uid, 'weapon', 3)
+                    r.hset(uid, 's_weapon', 10)
+                    bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено посох Діда Мороза - легендарного '
+                                          'персонажа, в якого вірять русаки.', call.message.chat.id, call.message.id)
+                else:
+                    for member in r.smembers(call.message.chat.id):
+                        spirit(2000, int(member), int(r.hget(int(member), 'class')), False)
+                    bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено феєрверк. Після його запуску всі русаки '
+                                          'чату насолоджувались видовищем.\n\U0001F54A +2000',
+                                          call.message.chat.id, call.message.id)
 
         elif int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
             if int(r.hget(uid, 'packs')) > 0:
