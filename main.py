@@ -1462,7 +1462,7 @@ def unpack():
 
 def boost():
     markup = types.InlineKeyboardMarkup()
-    items = {'Отримати подарунок': 'boost'}
+    items = {'Отримати подарунок': 'boost2'}
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
@@ -1769,6 +1769,14 @@ def handle_help(message):
                           "Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n"
                           "Щоб взяти русака напиши команду \n/donbass\nВсі команди - /commands\nДетальна інформація про"
                           " русаків -\nhttps://t.me/randomuanews/4")
+    if message.from_user.id == 456514639:
+        bot.send_message(-1001508218205, '<b>Місцева газета Соледару «Гойський бульвар» вітає вас з Новим Роком!\n'
+                                         'Бажаємо вашим русакам ще пліднішої роботи в шахтах, більше перемог у '
+                                         'сутичках з колегами і звісно побільше горілки та легендарок в пакунках! '
+                                         'З нагоди свята, адміністрація Соледару дарує кожному новорічні пакунки!\n'
+                                         'В новому році, на вас чекає ще більше цікавих подій та турнірів! Слідкуйте '
+                                         'за нашими новинами, скоро нові класи!</b>',
+                         reply_markup=boost(), parse_mode='HTML')
 
 
 @bot.message_handler(commands=['links'])
@@ -2420,27 +2428,27 @@ def war(cid, location, big_battle):
                 r.hincrby(win, 'strength', 10)
                 class_reward = '\U0001F919: \U0001F4AA +10'
                 r.hset(win, 'hach_time', date.today().day)
-    if location == 'Битва на покинутому заводі':
+    elif location == 'Битва на покинутому заводі':
         if wc == 2 or wc == 12 or wc == 22:
             class_reward = '\U0001F9F0: \U0001F4B5 +5 \u2622 +10'
             r.hincrby(win, 'money', 5)
             r.hincrby(win, 'vodka', 10)
-    if location == 'Битва в темному лісі':
+    elif location == 'Битва в темному лісі':
         if wc == 3 or wc == 13 or wc == 23:
             class_reward = '\U0001F52E: \U0001F54A +2000\nВсі інші учасники битви втратили по 1000 бойового духу.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
                 spirit(-1000, member, int(r.hget(member, 'class')), fi=False)
             spirit(2000, win, wc, fi=False)
-    if location == 'Битва біля старого дуба':
+    elif location == 'Битва біля старого дуба':
         if wc == 4 or wc == 14 or wc == 24:
             class_reward = '\U0001F5FF: \U0001F54A +10000'
             spirit(10000, win, wc, fi=False)
-    if location == 'Битва в житловому районі':
+    elif location == 'Битва в житловому районі':
         if wc == 5 or wc == 15 or wc == 25:
             class_reward = '\U0001fa96: \u2622 +15'
             r.hincrby(win, 'vodka', 15)
-    if location == 'Битва біля поліцейського відділку':
+    elif location == 'Битва біля поліцейського відділку':
         if wc == 6 or wc == 16 or wc == 26:
             class_reward = '\U0001F46E: \U0001F4B5 +5'
             r.hincrby(win, 'money', 5)
@@ -2451,15 +2459,18 @@ def war(cid, location, big_battle):
                 r.hset(win, 'defense', 16)
                 r.hincrby(win, 's_defense', 10)
                 class_reward = '\U0001F46E: \U0001F4B5 +5 \U0001F6E1 +10'
-    if location == 'Битва в офісі ОПЗЖ':
+    elif location == 'Битва в офісі ОПЗЖ':
         if wc == 7 or wc == 17 or wc == 27:
             class_reward = '\U0001F921: \U0001F3C5 +1 \U0001F3C6 +5'
             r.hincrby(win, 'wins', 5)
             r.hincrby(win, 'trophy', 1)
-    if location == 'Битва в серверній кімнаті':
+    elif location == 'Битва в серверній кімнаті':
         if wc == 8 or wc == 18 or wc == 28:
             class_reward = '\U0001F4DF: \U0001F4B5 +20'
             r.hincrby(win, 'money', 20)
+    elif location == 'Битва біля новорічної ялинки':
+        class_reward = '\U0001F381 +1'
+        r.hincrby(win, 'n_packs', 1)
 
     time.sleep(10)
     r.hdel('battle' + str(cid), 'start')
@@ -3097,7 +3108,8 @@ def handle_query(call):
                 ran = random.choice(['Битва в Соледарі', 'Битва на овечій фермі', 'Битва на покинутому заводі',
                                      'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
                                      'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
-                                     'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП'])
+                                     'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП',
+                                     'Битва біля новорічної ялинки'])
                 big_battle = True
                 try:
                     bot.unpin_chat_message(chat_id=call.message.chat.id,
@@ -4116,32 +4128,32 @@ def handle_query(call):
         else:
             bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id, call.message.id)
 
-    elif call.data.startswith('boost'):
-        if r.hexists(call.from_user.id, 'gift1') == 0:
+    elif call.data.startswith('boost2'):
+        if r.hexists(call.from_user.id, 'gift2') == 0:
             if bot.get_chat_member(call.message.chat.id, call.from_user.id).status == 'left':
-                r.hincrby(call.from_user.id, 'packs', 5)
-                r.hset(call.from_user.id, 'gift1', 1)
+                r.hincrby(call.from_user.id, 'n_packs', 5)
+                r.hset(call.from_user.id, 'gift2', 1)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Дякую за інтерес проявлений до бота! '
                                                'Буду вдячний за його поширення.\n\n'
-                                               '\U0001F4E6 Отримано 5 пакунків\n\n'
+                                               '\U0001F4E6 Отримано 5 новорічних пакунків\n\n'
                                                'Підпишись на канал щоб отримати більше!')
             else:
-                r.hincrby(call.from_user.id, 'packs', 10)
-                r.hset(call.from_user.id, 'gift1', 2)
+                r.hincrby(call.from_user.id, 'n_packs', 10)
+                r.hset(call.from_user.id, 'gift2', 2)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Дякую за інтерес проявлений до бота! '
                                                'Буду вдячний за його поширення.\n\n'
-                                               '\U0001F4E6 Отримано 10 пакунків')
+                                               '\U0001F4E6 Отримано 10 новорічних пакунків')
         else:
-            if int(r.hget(call.from_user.id, 'gift1')) == 1:
+            if int(r.hget(call.from_user.id, 'gift2')) == 1:
                 if bot.get_chat_member(call.message.chat.id, call.from_user.id).status != 'left':
-                    r.hincrby(call.from_user.id, 'packs', 5)
-                    r.hset(call.from_user.id, 'gift1', 2)
+                    r.hincrby(call.from_user.id, 'n_packs', 5)
+                    r.hset(call.from_user.id, 'gift2', 2)
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text='Дякую за інтерес проявлений до бота! '
                                                    'Буду вдячний за його поширення.\n\n'
-                                                   '\U0001F4E6 Отримано 5 пакунків')
+                                                   '\U0001F4E6 Отримано 5 новорічних пакунків')
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text='Підпишись на канал, щоб отримати більше подарунків.')
