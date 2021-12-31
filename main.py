@@ -135,7 +135,7 @@ def prepare_to_fight(uid, fn, q):
 
         return '\u2744\uFE0F ' + fn + ' починає битву русаків!' + query + stats
     else:
-        return '\U0001fac0 Русак лежить весь в крові (він не може битись поки не поїсть, або не полікується).'
+        return '\U0001fac0 Русак лежить весь в крові.\nВін не може битись поки не поїсть, або не полікується.'
 
 
 def fight(uid1, uid2, un1, un2):
@@ -284,12 +284,12 @@ def fight(uid1, uid2, un1, un2):
         defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
 
     if int(r.hget(uid1, 'support')) == 1:
-        hp(4, uid1)
+        hp(10, uid1)
         r.hincrby(uid1, 's_support', -1)
         if int(r.hget(uid1, 's_support')) <= 0:
             r.hset(uid1, 'support', 0)
     if int(r.hget(uid2, 'support')) == 1:
-        hp(4, uid2)
+        hp(10, uid2)
         r.hincrby(uid2, 's_support', -1)
         if int(r.hget(uid2, 's_support')) <= 0:
             r.hset(uid2, 'support', 0)
@@ -2016,7 +2016,7 @@ def shop(message):
                                        '\n\U0001F6E1 Колючий щит [Захист] - працює так само як дрин, тільки знижує '
                                        'бойовий дух тому, хто атакує.'
                                        '\n\U0001F9EA Аптечка [Допомога, міцність=5] - збільшує здоров`я на 5 і на '
-                                       '4 кожного бою.'
+                                       '10 кожного бою.'
                                        '\n\U0001F4B3 Трофейний паспорт - поміняє ім`я русака на інше, випадкове.'
                                        '\n\U0001F3DA '
                                        'Утеплена будка - 15 додаткової сили при кожному годуванні русака '
@@ -2775,7 +2775,12 @@ def inventory(message):
 def pack(message):
     if r.hexists(message.from_user.id, 'name') == 1:
         packs = int(r.hget(message.from_user.id, 'packs'))
-        if packs != 0:
+        if r.hexists(message.from_user.id, 'n_packs'):
+            if int(r.hget(message.from_user.id, 'n_packs')) > 0:
+                bot.reply_to(message, '\U0001F381 Новорічні пакунки: ' +
+                             r.hget(message.from_user.id, 'n_packs').decode() + '\n\nВідкрити?',
+                             reply_markup=unpack())
+        elif packs != 0:
             bot.reply_to(message, '\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
                          reply_markup=unpack())
         else:
@@ -3026,8 +3031,8 @@ def handle_query(call):
                                               text='\U0001fac0 Зараз цей русак не може битись.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                          text='\U0001fac0 Русак лежить весь в крові (він не може '
-                                               'битись поки не поїсть, або не полікується).')
+                                          text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
+                                               'битись поки не поїсть, або не полікується.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти хочеш атакувати свого русака'
                                                                                        ', але розумієш, що він зараз ма'
@@ -3391,6 +3396,7 @@ def handle_query(call):
         if int(r.hget(call.from_user.id, 'support')) == 0:
             if int(r.hget(call.from_user.id, 'money')) >= 1:
                 r.hincrby(call.from_user.id, 'money', -1)
+                r.hincrby(call.from_user.id, 'hp', 5)
                 r.hset(call.from_user.id, 'support', 1)
                 r.hset(call.from_user.id, 's_support', 5)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -3809,7 +3815,15 @@ def handle_query(call):
     elif call.data.startswith('unpack') and call.from_user.id == call.message.reply_to_message.from_user.id:
         uid = call.from_user.id
         cl = int(r.hget(uid, 'class'))
-        if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
+
+        n_packs = 0
+        if r.hexists(uid, 'n_packs') == 1:
+            if int(r.hget(uid, 'n_packs')) > 0:
+                n_packs = 1
+        if n_packs == 1:
+            r.hincrby(uid, 'n_packs', -1)
+
+        elif int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
             if int(r.hget(uid, 'packs')) > 0:
                 r.hincrby(uid, 'packs', -1)
             else:
