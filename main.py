@@ -2810,11 +2810,13 @@ def inventory(message):
 def pack(message):
     if r.hexists(message.from_user.id, 'name') == 1:
         packs = int(r.hget(message.from_user.id, 'packs'))
+        n_packs = 0
         if r.hexists(message.from_user.id, 'n_packs'):
             if int(r.hget(message.from_user.id, 'n_packs')) > 0:
-                bot.reply_to(message, '\U0001F381 Новорічні пакунки: ' +
-                             r.hget(message.from_user.id, 'n_packs').decode() + '\n\nВідкрити?',
-                             reply_markup=unpack())
+                n_packs = 1
+        if n_packs == 1:
+            bot.reply_to(message, '\U0001F381 Новорічні пакунки: ' +
+                         r.hget(message.from_user.id, 'n_packs').decode() + '\n\nВідкрити?', reply_markup=unpack())
         elif packs != 0:
             bot.reply_to(message, '\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
                          reply_markup=unpack())
@@ -3903,10 +3905,10 @@ def handle_query(call):
                                       call.message.chat.id, call.message.id)
             elif ran == [5]:
                 if int(r.hget(uid, 'support')) == 3:
-                    r.hincrby(uid, 'r_support', 5)
+                    r.hincrby(uid, 's_support', 5)
                 else:
                     r.hset(uid, 'support', 3)
-                    r.hset(uid, 'r_support', 5)
+                    r.hset(uid, 's_support', 5)
                 bot.edit_message_text('\U0001f535 В пакунку лежить Совєтскоє Шампанскоє. '
                                       'Його можна застосувати в боях...',
                                       call.message.chat.id, call.message.id)
