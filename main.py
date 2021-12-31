@@ -304,9 +304,9 @@ def fight(uid1, uid2, un1, un2):
     hp1, hp2 = int(stats11[3]), int(stats22[3])
 
     if hp1 >= 90:
-        s1 = s1 * 1.1
+        s1 = int(s1 * 1.1)
     if hp2 >= 90:
-        s2 = s2 * 1.1
+        s2 = int(s2 * 1.1)
 
     if int(r.hget(uid1, 'injure')) > 0:
         s1, s11, i1, bd1 = injure(uid1, True)
