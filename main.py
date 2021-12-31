@@ -1774,14 +1774,15 @@ def my_rusak(message):
             r_photo = photos[int(r.hget(message.from_user.id, 'photo'))]
         except:
             r_photo = photos[0]
-        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms')
+        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp')
         if int(stats[3]) > 0:
             inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
         if int(stats[4]) > 0:
             ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + cl + ms + inj
+                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[5].decode() \
+                     + cl + ms + inj
         bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
