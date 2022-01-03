@@ -1,9 +1,9 @@
-import random
 import telebot
 from telebot import types
 import os
 from flask import Flask, request
 import redis
+from random import randint, choice, choices, uniform, randrange, sample
 from datetime import date
 from datetime import datetime
 import time
@@ -33,15 +33,15 @@ def prepare_to_fight(uid, fn, q):
             s, s1, i, bd = injure(uid, False)
 
         if c == 3:
-            s = random.randint(10, 1000)
-            i = random.randint(1, 10)
-            bd = random.randint(0, 10000)
+            s = randint(10, 1000)
+            i = randint(1, 10)
+            bd = randint(0, 10000)
         elif c == 13 or c == 23:
-            s = random.randint(200, 2000)
-            i = random.randint(10, 20)
-            bd = random.randint(0, 10000)
+            s = randint(200, 2000)
+            i = randint(10, 20)
+            bd = randint(0, 10000)
             if c == 23:
-                c = random.randint(0, len(icons))
+                c = randint(0, len(icons))
 
         query = ''
         try:
@@ -112,7 +112,7 @@ def fight(uid1, uid2, un1, un2):
     if c1 == 22:
         if int(r.hget(uid1, 'worker')) != date.today().day and int(r.hget(uid1, 'time')) == date.today().day:
             alcohol = int(r.hget(uid1, 's1'))
-            ran = random.choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
+            ran = choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
             if ran == [1]:
                 worker += '\n\U0001F9F0 ' + names[name1] + ' отримує від начальника талон на їжу.\n'
                 r.hset(uid1, 'worker', date.today().day)
@@ -120,7 +120,7 @@ def fight(uid1, uid2, un1, un2):
     if c2 == 22:
         if int(r.hget(uid2, 'worker')) != date.today().day and int(r.hget(uid2, 'time')) == date.today().day:
             alcohol = int(r.hget(uid2, 's1'))
-            ran = random.choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
+            ran = choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
             if ran == [1]:
                 worker += '\n\U0001F9F0 ' + names[name2] + ' отримує від начальника талон на їжу.\n'
                 r.hset(uid2, 'worker', date.today().day)
@@ -128,7 +128,7 @@ def fight(uid1, uid2, un1, un2):
     if c1 == 26:
         if c2 != 6 and c2 != 16 and c2 != 26:
             if weapon2 != 0:
-                cop1 = random.choices([1, 0], weights=[20, 80])
+                cop1 = choices([1, 0], weights=[20, 80])
                 if cop1 == [1]:
                     if weapon2 == 15 or weapon2 == 17:
                         r.hset(uid2, 'weapon', 0)
@@ -148,7 +148,7 @@ def fight(uid1, uid2, un1, un2):
     if c2 == 26:
         if c1 != 6 and c1 != 16 and c1 != 26:
             if weapon1 != 0:
-                cop2 = random.choices([1, 0], weights=[20, 80])
+                cop2 = choices([1, 0], weights=[20, 80])
                 if cop2 == [1]:
                     if defense1 == 15 or defense1 == 17:
                         r.hset(uid1, 'weapon', 0)
@@ -167,31 +167,31 @@ def fight(uid1, uid2, un1, un2):
                            ' вилучив у ворога захисне спорядження! За це він отримав поліцейський щит.\n'
 
     if c1 == 27 and c2 == 0:
-        fsb1 = random.choices([1, 0], weights=[5, 95])
+        fsb1 = choices([1, 0], weights=[5, 95])
         if fsb1 == [1]:
             r.hset(uid2, 'class', 7)
-            r.hset(uid2, 'photo', random.randint(31, 35))
+            r.hset(uid2, 'photo', randint(31, 35))
             r.hincrby(uid1, 'money', 20)
             fsb += '\n\U0001F921 ' + names[name1] + ' завербував ворога!\n\U0001F4B5 +20\n'
     if c2 == 27 and c1 == 0:
-        fsb2 = random.choices([1, 0], weights=[5, 95])
+        fsb2 = choices([1, 0], weights=[5, 95])
         if fsb2 == [1]:
             r.hset(uid1, 'class', 7)
-            r.hset(uid1, 'photo', random.randint(31, 35))
+            r.hset(uid1, 'photo', randint(31, 35))
             r.hincrby(uid2, 'money', 20)
             fsb += '\n\U0001F921 ' + names[name2] + ' завербував ворога!\n\U0001F4B5 +20\n'
 
     if weapon2 == 1 and int(r.hget(uid1, 'spirit')) >= 300:
         foc = 1
         if c1 == 3 or c1 == 13 or c1 == 23:
-            foc = random.choice([0, 0, 0, 0, 1])
+            foc = choice([0, 0, 0, 0, 1])
         if foc == 1:
             if int(r.hget(uid1, 'spirit')) <= 1000:
                 r.hset(uid1, 'spirit', 0)
             elif 1000 < int(r.hget(uid1, 'spirit')) < 2500:
                 r.hincrby(uid1, 'spirit', -1000)
             else:
-                chance = random.choice([2.5, 3.333, 5])
+                chance = choice([2.5, 3.333, 5])
                 r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
             r.hset(uid2, 'weapon', 0)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій колючий дрин, опонента це' \
@@ -205,7 +205,7 @@ def fight(uid1, uid2, un1, un2):
         elif 1000 < int(r.hget(uid1, 'spirit')) < 2500:
             r.hincrby(uid1, 'spirit', -1000)
         else:
-            chance = random.choice([2.5, 3.333, 5])
+            chance = choice([2.5, 3.333, 5])
             r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
         r.hincrby(uid2, 's_weapon', -1)
         if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -219,7 +219,7 @@ def fight(uid1, uid2, un1, un2):
         elif 1000 < int(r.hget(uid2, 'spirit')) < 2500:
             r.hincrby(uid2, 'spirit', -1000)
         else:
-            chance = random.choice([2.5, 3.333, 5])
+            chance = choice([2.5, 3.333, 5])
             r.hincrby(uid2, 'spirit', -int(int(r.hget(uid2, 'spirit')) / chance))
         r.hset(uid1, 'defense', 0)
         defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
@@ -305,7 +305,7 @@ def fight(uid1, uid2, un1, un2):
         if int(r.hget(uid2, 's_weapon')) <= 0:
             r.hset(uid2, 'weapon', 0)
             r.hset(uid2, 'defense', 0)
-        ran = random.choices([1, 2], weights=[98, 2])
+        ran = choices([1, 2], weights=[98, 2])
         if ran == [2] and defense1 != 2:
             weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав ' \
                               'важкі поранення.'
@@ -375,7 +375,7 @@ def fight(uid1, uid2, un1, un2):
         if int(r.hget(uid1, 's_weapon')) <= 0:
             r.hset(uid1, 'weapon', 0)
             r.hset(uid1, 'defense', 0)
-        ran = random.choices([1, 2], weights=[98, 2])
+        ran = choices([1, 2], weights=[98, 2])
         if ran == [2] and defense2 != 2:
             defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                                 ' важкі поранення.'
@@ -493,9 +493,9 @@ def fight(uid1, uid2, un1, un2):
             ch = 20
         s1 = int(s1 * (1 + 0.025 * ch))
         if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300 and int(r.hget(uid2, 'strength')) >= 30:
-            shot = random.choices([1, 0], weights=[10, 90])
+            shot = choices([1, 0], weights=[10, 90])
             if shot == [1]:
-                ran = random.randint(5, 10)
+                ran = randint(5, 10)
                 meat += '\n\U0001fa96 ' + names[name1] + ' +1 \U0001fa78 | ' + names[name2] + ' +' + \
                         str(ran) + ' \U0001fa78\n'
                 r.hincrby(uid1, 'injure', 1)
@@ -506,9 +506,9 @@ def fight(uid1, uid2, un1, un2):
             ch = 20
         s2 = int(s2 * (1 + 0.025 * ch))
         if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300 and int(r.hget(uid1, 'strength')) >= 30:
-            shot = random.choices([1, 0], weights=[10, 90])
+            shot = choices([1, 0], weights=[10, 90])
             if shot == [1]:
-                ran = random.randint(5, 10)
+                ran = randint(5, 10)
                 meat += '\n\U0001fa96 ' + names[name2] + ' +1 \U0001fa78 | ' + names[name1] + ' +' + \
                         str(ran) + ' \U0001fa78\n'
                 r.hincrby(uid2, 'injure', 1)
@@ -521,15 +521,15 @@ def fight(uid1, uid2, un1, un2):
     chance22 = chance2 / ((chance1 + chance2) / 100)
 
     if c2 != 7 and chance11 > 95:
-        win = random.choices(['1', '2'], weights=[95, 5])
+        win = choices(['1', '2'], weights=[95, 5])
     elif c1 != 7 and chance22 > 95:
-        win = random.choices(['1', '2'], weights=[5, 95])
+        win = choices(['1', '2'], weights=[5, 95])
     elif c2 == 7 and chance11 > 80:
-        win = random.choices(['1', '2'], weights=[80, 20])
+        win = choices(['1', '2'], weights=[80, 20])
     elif c1 == 7 and chance22 > 80:
-        win = random.choices(['1', '2'], weights=[20, 80])
+        win = choices(['1', '2'], weights=[20, 80])
     else:
-        win = random.choices(['1', '2'], weights=[chance1, chance2])
+        win = choices(['1', '2'], weights=[chance1, chance2])
 
     info = str('\u2744\uFE0F ' + un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' +
                icons[c1] + ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
@@ -539,11 +539,11 @@ def fight(uid1, uid2, un1, un2):
 
     if win == ['1']:
         if s11 / s22 > 2:
-            bonus = random.randint(1, 20)
+            bonus = randint(1, 20)
             grn = ''
         elif s11 / s22 < 0.5:
-            bonus = random.randint(60, 120)
-            grn = random.choices([1, 2, 3], weights=[50, 48, 2])
+            bonus = randint(60, 120)
+            grn = choices([1, 2, 3], weights=[50, 48, 2])
             if grn == [1]:
                 r.hincrby(uid1, 'money', 1)
                 grn = '\n\U0001F4B5 +1'
@@ -554,8 +554,8 @@ def fight(uid1, uid2, un1, un2):
                 r.hincrby(uid1, 'money', 3)
                 grn = '\n\U0001F4B5 +3'
         else:
-            bonus = random.randint(20, 60)
-            grn = random.choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            bonus = randint(20, 60)
+            grn = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
             if grn == [1]:
                 r.hincrby(uid1, 'money', 1)
                 grn = '\n\U0001F4B5 +1'
@@ -571,16 +571,16 @@ def fight(uid1, uid2, un1, un2):
         if hach1 == 1:
             if c1 != 1:
                 hc = s2 / (s1 + s2)
-                trick = random.choices([1, 0], weights=[hc, 1 - hc])
+                trick = choices([1, 0], weights=[hc, 1 - hc])
                 if trick == [1]:
-                    trick = random.choices([1, 2, 3], weights=[45, 45, 10])
+                    trick = choices([1, 2, 3], weights=[45, 45, 10])
                     if trick == [1]:
-                        ran = random.randint(50, 100)
+                        ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника через стегно!\n\U0001F54A -' + \
                                 str(ran) + '\n'
                         spirit(-ran, uid2, c2, fi=False)
                     elif trick == [2]:
-                        ran = random.randint(50, 100)
+                        ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника млином!\n\U0001F54A +' + \
                                 str(ran) + '\n'
                         spirit(ran, uid1, c1, fi=False)
@@ -604,9 +604,9 @@ def fight(uid1, uid2, un1, un2):
 
         hack = ''
         if c2 == 8 or c2 == 18 or c2 == 28:
-            hack1 = random.choices([0, 1], weights=[82, 18])
+            hack1 = choices([0, 1], weights=[82, 18])
             if weapon2 == 18:
-                hack1 = random.choices([0, 1], weights=[1, 99])
+                hack1 = choices([0, 1], weights=[1, 99])
                 hack = '\n\n\U0001F5E1 ' + names[name2] + ' використав експлойт...'
                 r.hincrby(uid2, 's_weapon', -1)
                 if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -652,11 +652,11 @@ def fight(uid1, uid2, un1, un2):
         return info + win_info
     elif win == ['2']:
         if s22 / s11 > 2:
-            bonus = random.randint(1, 20)
+            bonus = randint(1, 20)
             grn = ''
         elif s22 / s11 < 0.5:
-            bonus = random.randint(60, 120)
-            grn = random.choices([1, 2, 3], weights=[50, 48, 2])
+            bonus = randint(60, 120)
+            grn = choices([1, 2, 3], weights=[50, 48, 2])
             if grn == [1]:
                 r.hincrby(uid2, 'money', 1)
                 grn = '\n\U0001F4B5 +1'
@@ -667,8 +667,8 @@ def fight(uid1, uid2, un1, un2):
                 r.hincrby(uid2, 'money', 3)
                 grn = '\n\U0001F4B5 +3'
         else:
-            bonus = random.randint(20, 60)
-            grn = random.choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            bonus = randint(20, 60)
+            grn = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
             if grn == [1]:
                 r.hincrby(uid2, 'money', 1)
                 grn = '\n\U0001F4B5 +1'
@@ -684,16 +684,16 @@ def fight(uid1, uid2, un1, un2):
         if hach2 == 1:
             if c2 != 1:
                 hc = s1 / (s1 + s2)
-                trick = random.choices([1, 0], weights=[hc, 1 - hc])
+                trick = choices([1, 0], weights=[hc, 1 - hc])
                 if trick == [1]:
-                    trick = random.choices([1, 2, 3], weights=[45, 45, 10])
+                    trick = choices([1, 2, 3], weights=[45, 45, 10])
                     if trick == [1]:
-                        ran = random.randint(50, 100)
+                        ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника через стегно!\n\U0001F54A -' + \
                                 str(ran) + '\n'
                         spirit(-ran, uid1, c1, fi=False)
                     elif trick == [2]:
-                        ran = random.randint(50, 100)
+                        ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника млином!\n\U0001F54A +' + \
                                 str(ran) + '\n'
                         spirit(ran, uid2, c2, fi=False)
@@ -717,9 +717,9 @@ def fight(uid1, uid2, un1, un2):
 
         hack = ''
         if c1 == 8 or c1 == 18 or c1 == 28:
-            hack2 = random.choices([0, 1], weights=[82, 18])
+            hack2 = choices([0, 1], weights=[82, 18])
             if weapon1 == 18:
-                hack2 = random.choices([0, 1], weights=[1, 99])
+                hack2 = choices([0, 1], weights=[1, 99])
                 hack = '\n\n\U0001F5E1 ' + names[name1] + ' використав експлойт...'
                 r.hincrby(uid1, 's_weapon', -1)
                 if int(r.hget(uid1, 's_weapon')) <= 0:
@@ -791,7 +791,7 @@ def tournament(uid1, uid2, un1, un2, mid):
         if c1 == 26:
             if c2 != 6 and c2 != 16 and c2 != 26:
                 if weapon2 != 0:
-                    cop1 = random.choices([1, 0], weights=[20, 80])
+                    cop1 = choices([1, 0], weights=[20, 80])
                     if cop1 == [1]:
                         if weapon2 == 15 or weapon2 == 17:
                             r.hset(uid2, 'weapon', 0)
@@ -809,7 +809,7 @@ def tournament(uid1, uid2, un1, un2, mid):
         if c2 == 26:
             if c1 != 6 and c1 != 16 and c1 != 26:
                 if weapon1 != 0:
-                    cop2 = random.choices([1, 0], weights=[20, 80])
+                    cop2 = choices([1, 0], weights=[20, 80])
                     if cop2 == [1]:
                         if defense1 == 15 or defense1 == 17:
                             r.hset(uid1, 'weapon', 0)
@@ -828,14 +828,14 @@ def tournament(uid1, uid2, un1, un2, mid):
         if weapon2 == 1 and int(r.hget(uid1, 'spirit')) >= 300:
             foc = 1
             if c1 == 3 or c1 == 13 or c1 == 23:
-                foc = random.choice([0, 0, 0, 0, 1])
+                foc = choice([0, 0, 0, 0, 1])
             if foc == 1:
                 if int(r.hget(uid1, 'spirit')) <= 1000:
                     r.hset(uid1, 'spirit', 0)
                 elif 1000 < int(r.hget(uid1, 'spirit')) < 2500:
                     r.hincrby(uid1, 'spirit', -1000)
                 else:
-                    chance = random.choice([2.5, 3.333, 5])
+                    chance = choice([2.5, 3.333, 5])
                     r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
                 r.hset(uid2, 'weapon', 0)
                 weapon = ' \U0001F5E1'
@@ -848,7 +848,7 @@ def tournament(uid1, uid2, un1, un2, mid):
             elif 1000 < int(r.hget(uid1, 'spirit')) < 2500:
                 r.hincrby(uid1, 'spirit', -1000)
             else:
-                chance = random.choice([2.5, 3.333, 5])
+                chance = choice([2.5, 3.333, 5])
                 r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
             r.hincrby(uid2, 's_weapon', -1)
             if int(r.hget(uid2, 's_weapon')) <= 0:
@@ -861,7 +861,7 @@ def tournament(uid1, uid2, un1, un2, mid):
             elif 1000 < int(r.hget(uid2, 'spirit')) < 2500:
                 r.hincrby(uid2, 'spirit', -1000)
             else:
-                chance = random.choice([2.5, 3.333, 5])
+                chance = choice([2.5, 3.333, 5])
                 r.hincrby(uid2, 'spirit', -int(int(r.hget(uid2, 'spirit')) / chance))
             r.hset(uid1, 'defense', 0)
             defense = ' \U0001F6E1'
@@ -931,7 +931,7 @@ def tournament(uid1, uid2, un1, un2, mid):
             if int(r.hget(uid2, 's_weapon')) <= 0:
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
-            ran = random.choices([1, 2], weights=[98, 2])
+            ran = choices([1, 2], weights=[98, 2])
             if ran == [2]:
                 weapon = weapon + ' \u2620\uFE0F'
                 r.hset(uid2, 'spirit', 0)
@@ -973,7 +973,7 @@ def tournament(uid1, uid2, un1, un2, mid):
             if int(r.hget(uid1, 's_weapon')) <= 0:
                 r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
-            ran = random.choices([1, 2], weights=[98, 2])
+            ran = choices([1, 2], weights=[98, 2])
             if ran == [2]:
                 defense = defense + ' \u2620\uFE0F'
                 r.hset(uid1, 'spirit', 0)
@@ -1088,9 +1088,9 @@ def tournament(uid1, uid2, un1, un2, mid):
                 ch = 20
             s1 = int(s1 * (1 + 0.025 * ch))
             if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300 and int(r.hget(uid2, 'strength')) >= 30:
-                shot = random.choices([1, 0], weights=[10, 90])
+                shot = choices([1, 0], weights=[10, 90])
                 if shot == [1]:
-                    ran = random.randint(5, 10)
+                    ran = randint(5, 10)
                     meat += '\U0001fa96'
                     r.hincrby(uid1, 'injure', 1)
                     r.hincrby(uid2, 'injure', ran)
@@ -1100,9 +1100,9 @@ def tournament(uid1, uid2, un1, un2, mid):
                 ch = 20
             s2 = int(s2 * (1 + 0.025 * ch))
             if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300 and int(r.hget(uid1, 'strength')) >= 30:
-                shot = random.choices([1, 0], weights=[10, 90])
+                shot = choices([1, 0], weights=[10, 90])
                 if shot == [1]:
-                    ran = random.randint(5, 10)
+                    ran = randint(5, 10)
                     meat += ' \U0001fa96'
                     r.hincrby(uid2, 'injure', 1)
                     r.hincrby(uid1, 'injure', ran)
@@ -1114,15 +1114,15 @@ def tournament(uid1, uid2, un1, un2, mid):
         chance22 = chance2 / ((chance1 + chance2) / 100)
 
         if chance11 > 95:
-            win = random.choices(['1', '2'], weights=[95, 5])
+            win = choices(['1', '2'], weights=[95, 5])
         elif chance22 > 95:
-            win = random.choices(['1', '2'], weights=[5, 95])
+            win = choices(['1', '2'], weights=[5, 95])
         elif c2 == 7 and chance1 > 80:
-            win = random.choices(['1', '2'], weights=[80, 20])
+            win = choices(['1', '2'], weights=[80, 20])
         elif c1 == 7 and chance2 > 80:
-            win = random.choices(['1', '2'], weights=[20, 80])
+            win = choices(['1', '2'], weights=[20, 80])
         else:
-            win = random.choices(['1', '2'], weights=[chance1, chance2])
+            win = choices(['1', '2'], weights=[chance1, chance2])
 
         if loop == 0:
             if int(r.hget(uid1, 'injure')) > 0:
@@ -1160,34 +1160,34 @@ def tournament(uid1, uid2, un1, un2, mid):
 
 
 def get_rusak():
-    name = random.randrange(0, len(names))
-    strength = random.randint(10, 50)
-    mind = int(random.choice(['1', '1', '1', '1', '2']))
+    name = randrange(0, len(names))
+    strength = randint(10, 50)
+    mind = int(choice(['1', '1', '1', '1', '2']))
     return name, strength, mind
 
 
 def feed_rusak(uid):
-    success = int(random.choice(['1', '1', '1', '1', '0']))
-    strength = random.randint(1, 30)
+    success = int(choice(['1', '1', '1', '1', '0']))
+    strength = randint(1, 30)
     mind = 0
     if int(r.hget(uid, 'intellect')) < 20:
-        mind = int(random.choice(['1', '0', '0', '0', '0']))
-    bd = int(random.choice(['1', '0', '0']))
+        mind = int(choice(['1', '0', '0', '0', '0']))
+    bd = int(choice(['1', '0', '0']))
     return success, strength, mind, bd
 
 
 def mine_salt(s2):
-    success = int(random.choice(['1', '1', '1', '1', '0']))
+    success = int(choice(['1', '1', '1', '1', '0']))
     money = 5
     if s2 == 1:
-        money = random.randint(3, 8)
+        money = randint(3, 8)
     elif s2 == 2:
-        money = random.randint(4, 9)
+        money = randint(4, 9)
     elif s2 >= 3:
-        money = random.randint(5, 10)
-    mind = int(random.choice(['1', '0', '0', '0', '0', '0', '0', '0', '0', '0']))
+        money = randint(5, 10)
+    mind = int(choice(['1', '0', '0', '0', '0', '0', '0', '0', '0', '0']))
     if s2 >= 4:
-        mind = int(random.choice(['1', '0', '0', '0', '0']))
+        mind = int(choice(['1', '0', '0', '0', '0']))
     return success, money, mind
 
 
@@ -1443,7 +1443,7 @@ def spirit(value, uid, c, fi):
 
 
 def vodka(uid, cl):
-    ran = random.randint(10, 70)
+    ran = randint(10, 70)
     increase = ran * int(r.hget(uid, 's1'))
     spirit(increase, uid, cl, fi=False)
     r.hincrby(uid, 'vodka', 1)
@@ -1491,7 +1491,7 @@ def pastLife():
             'Робот з Boston Dynamics', 'Канадський українець', "Дощовий черв`як звичайний", 'Космонавт',
             'Пірат', 'Французька дворянка', 'Повія з Санкт-Петербурга', 'Американський агент',
             'Розбійник', 'Серійний вбивця', 'Безхатько', 'Сольовий торчок']
-    ran = random.choice(life)
+    ran = choice(life)
     return ran
 
 
@@ -1512,14 +1512,14 @@ def earnings():
                '\ud83c\udde7\ud83c\uddf7 Бразилія', '\ud83c\udde6\ud83c\uddfa Австралія',
                '\ud83c\uddec\ud83c\udde7 Великобританія', '\ud83c\udde6\ud83c\uddf7 Аргентина',
                '\ud83c\udde6\ud83c\uddea ОАЕ', '\ud83c\uddf3\ud83c\uddff Нова Зеландія']
-    ran = random.choice(country)
+    ran = choice(country)
     return ran
 
 
 def political():
-    a1 = random.choice(['Економічно праві - ', 'Економічно ліві - '])
-    a2 = random.choice(['Авторитаризм - ', 'Лібертаріанство - '])
-    ran = a1 + str(random.randint(0, 100)) + '%\n' + a2 + str(random.randint(0, 100)) + '%'
+    a1 = choice(['Економічно праві - ', 'Економічно ліві - '])
+    a2 = choice(['Авторитаризм - ', 'Лібертаріанство - '])
+    ran = a1 + str(randint(0, 100)) + '%\n' + a2 + str(randint(0, 100)) + '%'
     return ran
 
 
@@ -1529,41 +1529,40 @@ def question():
           '\u2b1c\ufe0f Ніколи \u2b1c\ufe0f', '\ud83d\udfea Скорше так, ніж ні \ud83d\udfea',
           '\ud83d\udfe7 Скорше ні, ніж так \ud83d\udfe7', '\ud83d\udfe8 Слава Україні! \ud83d\udfe6'
           ])
-    ran = '-----|' + random.choice(q) + '|-----'
+    ran = '-----|' + choice(q) + '|-----'
     return ran
 
 
 def love():
-    i = random.randint(0, 100)
-    s = random.choice(['\ud83c\udff3\u200d\ud83c\udf08', '\ud83d\udc9a', '\ud83d\udc9c', '\u2764\ufe0f',
-                       '\ud83d\udc9e', '\ud83d\udc96', '\ud83d\udc98', '\ud83d\udc85'])
+    i = randint(0, 100)
+    s = choice(['\ud83c\udff3\u200d\ud83c\udf08', '\ud83d\udc9a', '\ud83d\udc9c', '\u2764\ufe0f',
+                '\ud83d\udc9e', '\ud83d\udc96', '\ud83d\udc98', '\ud83d\udc85'])
     ran = str(s) + ' ' + str(i) + '% ' + str(s)
     return ran
 
 
 def zradoMoga():
-    ran = random.choice(['\ud83c\uddfa\ud83c\udde6 Перемога \ud83c\uddfa\ud83c\udde6',
-                         '\u2721 Зрада \ud83c\uddf7\ud83c\uddfa', '\u23f3 Боротьба триває',
-                         '\ud83c\uddfa\ud83c\udde6 Перемога \ud83c\uddfa\ud83c\udde6',
-                         '\u2721 Зрада \ud83c\uddf7\ud83c\uddfa'])
+    ran = choice(['\ud83c\uddfa\ud83c\udde6 Перемога \ud83c\uddfa\ud83c\udde6', '\u2721 Зрада \ud83c\uddf7\ud83c\uddfa',
+                  '\u23f3 Боротьба триває', '\ud83c\uddfa\ud83c\udde6 Перемога \ud83c\uddfa\ud83c\udde6',
+                  '\u2721 Зрада \ud83c\uddf7\ud83c\uddfa'])
     return ran
 
 
 def penis():
-    normal = f'Твій пісюн - {random.uniform(5.0, 16.0):.2f} см'
-    small = f'Твій мініган - {random.uniform(0.0, 5.0):.2f} см'
-    big = f'Твій моцний гилун - {random.uniform(16.0, 40):.2f} см'
-    rare = random.choice(['Найбільший член в чаті', 'Найменший член в чаті'])
+    normal = f'Твій пісюн - {uniform(5.0, 16.0):.2f} см'
+    small = f'Твій мініган - {uniform(0.0, 5.0):.2f} см'
+    big = f'Твій моцний гилун - {uniform(16.0, 40):.2f} см'
+    rare = choice(['Найбільший член в чаті', 'Найменший член в чаті'])
     vg = 'В тебе немає пісюна \ud83c\udf1a'
-    decor = random.choice(['\ud83c\udf46 ', '\ud83e\udd55 ', '\ud83d\udc46 ',
-                           '\ud83d\udc4c ', '\ud83c\udf36 ', '\u2642\ufe0f '])
-    ran = decor + random.choice([normal, normal, normal, normal, small, small, big, big, rare, vg])
+    decor = choice(['\ud83c\udf46 ', '\ud83e\udd55 ', '\ud83d\udc46 ',
+                    '\ud83d\udc4c ', '\ud83c\udf36 ', '\u2642\ufe0f '])
+    ran = decor + choice([normal, normal, normal, normal, small, small, big, big, rare, vg])
     return ran
 
 
 def choose(q):
-    s = random.choice(['\ud83c\udfb0 ', '\ud83d\udc49 ', '\u270d ', '\ud83c\udf9b ',
-                       '\ud83d\udcdf ', '\u2696 ', '\ud83d\udcca ', '\u21aa\ufe0f '])
+    s = choice(['\ud83c\udfb0 ', '\ud83d\udc49 ', '\u270d ', '\ud83c\udf9b ',
+                '\ud83d\udcdf ', '\u2696 ', '\ud83d\udcca ', '\u21aa\ufe0f '])
     q = q.replace(' чи ', '2a2b').replace(' або ', '2a2b').replace('?', '')
     q = q.replace(' ', '1a2b')
     q = q.replace('2a2b', ' ').split()
@@ -1571,25 +1570,21 @@ def choose(q):
     for i in q:
         i = i.replace('1a2b', ' ').strip()
         end.append(i)
-    ran = s + random.choice(end)
+    ran = s + choice(end)
     return ran
 
 
 def beer():
-    beer1 = '\ud83c\udf7a ' + random.choice(['Львівське різдвяне', 'Bud', 'Львівське 1715', 'Carlsberg',
-                                             'Kronenbourg Blanc', 'Staropramen', 'Чернігівське', 'Оболонь',
-                                             'Stella Artois', 'Tuborg', 'Corona Extra', 'Krušovice',
-                                             'Старий Мельник', 'Velkopopovicky Kozel', 'Heineken', 'Faxe',
-                                             'Опілля Корифей', 'Опілля Княже', 'Закарпатське', 'Арсенал',
-                                             'Kalusher', 'Kaluskie Exportove', 'Правда', 'Балтика', 'Zeman',
-                                             'Проскурівське', 'Zibert',
-                                             'Тетерів', 'Вишневий Тетерів'])
-    not_beer = random.choice(['\ud83d\udeab Сьогодні не пити', '\ud83c\udf7b Сходити в паб',
-                              '\ud83e\udd5b Випити молока', '\ud83d\udcaf Бахнути горілочки',
-                              '\ud83c\udf77 Випити холодного вина', '\ud83d\udc92 Піти на пивзавод',
-                              '\u2620 Годі бухати, заїбав, здохнеш так скоро к хуям собачим'
-                              ])
-    ran = random.choice([beer1, beer1, beer1, beer1, not_beer])
+    beer1 = '\ud83c\udf7a ' + choice(['Львівське різдвяне', 'Bud', 'Львівське 1715', 'Carlsberg', 'Kronenbourg Blanc',
+                                      'Staropramen', 'Чернігівське', 'Оболонь', 'Stella Artois', 'Tuborg',
+                                      'Corona Extra', 'Krušovice', 'Старий Мельник', 'Velkopopovicky Kozel', 'Heineken',
+                                      'Faxe', 'Опілля Корифей', 'Опілля Княже', 'Закарпатське', 'Арсенал', 'Kalusher',
+                                      'Kaluskie Exportove', 'Правда', 'Балтика', 'Zeman', 'Проскурівське', 'Zibert',
+                                      'Тетерів', 'Вишневий Тетерів'])
+    not_beer = choice(['\ud83d\udeab Сьогодні не пити', '\ud83c\udf7b Сходити в паб', '\ud83e\udd5b Випити молока',
+                       '\ud83d\udcaf Бахнути горілочки', '\ud83c\udf77 Випити холодного вина',
+                       '\ud83d\udc92 Піти на пивзавод', '\u2620 Годі бухати, заїбав, здохнеш так скоро к хуям собачим'])
+    ran = choice([beer1, beer1, beer1, beer1, not_beer])
     return ran
 
 
@@ -1599,18 +1594,18 @@ def generator(q):
     try:
         numbers = q.split()
         if len(numbers) == 0:
-            ran = '\ud83c\udfb2 Випадкове число від 1 до 100' + '\n\n' + str(random.randrange(1, 101))
+            ran = '\ud83c\udfb2 Випадкове число від 1 до 100' + '\n\n' + str(randrange(1, 101))
             return ran
         elif len(numbers) == 1:
             number = int(q) + 1
-            ran = '\ud83c\udfb2 Випадкове число від 1 до ' + str(q) + '\n\n' + str(random.randrange(1, number))
+            ran = '\ud83c\udfb2 Випадкове число від 1 до ' + str(q) + '\n\n' + str(randrange(1, number))
             return ran
         elif len(numbers) == 2:
             first = int(numbers[0])
             second = int(numbers[1]) + 1
             if first < second - 1:
                 ran = '\ud83c\udfb3 Випадкове число від ' + str(first) + ' до ' + str(second - 1) \
-                      + '\n\n' + str(random.randrange(first, second))
+                      + '\n\n' + str(randrange(first, second))
                 return ran
             else:
                 return error
@@ -1621,7 +1616,7 @@ def generator(q):
             if first < second - 1 and third <= 10:
                 ran = '\ud83c\udfb0 Випадкові числа від ' + str(first) + ' до ' + str(second - 1) + '\n\n'
                 for i in range(third):
-                    a = random.randrange(first, second)
+                    a = randrange(first, second)
                     ran += str(a) + '\n'
                 return ran
             else:
@@ -1642,11 +1637,11 @@ def race():
              'Негроїд', 'Австралоїд', 'Корінний американець']
     choice1 = ['Арієць', 'Українець', 'Єврей', 'Циган', 'Кельт', 'Германець', 'Негроїд',
                'Скандинав', 'Британець', 'Італієць', 'Іспанець', 'Француз', 'Грек']
-    variant = random.choice([1, 2, 2, 3, 3, 3, 3, 4, 5])
+    variant = choice([1, 2, 2, 3, 3, 3, 3, 4, 5])
     ran = ''
 
     if variant == 1:
-        ran = '100% - ' + random.choice(choice1)
+        ran = '100% - ' + choice(choice1)
     elif variant > 1:
         try:
             n = 90
@@ -1656,15 +1651,15 @@ def race():
                     percent = 100 - sum(percents)
                     percents.append(percent)
                 else:
-                    percent = random.randrange(1, n)
+                    percent = randrange(1, n)
                     percents.append(percent)
                     n = n - percent
             percents.sort(reverse=True)
-            random_values = random.sample(races, k=variant)
+            random_values = sample(races, k=variant)
             for i in range(variant):
                 ran = ran + str(percents[i]) + '% - ' + random_values[i] + '\n'
         except:
-            ran = '100% - ' + random.choice(choice1)
+            ran = '100% - ' + choice(choice1)
 
     return ran
 
@@ -1694,7 +1689,7 @@ def gender():
                'Безпілотний літальний апарат Bayraktar TB2', 'Патрульний катер типу «Айленд»',
                'Береговий ракетний комплекс РК-360МЦ «Нептун»', '152-мм самохідна гармата-гаубиця vz.77 «Дана»',
                'Легкий тактичний позадорожній бронеавтомобіль HMMWV', 'Багатоцільовий гелікоптер МСБ-2']
-    ran = random.choice(emoji) + ' Я по гендеру... \n\n' + random.choice(genders)
+    ran = choice(emoji) + ' Я по гендеру... \n\n' + choice(genders)
     return ran
 
 
@@ -1834,7 +1829,7 @@ def feed(message):
                 except:
                     r.hincrby(message.from_user.id, 'strength', fr[1])
                     ran = fr[1]
-                emoji = random.choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
                               ' смачно поїв.\n\nСила зросла на ' + str(ran) + '.\n'
                 if fr[2] == 1:
@@ -1870,7 +1865,7 @@ def mine(message):
                 success = ms[0]
                 cl = int(r.hget(message.from_user.id, 'class'))
                 if cl == 2 or cl == 12 or cl == 22:
-                    success = random.choice([0, 0, 1, 1, 1])
+                    success = choice([0, 0, 1, 1, 1])
                 if success == 1:
                     money = ms[1]
                     if cl == 2 or cl == 12 or cl == 22:
@@ -1945,7 +1940,7 @@ def fascist(message):
                             ran.append(member)
                     except:
                         r.srem(message.chat.id, mem)
-                ran = random.choice(ran)
+                ran = choice(ran)
                 ran = int(ran)
                 r.hset('f' + str(message.chat.id), 'username', r.hget(ran, 'username').decode())
                 r.hincrby(ran, 'childs', 1)
@@ -2185,7 +2180,7 @@ def merchant(message):
     if message.chat.id == -1001211933154:
         if r.hexists('soledar', 'merchant_day') == 0:
             r.hset('soledar', 'merchant_day', 0)
-            r.hset('soledar', 'merchant_hour', random.randint(16, 20))
+            r.hset('soledar', 'merchant_hour', randint(16, 20))
 
         if int(r.hget('soledar', 'merchant_day')) != date.today().day and \
                 int(r.hget('soledar', 'merchant_hour')) == datetime.now().hour:
@@ -2209,7 +2204,7 @@ def merchant(message):
                                reply_markup=merchant_goods())
             r.hset('soledar', 'merchant_day', date.today().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
-            r.hset('soledar', 'merchant_hour', random.randint(16, 20))
+            r.hset('soledar', 'merchant_hour', randint(16, 20))
             try:
                 bot.unpin_chat_message(chat_id=pin.chat.id,
                                        message_id=int(r.hget('soledar', 'pin')))
@@ -2286,8 +2281,7 @@ def war(cid, location, big_battle):
     bot.send_message(cid, '\U0001F5FA Починається ' + location + '!',
                      reply_to_message_id=int(r.hget('battle' + str(cid), 'start')))
     time.sleep(2)
-    ran = random.choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7',
-                         '\U0001F93C\u200D\u2642\uFE0F'])
+    ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
     bot.send_message(cid, ran + ' Русаки несамовито молотять один одного...')
     time.sleep(3)
     m = bot.send_message(cid, '\u2694 Йде бій...')
@@ -2341,7 +2335,7 @@ def war(cid, location, big_battle):
                 d = 1
             chance = w * d
             fighters.update({key: chance})
-    win = random.choices(list(fighters.keys()), weights=list(fighters.values()))
+    win = choices(list(fighters.keys()), weights=list(fighters.values()))
     win = int(str(win)[3:-2])
     wc = int(r.hget(win, 'class'))
     if not big_battle:
@@ -2423,8 +2417,7 @@ def war(cid, location, big_battle):
 
 def great_war(cid1, cid2, a, b):
     time.sleep(2)
-    ran = random.choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7',
-                         '\U0001F93C\u200D\u2642\uFE0F'])
+    ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
     bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...')
     bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...')
     time.sleep(3)
@@ -2475,7 +2468,7 @@ def great_war(cid1, cid2, a, b):
         except:
             continue
 
-    win = random.choices(['a', 'b'], weights=[chance1, chance2])
+    win = choices(['a', 'b'], weights=[chance1, chance2])
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     if win == ['a']:
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
@@ -3041,12 +3034,12 @@ def handle_query(call):
                 bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name + '\n\nБій почався...',
                     chat_id=call.message.chat.id, message_id=call.message.id)
-                ran = random.choice(['Битва в Соледарі', 'Битва на овечій фермі', 'Битва на покинутому заводі',
-                                     'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
-                                     'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
-                                     'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП',
-                                     'Битва біля новорічної ялинки', 'Битва біля новорічної ялинки',
-                                     'Битва біля новорічної ялинки'])
+                ran = choice(['Битва в Соледарі', 'Битва на овечій фермі', 'Битва на покинутому заводі',
+                              'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
+                              'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
+                              'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП',
+                              'Битва біля новорічної ялинки', 'Битва біля новорічної ялинки',
+                              'Битва біля новорічної ялинки'])
                 big_battle = True
                 try:
                     bot.unpin_chat_message(chat_id=call.message.chat.id,
@@ -3066,7 +3059,7 @@ def handle_query(call):
         if call.from_user.id == int(r.hget('battle' + str(call.message.chat.id), 'starter')):
             bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
                                   chat_id=call.message.chat.id, message_id=call.message.id)
-            ran = random.choice(['Битва в Соледарі', 'Штурм Горлівки', 'Штурм ДАП'])
+            ran = choice(['Битва в Соледарі', 'Штурм Горлівки', 'Штурм ДАП'])
             big_battle = False
             try:
                 bot.unpin_chat_message(chat_id=call.message.chat.id,
@@ -3305,9 +3298,9 @@ def handle_query(call):
                                           text='Ви розширили місце в підвалі для додаткового русака.')
                 bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
                                                        'Змінити бойового русака можна командою /swap.')
-                r.hset(call.from_user.id, 'name2', random.randrange(0, len(names)),
-                       {'strength2': random.randint(10, 50),
-                        'intellect2': int(random.choice(['1', '1', '1', '1', '2'])),
+                r.hset(call.from_user.id, 'name2', randrange(0, len(names)),
+                       {'strength2': randint(10, 50),
+                        'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100,
                         'support2': 0, 's_support2': 0})
@@ -3396,7 +3389,7 @@ def handle_query(call):
 
     elif call.data.startswith('passport'):
         if int(r.hget(call.from_user.id, 'money')) >= 10:
-            ran = random.randrange(0, len(names))
+            ran = randrange(0, len(names))
             r.hincrby(call.from_user.id, 'money', -10)
             r.hset(call.from_user.id, 'name', ran)
             if r.hexists(call.from_user.id, 'ac3') == 0:
@@ -3733,9 +3726,9 @@ def handle_query(call):
             if int(r.hget(call.from_user.id, 'strap')) >= 3:
                 r.hincrby(call.from_user.id, 'strap', -3)
                 r.hset(call.from_user.id, 's3', 5)
-                r.hset(call.from_user.id, 'name2', random.randrange(0, len(names)),
-                       {'strength2': random.randint(10, 50),
-                        'intellect2': int(random.choice(['1', '1', '1', '1', '2'])),
+                r.hset(call.from_user.id, 'name2', randrange(0, len(names)),
+                       {'strength2': randint(10, 50),
+                        'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100,
                         'support2': 0, 's_support2': 0})
@@ -3810,11 +3803,10 @@ def handle_query(call):
             r.hincrby(uid, 'n_packs', -1)
             r.hincrby(uid, 'opened', 1)
 
-            ran = random.choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                                 weights=[20, 15, 14, 13, 12, 10, 5, 4, 3, 2, 1, 1])
+            ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], weights=[20, 15, 14, 13, 12, 10, 5, 4, 3, 2, 1, 1])
             if ran == [1]:
                 msg = '\u26AA В пакунку була загадкова цукерка. Русак її з`їв...'
-                ran2 = random.randint(1, 5)
+                ran2 = randint(1, 5)
                 if ran2 == 1:
                     r.hincrby(uid, 'strength', 1)
                     msg += '\n\U0001F4AA +1'
@@ -3881,7 +3873,7 @@ def handle_query(call):
                 bot.edit_message_text(msg, call.message.chat.id, call.message.id)
             elif ran == [9]:
                 r.hset(uid, 'time', 0)
-                emoji = random.choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 bot.edit_message_text('\U0001f7e3 В цьому широкому пакунку знаходиться тазік олів`є. Русак також отри'
                                       'мав невелику порцію.\n' + emoji + ' +1', call.message.chat.id, call.message.id)
             elif ran == [10]:
@@ -3914,8 +3906,8 @@ def handle_query(call):
                 r.hincrby(uid, 'money', -20)
             r.hincrby(uid, 'opened', 1)
 
-            ran = random.choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-                                 weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
+            ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                          weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
             if ran == [1]:
                 bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                       call.message.chat.id, call.message.id)
@@ -4026,7 +4018,7 @@ def handle_query(call):
                                       '\n\u2620\uFE0F +5', call.message.chat.id, call.message.id)
                 r.hincrby(uid, 'deaths', 5)
             elif ran == [11]:
-                emoji = random.choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої бараболі'
                                       ' і закруток з помідорами (можна згодувати русаку).'
                                       '\n\u2B50 +1 \U0001F4B5 +300 ' + emoji + ' +1',
@@ -4133,48 +4125,48 @@ def messages(message):
                         int(r.hget(message.from_user.id, 'class')) == 0:
                     if message.text.startswith('Обираю клас '):
                         if 'Хач' in message.text or 'хач' in message.text:
-                            ran = random.randint(1, 5)
+                            ran = randint(1, 5)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Хач.')
                             r.hset(message.from_user.id, 'class', 1)
                             r.hincrby(message.from_user.id, 'strength', 100)
                             r.hset(message.from_user.id, 'hach_time', 0)
                         elif 'Роботяга' in message.text or 'роботяга' in message.text:
-                            ran = random.randint(6, 10)
+                            ran = randint(6, 10)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Роботяга.')
                             r.hset(message.from_user.id, 'class', 2)
                         elif 'Фокусник' in message.text or 'фокусник' in message.text:
-                            ran = random.randint(11, 15)
+                            ran = randint(11, 15)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Фокусник.')
                             r.hset(message.from_user.id, 'class', 3)
                             r.hincrby(message.from_user.id, 'intellect', 1)
                             intellect(1, message.from_user.id)
                         elif 'Язичник' in message.text or 'язичник' in message.text:
-                            ran = random.randint(16, 20)
+                            ran = randint(16, 20)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Язичник.')
                             r.hset(message.from_user.id, 'class', 4)
                         elif 'Гарматне' in message.text or 'гарматне' in message.text:
-                            ran = random.randint(21, 25)
+                            ran = randint(21, 25)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Гарматне м`ясо.')
                             r.hset(message.from_user.id, 'class', 5)
                         elif 'Мусор' in message.text or 'мусор' in message.text:
-                            ran = random.randint(26, 30)
+                            ran = randint(26, 30)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Мусор.')
                             r.hset(message.from_user.id, 'class', 6)
                             r.hset(message.from_user.id, 'weapon', 16)
                         elif 'Малорос' in message.text or 'малорос' in message.text:
-                            ran = random.randint(31, 35)
+                            ran = randint(31, 35)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Малорос.')
                             r.hset(message.from_user.id, 'class', 7)
                             intellect(-2, message.from_user.id)
                         elif 'Хакер' in message.text or 'хакер' in message.text:
-                            ran = random.randint(36, 40)
+                            ran = randint(36, 40)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Хакер.')
                             r.hset(message.from_user.id, 'class', 8)
