@@ -3,80 +3,21 @@ from telebot import types
 import os
 from flask import Flask, request
 import redis
-from random import randint, choice, choices, uniform, randrange, sample
+from random import randint, choice, choices
 from datetime import date
 from datetime import datetime
 import time
 
 from variables import names, icons, class_name, weapons, defenses, supports, photos, sudoers
+from inline import prepare_to_fight, pastLife, earnings, political, love, \
+    question, zradoMoga, penis, choose, beer, generator, race, gender
+from parameters import spirit, vodka, intellect, injure, hp
 
 r = redis.Redis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT')),
                 password=os.environ.get('REDIS_PASSWORD'), db=0)
 
 TOKEN = os.environ.get('TOKEN')
 bot = telebot.TeleBot(TOKEN)
-
-
-def prepare_to_fight(uid, fn, q):
-    if r.hexists(uid, 'name') == 0:
-        return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
-    elif int(r.hget(uid, 'hp')) > 0:
-        stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')
-        name = int(stats[0])
-        c = int(stats[1])
-        s = int(stats[2])
-        s1 = s
-        i = int(stats[3])
-        bd = int(stats[4])
-
-        if int(r.hget(uid, 'injure')) > 0:
-            s, s1, i, bd = injure(uid, False)
-
-        if c == 3:
-            s = randint(10, 1000)
-            i = randint(1, 10)
-            bd = randint(0, 10000)
-        elif c == 13 or c == 23:
-            s = randint(200, 2000)
-            i = randint(10, 20)
-            bd = randint(0, 10000)
-            if c == 23:
-                c = randint(0, len(icons))
-
-        query = ''
-        try:
-            q = q.split()
-            if q[0].startswith('турнірний_режим_2021'):
-                query = '\n\n\U0001F530 Турнірний режим \U0001F530'
-                try:
-                    if q[1].startswith('@'):
-                        query += '\n\U0001F4E3 Викликаю на бій ' + q[1] + '!'
-                except:
-                    pass
-            elif q[0].startswith('особисте_запрошення_2021'):
-                try:
-                    if q[1].startswith('@'):
-                        query += '\n\U0001F4E3 Викликаю на бій ' + q[1] + '!'
-                except:
-                    pass
-            elif int(q[1]) > 0:
-                s2 = s1 - int(q[1])
-                if s2 < 1:
-                    s2 = 1
-                query = '\n\n\U0001F4E2 Розшукується суперник з силою від ' + \
-                        str(s2) + ' до ' + str(s1 + int(q[1])) + '.'
-        except:
-            pass
-
-        stats = str("\n\n\U0001F3F7 " + names[name] + ' ' + icons[c] +
-                    '\n\U0001F4AA ' + str(s) +
-                    ' \U0001F9E0 ' + str(i) +
-                    ' \U0001F54A ' + str(bd) +
-                    '\n\n\u2744\uFE0F @Random_UAbot <- отримати русака')
-
-        return '\u2744\uFE0F ' + fn + ' починає битву русаків!' + query + stats
-    else:
-        return '\U0001fac0 Русак лежить весь в крові.\nВін не може битись поки не поїсть, або не полікується.'
 
 
 def fight(uid1, uid2, un1, un2):
@@ -101,14 +42,14 @@ def fight(uid1, uid2, un1, un2):
                 hach += '\n' + names[name1] + ': брат за брата! \U0001F919\n\U0001F4AA + 10 \U0001F54A +1000\n'
                 r.hset(uid1, 'hach_time2', date.today().day)
                 r.hincrby(uid1, 'strength', 10)
-                spirit(1000, uid1, 21, fi=False)
+                spirit(1000, uid1, 21, False, r)
     if c2 == 21:
         if c1 == 1 or c1 == 11 or c1 == 21:
             if int(r.hget(uid2, 'hach_time2')) != date.today().day:
                 hach += '\n' + names[name2] + ': брат за брата! \U0001F919\n\U0001F4AA + 10 \U0001F54A +1000\n'
                 r.hset(uid2, 'hach_time2', date.today().day)
                 r.hincrby(uid2, 'strength', 10)
-                spirit(1000, uid2, 21, fi=False)
+                spirit(1000, uid2, 21, False, r)
     if c1 == 22:
         if int(r.hget(uid1, 'worker')) != date.today().day and int(r.hget(uid1, 'time')) == date.today().day:
             alcohol = int(r.hget(uid1, 's1'))
@@ -225,12 +166,12 @@ def fight(uid1, uid2, un1, un2):
         defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
 
     if int(r.hget(uid1, 'support')) == 1:
-        hp(10, uid1)
+        hp(10, uid1, r)
         r.hincrby(uid1, 's_support', -1)
         if int(r.hget(uid1, 's_support')) <= 0:
             r.hset(uid1, 'support', 0)
     if int(r.hget(uid2, 'support')) == 1:
-        hp(10, uid2)
+        hp(10, uid2, r)
         r.hincrby(uid2, 's_support', -1)
         if int(r.hget(uid2, 's_support')) <= 0:
             r.hset(uid2, 'support', 0)
@@ -250,10 +191,10 @@ def fight(uid1, uid2, un1, un2):
         s2 = int(s2 * 1.1)
 
     if int(r.hget(uid1, 'injure')) > 0:
-        s1, s11, i1, bd1 = injure(uid1, True)
+        s1, s11, i1, bd1 = injure(uid1, True, r)
         inj1 = '\U0001fa78 '
     if int(r.hget(uid2, 'injure')) > 0:
-        s2, s22, i2, bd2 = injure(uid2, True)
+        s2, s22, i2, bd2 = injure(uid2, True, r)
         inj2 = '\U0001fa78 '
 
     if weapon2 == 11:
@@ -348,7 +289,7 @@ def fight(uid1, uid2, un1, un2):
         weapon = '\n\n\U0001F381 ' + names[name2] + ' прийшов на бій з посохом Діда Мороза і вручив ворогу подарунок!' \
                                                     '\n\U0001F54A +1000'
         r.hincrby(uid1, 'n_packs', 1)
-        spirit(1000, uid2, c2, False)
+        spirit(1000, uid2, c2, False, r)
         r.hincrby(uid2, 's_weapon', -1)
         if int(r.hget(uid2, 's_weapon')) <= 0:
             r.hset(uid2, 'weapon', 0)
@@ -364,7 +305,7 @@ def fight(uid1, uid2, un1, un2):
         if i2 > i1:
             if c2 != 3 and c2 != 13 and c2 != 23:
                 s1 = int(s1 * 0.5)
-                intellect(1, uid1)
+                intellect(1, uid1, r)
                 defense = '\n\n\U0001F6E1 ' + names[name1] + ' прийшов на бій під мухоморами. Він був' \
                                                              ' обезсилений, але запам`ятав тактику ворога.'
                 r.hset(uid1, 'defense', 0)
@@ -443,13 +384,13 @@ def fight(uid1, uid2, un1, un2):
 
     if hach1 == 1:
         s1 = int(s1 * 1.1)
-        spirit(30, uid1, c1, fi=True)
+        spirit(30, uid1, c1, True, r)
     elif hach1 == 0:
         if c1 == 1 or c1 == 11 or c1 == 21:
             s1 = int(s1 * 0.9)
     if hach2 == 1:
         s2 = int(s2 * 1.1)
-        spirit(30, uid2, c2, fi=True)
+        spirit(30, uid2, c2, True, r)
     elif hach2 == 0:
         if c2 == 1 or c2 == 11 or c2 == 21:
             s2 = int(s2 * 0.9)
@@ -578,12 +519,12 @@ def fight(uid1, uid2, un1, un2):
                         ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника через стегно!\n\U0001F54A -' + \
                                 str(ran) + '\n'
-                        spirit(-ran, uid2, c2, fi=False)
+                        spirit(-ran, uid2, c2, False, r)
                     elif trick == [2]:
                         ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника млином!\n\U0001F54A +' + \
                                 str(ran) + '\n'
-                        spirit(ran, uid1, c1, fi=False)
+                        spirit(ran, uid1, c1, False, r)
                     elif trick == [3]:
                         hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника прогином!\n\U0001F4B5 +2\n'
                         r.hincrby(uid1, 'money', 2)
@@ -598,8 +539,8 @@ def fight(uid1, uid2, un1, un2):
             pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли русак програв' \
                                                    ', його бойовий дух влився у ворога...'
 
-        spirit(bonus, uid1, c1, fi=True)
-        spirit(-bonus, uid2, c2, fi=True)
+        spirit(bonus, uid1, c1, True, r)
+        spirit(-bonus, uid2, c2, True, r)
         r.hincrby(uid1, 'wins', 1)
 
         hack = ''
@@ -612,8 +553,8 @@ def fight(uid1, uid2, un1, un2):
                 if int(r.hget(uid2, 's_weapon')) <= 0:
                     r.hset(uid2, 'weapon', 0)
             if hack1 == [1]:
-                spirit(bonus * 2, uid2, c2, fi=False)
-                spirit(-bonus, uid1, c1, fi=False)
+                spirit(bonus * 2, uid2, c2, False, r)
+                spirit(-bonus, uid1, c1, False, r)
                 money = 1
                 if c2 == 28:
                     money2 = int(r.hget(uid1, 'money'))
@@ -628,8 +569,8 @@ def fight(uid1, uid2, un1, un2):
                                                                'собі.\n\U0001F4B5 +' + str(money)
 
         if weapon1 == 15:
-            meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1, 5)
-        hp(-1, uid2)
+            meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1, 5, r)
+        hp(-1, uid2, r)
         bottle = ''
         if int(r.hget(uid1, 'support')) == 3:
             bottle = '\n\U0001F37E ' + names[name1] + ' випив шампанського, а ' + names[name2] + \
@@ -691,12 +632,12 @@ def fight(uid1, uid2, un1, un2):
                         ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника через стегно!\n\U0001F54A -' + \
                                 str(ran) + '\n'
-                        spirit(-ran, uid1, c1, fi=False)
+                        spirit(-ran, uid1, c1, False, r)
                     elif trick == [2]:
                         ran = randint(50, 100)
                         hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника млином!\n\U0001F54A +' + \
                                 str(ran) + '\n'
-                        spirit(ran, uid2, c2, fi=False)
+                        spirit(ran, uid2, c2, False, r)
                     elif trick == [3]:
                         hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника прогином!\n\U0001F4B5 +2\n'
                         r.hincrby(uid2, 'money', 2)
@@ -711,8 +652,8 @@ def fight(uid1, uid2, un1, un2):
             pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли ворог програв' \
                                                    ', його бойовий дух влився у русака...'
 
-        spirit(bonus, uid2, c2, fi=True)
-        spirit(-bonus, uid1, c1, fi=True)
+        spirit(bonus, uid2, c2, True, r)
+        spirit(-bonus, uid1, c1, True, r)
         r.hincrby(uid2, 'wins', 1)
 
         hack = ''
@@ -725,8 +666,8 @@ def fight(uid1, uid2, un1, un2):
                 if int(r.hget(uid1, 's_weapon')) <= 0:
                     r.hset(uid1, 'weapon', 0)
             if hack2 == [1]:
-                spirit(bonus * 2, uid1, c1, fi=False)
-                spirit(-bonus, uid2, c2, fi=False)
+                spirit(bonus * 2, uid1, c1, False, r)
+                spirit(-bonus, uid2, c2, False, r)
                 money = 1
                 if c1 == 28:
                     money2 = int(r.hget(uid2, 'money'))
@@ -741,8 +682,8 @@ def fight(uid1, uid2, un1, un2):
                                                                'собі.\n\U0001F4B5 +' + str(money)
 
         if weapon2 == 15:
-            meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5)
-        hp(-1, uid1)
+            meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5, r)
+        hp(-1, uid1, r)
         bottle = ''
         if int(r.hget(uid2, 'support')) == 3:
             bottle = '\n\U0001F37E ' + names[name2] + ' випив шампанського, а ' + names[name1] + \
@@ -876,10 +817,10 @@ def tournament(uid1, uid2, un1, un2, mid):
         bd2 = int(stats22[2])
 
         if int(r.hget(uid1, 'injure')) > 0:
-            s1, s11, i1, bd1 = injure(uid1, False)
+            s1, s11, i1, bd1 = injure(uid1, False, r)
             inj1 = '\U0001fa78 '
         if int(r.hget(uid2, 'injure')) > 0:
-            s2, s22, i2, bd2 = injure(uid2, False)
+            s2, s22, i2, bd2 = injure(uid2, False, r)
             inj2 = '\U0001fa78 '
 
         if weapon2 == 11:
@@ -1038,13 +979,13 @@ def tournament(uid1, uid2, un1, un2, mid):
 
         if hach1 == 1:
             s1 = int(s1 * 1.1)
-            spirit(30, uid1, c1, fi=True)
+            spirit(30, uid1, c1, True, r)
         elif hach1 == 0:
             if c1 == 1 or c1 == 11 or c1 == 21:
                 s1 = int(s1 * 0.9)
         if hach2 == 1:
             s2 = int(s2 * 1.1)
-            spirit(30, uid2, c2, fi=True)
+            spirit(30, uid2, c2, True, r)
         elif hach2 == 0:
             if c2 == 1 or c2 == 11 or c2 == 21:
                 s2 = int(s2 * 0.9)
@@ -1126,9 +1067,9 @@ def tournament(uid1, uid2, un1, un2, mid):
 
         if loop == 0:
             if int(r.hget(uid1, 'injure')) > 0:
-                injure(uid1, True)
+                injure(uid1, True, r)
             if int(r.hget(uid2, 'injure')) > 0:
-                injure(uid2, True)
+                injure(uid2, True, r)
             info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' + icons[c1] +
                        ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
                        '\n\U0001F4AA ' + stats11[0].decode() + ' | ' + stats22[0].decode() +
@@ -1160,7 +1101,7 @@ def tournament(uid1, uid2, un1, un2, mid):
 
 
 def get_rusak():
-    name = randrange(0, len(names))
+    name = randint(0, len(names) - 1)
     strength = randint(10, 50)
     mind = int(choice(['1', '1', '1', '1', '2']))
     return name, strength, mind
@@ -1412,287 +1353,6 @@ def boost():
     return markup
 
 
-def spirit(value, uid, c, fi):
-    if fi is True:
-        if c == 4 or c == 14 or c == 24:
-            if value < 0 and c == 4:
-                r.hincrby(uid, 'spirit', value * 2)
-            elif value < 0 and c == 14:
-                r.hincrby(uid, 'spirit', value)
-            elif value < 0 and c == 24:
-                r.hincrby(uid, 'spirit', int(value / 2))
-            else:
-                r.hincrby(uid, 'spirit', value * 3)
-            if int(r.hget(uid, 'spirit')) > 20000:
-                r.hset(uid, 'spirit', 20000)
-        else:
-            r.hincrby(uid, 'spirit', value)
-            if int(r.hget(uid, 'spirit')) > 10000:
-                r.hset(uid, 'spirit', 10000)
-        if int(r.hget(uid, 'spirit')) < 0:
-            r.hset(uid, 'spirit', 0)
-    elif fi is False:
-        r.hincrby(uid, 'spirit', value)
-        if c == 4 or c == 14 or c == 24:
-            if int(r.hget(uid, 'spirit')) > 20000:
-                r.hset(uid, 'spirit', 20000)
-        elif int(r.hget(uid, 'spirit')) > 10000:
-            r.hset(uid, 'spirit', 10000)
-        if int(r.hget(uid, 'spirit')) < 0:
-            r.hset(uid, 'spirit', 0)
-
-
-def vodka(uid, cl):
-    ran = randint(10, 70)
-    increase = ran * int(r.hget(uid, 's1'))
-    spirit(increase, uid, cl, fi=False)
-    r.hincrby(uid, 'vodka', 1)
-    return str(increase)
-
-
-def intellect(value, uid):
-    if value > 0:
-        r.hincrby(uid, 'intellect', value)
-        if int(r.hget(uid, 'intellect')) > 20:
-            r.hset(uid, 'intellect', 20)
-    if value < 0:
-        r.hincrby(uid, 'intellect', value)
-        if int(r.hget(uid, 'intellect')) <= 0:
-            r.hset(uid, 'intellect', 1)
-
-
-def injure(uid, fi):
-    stats = r.hmget(uid, 'strength', 'intellect', 'spirit')
-    if fi:
-        r.hincrby(uid, 'injure', -1)
-    return int(int(stats[0])*(1/3)), int(int(stats[0])*(1/3)), int(int(stats[1])*(1/3)), int(int(stats[2])*(1/3))
-
-
-def hp(value, uid):
-    if value > 0:
-        r.hincrby(uid, 'hp', value)
-        if int(r.hget(uid, 'hp')) > 100:
-            r.hset(uid, 'hp', 100)
-    if value < 0:
-        r.hincrby(uid, 'hp', value)
-        if int(r.hget(uid, 'hp')) < 0:
-            r.hset(uid, 'hp', 0)
-
-
-def pastLife():
-    life = ['Звичайний совковий роботяга', 'Видатний письменник', 'Лауреат Нобелівської премії',
-            'Кріпак з Черкащини', 'Англійський аристократ', 'Хитрий жид', 'Запорізький козак',
-            'Житель Зеленого Клину', 'Кубанський козак', 'А ніким і не був, це твоє перше життя',
-            'Мер Харкова', 'Польська курва', 'Раб з Африки', 'Boss of gym', 'Dungeon master',
-            'Динозавр', 'Штурмбанфюрер', 'Донощик', 'Грязний циган', 'Депутат', 'Кримський хан',
-            'Московський холоп', 'НКВСник', 'Партизан з УПА', "Слов`янський ремісник", 'Дівчина чорноброва',
-            'Карпатський гуцул', 'Монгольський кінний лучник', 'Інквізитор', 'Викладач політеху',
-            'Дитя Донбасу', 'Руський боярин', 'Собака', 'Кіт', 'Козак-характерник', 'Німецький єврей',
-            'Робот з Boston Dynamics', 'Канадський українець', "Дощовий черв`як звичайний", 'Космонавт',
-            'Пірат', 'Французька дворянка', 'Повія з Санкт-Петербурга', 'Американський агент',
-            'Розбійник', 'Серійний вбивця', 'Безхатько', 'Сольовий торчок']
-    ran = choice(life)
-    return ran
-
-
-def earnings():
-    country = ['\ud83c\uddfa\ud83c\udde6 Україна', '\ud83c\uddf5\ud83c\uddf1 Польща',
-               '\ud83c\uddf7\ud83c\uddfa Росія (ганьба)', '\ud83c\udde8\ud83c\uddff Чехія',
-               '\ud83c\udded\ud83c\uddfa Угорщина', '\ud83c\udde9\ud83c\uddea Німеччина',
-               '\ud83c\uddf3\ud83c\uddf4 Норвегія', '\ud83c\udde9\ud83c\uddf0 Данія',
-               '\ud83c\uddfa\ud83c\uddf8 США', '\ud83c\udde8\ud83c\udde6 Канада',
-               '\ud83c\uddf2\ud83c\uddfd Мексика', '\ud83c\uddeb\ud83c\uddf7 Франція',
-               '\ud83c\udde7\ud83c\uddea Бельгія', '\ud83c\uddf3\ud83c\uddf1 Нідерланди',
-               '\ud83c\uddef\ud83c\uddf5 Японія', '\ud83c\uddf9\ud83c\udded Таїланд',
-               '\ud83c\uddf2\ud83c\udde9 Молдова', '\ud83c\udde8\ud83c\udded Швейцарія',
-               '\ud83c\uddee\ud83c\uddf9 Італія', '\ud83c\uddf3\ud83c\uddec Нігерія',
-               '\ud83c\uddf9\ud83c\uddf7 Туреччина', '\ud83c\uddec\ud83c\uddea Грузія',
-               '\ud83c\uddee\ud83c\uddea Ірландія', '\ud83c\uddea\ud83c\uddf8 Іспанія',
-               '\ud83c\udde8\ud83c\uddf3 Китай', '\ud83c\uddee\ud83c\uddf3 Індія',
-               '\ud83c\udde7\ud83c\uddf7 Бразилія', '\ud83c\udde6\ud83c\uddfa Австралія',
-               '\ud83c\uddec\ud83c\udde7 Великобританія', '\ud83c\udde6\ud83c\uddf7 Аргентина',
-               '\ud83c\udde6\ud83c\uddea ОАЕ', '\ud83c\uddf3\ud83c\uddff Нова Зеландія']
-    ran = choice(country)
-    return ran
-
-
-def political():
-    a1 = choice(['Економічно праві - ', 'Економічно ліві - '])
-    a2 = choice(['Авторитаризм - ', 'Лібертаріанство - '])
-    ran = a1 + str(randint(0, 100)) + '%\n' + a2 + str(randint(0, 100)) + '%'
-    return ran
-
-
-def question():
-    q = (['\ud83d\udfe9 Так \ud83d\udfe9', '\ud83d\udfe5 Ні \ud83d\udfe5', '\ud83d\udfeb Не скажу \ud83d\udfeb',
-          '\u2b1b\ufe0f Неможливо передбачити \u2b1b\ufe0f', '\ud83d\udfe6 100% \ud83d\udfe6',
-          '\u2b1c\ufe0f Ніколи \u2b1c\ufe0f', '\ud83d\udfea Скорше так, ніж ні \ud83d\udfea',
-          '\ud83d\udfe7 Скорше ні, ніж так \ud83d\udfe7', '\ud83d\udfe8 Слава Україні! \ud83d\udfe6'
-          ])
-    ran = '-----|' + choice(q) + '|-----'
-    return ran
-
-
-def love():
-    i = randint(0, 100)
-    s = choice(['\ud83c\udff3\u200d\ud83c\udf08', '\ud83d\udc9a', '\ud83d\udc9c', '\u2764\ufe0f',
-                '\ud83d\udc9e', '\ud83d\udc96', '\ud83d\udc98', '\ud83d\udc85'])
-    ran = str(s) + ' ' + str(i) + '% ' + str(s)
-    return ran
-
-
-def zradoMoga():
-    ran = choice(['\ud83c\uddfa\ud83c\udde6 Перемога \ud83c\uddfa\ud83c\udde6', '\u2721 Зрада \ud83c\uddf7\ud83c\uddfa',
-                  '\u23f3 Боротьба триває', '\ud83c\uddfa\ud83c\udde6 Перемога \ud83c\uddfa\ud83c\udde6',
-                  '\u2721 Зрада \ud83c\uddf7\ud83c\uddfa'])
-    return ran
-
-
-def penis():
-    normal = f'Твій пісюн - {uniform(5.0, 16.0):.2f} см'
-    small = f'Твій мініган - {uniform(0.0, 5.0):.2f} см'
-    big = f'Твій моцний гилун - {uniform(16.0, 40):.2f} см'
-    rare = choice(['Найбільший член в чаті', 'Найменший член в чаті'])
-    vg = 'В тебе немає пісюна \ud83c\udf1a'
-    decor = choice(['\ud83c\udf46 ', '\ud83e\udd55 ', '\ud83d\udc46 ',
-                    '\ud83d\udc4c ', '\ud83c\udf36 ', '\u2642\ufe0f '])
-    ran = decor + choice([normal, normal, normal, normal, small, small, big, big, rare, vg])
-    return ran
-
-
-def choose(q):
-    s = choice(['\ud83c\udfb0 ', '\ud83d\udc49 ', '\u270d ', '\ud83c\udf9b ',
-                '\ud83d\udcdf ', '\u2696 ', '\ud83d\udcca ', '\u21aa\ufe0f '])
-    q = q.replace(' чи ', '2a2b').replace(' або ', '2a2b').replace('?', '')
-    q = q.replace(' ', '1a2b')
-    q = q.replace('2a2b', ' ').split()
-    end = []
-    for i in q:
-        i = i.replace('1a2b', ' ').strip()
-        end.append(i)
-    ran = s + choice(end)
-    return ran
-
-
-def beer():
-    beer1 = '\ud83c\udf7a ' + choice(['Львівське різдвяне', 'Bud', 'Львівське 1715', 'Carlsberg', 'Kronenbourg Blanc',
-                                      'Staropramen', 'Чернігівське', 'Оболонь', 'Stella Artois', 'Tuborg',
-                                      'Corona Extra', 'Krušovice', 'Старий Мельник', 'Velkopopovicky Kozel', 'Heineken',
-                                      'Faxe', 'Опілля Корифей', 'Опілля Княже', 'Закарпатське', 'Арсенал', 'Kalusher',
-                                      'Kaluskie Exportove', 'Правда', 'Балтика', 'Zeman', 'Проскурівське', 'Zibert',
-                                      'Тетерів', 'Вишневий Тетерів'])
-    not_beer = choice(['\ud83d\udeab Сьогодні не пити', '\ud83c\udf7b Сходити в паб', '\ud83e\udd5b Випити молока',
-                       '\ud83d\udcaf Бахнути горілочки', '\ud83c\udf77 Випити холодного вина',
-                       '\ud83d\udc92 Піти на пивзавод', '\u2620 Годі бухати, заїбав, здохнеш так скоро к хуям собачим'])
-    ran = choice([beer1, beer1, beer1, beer1, not_beer])
-    return ran
-
-
-def generator(q):
-    error = 'Неправильний запит\n[x] - число від 0 до x\n[x] [y] - число від x до y' \
-            '\n[x] [y] [n<=10] - n випадкових чисел від x до y'
-    try:
-        numbers = q.split()
-        if len(numbers) == 0:
-            ran = '\ud83c\udfb2 Випадкове число від 1 до 100' + '\n\n' + str(randrange(1, 101))
-            return ran
-        elif len(numbers) == 1:
-            number = int(q) + 1
-            ran = '\ud83c\udfb2 Випадкове число від 1 до ' + str(q) + '\n\n' + str(randrange(1, number))
-            return ran
-        elif len(numbers) == 2:
-            first = int(numbers[0])
-            second = int(numbers[1]) + 1
-            if first < second - 1:
-                ran = '\ud83c\udfb3 Випадкове число від ' + str(first) + ' до ' + str(second - 1) \
-                      + '\n\n' + str(randrange(first, second))
-                return ran
-            else:
-                return error
-        elif len(numbers) == 3:
-            first = int(numbers[0])
-            second = int(numbers[1]) + 1
-            third = int(numbers[2])
-            if first < second - 1 and third <= 10:
-                ran = '\ud83c\udfb0 Випадкові числа від ' + str(first) + ' до ' + str(second - 1) + '\n\n'
-                for i in range(third):
-                    a = randrange(first, second)
-                    ran += str(a) + '\n'
-                return ran
-            else:
-                return error
-        else:
-            return error
-    except:
-        return error
-
-
-def race():
-    races = ["Східний слов'янин", "Західний слов'янин", "Південний слов'янин", "Балтієць",
-             'Кельт', 'Германець', 'Скандинав', 'Британець', 'Вірмен',
-             'Циган', 'Італієць', 'Іспанець', 'Француз', 'Грек',
-             'Албанець', 'Фіно-угорець', 'Мокша', 'Тюрк', 'Татар',
-             'Кавказець', 'Індієць', 'Іранець', 'Монгол', 'Кореєць',
-             'Японець', 'Китаєць', 'Сибіряк', 'Індонезієць', 'Семіт',
-             'Негроїд', 'Австралоїд', 'Корінний американець']
-    choice1 = ['Арієць', 'Українець', 'Єврей', 'Циган', 'Кельт', 'Германець', 'Негроїд',
-               'Скандинав', 'Британець', 'Італієць', 'Іспанець', 'Француз', 'Грек']
-    variant = choice([1, 2, 2, 3, 3, 3, 3, 4, 5])
-    ran = ''
-
-    if variant == 1:
-        ran = '100% - ' + choice(choice1)
-    elif variant > 1:
-        try:
-            n = 90
-            percents = []
-            for i in range(variant):
-                if i == variant - 1:
-                    percent = 100 - sum(percents)
-                    percents.append(percent)
-                else:
-                    percent = randrange(1, n)
-                    percents.append(percent)
-                    n = n - percent
-            percents.sort(reverse=True)
-            random_values = sample(races, k=variant)
-            for i in range(variant):
-                ran = ran + str(percents[i]) + '% - ' + random_values[i] + '\n'
-        except:
-            ran = '100% - ' + choice(choice1)
-
-    return ran
-
-
-def gender():
-    emoji = ['\ud83d\uddff', '\u267f\ufe0f', '\ud83e\udd78', '\ud83d\udc68\u200d\ud83c\udfa4', '\ud83e\udddc',
-             '\ud83e\uddd1\u200d\ud83c\udfa4', '\ud83d\udc69\u200d\ud83c\udfa4', '\ud83e\udd77', '\ud83e\udd9e',
-             '\ud83e\uddd9\u200d\u2640', '\ud83e\uddda', '\ud83e\udeb5', '\u26c4\ufe0f', '\u2708\ufe0f', '\ud83d\udef0',
-             '\ud83d\ude81', '\ud83d\udef8', '\u26a7']
-    genders = ['Протитанковий ракетний комплекс FGM-148 Javelin', 'ПТКР BGM-71 TOW', 'Самозарядний пістолет Форт-14',
-               'Пістолет Desert Eagle', 'Пістолет-кулемет STEN', 'Автомат Калашникова модернізований', 'Кулемет M240',
-               'Пістолетний унітарний патрон 9×19 мм Парабелум', 'Кулемет КМ-7,62', 'Самозарядна гвинтівка Gewehr 41',
-               'Багатоцільовий вертольіт PZL W-3 Sokół', 'Багатоцільовий гелікоптер ВМ-4 «Джміль»', 'Кулемет MG-42',
-               'Пістолет-кулемет Heckler & Koch MP5', 'Пістолет Walther P38', 'Болтова гвинтівка Vz.24/G24(t)',
-               'Пістолет-кулемет MP-40', 'Гвинтівка Mauser 98k', 'Автомат Вулкан-М', 'ПТРК Скіф', 'Пістолет Mauser C96',
-               '40-мм ручний протитанковий гранатомет РПГ-7', 'Автомат Ґаліль', 'Карабін мисливський Зброяр Z-10 ',
-               'Снайперська гвинтівка Stealth Recon Scout', 'Автоматичний гранатомет УАГ-40', 'Гвинтівка FG-42',
-               'Великокаліберна снайперська гвинтівка  Barrett M82', 'Багатоцільовий вертольіт NHI NH90',
-               'Підствольний гранатомет ГП-25 «Костьор»', 'Атомний підводний човен з балістичними ракетами',
-               'Ударний вертоліт Мі-24ПУ1', 'Протитанкова рушниця Panzerbüchse 35(p)', 'Вогнемет Flammenwerfer 35',
-               'Переносна протитанкова безвідкатна гармата Panzerfaust', 'Реактивний піхотний вогнемет РПВ «Джміль»',
-               'Переносний зенітно-ракетний комплекс FIM-92 Stinger', 'Автомат FN SCAR', 'Автоматична гвинтівка M4',
-               'Розвідувально-ударний вертоліт Boeing–Sikorsky RAH-66 Comanche', 'Автоматична гвинтівка M16',
-               'Проміжний патрон для сучасних автоматичних гвинтівок 5,56×45 мм', 'Пістолет-кулемет Thompson M1',
-               'Основний бойовий танк БМ Оплот', 'Основний бойовий танк Т-84', 'Бронетранспортер БТР-7',
-               'Авіадесантний бронетранспортер БТР-Д', 'Бронеавтомобіль KrAZ-MPV Shrek One',
-               'Безпілотний літальний апарат Bayraktar TB2', 'Патрульний катер типу «Айленд»',
-               'Береговий ракетний комплекс РК-360МЦ «Нептун»', '152-мм самохідна гармата-гаубиця vz.77 «Дана»',
-               'Легкий тактичний позадорожній бронеавтомобіль HMMWV', 'Багатоцільовий гелікоптер МСБ-2']
-    ran = choice(emoji) + ' Я по гендеру... \n\n' + choice(genders)
-    return ran
-
-
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     if message.chat.type == 'private':
@@ -1834,10 +1494,10 @@ def feed(message):
                               ' смачно поїв.\n\nСила зросла на ' + str(ran) + '.\n'
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
-                    intellect(1, message.from_user.id)
+                    intellect(1, message.from_user.id, r)
                 if fr[3] == 1:
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
-                    spirit(1000, message.from_user.id, int(r.hget(message.from_user.id, 'class')), fi=False)
+                    spirit(1000, message.from_user.id, int(r.hget(message.from_user.id, 'class')), False, r)
                     bot.send_photo(message.chat.id, photo='https://i.ibb.co/bK2LrSD/feed.jpg',
                                    caption=msg, reply_to_message_id=message.id)
                 else:
@@ -1878,7 +1538,7 @@ def mine(message):
                         msg += '\nРусак сьогодні працював з новітніми технологіями.\n'
                         if int(r.hget(message.from_user.id, 'intellect')) < 20:
                             msg += '\U0001F9E0 +1'
-                            intellect(1, message.from_user.id)
+                            intellect(1, message.from_user.id, r)
                         else:
                             msg += '\U0001F4B5 +20'
                             r.hincrby(message.from_user.id, 'money', 20)
@@ -2295,7 +1955,7 @@ def war(cid, location, big_battle):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member), True)
+                s, s1, i, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2352,7 +2012,7 @@ def war(cid, location, big_battle):
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
             if int(r.hget(win, 'hach_time')) == date.today().day:
-                spirit(1000, win, wc, fi=False)
+                spirit(1000, win, wc, False, r)
                 class_reward = '\U0001F919: \U0001F54A +1000'
             else:
                 r.hincrby(win, 'strength', 10)
@@ -2368,12 +2028,12 @@ def war(cid, location, big_battle):
             class_reward = '\U0001F52E: \U0001F54A +2000\nВсі інші учасники битви втратили по 1000 бойового духу.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
-                spirit(-1000, member, int(r.hget(member, 'class')), fi=False)
-            spirit(2000, win, wc, fi=False)
+                spirit(-1000, member, int(r.hget(member, 'class')), False, r)
+            spirit(2000, win, wc, False, r)
     elif location == 'Битва біля старого дуба':
         if wc == 4 or wc == 14 or wc == 24:
             class_reward = '\U0001F5FF: \U0001F54A +10000'
-            spirit(10000, win, wc, fi=False)
+            spirit(10000, win, wc, False, r)
     elif location == 'Битва в житловому районі':
         if wc == 5 or wc == 15 or wc == 25:
             class_reward = '\U0001fa96: \u2622 +15'
@@ -2430,7 +2090,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member), True)
+                s, s1, i, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -2452,7 +2112,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member), True)
+                s, s1, i, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -3144,7 +2804,7 @@ def handle_query(call):
                         mush = int(r.hget(mem, 'mushrooms'))
                         if mush > 0:
                             r.hset(mem, 'mushrooms', 0)
-                            intellect(-mush, mem)
+                            intellect(-mush, mem, r)
                         else:
                             r.hset(mem, 'spirit', int(i))
                     except:
@@ -3157,7 +2817,7 @@ def handle_query(call):
         r.hset(call.from_user.id, 'photo', 0)
         r.hset(call.from_user.id, 'mushrooms', 0)
         r.hset(call.from_user.id, 'spirit', 0)
-        spirit(5 * int(r.hget(call.from_user.id, 'strength')), call.from_user.id, 0, False)
+        spirit(5 * int(r.hget(call.from_user.id, 'strength')), call.from_user.id, 0, False, r)
         r.hset(call.from_user.id, 'strength', 0)
         r.hset(call.from_user.id, 'class', 0)
         r.hset(call.from_user.id, 'intellect', 0)
@@ -3256,7 +2916,7 @@ def handle_query(call):
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text='\u26CF Ви підняли рівень майстерності до ' + str(s2 + 1) + '.')
                     if s2 + 1 == 5:
-                        intellect(2, call.from_user.id)
+                        intellect(2, call.from_user.id, r)
                         bot.send_message(call.message.chat.id, 'За досягнення найвищого рівня майстерності твій'
                                                                ' русак отримує \U0001F9E0 +2 інтелекту.')
                 else:
@@ -3298,7 +2958,7 @@ def handle_query(call):
                                           text='Ви розширили місце в підвалі для додаткового русака.')
                 bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
                                                        'Змінити бойового русака можна командою /swap.')
-                r.hset(call.from_user.id, 'name2', randrange(0, len(names)),
+                r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
                        {'strength2': randint(10, 50),
                         'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
@@ -3330,7 +2990,7 @@ def handle_query(call):
             cl = int(r.hget(call.from_user.id, 'class'))
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
-                                           vodka(call.from_user.id, cl))
+                                           vodka(call.from_user.id, cl, r))
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Недостатньо коштів на рахунку')
@@ -3389,7 +3049,7 @@ def handle_query(call):
 
     elif call.data.startswith('passport'):
         if int(r.hget(call.from_user.id, 'money')) >= 10:
-            ran = randrange(0, len(names))
+            ran = randint(0, len(names) - 1)
             r.hincrby(call.from_user.id, 'money', -10)
             r.hset(call.from_user.id, 'name', ran)
             if r.hexists(call.from_user.id, 'ac3') == 0:
@@ -3726,7 +3386,7 @@ def handle_query(call):
             if int(r.hget(call.from_user.id, 'strap')) >= 3:
                 r.hincrby(call.from_user.id, 'strap', -3)
                 r.hset(call.from_user.id, 's3', 5)
-                r.hset(call.from_user.id, 'name2', randrange(0, len(names)),
+                r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
                        {'strength2': randint(10, 50),
                         'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
@@ -3811,24 +3471,24 @@ def handle_query(call):
                     r.hincrby(uid, 'strength', 1)
                     msg += '\n\U0001F4AA +1'
                 elif ran2 == 2:
-                    intellect(1, uid)
+                    intellect(1, uid, r)
                     msg += '\n\U0001F9E0 +1'
                 elif ran2 == 3:
-                    spirit(1, uid, cl, False)
+                    spirit(1, uid, cl, False, r)
                     msg += '\n\U0001F54A +1'
                 elif ran2 == 4:
                     r.hincrby(uid, 'injure', 1)
                     msg += '\n\U0001fa78 +1'
                 elif ran2 == 5:
-                    hp(1, uid)
+                    hp(1, uid, r)
                     msg += '\n\U0001fac0 +1'
                 bot.edit_message_text(msg, call.message.chat.id, call.message.id)
             elif ran == [2]:
-                spirit(2000, uid, cl, False)
+                spirit(2000, uid, cl, False, r)
                 bot.edit_message_text('\u26AA В цьому пакунку лежить торбинка мандаринів.\n\U0001F54A +2000',
                                       call.message.chat.id, call.message.id)
             elif ran == [3]:
-                spirit(1000, uid, cl, False)
+                spirit(1000, uid, cl, False, r)
                 msg = '\u26AA В цьому пакунку знайдено дві упаковки бенгальських вогнів.\n\U0001F54A +1000'
                 if r.hexists(uid, 'name2') == 1:
                     msg += ' \U0001F54A +1000'
@@ -3865,10 +3525,10 @@ def handle_query(call):
             elif ran == [8]:
                 msg = '\U0001f7e3 Пакунок виявився доволі важким, адже там цілий ящик мандаринів!'
                 if int(r.hget(uid, 'intellect')) >= 20:
-                    spirit(5000, uid, cl, False)
+                    spirit(5000, uid, cl, False, r)
                     msg += '\n\U0001F54A +5000'
                 else:
-                    intellect(1, uid)
+                    intellect(1, uid, r)
                     msg += '\n\U0001F9E0 +1'
                 bot.edit_message_text(msg, call.message.chat.id, call.message.id)
             elif ran == [9]:
@@ -3882,7 +3542,7 @@ def handle_query(call):
                                       '\n\U0001F4B5 +400', call.message.chat.id, call.message.id)
             elif ran == [11]:
                 for member in r.smembers(call.message.chat.id):
-                    spirit(2000, int(member), int(r.hget(int(member), 'class')), False)
+                    spirit(2000, int(member), int(r.hget(int(member), 'class')), False, r)
                 bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено феєрверк. Після його запуску всі русаки '
                                       'чату насолоджувались видовищем.\n\U0001F54A +2000',
                                       call.message.chat.id, call.message.id)
@@ -3894,7 +3554,7 @@ def handle_query(call):
                                           'персонажа, в якого вірять русаки.', call.message.chat.id, call.message.id)
                 else:
                     for member in r.smembers(call.message.chat.id):
-                        spirit(2000, int(member), int(r.hget(int(member), 'class')), False)
+                        spirit(2000, int(member), int(r.hget(int(member), 'class')), False, r)
                     bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено феєрверк. Після його запуску всі русаки '
                                           'чату насолоджувались видовищем.\n\U0001F54A +2000',
                                           call.message.chat.id, call.message.id)
@@ -4142,7 +3802,7 @@ def messages(message):
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Фокусник.')
                             r.hset(message.from_user.id, 'class', 3)
                             r.hincrby(message.from_user.id, 'intellect', 1)
-                            intellect(1, message.from_user.id)
+                            intellect(1, message.from_user.id, r)
                         elif 'Язичник' in message.text or 'язичник' in message.text:
                             ran = randint(16, 20)
                             r.hset(message.from_user.id, 'photo', ran)
@@ -4164,7 +3824,7 @@ def messages(message):
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Малорос.')
                             r.hset(message.from_user.id, 'class', 7)
-                            intellect(-2, message.from_user.id)
+                            intellect(-2, message.from_user.id, r)
                         elif 'Хакер' in message.text or 'хакер' in message.text:
                             ran = randint(36, 40)
                             r.hset(message.from_user.id, 'photo', ran)
@@ -4183,7 +3843,7 @@ def messages(message):
                     if cl == 3:
                         bot.reply_to(message, 'Ти покращив фокусника до Злого генія.')
                         r.hset(message.from_user.id, 'class', 13)
-                        intellect(2, message.from_user.id)
+                        intellect(2, message.from_user.id, r)
                     if cl == 4:
                         bot.reply_to(message, 'Ти покращив язичника до Скінхеда.')
                         r.hset(message.from_user.id, 'class', 14)
@@ -4246,7 +3906,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     inline_query.query))),
+                                                                     inline_query.query, r))),
                                             reply_markup=markup.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                callback_data=call)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
@@ -4325,7 +3985,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     inline_query.query))),
+                                                                     inline_query.query, r))),
                                             reply_markup=markup.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                callback_data=call)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
@@ -4334,7 +3994,8 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     'особисте_запрошення_2021' + inline_query.query))),
+                                                                     'особисте_запрошення_2021' + inline_query.query,
+                                                                     r))),
                                             reply_markup=markup2.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                 callback_data=call1)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
@@ -4344,7 +4005,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     'турнірний_режим_2021' + inline_query.query))),
+                                                                     'турнірний_режим_2021' + inline_query.query, r))),
                                             reply_markup=markup3.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                 callback_data=call2)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
