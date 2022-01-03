@@ -12,6 +12,8 @@ from variables import names, icons, class_name, weapons, defenses, supports, pho
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender
 from parameters import spirit, vodka, intellect, injure, hp
+from buttons import goods, merchant_goods, donate_goods, skill_set,\
+    battle_button, battle_button_2, battle_button_3, invent, unpack
 
 r = redis.Redis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT')),
                 password=os.environ.get('REDIS_PASSWORD'), db=0)
@@ -1264,93 +1266,6 @@ def ctop(sett):
 
     except:
         return 'Недостатньо інформації для створення рейтингу.'
-
-
-def goods():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Горілка "Козаки" - 2 грн': 'vodka', 'Колючий дрин - 7 грн': 'weapon', 'Колючий щит - 8 грн': 'defense',
-             'Аптечка - 1 грн': 'aid_kit', 'Трофейний паспорт - 10 грн': 'passport', 'Утеплена будка - 30 грн': 'cabin',
-             'Жінка - 150 грн': 'woman', 'Тютюн та люлька - 1 жінка': 'pipe'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def donate_goods():
-    markup = types.InlineKeyboardMarkup()
-    items = {'TF2_heavy - 1 погон': 'tf2', 'Слов`янин Рікардо - 1 погон': 'ricardo',
-             'Преміум-фото класу - 1 погон': 'premium', '40 пакунків - 1 погон': '40_packs',
-             'Настоянка глоду - 1 погон': 'glid', 'Курс перекваліфікації - 2 погони': 'course',
-             'Велике будівництво - 3 погони': 'fast_cellar'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def merchant_goods():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Купити уламок бронетехніки': 'fragment', 'Купити мухомор': 'mushroom',
-             'Купити спорядження свого класу': 'equipment'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def skill_set():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Прокачати алкоголізм': 'alcohol', 'Прокачати майстерність': 'master',
-             'Продовжити будівництво': 'cellar'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def battle_button():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Відправити русака на бій': 'join'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def battle_button_2():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Відправити русака на бій': 'join', 'Почати битву': 'start_battle'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def battle_button_3():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Відправити русака на міжчатовий бій': 'war_join'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def invent():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Викинути зброю': 'drop_w', 'Викинути захист': 'drop_d', 'Викинути допомогу': 'drop_s'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def unpack():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Так': 'unpack'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def boost():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Отримати подарунок': 'boost2'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
 
 
 @bot.message_handler(commands=['start'])
@@ -2853,7 +2768,7 @@ def handle_query(call):
                                    '/gtop - глобальний топ\n'
                                    '/itop - яке я місце в топі?\n'
                                    '/ctop - топ чатів\n'
-                                   '/passport - твої характеристикиn\n\n'
+                                   '/passport - твої характеристики\n\n'
                                    'Русаки:\n'
                                    '/donbass - взяти русака\n'
                                    '/rusak - характеристики твого русака\n'
@@ -3353,7 +3268,7 @@ def handle_query(call):
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Недостатньо погонів на рахунку, або русак без класу')
-    elif call.data.startswith('glid'):
+    elif call.data.startswith('hawthorn'):
         if int(r.hget(call.from_user.id, 'strength')) < 400 and int(r.hget(call.from_user.id, 'intellect')) < 5:
             if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
                 r.hincrby(call.from_user.id, 'strap', -1)
