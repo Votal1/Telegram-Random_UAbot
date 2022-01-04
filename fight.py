@@ -6,7 +6,7 @@ from variables import names, icons
 
 
 def fight(uid1, uid2, un1, un2, t, loop, info, wins1, wins2, r):
-    if loop / 2 != 0 and t is True:
+    if loop % 2 != 0 and t is True:
         uid = uid1
         uid1 = uid2
         uid2 = uid
