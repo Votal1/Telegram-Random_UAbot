@@ -2654,14 +2654,14 @@ def default_query(inline_query):
 def default_query(inline_query):
     markup = types.InlineKeyboardMarkup()
     markup2 = types.InlineKeyboardMarkup()
-    markup3 = types.InlineKeyboardMarkup()
+    # markup3 = types.InlineKeyboardMarkup()
     try:
         call = 'fight' + str(inline_query.from_user.first_name) + ',' + \
                str(inline_query.from_user.id) + ',' + str(inline_query.query)
         call1 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
                 str(inline_query.from_user.id) + ',' + 'private,' + str(inline_query.query)
-        call2 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
-                str(inline_query.from_user.id) + ',' + 'tournament,' + str(inline_query.query)
+        # call2 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
+        #         str(inline_query.from_user.id) + ',' + 'tournament,' + str(inline_query.query)
         r1 = types.InlineQueryResultArticle('1', 'Пошук суперника по силі',
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
@@ -2681,7 +2681,7 @@ def default_query(inline_query):
                                                                                                 callback_data=call1)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
                                             description='введи @username')
-
+        '''
         r3 = types.InlineQueryResultArticle('3', 'Турнірний режим',
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
@@ -2691,7 +2691,8 @@ def default_query(inline_query):
                                                                                                 callback_data=call2)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
                                             description='Режим Best of 5. Можна ввести @username. Без нагород.')
-        bot.answer_inline_query(inline_query.id, [r1, r2, r3], cache_time=0)
+        '''
+        bot.answer_inline_query(inline_query.id, [r1, r2], cache_time=0)
     except Exception as e:
         print(e)
 
