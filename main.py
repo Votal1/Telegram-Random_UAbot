@@ -1856,7 +1856,7 @@ def handle_query(call):
                         if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
                                 int(r.hget(uid1, 'strength')) + diff:
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, r),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, '', 0, 0, r),
                                                   inline_message_id=call.inline_message_id)
                         else:
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1869,21 +1869,27 @@ def handle_query(call):
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
+                                        info, wins1, wins2 = '', 0, 0
                                         for loop in range(5):
-                                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, True, loop, r),
+                                            info, wins1, wins2 = fight(uid1, uid2, un1, un2, True, loop,
+                                                                       info, wins1, wins2, r)
+                                            bot.edit_message_text(text=info,
                                                                   inline_message_id=call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                   text='Цей бій не для тебе.')
                                 except:
+                                    info, wins1, wins2 = '', 0, 0
                                     for loop in range(5):
-                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, True, loop, r),
+                                        info, wins1, wins2 = fight(uid1, uid2, un1, un2, True, loop,
+                                                                   info, wins1, wins2, r)
+                                        bot.edit_message_text(text=info,
                                                               inline_message_id=call.inline_message_id)
                             elif cdata[2] == 'private':
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
-                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, r),
+                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, '', 0, 0, r),
                                                               inline_message_id=call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1895,7 +1901,7 @@ def handle_query(call):
                         except:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, r),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, '', 0, 0, r),
                                                   inline_message_id=call.inline_message_id)
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
