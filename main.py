@@ -6,7 +6,7 @@ import redis
 from random import randint, choice, choices
 from datetime import date
 from datetime import datetime
-import time
+from time import sleep
 
 from variables import names, icons, class_name, weapons, defenses, supports, photos, sudoers
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
@@ -408,7 +408,7 @@ def tournament(uid1, uid2, un1, un2, mid):
                 wins1 += 1
 
         bot.edit_message_text(text=info + line, inline_message_id=mid)
-        time.sleep(3)
+        sleep(3)
         if loop == 4:
             if wins1 > wins2:
                 win_info = '\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + ' в турнірному бою!'
@@ -1170,10 +1170,10 @@ def donate_shop(message):
 def war(cid, location, big_battle):
     bot.send_message(cid, '\U0001F5FA Починається ' + location + '!',
                      reply_to_message_id=int(r.hget('battle' + str(cid), 'start')))
-    time.sleep(2)
+    sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
     bot.send_message(cid, ran + ' Русаки несамовито молотять один одного...')
-    time.sleep(3)
+    sleep(3)
     m = bot.send_message(cid, '\u2694 Йде бій...')
 
     everyone = r.smembers('fighters' + str(cid))
@@ -1292,7 +1292,7 @@ def war(cid, location, big_battle):
         class_reward = '\U0001F381 +1'
         r.hincrby(win, 'n_packs', 1)
 
-    time.sleep(10)
+    sleep(10)
     r.hdel('battle' + str(cid), 'start')
     for member in r.smembers('fighters' + str(cid)):
         r.srem('fighters' + str(cid), member)
@@ -1306,11 +1306,11 @@ def war(cid, location, big_battle):
 
 
 def great_war(cid1, cid2, a, b):
-    time.sleep(2)
+    sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
     bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...')
     bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...')
-    time.sleep(3)
+    sleep(3)
     chance1 = 0
     chance2 = 0
     for member in a:
@@ -1375,7 +1375,7 @@ def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'money', 3)
         r.hincrby(222, cid2, 1)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +2 \U0001F4B5 +3'
-    time.sleep(10)
+    sleep(10)
 
     r.hdel('war_battle' + str(cid1), 'start')
     r.hdel('war_battle' + str(cid1), 'enemy')
@@ -1856,7 +1856,7 @@ def handle_query(call):
                         if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
                                 int(r.hget(uid1, 'strength')) + diff:
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, r),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, r),
                                                   inline_message_id=call.inline_message_id)
                         else:
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1869,17 +1869,21 @@ def handle_query(call):
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
-                                        tournament(uid1, uid2, un1, un2, call.inline_message_id)
+                                        for loop in range(5):
+                                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, True, loop, r),
+                                                                  inline_message_id=call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                   text='Цей бій не для тебе.')
                                 except:
-                                    tournament(uid1, uid2, un1, un2, call.inline_message_id)
+                                    for loop in range(5):
+                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, True, loop, r),
+                                                              inline_message_id=call.inline_message_id)
                             elif cdata[2] == 'private':
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
-                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, r),
+                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, r),
                                                               inline_message_id=call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1891,7 +1895,7 @@ def handle_query(call):
                         except:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, r),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, r),
                                                   inline_message_id=call.inline_message_id)
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

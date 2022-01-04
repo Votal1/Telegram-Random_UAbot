@@ -1,10 +1,16 @@
 from random import randint, choice, choices
 from datetime import date
+from time import sleep
 from parameters import spirit, vodka, intellect, injure, hp
 from variables import names, icons
 
 
-def fight(uid1, uid2, un1, un2, r):
+def fight(uid1, uid2, un1, un2, t, loop, r):
+    if loop / 2 != 0 and t is True:
+        uid = uid1
+        uid1 = uid2
+        uid2 = uid
+
     weapon, defense = '', ''
     stats1 = r.hmget(uid1, 'name', 'class', 'weapon', 'defense')
     stats2 = r.hmget(uid2, 'name', 'class', 'weapon', 'defense')
@@ -455,6 +461,41 @@ def fight(uid1, uid2, un1, un2, r):
         win = choices(['1', '2'], weights=[20, 80])
     else:
         win = choices(['1', '2'], weights=[chance1, chance2])
+
+    if t is True:
+        if len(defense) > 0:
+            defense = ' \U0001F6E1'
+        if len(weapon) > 0:
+            weapon = ' \U0001F5E1'
+        if loop == 0:
+            wins1, wins2 = 0, 0
+            info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' + icons[c1] +
+                       ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
+                       '\n\U0001F4AA ' + stats11[0].decode() + ' | ' + stats22[0].decode() +
+                       '\n\U0001F9E0 ' + stats11[1].decode() + ' | ' + stats22[1].decode() +
+                       '\n\U0001F54A ' + stats11[2].decode() + ' | ' + stats22[2].decode() + '\n\n')
+
+            if win == ['1']:
+                info += str(loop + 1) + '. ' + '\U0001F3C6 ' + names[name1] + ' ' + weapon + ' | ' + \
+                        names[name2] + ' ' + defense + '\n'
+                if loop % 2 == 0:
+                    wins1 += 1
+                else:
+                    wins2 += 1
+            if win == ['2']:
+                info += str(loop + 1) + '. ' + names[name1] + ' ' + weapon + ' | ' + '\U0001F3C6 ' \
+                        + names[name2] + ' ' + defense + '\n'
+                if loop % 2 == 0:
+                    wins2 += 1
+                else:
+                    wins1 += 1
+            if loop == 4:
+                if wins1 > wins2:
+                    info += '\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + ' в турнірному бою!'
+                else:
+                    info += '\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + ' в турнірному бою!'
+            sleep(3)
+            return info
 
     info = str('\u2744\uFE0F ' + un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' +
                icons[c1] + ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
