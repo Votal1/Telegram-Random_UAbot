@@ -1297,7 +1297,8 @@ def handle_query(call):
                         if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
                                 int(r.hget(uid1, 'strength')) + diff:
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, '', 0, 0, r),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
+                                                             call.message.id),
                                                   inline_message_id=call.inline_message_id)
                         else:
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1310,27 +1311,18 @@ def handle_query(call):
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
-                                        info, wins1, wins2 = '', 0, 0
-                                        for loop in range(5):
-                                            info, wins1, wins2 = fight(uid1, uid2, un1, un2, True, loop,
-                                                                       info, wins1, wins2, r)
-                                            bot.edit_message_text(text=info,
-                                                                  inline_message_id=call.inline_message_id)
+                                        fight(uid1, uid2, un1, un2, 5, r, bot, call.message.id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                   text='Цей бій не для тебе.')
                                 except:
-                                    info, wins1, wins2 = '', 0, 0
-                                    for loop in range(5):
-                                        info, wins1, wins2 = fight(uid1, uid2, un1, un2, True, loop,
-                                                                   info, wins1, wins2, r)
-                                        bot.edit_message_text(text=info,
-                                                              inline_message_id=call.inline_message_id)
+                                    fight(uid1, uid2, un1, un2, 5, r, bot, call.message.id)
                             elif cdata[2] == 'private':
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
-                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, '', 0, 0, r),
+                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
+                                                                         call.message.id),
                                                               inline_message_id=call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1342,7 +1334,7 @@ def handle_query(call):
                         except:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, False, 0, '', 0, 0, r),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot, call.message.id),
                                                   inline_message_id=call.inline_message_id)
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -2654,14 +2646,14 @@ def default_query(inline_query):
 def default_query(inline_query):
     markup = types.InlineKeyboardMarkup()
     markup2 = types.InlineKeyboardMarkup()
-    # markup3 = types.InlineKeyboardMarkup()
+    markup3 = types.InlineKeyboardMarkup()
     try:
         call = 'fight' + str(inline_query.from_user.first_name) + ',' + \
                str(inline_query.from_user.id) + ',' + str(inline_query.query)
         call1 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
                 str(inline_query.from_user.id) + ',' + 'private,' + str(inline_query.query)
-        # call2 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
-        #         str(inline_query.from_user.id) + ',' + 'tournament,' + str(inline_query.query)
+        call2 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
+                str(inline_query.from_user.id) + ',' + 'tournament,' + str(inline_query.query)
         r1 = types.InlineQueryResultArticle('1', 'Пошук суперника по силі',
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
@@ -2681,7 +2673,6 @@ def default_query(inline_query):
                                                                                                 callback_data=call1)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
                                             description='введи @username')
-        '''
         r3 = types.InlineQueryResultArticle('3', 'Турнірний режим',
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
@@ -2691,8 +2682,7 @@ def default_query(inline_query):
                                                                                                 callback_data=call2)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
                                             description='Режим Best of 5. Можна ввести @username. Без нагород.')
-        '''
-        bot.answer_inline_query(inline_query.id, [r1, r2], cache_time=0)
+        bot.answer_inline_query(inline_query.id, [r1, r2, r3], cache_time=0)
     except Exception as e:
         print(e)
 
