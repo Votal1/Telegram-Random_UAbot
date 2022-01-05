@@ -1298,7 +1298,7 @@ def handle_query(call):
                                 int(r.hget(uid1, 'strength')) + diff:
                             un2 = call.from_user.first_name
                             bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
-                                                             call.message.id),
+                                                             call.inline_message_id),
                                                   inline_message_id=call.inline_message_id)
                         else:
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1311,18 +1311,18 @@ def handle_query(call):
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
-                                        fight(uid1, uid2, un1, un2, 5, r, bot, call.message.id)
+                                        fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                   text='Цей бій не для тебе.')
                                 except:
-                                    fight(uid1, uid2, un1, un2, 5, r, bot, call.message.id)
+                                    fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
                             elif cdata[2] == 'private':
                                 try:
                                     q = cdata[3].split()
                                     if q[1][1:] == call.from_user.username:
                                         bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
-                                                                         call.message.id),
+                                                                         call.inline_message_id),
                                                               inline_message_id=call.inline_message_id)
                                     else:
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1334,7 +1334,7 @@ def handle_query(call):
                         except:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot, call.message.id),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot, call.inline_message_id),
                                                   inline_message_id=call.inline_message_id)
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
