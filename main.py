@@ -1308,15 +1308,22 @@ def handle_query(call):
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
                             if cdata[2] == 'tournament':
-                                try:
-                                    q = cdata[3].split()
-                                    if q[1][1:] == call.from_user.username:
+                                timestamp = int(datetime.now().timestamp())
+                                if r.hexists(call.from_user.id, 'timestamp') == 0:
+                                    r.hset(call.from_user.id, 'timestamp', 0)
+                                if timestamp - int(r.hget(call.from_user.id, 'timestamp')) < 15:
+                                    pass
+                                else:
+                                    r.hset(call.from_user.id, 'timestamp', timestamp)
+                                    try:
+                                        q = cdata[3].split()
+                                        if q[1][1:] == call.from_user.username:
+                                            fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
+                                        else:
+                                            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                      text='Цей бій не для тебе.')
+                                    except:
                                         fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
-                                    else:
-                                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                  text='Цей бій не для тебе.')
-                                except:
-                                    fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
                             elif cdata[2] == 'private':
                                 try:
                                     q = cdata[3].split()

@@ -8,7 +8,7 @@ from variables import names, icons
 def fight(uid1, uid2, un1, un2, t, r, bot, mid):
     info, wins1, wins2 = '', 0, 0
     for loop in range(t):
-        if loop % 2 != 0 and t == 5:
+        if loop / 2 != 0 and t == 5:
             uid = uid1
             uid1 = uid2
             uid2 = uid
