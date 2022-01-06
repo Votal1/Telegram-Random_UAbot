@@ -1317,7 +1317,7 @@ def handle_query(call):
                                     r.hset(call.from_user.id, 'timestamp', timestamp)
                                     try:
                                         q = cdata[2].split()
-                                        if q[1][1:] == call.from_user.username:
+                                        if q[1][1:].lower() == call.from_user.username.lower():
                                             fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
                                         else:
                                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1327,7 +1327,7 @@ def handle_query(call):
                             elif cdata[1] == 'pr':
                                 try:
                                     q = cdata[2].split()
-                                    if q[1][1:] == call.from_user.username:
+                                    if q[1][1:].lower() == call.from_user.username.lower():
                                         bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
                                                                          call.inline_message_id),
                                                               inline_message_id=call.inline_message_id)
@@ -2671,7 +2671,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     'особисте_запрошення_2021' + inline_query.query,
+                                                                     'pr' + inline_query.query,
                                                                      r))),
                                             reply_markup=markup2.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                 callback_data=call1)),
@@ -2681,7 +2681,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     'турнірний_режим_2021' + inline_query.query, r))),
+                                                                     'tr' + inline_query.query, r))),
                                             reply_markup=markup3.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                 callback_data=call2)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',

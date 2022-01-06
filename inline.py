@@ -33,14 +33,14 @@ def prepare_to_fight(uid, fn, q, r):
         query = ''
         try:
             q = q.split()
-            if q[0].startswith('турнірний_режим_2021'):
+            if q[0].startswith('tr'):
                 query = '\n\n\U0001F530 Турнірний режим \U0001F530'
                 try:
                     if q[1].startswith('@'):
                         query += '\n\U0001F4E3 Викликаю на бій ' + q[1] + '!'
                 except:
                     pass
-            elif q[0].startswith('особисте_запрошення_2021'):
+            elif q[0].startswith('pr'):
                 try:
                     if q[1].startswith('@'):
                         query += '\n\U0001F4E3 Викликаю на бій ' + q[1] + '!'
