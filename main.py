@@ -1285,13 +1285,13 @@ def handle_query(call):
 
     elif call.data.startswith('fight') and r.hexists(call.from_user.id, 'name') != 0:
         cdata = call.data[5:].split(',', 3)
-        uid1 = cdata[1]
-        un1 = cdata[0]
+        uid1 = cdata[0]
+        un1 = r.hget(uid1, 'firstname').decode()
         if call.from_user.id != int(uid1):
             if int(r.hget(call.from_user.id, 'hp')) > 0:
                 if int(r.hget(uid1, 'hp')) > 0:
                     try:
-                        q = cdata[2].split()
+                        q = cdata[1].split()
                         diff = int(q[1])
                         uid2 = call.from_user.id
                         if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
@@ -1307,7 +1307,7 @@ def handle_query(call):
                         try:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
-                            if cdata[2] == 'tournament':
+                            if cdata[1] == 'tr':
                                 timestamp = int(datetime.now().timestamp())
                                 if r.hexists(call.from_user.id, 'timestamp') == 0:
                                     r.hset(call.from_user.id, 'timestamp', 0)
@@ -1316,7 +1316,7 @@ def handle_query(call):
                                 else:
                                     r.hset(call.from_user.id, 'timestamp', timestamp)
                                     try:
-                                        q = cdata[3].split()
+                                        q = cdata[2].split()
                                         if q[1][1:] == call.from_user.username:
                                             fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
                                         else:
@@ -1324,9 +1324,9 @@ def handle_query(call):
                                                                       text='Цей бій не для тебе.')
                                     except:
                                         fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
-                            elif cdata[2] == 'private':
+                            elif cdata[1] == 'pr':
                                 try:
-                                    q = cdata[3].split()
+                                    q = cdata[2].split()
                                     if q[1][1:] == call.from_user.username:
                                         bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
                                                                          call.inline_message_id),
@@ -2581,7 +2581,7 @@ def messages(message):
 def default_query(inline_query):
     markup = types.InlineKeyboardMarkup()
     try:
-        call = 'fight' + str(inline_query.from_user.first_name) + ',' + str(inline_query.from_user.id)
+        call = 'fight' + str(inline_query.from_user.id)
         r1 = types.InlineQueryResultArticle('1', 'Бій русаків',
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
@@ -2655,12 +2655,9 @@ def default_query(inline_query):
     markup2 = types.InlineKeyboardMarkup()
     markup3 = types.InlineKeyboardMarkup()
     try:
-        call = 'fight' + str(inline_query.from_user.first_name) + ',' + \
-               str(inline_query.from_user.id) + ',' + str(inline_query.query)
-        call1 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
-                str(inline_query.from_user.id) + ',' + 'private,' + str(inline_query.query)
-        call2 = 'fight' + str(inline_query.from_user.first_name) + ',' + \
-                str(inline_query.from_user.id) + ',' + 'tournament,' + str(inline_query.query)
+        call = 'fight' + str(inline_query.from_user.id) + ',' + str(inline_query.query)
+        call1 = 'fight' + str(inline_query.from_user.id) + ',' + 'pr,' + str(inline_query.query)
+        call2 = 'fight' + str(inline_query.from_user.id) + ',' + 'tr,' + str(inline_query.query)
         r1 = types.InlineQueryResultArticle('1', 'Пошук суперника по силі',
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,

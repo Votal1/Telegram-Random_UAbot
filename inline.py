@@ -8,6 +8,7 @@ def prepare_to_fight(uid, fn, q, r):
         return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
     elif int(r.hget(uid, 'hp')) > 0:
         stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')
+        r.hset(uid, 'firstname', fn)
         name = int(stats[0])
         c = int(stats[1])
         s = int(stats[2])
