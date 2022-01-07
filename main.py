@@ -1097,11 +1097,6 @@ def pack(message):
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
 
-@bot.message_handler(commands=['time'])
-def timezone(message):
-    bot.reply_to(message, str(datetime.now()))
-
-
 @bot.message_handler(commands=['skills'])
 def skills(message):
     try:
