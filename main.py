@@ -879,6 +879,7 @@ def war_battle(message):
                 a = bot.send_message(message.chat.id, '\u2694 Пошук ворогів...\n\n')
                 r.hset('battles', a.chat.id, 0)
                 r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
+                r.hset('war_battle' + str(message.chat.id), 'starter', message.from_user.id)
             else:
                 i = len(r.hkeys('battles'))
                 for k in r.hkeys('battles'):
@@ -905,12 +906,14 @@ def war_battle(message):
                                 pass
                             r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
                             r.hset('war_battle' + k.decode(), 'start', b.message_id)
+                            r.hset('war_battle' + str(message.chat.id), 'starter', a.from_user.id)
                             break
                     i -= 1
                     if i == 0:
                         a = bot.send_message(message.chat.id, '\u2694 Пошук ворогів...\n\n')
                         r.hset('battles', a.chat.id, 0)
                         r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
+                        r.hset('war_battle' + str(message.chat.id), 'starter', a.from_user.id)
         elif '@' not in message.chat.title:
             try:
                 msg = '\U0001F5E1 Підготовка до міжчатової битви тут.\n\nКількість наших бійців: ' \
