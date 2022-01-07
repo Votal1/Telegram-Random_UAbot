@@ -1,5 +1,5 @@
 from random import randint, choice, choices
-from datetime import date
+from datetime import datetime
 from time import sleep
 from parameters import spirit, vodka, intellect, injure, hp
 from variables import names, icons
@@ -30,33 +30,33 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 hach2 = 1
         if c1 == 21:
             if c2 == 1 or c2 == 11 or c2 == 21:
-                if int(r.hget(uid1, 'hach_time2')) != date.today().day:
+                if int(r.hget(uid1, 'hach_time2')) != datetime.now().day:
                     hach += '\n' + names[name1] + ': брат за брата! \U0001F919\n\U0001F4AA + 10 \U0001F54A +1000\n'
-                    r.hset(uid1, 'hach_time2', date.today().day)
+                    r.hset(uid1, 'hach_time2', datetime.now().day)
                     r.hincrby(uid1, 'strength', 10)
                     spirit(1000, uid1, 21, False, r)
         if c2 == 21:
             if c1 == 1 or c1 == 11 or c1 == 21:
-                if int(r.hget(uid2, 'hach_time2')) != date.today().day:
+                if int(r.hget(uid2, 'hach_time2')) != datetime.now().day:
                     hach += '\n' + names[name2] + ': брат за брата! \U0001F919\n\U0001F4AA + 10 \U0001F54A +1000\n'
-                    r.hset(uid2, 'hach_time2', date.today().day)
+                    r.hset(uid2, 'hach_time2', datetime.now().day)
                     r.hincrby(uid2, 'strength', 10)
                     spirit(1000, uid2, 21, False, r)
         if c1 == 22:
-            if int(r.hget(uid1, 'worker')) != date.today().day and int(r.hget(uid1, 'time')) == date.today().day:
+            if int(r.hget(uid1, 'worker')) != datetime.now().day and int(r.hget(uid1, 'time')) == datetime.now().day:
                 alcohol = int(r.hget(uid1, 's1'))
                 ran = choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
                 if ran == [1]:
                     worker += '\n\U0001F9F0 ' + names[name1] + ' отримує від начальника талон на їжу.\n'
-                    r.hset(uid1, 'worker', date.today().day)
+                    r.hset(uid1, 'worker', datetime.now().day)
                     r.hset(uid1, 'time', 0)
         if c2 == 22:
-            if int(r.hget(uid2, 'worker')) != date.today().day and int(r.hget(uid2, 'time')) == date.today().day:
+            if int(r.hget(uid2, 'worker')) != datetime.now().day and int(r.hget(uid2, 'time')) == datetime.now().day:
                 alcohol = int(r.hget(uid2, 's1'))
                 ran = choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
                 if ran == [1]:
                     worker += '\n\U0001F9F0 ' + names[name2] + ' отримує від начальника талон на їжу.\n'
-                    r.hset(uid2, 'worker', date.today().day)
+                    r.hset(uid2, 'worker', datetime.now().day)
                     r.hset(uid2, 'time', 0)
         if c1 == 26:
             if c2 != 6 and c2 != 16 and c2 != 26:

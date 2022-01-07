@@ -4,7 +4,6 @@ import os
 from flask import Flask, request
 import redis
 from random import randint, choice, choices
-from datetime import date
 from datetime import datetime
 from time import sleep
 
@@ -140,8 +139,8 @@ def feed(message):
                 r.hset('f' + str(message.chat.id), 'title', message.chat.title)
         except:
             pass
-        if not date.today().day == int(r.hget(message.from_user.id, 'time')):
-            r.hset(message.from_user.id, 'time', date.today().day)
+        if not datetime.now().day == int(r.hget(message.from_user.id, 'time')):
+            r.hset(message.from_user.id, 'time', datetime.now().day)
             r.hset(message.from_user.id, 'hp', 100)
             fr = feed_rusak(int(r.hget(message.from_user.id, 'intellect')))
             r.hincrby(message.from_user.id, 'eat', 1)
@@ -175,7 +174,7 @@ def feed(message):
                     bot.reply_to(message, msg)
             else:
                 bot.reply_to(message, '\U0001F9A0 Твій русак сьогодні захворів. Сили від їжі не прибавилось.')
-        elif date.today().day == int(r.hget(message.from_user.id, 'time')):
+        elif datetime.now().day == int(r.hget(message.from_user.id, 'time')):
             bot.reply_to(message, 'Твій русак сьогодні їв, хватить з нього')
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
@@ -187,9 +186,9 @@ def mine(message):
         try:
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
-            if not date.today().day == int(r.hget(message.from_user.id, 'time1')):
+            if not datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
                 ms = mine_salt(int(r.hget(message.from_user.id, 's2')))
-                r.hset(message.from_user.id, 'time1', date.today().day)
+                r.hset(message.from_user.id, 'time1', datetime.now().day)
                 if message.text.startswith('/minecraft'):
                     if r.hexists(message.from_user.id, 'ac1') == 0:
                         r.hset(message.from_user.id, 'ac1', 1)
@@ -229,7 +228,7 @@ def mine(message):
                         if int(r.hget(message.from_user.id, 'class')) == 18 or \
                                 int(r.hget(message.from_user.id, 'class')) == 28:
                             r.hset(message.from_user.id, 'time1', 0)
-            elif date.today().day == int(r.hget(message.from_user.id, 'time1')):
+            elif datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
                 bot.reply_to(message, 'Твій русак сьогодні відпрацював зміну.')
         except:
             bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
@@ -240,7 +239,7 @@ def sacrifice(message):
     if r.hexists(message.from_user.id, 'time2') == 0:
         r.hset(message.from_user.id, 'time2', 0)
 
-    if date.today().day != int(r.hget(message.from_user.id, 'time2')) \
+    if datetime.now().day != int(r.hget(message.from_user.id, 'time2')) \
             and r.hexists(message.from_user.id, 'strength') == 1 \
             and int(r.hget(message.from_user.id, 'strength')) != 0:
         markup = types.InlineKeyboardMarkup()
@@ -259,8 +258,8 @@ def fascist(message):
         if message.chat.type != 'private' and len(r.smembers(message.chat.id)) >= 14:
             if r.hexists('f' + str(message.chat.id), 'time3') == 0:
                 r.hset('f' + str(message.chat.id), 'time3', 0)
-            if int(r.hget('f' + str(message.chat.id), 'time3')) != int(date.today().day):
-                r.hset('f' + str(message.chat.id), 'time3', date.today().day)
+            if int(r.hget('f' + str(message.chat.id), 'time3')) != int(datetime.now().day):
+                r.hset('f' + str(message.chat.id), 'time3', datetime.now().day)
                 ran = []
                 for member in r.smembers(message.chat.id):
                     mem = int(member)
@@ -367,10 +366,10 @@ def woman(message):
             if r.hexists(message.from_user.id, 'time4') == 0:
                 r.hset(message.from_user.id, 'time4', 0)
             if int(r.hget(message.from_user.id, 'woman')) == 1:
-                if int(r.hget(message.from_user.id, 'time4')) != date.today().day:
+                if int(r.hget(message.from_user.id, 'time4')) != datetime.now().day:
                     if r.hexists(message.from_user.id, 'time5') == 0:
                         r.hset(message.from_user.id, 'time5', 0)
-                    r.hset(message.from_user.id, 'time4', date.today().day)
+                    r.hset(message.from_user.id, 'time4', datetime.now().day)
                     r.hincrby(message.from_user.id, 'time5', 1)
                     if int(r.hget(message.from_user.id, 'time5')) == 9:
                         bot.reply_to(message, '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 '
@@ -511,9 +510,9 @@ def merchant(message):
     if message.chat.id == -1001211933154:
         if r.hexists('soledar', 'merchant_day') == 0:
             r.hset('soledar', 'merchant_day', 0)
-            r.hset('soledar', 'merchant_hour', randint(16, 20))
+            r.hset('soledar', 'merchant_hour', randint(18, 22))
 
-        if int(r.hget('soledar', 'merchant_day')) != date.today().day and \
+        if int(r.hget('soledar', 'merchant_day')) != datetime.now().day and \
                 int(r.hget('soledar', 'merchant_hour')) == datetime.now().hour:
             pin = bot.reply_to(message, 'Прийшов мандрівний торговець, приніс різноманітні товари.\n\n'
                                         '\U0001F6E1 Уламок бронетехніки [Захист, міцність=7, ціна=10] - збільшує силу '
@@ -533,9 +532,9 @@ def merchant(message):
                                         'бойовий дух до максимуму на бій.\n\U0001F4DF Експлойт [Атака, міцність=2, '
                                         'ціна=9] - шанс активувати здібність хакера - 99%.',
                                reply_markup=merchant_goods())
-            r.hset('soledar', 'merchant_day', date.today().day)
+            r.hset('soledar', 'merchant_day', datetime.now().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
-            r.hset('soledar', 'merchant_hour', randint(16, 20))
+            r.hset('soledar', 'merchant_hour', randint(18, 22))
             try:
                 bot.unpin_chat_message(chat_id=pin.chat.id,
                                        message_id=int(r.hget('soledar', 'pin')))
@@ -682,13 +681,13 @@ def war(cid, location, big_battle):
 
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
-            if int(r.hget(win, 'hach_time')) == date.today().day:
+            if int(r.hget(win, 'hach_time')) == datetime.now().day:
                 spirit(1000, win, wc, False, r)
                 class_reward = '\U0001F919: \U0001F54A +1000'
             else:
                 r.hincrby(win, 'strength', 10)
                 class_reward = '\U0001F919: \U0001F4AA +10'
-                r.hset(win, 'hach_time', date.today().day)
+                r.hset(win, 'hach_time', datetime.now().day)
     elif location == 'Битва на покинутому заводі':
         if wc == 2 or wc == 12 or wc == 22:
             class_reward = '\U0001F9F0: \U0001F4B5 +5 \u2622 +10'
@@ -1471,7 +1470,7 @@ def handle_query(call):
                                                                                        ' нема русака')
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
-            int(r.hget(call.from_user.id, 'time2')) != date.today().day:
+            int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
         try:
             for member in r.smembers(call.message.chat.id):
                 mem = int(member)
@@ -1506,7 +1505,7 @@ def handle_query(call):
         r.hset(call.from_user.id, 'strength', 0)
         r.hset(call.from_user.id, 'class', 0)
         r.hset(call.from_user.id, 'intellect', 0)
-        r.hset(call.from_user.id, 'time2', date.today().day)
+        r.hset(call.from_user.id, 'time2', datetime.now().day)
         r.hincrby(call.from_user.id, 'deaths', 1)
         if call.message.chat.type == 'private':
             bot.edit_message_text(text='\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, '
