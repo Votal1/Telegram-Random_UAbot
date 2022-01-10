@@ -251,6 +251,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                   'і отримав важкі поранення.'
                 r.hset(uid2, 'spirit', 0)
+                r.hset(uid2, 'hp', 0)
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
                 r.hincrby(uid2, 'injure', 100)
@@ -259,6 +260,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                               + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                                 ' важкі поранення, як і ' + names[name1] + '.'
                     r.hset(uid1, 'spirit', 0)
+                    r.hset(uid1, 'hp', 0)
                     if c1 != 6 and c1 != 16 and c1 != 26:
                         r.hset(uid1, 'weapon', 0)
                     r.hset(uid1, 'defense', 0)
@@ -292,10 +294,11 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
 
         elif weapon2 == 2 and defense1 != 2:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
-            r.hincrby(uid1, 'injure', 200)
+            r.hincrby(uid1, 'injure', 300)
             r.hset(uid1, 'spirit', 0)
             if c1 != 6 and c1 != 16 and c1 != 26:
                 r.hset(uid1, 'weapon', 0)
+            r.hset(uid1, 'hp', 0)
             r.hset(uid1, 'defense', 0)
             r.hset(uid2, 'weapon', 0)
             r.hset(uid2, 's_weapon', 0)
@@ -335,6 +338,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                     'і отримав важкі поранення.'
                 r.hset(uid1, 'spirit', 0)
+                r.hset(uid1, 'hp', 0)
                 r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
                 r.hincrby(uid1, 'injure', 100)
@@ -343,6 +347,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                               + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                                 ' важкі поранення, як і ' + names[name2] + '.'
                     r.hset(uid2, 'spirit', 0)
+                    r.hset(uid2, 'hp', 0)
                     if c2 != 6 and c2 != 16 and c2 != 26:
                         r.hset(uid2, 'weapon', 0)
                     r.hset(uid2, 'defense', 0)

@@ -428,7 +428,8 @@ def classes(message):
                               ' втричі більше бойового духу, але при поразці вдвічі більше втрачає.\n\n'
                               'Гарматне м`ясо \U0001fa96 - +50% сили в бою, якщо є АК-47 (зброя, яку можна придбати в '
                               'мандрівного торговця). 2% шанс отримати поранення в бою від АК-47 (втрачає весь бойовий'
-                              ' дух, зброю, захист, на 100 боїв втричі зменшує силу, інтелект та бойовий дух).\n\n'
+                              ' дух, здоров`я, зброю, захист, на 100 боїв вдвічі зменшує бойовий дух та втричі - '
+                              'силу).\n\n'
                               'Мусор \U0001F46E - має постійну зброю, яка перед боєм ігнорує бойовий дух двох сторін.'
                               ' Якщо є захист, ігнорує лише бойовий дух ворога.\n\n'
                               'Малорос \U0001F921 - моментально віднімає 2 інтелекту. При жертві віднімає у всіх'
@@ -1755,8 +1756,8 @@ def handle_query(call):
         if r.hexists(call.from_user.id, 's_support') == 0:
             r.hset(call.from_user.id, 's_support', 0)
         if int(r.hget(call.from_user.id, 'support')) == 0:
-            if int(r.hget(call.from_user.id, 'money')) >= 1:
-                r.hincrby(call.from_user.id, 'money', -1)
+            if int(r.hget(call.from_user.id, 'money')) >= 4:
+                r.hincrby(call.from_user.id, 'money', -4)
                 r.hincrby(call.from_user.id, 'hp', 5)
                 r.hset(call.from_user.id, 'support', 1)
                 r.hset(call.from_user.id, 's_support', 5)
@@ -2365,6 +2366,12 @@ def handle_query(call):
                     elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 18)
                         r.hset(uid, 's_weapon', 2)
+                elif cl == 9 or cl == 19 or cl == 29:
+                    if int(r.hget(uid, 'weapon')) == 19:
+                        r.hincrby(uid, 's_weapon', 5)
+                    elif int(r.hget(uid, 'weapon')) != 2:
+                        r.hset(uid, 'weapon', 19)
+                        r.hset(uid, 's_weapon', 5)
                 else:
                     bot.edit_message_text('\u26AA В цьому пакунку лежать дивні речі, якими '
                                           'русак не вміє користуватись...', call.message.chat.id, call.message.id)
@@ -2436,8 +2443,8 @@ def handle_query(call):
                 if cl != 6 or cl != 16 or cl != 26:
                     bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
                                           'РПГ-7 і одну гранату до нього [Атака, міцність=1] - завдає ворогу важке пор'
-                                          'анення (віднімає бойовий дух і спорядження, його сила, інтелект та '
-                                          'бойовий дух впадуть втричі на 200 боїв).',
+                                          'анення (віднімає бойовий дух, здоров`я і спорядження, на 300 боїв бойовий '
+                                          'дух впаде вдвічі а сила втричі).',
                                           call.message.chat.id, call.message.id)
                     r.hset(uid, 'weapon', 2)
                     r.hset(uid, 's_weapon', 1)
