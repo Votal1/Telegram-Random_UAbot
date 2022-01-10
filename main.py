@@ -433,7 +433,10 @@ def classes(message):
                               ' русаків чату інтелект, який вони здобули від мухоморів (їх можна буде знову купити). '
                               'Якщо інтелект не зняло, віднімає 90% бойового духу. Мінімальний шанс перемоги збільшено '
                               'до 20%.\n\nХакер \U0001F4DF - при поразці є 18% підняти собі бойовий дух, знизити ворогу'
-                              ' і заробити гривню.\n\n\n'
+                              ' і заробити гривню.\n\n'
+                              'Медик \u26D1 -  якщо у ворога менше ніж 50 здоров`я, то медик лікує йому 5. В іншому'
+                              ' випадку з шансом 20% завдає поранення на 2 бої. Наявність медика вдвічі збільшує силу'
+                              ' банди в міжчатових битвах.\n\n\n'
                               'Щоб подивитись другий рівень класів натисни /class_2\n'
                               'Якщо твій русак вже набрав 5 інтелекту, можеш вибрати один з цих класів (один раз на '
                               'одного русака), написавши сюди "Обираю клас " і назву класу.')
@@ -753,9 +756,10 @@ def great_war(cid1, cid2, a, b):
     sleep(3)
     chance1 = 0
     chance2 = 0
+    m1, m2 = 0, 0
     for member in a:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'class')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -771,13 +775,17 @@ def great_war(cid1, cid2, a, b):
                 d = 1.5
             else:
                 d = 1
+            if int(stats[6]) == 9 or int(stats[6]) == 19 or int(stats[6]) == 29:
+                m1 = 1
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
             chance1 += chance
         except:
             continue
+    if m1 == 1:
+        chance1 = chance1 * 2
     for member in b:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'class')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -793,10 +801,14 @@ def great_war(cid1, cid2, a, b):
                 d = 1.5
             else:
                 d = 1
+            if int(stats[6]) == 9 or int(stats[6]) == 19 or int(stats[6]) == 29:
+                m2 = 1
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
             chance2 += chance
         except:
             continue
+    if m2 == 1:
+        chance2 = chance2 * 2
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
@@ -2030,6 +2042,8 @@ def handle_query(call):
                 r.hset(call.from_user.id, 'photo', 49)
             if cl == 8 or cl == 18 or cl == 28:
                 r.hset(call.from_user.id, 'photo', 50)
+            if cl == 9 or cl == 19 or cl == 29:
+                r.hset(call.from_user.id, 'photo', 56)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно змінили фото русаку')
         else:
@@ -2512,6 +2526,11 @@ def messages(message):
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Хакер.')
                             r.hset(message.from_user.id, 'class', 8)
+                        elif 'Медик' in message.text or 'медик' in message.text:
+                            ran = randint(51, 55)
+                            r.hset(message.from_user.id, 'photo', ran)
+                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Медик.')
+                            r.hset(message.from_user.id, 'class', 9)
             if int(r.hget(message.from_user.id, 'intellect')) >= 12:
                 if message.text == 'Покращити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))

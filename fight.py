@@ -21,7 +21,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
         weapon1, weapon2 = int(stats1[2]), int(stats2[2])
         defense1, defense2 = int(stats1[3]), int(stats2[3])
 
-        hach1, hach2, hach, worker, meat, cop, fsb, inj1, inj2 = 0, 0, '', '', '', '', '', '', ''
+        hach1, hach2, hach, worker, meat, cop, fsb, m1, m2, inj1, inj2 = 0, 0, '', '', '', '', '', '', '', '', ''
         if c1 == 1 or c1 == 11 or c1 == 21:
             if weapon2 == 0:
                 hach1 = 1
@@ -447,6 +447,27 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     r.hincrby(uid2, 'injure', 1)
                     r.hincrby(uid1, 'injure', ran)
 
+        if c1 == 9 or c1 == 19 or c1 == 29:
+            if hp2 < 50:
+                hp(5, uid2, r)
+            else:
+                ran = choices([0, 1], weights=[80, 20])
+                if ran == [1]:
+                    m1 = '\n\u26D1 ' + names[name1] + ' побачив що ' + names[name2] + ' занадто здоровий і виправив це.'
+                    if c1 == 9:
+                        m1 += '\n\U0001fa78 +2'
+                        r.hincrby(uid2, 'injure', 2)
+        if c2 == 9 or c2 == 19 or c2 == 29:
+            if hp1 < 50:
+                hp(5, uid1, r)
+            else:
+                ran = choices([0, 1], weights=[80, 20])
+                if ran == [1]:
+                    m2 = '\n\u26D1 ' + names[name2] + ' побачив що ' + names[name1] + ' занадто здоровий і виправив це.'
+                    if c2 == 9:
+                        m2 += '\n\U0001fa78 +2'
+                        r.hincrby(uid1, 'injure', 2)
+
         chance1 = s1 * (1 + 0.1 * i1) * (1 + 0.01 * (bd1 * 0.01))
         chance2 = s2 * (1 + 0.1 * i2) * (1 + 0.01 * (bd2 * 0.01))
 
@@ -613,7 +634,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 r.hincrby(uid2, 's_support', -1)
                 if int(r.hget(uid2, 's_support')) <= 0:
                     r.hset(uid2, 'support', 0)
-            info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)'
+            info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)' + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
                                                                    ' стільки ж втрачає.' +
@@ -727,7 +748,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 r.hincrby(uid1, 's_support', -1)
                 if int(r.hget(uid1, 's_support')) <= 0:
                     r.hset(uid1, 'support', 0)
-            info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode()
+            info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode() + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
                                                                    ' стільки ж втрачає.' +
