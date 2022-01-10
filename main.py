@@ -1660,7 +1660,7 @@ def handle_query(call):
                         'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100,
-                        'support2': 0, 's_support2': 0})
+                        'support2': 0, 's_support2': 0, 'sch2': 0})
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='У вас немає русака.')
@@ -2090,7 +2090,7 @@ def handle_query(call):
                         'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100,
-                        'support2': 0, 's_support2': 0})
+                        'support2': 0, 's_support2': 0, 'sch2': 0})
                 r.hset(call.from_user.id, 'time22', 0)
                 r.hset(call.from_user.id, 'time23', 0)
                 bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
