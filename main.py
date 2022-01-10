@@ -630,7 +630,7 @@ def war(cid, location, big_battle):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, bd = injure(int(member), True, r)
+                s, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -766,7 +766,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, bd = injure(int(member), True, r)
+                s, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -792,7 +792,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, bd = injure(int(member), True, r)
+                s, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
