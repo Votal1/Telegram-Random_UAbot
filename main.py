@@ -1194,20 +1194,20 @@ def swap(message):
         if int(r.hget(message.from_user.id, 's3')) >= 4 and r.hexists(message.from_user.id, 'name') == 1:
             a = r.hmget(message.from_user.id, 'name', 'strength', 'intellect', 'spirit',
                         'weapon', 's_weapon', 'defense', 's_defense', 'mushrooms', 'class', 'photo', 'injure', 'hp',
-                        'support', 's_support')
+                        'support', 's_support', 'sch')
             b = r.hmget(message.from_user.id, 'name2', 'strength2', 'intellect2', 'spirit2', 'weapon2', 's_weapon2',
                         'defense2', 's_defense2', 'mushrooms2', 'class2', 'photo2', 'injure2', 'hp2',
-                        'support2', 's_support2')
+                        'support2', 's_support2', 'sch2')
             r.hset(message.from_user.id, 'name2', a[0], {'strength2': a[1], 'intellect2': a[2], 'spirit2': a[3],
                                                          'weapon2': a[4], 's_weapon2': a[5], 'defense2': a[6],
                                                          's_defense2': a[7], 'mushrooms2': a[8], 'class2': a[9],
                                                          'photo2': a[10], 'injure2': a[11], 'hp2': a[12],
-                                                         'support2': a[13], 's_support2': a[14]})
+                                                         'support2': a[13], 's_support2': a[14], 'sch2': a[15]})
             r.hset(message.from_user.id, 'name', b[0], {'strength': b[1], 'intellect': b[2], 'spirit': b[3],
                                                         'weapon': b[4], 's_weapon': b[5], 'defense': b[6],
                                                         's_defense': b[7], 'mushrooms': b[8], 'class': b[9],
                                                         'photo': b[10], 'injure': b[11], 'hp': b[12],
-                                                        'support': b[13], 's_support': b[14]})
+                                                        'support': b[13], 's_support': b[14], 'sch': b[15]})
             if r.hexists(message.from_user.id, 'time22') == 1:
                 a1 = r.hget(message.from_user.id, 'time')
                 b1 = r.hget(message.from_user.id, 'time22')
