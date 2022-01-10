@@ -459,6 +459,19 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if hp2 < 50:
                 hp(5, uid2, r)
                 m1 = '\n\u26D1 ' + names[name1] + ' підлатав ворога.'
+                if c1 == 29:
+                    money = 0
+                    if int(r.hget(uid2, 'injure')) > 0:
+                        money += 1
+                        r.hincrby(uid2, 'injure', -1)
+                    if int(r.hget(uid2, 'sch')) > 0:
+                        money += 1
+                        r.hincrby(uid2, 'sch', -1)
+                    ran = choices([0, 1], weights=[75, 25])
+                    if ran == [1]:
+                        money += 2
+                        m1 += '\n\U0001F4B5 +' + str(money)
+                        r.hincrby(uid1, 'money', money)
             else:
                 ran = choices([0, 1], weights=[80, 20])
                 if ran == [1]:
@@ -475,6 +488,19 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if hp1 < 50:
                 hp(5, uid1, r)
                 m2 = '\n\u26D1 ' + names[name2] + ' підлатав ворога.'
+                if c2 == 29:
+                    money = 0
+                    if int(r.hget(uid1, 'injure')) > 0:
+                        money += 1
+                        r.hincrby(uid1, 'injure', -1)
+                    if int(r.hget(uid1, 'sch')) > 0:
+                        money += 1
+                        r.hincrby(uid1, 'sch', -1)
+                    ran = choices([0, 1], weights=[75, 25])
+                    if ran == [1]:
+                        money += 2
+                        m2 += '\n\U0001F4B5 +' + str(money)
+                        r.hincrby(uid2, 'money', money)
             else:
                 ran = choices([0, 1], weights=[80, 20])
                 if ran == [1]:
