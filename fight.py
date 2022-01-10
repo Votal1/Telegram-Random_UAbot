@@ -183,10 +183,10 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             s2 = int(s2 * 1.1)
 
         if int(r.hget(uid1, 'injure')) > 0:
-            s1, s11, i1, bd1 = injure(uid1, True, r)
+            s1, s11, bd1 = injure(uid1, True, r)
             inj1 = '\U0001fa78 '
         if int(r.hget(uid2, 'injure')) > 0:
-            s2, s22, i2, bd2 = injure(uid2, True, r)
+            s2, s22, bd2 = injure(uid2, True, r)
             inj2 = '\U0001fa78 '
 
         if weapon2 == 11:
