@@ -276,6 +276,20 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if int(r.hget(uid2, 's_weapon')) <= 0:
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
+        elif weapon2 == 19:
+            if int(r.hget(uid1, 'injure')) == 0:
+                r.hincrby(uid1, 'injure', 1)
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
+            else:
+                r.hincrby(uid1, 'injure', -10)
+                if int(r.hget(uid1, 'injure')) < 0:
+                    r.hset(uid1, 'injure', 0)
+                hp(-10, uid1, r)
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' припинив ворогу кровотечу.\n\U0001fa78 -10 \U0001fac0 -10'
+            r.hincrby(uid2, 's_weapon', -1)
+            if int(r.hget(uid2, 's_weapon')) <= 0:
+                r.hset(uid2, 'weapon', 0)
+
         elif weapon2 == 2 and defense1 != 2:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
             r.hincrby(uid1, 'injure', 200)

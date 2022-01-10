@@ -508,7 +508,7 @@ def classes_3(message):
                               'кожні 50 гривень на рахунку ворога (1-5 гривень).\n\n'
                               'Патологоанатом \u26D1\u26D1\u26D1 - якщо у ворога менше ніж 50 здоров`я - лікує '
                               'поранення і шизофренію на 1, 25% шанс отримати за це 2 гривні і по одній гривні '
-                              'додатково за лікування цих захворювань\n\n\n'
+                              'додатково за лікування цих захворювань.\n\n\n'
                               'Якщо твій русак вже набрав 20 інтелекту і покращив клас, можеш ще раз'
                               'покращити клас, написавши сюди "Вдосконалити русака".')
     else:
@@ -540,7 +540,9 @@ def merchant(message):
                                         'ий щит [Захист, міцність=10, ціна=10] - зменшує силу ворога на 20%.\n'
                                         '\U0001F921 Прапор новоросії [Атака&Захист, міцність=8, ціна=11] - піднімає '
                                         'бойовий дух до максимуму на бій.\n\U0001F4DF Експлойт [Атака, міцність=2, '
-                                        'ціна=9] - шанс активувати здібність хакера - 99%.',
+                                        'ціна=9] - шанс активувати здібність хакера - 99%.\n'
+                                        '\u26D1 Медична пилка [Атака, міцність=5, ціна=10] - якщо у ворога нема '
+                                        'поранень - завдає 1, якщо є - лікує 10 і забирає 10 здоров`я.',
                                reply_markup=merchant_goods())
             r.hset('soledar', 'merchant_day', datetime.now().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
@@ -2002,6 +2004,21 @@ def handle_query(call):
                         r.hset(call.from_user.id, 's_weapon', 2)
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                   text='Ви успішно купили експлойт')
+                    else:
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Недостатньо коштів на рахунку')
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='У вас вже є зброя')
+
+            elif cl == 9 or cl == 19 or cl == 29:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                    if int(r.hget(call.from_user.id, 'money')) >= 10:
+                        r.hincrby(call.from_user.id, 'money', -10)
+                        r.hset(call.from_user.id, 'weapon', 19)
+                        r.hset(call.from_user.id, 's_weapon', 5)
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Ви успішно купили медичну пилку')
                     else:
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                   text='Недостатньо коштів на рахунку')
