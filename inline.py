@@ -17,9 +17,9 @@ def prepare_to_fight(uid, fn, q, r):
         bd = int(stats[4])
 
         if int(r.hget(uid, 'injure')) > 0:
-            s, bd = injure(uid, False, r)
+            s, bd = injure(uid, s, bd, False, r)
         if int(r.hget(uid, 'sch')) > 0:
-            i, bd = schizophrenia(uid, False, r)
+            i, bd = schizophrenia(uid, i, bd, False, r)
 
         if c == 3:
             s = randint(10, 1000)

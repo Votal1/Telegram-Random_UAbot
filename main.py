@@ -10,7 +10,7 @@ from time import sleep
 from variables import names, icons, class_name, weapons, defenses, supports, photos, sudoers
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender
-from parameters import spirit, vodka, intellect, injure, hp
+from parameters import spirit, vodka, intellect, injure, schizophrenia, hp
 from buttons import goods, merchant_goods, donate_goods, skill_set,\
     battle_button, battle_button_2, battle_button_3, invent, unpack
 from fight import fight
@@ -625,12 +625,14 @@ def war(cid, location, big_battle):
     fighters = {}
     for member in everyone:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, bd = injure(int(member), True, r)
+                s, bd = injure(int(member), s, bd, True, r)
+            if int(stats[6]) > 0:
+                i, bd = schizophrenia(int(member), i, bd, True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -700,7 +702,7 @@ def war(cid, location, big_battle):
             r.hincrby(win, 'vodka', 10)
     elif location == 'Битва в темному лісі':
         if wc == 3 or wc == 13 or wc == 23:
-            class_reward = '\U0001F52E: \U0001F54A +2000\nВсі інші учасники битви втратили по 1000 бойового духу.'
+            class_reward = '\U0001F52E: \U0001F54A +2000\n\U0001F54A -1000 всім іншим учасникам битви.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
                 spirit(-1000, member, int(r.hget(member, 'class')), False, r)
@@ -733,6 +735,16 @@ def war(cid, location, big_battle):
         if wc == 8 or wc == 18 or wc == 28:
             class_reward = '\U0001F4DF: \U0001F4B5 +20'
             r.hincrby(win, 'money', 20)
+    elif location == 'Битва в психлікарні':
+        if wc == 9 or wc == 19 or wc == 29:
+            class_reward = '\u26D1: \U0001fac0 +100\n\U0001F464 +10 всім іншим учасникам битви.'
+            r.srem('fighters' + str(cid), win)
+            for member in r.smembers('fighters' + str(cid)):
+                r.hincrby(member, 'sch', 10)
+            hp(100, win, r)
+        else:
+            class_reward = '\U0001F5FA: \U0001F464 +10'
+            r.hincrby(win, 'sch', 10)
     elif location == 'Битва біля новорічної ялинки':
         class_reward = '\U0001F381 +1'
         r.hincrby(win, 'n_packs', 1)
@@ -761,12 +773,14 @@ def great_war(cid1, cid2, a, b):
     m1, m2 = 0, 0
     for member in a:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'class')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, bd = injure(int(member), True, r)
+                s, bd = injure(int(member), s, bd, True, r)
+            if int(stats[6]) > 0:
+                i, bd = schizophrenia(int(member), i, bd, True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -777,7 +791,7 @@ def great_war(cid1, cid2, a, b):
                 d = 1.5
             else:
                 d = 1
-            if int(stats[6]) == 9 or int(stats[6]) == 19 or int(stats[6]) == 29:
+            if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
                 m1 = 1
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
             chance1 += chance
@@ -787,12 +801,14 @@ def great_war(cid1, cid2, a, b):
         chance1 = chance1 * 2
     for member in b:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'class')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, bd = injure(int(member), True, r)
+                s, bd = injure(int(member), s, bd, True, r)
+            if int(stats[6]) > 0:
+                i, bd = schizophrenia(int(member), i, bd, True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -803,7 +819,7 @@ def great_war(cid1, cid2, a, b):
                 d = 1.5
             else:
                 d = 1
-            if int(stats[6]) == 9 or int(stats[6]) == 19 or int(stats[6]) == 29:
+            if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
                 m2 = 1
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
             chance2 += chance
@@ -1394,7 +1410,7 @@ def handle_query(call):
                 ran = choice(['Битва в Соледарі', 'Битва на овечій фермі', 'Битва на покинутому заводі',
                               'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
                               'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
-                              'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП',
+                              'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні',
                               'Битва біля новорічної ялинки', 'Битва біля новорічної ялинки',
                               'Битва біля новорічної ялинки'])
                 big_battle = True

@@ -50,18 +50,16 @@ def intellect(value, uid, r):
             r.hset(uid, 'intellect', 1)
 
 
-def injure(uid, fi, r):
-    stats = r.hmget(uid, 'strength', 'spirit')
+def injure(uid, s, bd, fi, r):
     if fi:
         r.hincrby(uid, 'injure', -1)
-    return int(int(stats[0]) * (1 / 3)), int(int(stats[1]) * (1 / 2))
+    return int(s * (1 / 3)), int(bd * (1 / 2))
 
 
-def schizophrenia(uid, fi, r):
-    stats = r.hmget(uid, 'intellect', 'spirit')
+def schizophrenia(uid, i, bd, fi, r):
     if fi:
         r.hincrby(uid, 'sch', -1)
-    return int(int(stats[0]) * (1 / 3)), int(int(stats[1]) * (1 / 2))
+    return int(i * (1 / 3)), int(bd * (1 / 2))
 
 
 def hp(value, uid, r):
