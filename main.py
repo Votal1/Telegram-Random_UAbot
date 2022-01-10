@@ -428,7 +428,7 @@ def classes(message):
                               ' втричі більше бойового духу, але при поразці вдвічі більше втрачає.\n\n'
                               'Гарматне м`ясо \U0001fa96 - +50% сили в бою, якщо є АК-47 (зброя, яку можна придбати в '
                               'мандрівного торговця). 2% шанс отримати поранення в бою від АК-47 (втрачає весь бойовий'
-                              ' дух, здоров`я, зброю, захист, на 100 боїв вдвічі зменшує бойовий дух та втричі - '
+                              ' дух, здоров`я, все спорядження, на 100 боїв вдвічі зменшує бойовий дух та втричі - '
                               'силу).\n\n'
                               'Мусор \U0001F46E - має постійну зброю, яка перед боєм ігнорує бойовий дух двох сторін.'
                               ' Якщо є захист, ігнорує лише бойовий дух ворога.\n\n'
@@ -531,7 +531,7 @@ def merchant(message):
                                         'Мухомор королівський [Захист, міцність=1, ціна=60] - якщо у ворога більший '
                                         'інтелект, додає +1 інтелекту (не діє проти фокусників). На бій зменшує свою '
                                         'силу на 50%. Максимальна кількість покупок на русака - 3.\n'
-                                        '\U0001F452 Шапочка з фольги [Допомога, міцність=10, ціна=30] - захищає від вт'
+                                        '\U0001F452 Шапочка з фольги [Допомога, міцність=10, ціна=50] - захищає від вт'
                                         'рати бойового духу при пожертвах, при купівлі русак отримує 20 шизофренії.\n\n'
                                         '\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій '
                                         'на 50%.\n\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=12] - збільшує '
@@ -1513,6 +1513,7 @@ def handle_query(call):
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
         try:
+            cl = int(r.hget(call.from_user.id, 'class'))
             for member in r.smembers(call.message.chat.id):
                 mem = int(member)
                 try:
@@ -1522,9 +1523,8 @@ def handle_query(call):
                 except:
                     r.srem(call.message.chat.id, mem)
                 i1 = int(r.hget(mem, 'spirit'))
-                i = int(r.hget(mem, 'spirit') / 10)
+                i = int(i1 / 10)
                 r.hincrby(mem, 'spirit', -i)
-                cl = int(r.hget(call.from_user.id, 'class'))
                 if cl == 7 or cl == 17 or cl == 27:
                     try:
                         mush = int(r.hget(mem, 'mushrooms'))
@@ -1890,8 +1890,9 @@ def handle_query(call):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
             if int(r.hget(call.from_user.id, 'support')) == 0:
-                if int(r.hget(call.from_user.id, 'money')) >= 30:
-                    r.hincrby(call.from_user.id, 'money', -30)
+                if int(r.hget(call.from_user.id, 'money')) >= 50:
+                    r.hincrby(call.from_user.id, 'money', -50)
+                    r.hincrby(call.from_user.id, 'sch', 20)
                     r.hset(call.from_user.id, 'support', 2)
                     r.hset(call.from_user.id, 's_support', 10)
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -2465,8 +2466,8 @@ def handle_query(call):
                 if cl != 6 or cl != 16 or cl != 26:
                     bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
                                           'РПГ-7 і одну гранату до нього [Атака, міцність=1] - завдає ворогу важке пор'
-                                          'анення (віднімає бойовий дух, здоров`я і спорядження, на 300 боїв бойовий '
-                                          'дух впаде вдвічі а сила втричі).',
+                                          'анення (віднімає бойовий дух, здоров`я і все спорядження, на 300 боїв '
+                                          'бойовий дух впаде вдвічі а сила втричі).',
                                           call.message.chat.id, call.message.id)
                     r.hset(uid, 'weapon', 2)
                     r.hset(uid, 's_weapon', 1)

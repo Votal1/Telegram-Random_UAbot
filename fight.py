@@ -254,6 +254,8 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 r.hset(uid2, 'hp', 0)
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
+                r.hset(uid2, 'support', 0)
+                r.hset(uid2, 's_support', 0)
                 r.hincrby(uid2, 'injure', 100)
                 if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...' \
@@ -263,7 +265,11 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     r.hset(uid1, 'hp', 0)
                     if c1 != 6 and c1 != 16 and c1 != 26:
                         r.hset(uid1, 'weapon', 0)
+                        r.hset(uid1, 's_weapon', 0)
                     r.hset(uid1, 'defense', 0)
+                    r.hset(uid1, 's_defense', 0)
+                    r.hset(uid1, 'support', 0)
+                    r.hset(uid1, 's_support', 0)
                     r.hincrby(uid1, 'injure', 100)
         elif defense2 == 16:
             s1 = int(s1 * 0.8)
@@ -298,8 +304,12 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             r.hset(uid1, 'spirit', 0)
             if c1 != 6 and c1 != 16 and c1 != 26:
                 r.hset(uid1, 'weapon', 0)
+                r.hset(uid1, 's_weapon', 0)
             r.hset(uid1, 'hp', 0)
             r.hset(uid1, 'defense', 0)
+            r.hset(uid1, 's_defense', 0)
+            r.hset(uid1, 'support', 0)
+            r.hset(uid1, 's_support', 0)
             r.hset(uid2, 'weapon', 0)
             r.hset(uid2, 's_weapon', 0)
         elif weapon2 == 3:
@@ -341,6 +351,8 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 r.hset(uid1, 'hp', 0)
                 r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
+                r.hset(uid1, 'support', 0)
+                r.hset(uid1, 's_support', 0)
                 r.hincrby(uid1, 'injure', 100)
                 if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
                     defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...' \
@@ -350,7 +362,11 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     r.hset(uid2, 'hp', 0)
                     if c2 != 6 and c2 != 16 and c2 != 26:
                         r.hset(uid2, 'weapon', 0)
+                        r.hset(uid2, 's_weapon', 0)
                     r.hset(uid2, 'defense', 0)
+                    r.hset(uid2, 's_defense', 0)
+                    r.hset(uid2, 'support', 0)
+                    r.hset(uid2, 's_support', 0)
                     r.hincrby(uid2, 'injure', 100)
         elif defense1 == 16:
             s2 = int(s2 * 0.8)
