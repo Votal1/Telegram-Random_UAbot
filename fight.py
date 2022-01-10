@@ -456,8 +456,13 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 if ran == [1]:
                     m1 = '\n\u26D1 ' + names[name1] + ' побачив що ' + names[name2] + ' занадто здоровий і виправив це.'
                     if c1 == 9:
-                        m1 += '\n\U0001fa78 +2'
                         r.hincrby(uid2, 'injure', 2)
+                        m1 += '\n\U0001fa78 +2'
+                    else:
+                        nar = r.hmget(uid2, 'mushrooms', 's1')
+                        r.hincrby(uid2, 'injure', 2 + int(nar[0]))
+                        hp(int(nar[1]), uid2, r)
+                        m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
             if hp1 < 50:
                 hp(5, uid1, r)
@@ -467,8 +472,13 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 if ran == [1]:
                     m2 = '\n\u26D1 ' + names[name2] + ' побачив що ' + names[name1] + ' занадто здоровий і виправив це.'
                     if c2 == 9:
-                        m2 += '\n\U0001fa78 +2'
                         r.hincrby(uid1, 'injure', 2)
+                        m2 += '\n\U0001fa78 +2'
+                    else:
+                        nar = r.hmget(uid1, 'mushrooms', 's1')
+                        r.hincrby(uid1, 'injure', 2 + int(nar[0]))
+                        hp(int(nar[1]), uid1, r)
+                        m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
 
         chance1 = s1 * (1 + 0.1 * i1) * (1 + 0.01 * (bd1 * 0.01))
         chance2 = s2 * (1 + 0.1 * i2) * (1 + 0.01 * (bd2 * 0.01))
