@@ -509,7 +509,8 @@ def classes_3(message):
                               'кожні 50 гривень на рахунку ворога (1-5 гривень).\n\n'
                               'Патологоанатом \u26D1\u26D1\u26D1 - якщо у ворога менше ніж 50 здоров`я - лікує '
                               'поранення і шизофренію на 1, 25% шанс отримати за це 2 гривні і по одній гривні '
-                              'додатково за лікування цих захворювань.\n\n\n'
+                              'додатково за лікування цих захворювань. Якщо у ворога 0 здоров`я - лікує йому 20 і '
+                              'отримує 5 гривень.\n\n\n'
                               'Якщо твій русак вже набрав 20 інтелекту і покращив клас, можеш ще раз'
                               'покращити клас, написавши сюди "Вдосконалити русака".')
     else:
@@ -1392,9 +1393,17 @@ def handle_query(call):
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text='\U0001fac0 Зараз цей русак не може битись.')
             else:
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                          text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
-                                               'битись поки не поїсть, або не полікується.')
+                if int(r.hget(call.from_user.id, 'class')) == 29:
+                    bot.edit_message_text(text='\u26D1 ' + call.from_user.first_name + 'відправив свого русака надати '
+                                                                                       'медичну допомогу пораненому.\n'
+                                                                                       '\U0001fac0 +20 \U0001F4B5 +5',
+                                          inline_message_id=call.inline_message_id)
+                    hp(20, uid1, r)
+                    r.hincrby(call.from_user.id, 'money', 5)
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
+                                                   'битись поки не поїсть, або не полікується.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти хочеш атакувати свого русака'
                                                                                        ', але розумієш, що він зараз ма'
