@@ -1390,20 +1390,20 @@ def handle_query(call):
                             bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot, call.inline_message_id),
                                                   inline_message_id=call.inline_message_id)
                 else:
-                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                              text='\U0001fac0 Зараз цей русак не може битись.')
+                    if int(r.hget(call.from_user.id, 'class')) == 29:
+                        bot.edit_message_text(
+                            text='\u26D1 ' + call.from_user.first_name + 'відправив свого русака надати медичну допомо'
+                                                                         'гу пораненому.\n\U0001fac0 +20 \U0001F4B5 +5',
+                            inline_message_id=call.inline_message_id)
+                        hp(20, uid1, r)
+                        r.hincrby(call.from_user.id, 'money', 5)
+                    else:
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='\U0001fac0 Зараз цей русак не може битись.')
             else:
-                if int(r.hget(call.from_user.id, 'class')) == 29:
-                    bot.edit_message_text(text='\u26D1 ' + call.from_user.first_name + 'відправив свого русака надати '
-                                                                                       'медичну допомогу пораненому.\n'
-                                                                                       '\U0001fac0 +20 \U0001F4B5 +5',
-                                          inline_message_id=call.inline_message_id)
-                    hp(20, uid1, r)
-                    r.hincrby(call.from_user.id, 'money', 5)
-                else:
-                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                              text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
-                                                   'битись поки не поїсть, або не полікується.')
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
+                                          'битись поки не поїсть, або не полікується.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти хочеш атакувати свого русака'
                                                                                        ', але розумієш, що він зараз ма'
