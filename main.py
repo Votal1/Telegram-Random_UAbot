@@ -600,9 +600,9 @@ def donate_shop(message):
                          r.hget(message.from_user.id, 'strap').decode() +
                          '\n\nОсь опис товарів, які можна придбати:\n\n\U0001F304 Зміна звичайної фотки русака на фото '
                          'Хеві з ТФ2, слов`янина Рікардо (Увага! Ці фото зникнуть в момент вибору класу), або на преміу'
-                         'м фото свого класу(Кадиров, Обеме, Горшок, Тесак, Захарченко, Дерек, Янукович, Petya).\n'
-                         '\U0001F943 Настоянка глоду - буст для новачків. Якщо в русака менше 400 сили і 5 інтелекту, '
-                         'то настоянка моментально додасть 400 сили і 4 інтелекту.\n'
+                         'м фото свого класу(Кадиров, Обеме, Горшок, Тесак, Захарченко, Дерек Шовін, Янукович, Petya, '
+                         'Джонні Сінс).\n\U0001F943 Настоянка глоду - буст для новачків. Якщо в русака менше 400 сили '
+                         'і 5 інтелекту, то настоянка моментально додасть 400 сили і 4 інтелекту.\n'
                          '\U0001F4E6 40 Донбаських пакунків\n'
                          '\U0001F393 Курс перекваліфікації - '
                          'дозволяє русаку наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал найви'
@@ -630,7 +630,7 @@ def war(cid, location, big_battle):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member), True, r)
+                s, s1, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -766,7 +766,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member), True, r)
+                s, s1, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -792,7 +792,7 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, s1, i, bd = injure(int(member), True, r)
+                s, s1, bd = injure(int(member), True, r)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -1269,6 +1269,7 @@ def handle_query(call):
             r.hset(call.from_user.id, 'packs', 0)
             r.hset(call.from_user.id, 'opened', 0)
             r.hset(call.from_user.id, 'injure', 0)
+            r.hset(call.from_user.id, 'sch', 0)
             r.hset(call.from_user.id, 'hp', 100)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
