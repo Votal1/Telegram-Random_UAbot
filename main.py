@@ -530,7 +530,9 @@ def merchant(message):
                                         'на бій на 30%. Після зношення повертаються 4 гривні.\n\U0001F344 '
                                         'Мухомор королівський [Захист, міцність=1, ціна=60] - якщо у ворога більший '
                                         'інтелект, додає +1 інтелекту (не діє проти фокусників). На бій зменшує свою '
-                                        'силу на 50%. Максимальна кількість покупок на русака - 3.\n\n'
+                                        'силу на 50%. Максимальна кількість покупок на русака - 3.\n'
+                                        '\U0001F452 Шапочка з фольги [Допомога, міцність=10, ціна=30] - захищає від вт'
+                                        'рати бойового духу при пожертвах, при купівлі русак отримує 20 шизофренії.\n\n'
                                         '\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій '
                                         'на 50%.\n\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=12] - збільшує '
                                         'силу, інтелект і бойовий дух на 10%.\n\U0001F52E Колода з кіоску [Атака, міцні'
@@ -1519,8 +1521,9 @@ def handle_query(call):
                         continue
                 except:
                     r.srem(call.message.chat.id, mem)
-                i = int(r.hget(mem, 'spirit')) / 10
-                r.hincrby(mem, 'spirit', -int(i))
+                i1 = int(r.hget(mem, 'spirit'))
+                i = int(r.hget(mem, 'spirit') / 10)
+                r.hincrby(mem, 'spirit', -i)
                 cl = int(r.hget(call.from_user.id, 'class'))
                 if cl == 7 or cl == 17 or cl == 27:
                     try:
@@ -1529,9 +1532,14 @@ def handle_query(call):
                             r.hset(mem, 'mushrooms', 0)
                             intellect(-mush, mem, r)
                         else:
-                            r.hset(mem, 'spirit', int(i))
+                            r.hset(mem, 'spirit', i)
                     except:
                         r.hset(mem, 'spirit', int(i))
+                if int(r.hget(mem, 'support')) == 2:
+                    r.hset(mem, 'spirit', i1)
+                    r.hincrby(mem, 's_support', -1)
+                    if int(r.hget(mem, 's_support')) <= 0:
+                        r.hset(mem, 'support', 0)
         except:
             pass
         name = int(r.hget(call.from_user.id, 'name'))
@@ -1830,8 +1838,6 @@ def handle_query(call):
     elif call.data.startswith('fragment'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            if r.hexists(call.from_user.id, 'defense') == 0:
-                r.hset(call.from_user.id, 'defense', 0)
             if int(r.hget(call.from_user.id, 'defense')) == 0:
                 if int(r.hget(call.from_user.id, 'money')) >= 10:
                     r.hincrby(call.from_user.id, 'money', -10)
@@ -1852,10 +1858,6 @@ def handle_query(call):
     elif call.data.startswith('mushroom'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            if r.hexists(call.from_user.id, 'defense') == 0:
-                r.hset(call.from_user.id, 'defense', 0)
-            if r.hexists(call.from_user.id, 'mushrooms') == 0:
-                r.hset(call.from_user.id, 'mushrooms', 0)
             if int(r.hget(call.from_user.id, 'defense')) == 0:
                 mushroom = int(r.hget(call.from_user.id, 'mushrooms'))
                 if int(r.hget(call.from_user.id, 'class')) == 18 or int(r.hget(call.from_user.id, 'class')) == 28:
@@ -1880,6 +1882,26 @@ def handle_query(call):
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='У вас вже є захисне спорядження')
+        else:
+            bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id, call.message.id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
+    elif call.data.startswith('foil'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'support')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 30:
+                    r.hincrby(call.from_user.id, 'money', -30)
+                    r.hset(call.from_user.id, 'support', 2)
+                    r.hset(call.from_user.id, 's_support', 10)
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Ви успішно купили шапочку з фольги')
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Недостатньо коштів на рахунку')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='У вас вже є допоміжне спорядження')
         else:
             bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id, call.message.id)
             r.hset('soledar', 'merchant_hour_now', 26)
