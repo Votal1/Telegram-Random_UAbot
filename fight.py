@@ -450,6 +450,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
         if c1 == 9 or c1 == 19 or c1 == 29:
             if hp2 < 50:
                 hp(5, uid2, r)
+                m1 = '\n\u26D1 ' + names[name1] + ' підлатав ворога.'
             else:
                 ran = choices([0, 1], weights=[80, 20])
                 if ran == [1]:
@@ -460,6 +461,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
         if c2 == 9 or c2 == 19 or c2 == 29:
             if hp1 < 50:
                 hp(5, uid1, r)
+                m2 = '\n\u26D1 ' + names[name2] + ' підлатав ворога.'
             else:
                 ran = choices([0, 1], weights=[80, 20])
                 if ran == [1]:
