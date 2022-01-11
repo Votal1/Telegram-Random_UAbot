@@ -1699,7 +1699,7 @@ def handle_query(call):
                                    '/donbass - взяти русака\n'
                                    '/rusak - характеристики твого русака\n'
                                    '@Random_UAbot - почати битву\n'
-                                   '@Random_UAbot [число] - почати битву з суперником з певною силою\n'
+                                   '@Random_UAbot & - додаткові режими\n'
                                    '/feed - погодувати русака\n'
                                    '/shop - магазин\n'
                                    '/pack - Донбаський пакунок\n'
@@ -1722,8 +1722,8 @@ def handle_query(call):
                                    'Адміністраторські команди (боту потрібне право банити, та адмін з правом редагув'
                                    'ання групи має увімкнути їх командою /toggle_admin; використовувати команди '
                                    'можуть адміни з правом банити):\n'
-                                   '/ban [number][m/h/d]- бан\n'
-                                   '/mute [number][m/h/d/f] - мут\n'
+                                   '/ban [number][m/h/d] \ /unban\n'
+                                   '/mute [number][m/h/d/f] \ /unmute\n'
                                    '/moxir [number][m/h/d] - забрати стікери і медіа',
                               chat_id=call.message.chat.id, message_id=call.message.id)
 
