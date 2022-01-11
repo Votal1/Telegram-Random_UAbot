@@ -73,13 +73,31 @@ def ban(message):
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
             if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
                     bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
-                bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id)
-                bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name + ' вигнаний з чату.')
+                msg = message.reply_to_message.from_user.first_name + 'вигнаний з чату'
+                try:
+                    a = message.text.split(' ')
+                    if a[1].endswith('m'):
+                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                             until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])))
+                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' хвилин.')
+                    elif a[1].endswith('h'):
+                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                             until_date=datetime.now() + timedelta(hours=int(a[1][:-1])))
+                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' годин.')
+                    elif a[1].endswith('d'):
+                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                             until_date=datetime.now() + timedelta(days=int(a[1][:-1])))
+                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' днів.')
+                    else:
+                        raise Exception
+                except:
+                    bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id)
+                    bot.send_message(message.chat.id, msg + '.')
     except:
         pass
 
 
-@bot.message_handler(commands=['mute'])
+@bot.message_handler(commands=['mute', 'unmute'])
 def ban(message):
     if r.hexists('f' + str(message.chat.id), 'admin') == 1:
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
@@ -133,11 +151,38 @@ def moxir(message):
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
             if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
                     bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
-                bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id, can_send_messages=True,
-                                         can_send_media_messages=False, can_send_polls=False,
-                                         can_send_other_messages=False)
-                bot.send_message(message.chat.id, 'У ' + message.reply_to_message.from_user.first_name +
-                                 ' забрали стікери і медіа.')
+                msg = 'У ' + message.reply_to_message.from_user.first_name + ' забрали стікери і медіа'
+                try:
+                    a = message.text.split(' ')
+                    if a[1].endswith('m'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])),
+                                                 can_send_messages=True,
+                                                 can_send_media_messages=False, can_send_polls=False,
+                                                 can_send_other_messages=False)
+                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' хвилин.')
+                    elif a[1].endswith('h'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(hours=int(a[1][:-1])),
+                                                 can_send_messages=True,
+                                                 can_send_media_messages=False, can_send_polls=False,
+                                                 can_send_other_messages=False)
+                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' годин.')
+                    elif a[1].endswith('d'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(days=int(a[1][:-1])),
+                                                 can_send_messages=True,
+                                                 can_send_media_messages=False, can_send_polls=False,
+                                                 can_send_other_messages=False)
+                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' днів.')
+                    else:
+                        raise Exception
+                except:
+                    bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                             can_send_messages=True,
+                                             can_send_media_messages=False, can_send_polls=False,
+                                             can_send_other_messages=False)
+                    bot.send_message(message.chat.id, msg + '.')
     except:
         pass
 
