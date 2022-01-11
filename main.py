@@ -88,6 +88,7 @@ def ban(message):
                 msg = message.reply_to_message.from_user.first_name
                 if message.text.startswith('/unmute'):
                     bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                             until_date=datetime.now(),
                                              can_send_messages=True, can_send_media_messages=True, can_send_polls=True,
                                              can_send_other_messages=True, can_add_web_page_previews=True,
                                              can_change_info=True, can_invite_users=True, can_pin_messages=True)
