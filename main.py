@@ -81,16 +81,44 @@ def ban(message):
 
 @bot.message_handler(commands=['mute'])
 def ban(message):
-    try:
+    if r.hexists('f' + str(message.chat.id), 'admin') == 1:
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
             if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
                     bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
-                bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
-                                         until_date=datetime.now() + timedelta(hours=12), can_send_messages=False)
-                bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name + ' посидить 12 годин'
-                                                                                                  ' без прав.')
-    except:
-        pass
+                msg = message.reply_to_message.from_user.first_name
+                try:
+                    a = message.text.split(' ')
+                    if a[1].endswith('m'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])),
+                                                 can_send_messages=False)
+                        msg += ' посидить ' + a[[1][:-1]] + ' хвилин без права голосу.'
+                        bot.send_message(message.chat.id, msg)
+                    elif a[1].endswith('h'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(hours=int(a[1][:-1])),
+                                                 can_send_messages=False)
+                        msg += ' посидить ' + a[[1][:-1]] + ' годин без права голосу.'
+                        bot.send_message(message.chat.id, msg)
+                    elif a[1].endswith('d'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(days=int(a[1][:-1])),
+                                                 can_send_messages=False)
+                        msg += ' посидить ' + a[[1][:-1]] + ' днів без права голосу.'
+                        bot.send_message(message.chat.id, msg)
+                    elif a[1].endswith('f'):
+                        bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 can_send_messages=False)
+                        msg += ' назавжди залишається без права голосу.'
+                        bot.send_message(message.chat.id, msg)
+                    else:
+                        raise Exception
+                except:
+                    bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                             until_date=datetime.now() + timedelta(hours=12),
+                                             can_send_messages=False)
+                    msg += ' посидить 12 годин без права голосу.'
+                    bot.send_message(message.chat.id, msg)
 
 
 @bot.message_handler(commands=['moxir'])
