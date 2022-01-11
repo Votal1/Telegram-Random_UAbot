@@ -92,19 +92,19 @@ def ban(message):
                         bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
                                                  until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])),
                                                  can_send_messages=False)
-                        msg += ' посидить ' + a[[1][:-1]] + ' хвилин без права голосу.'
+                        msg += ' посидить ' + a[1][:-1] + ' хвилин без права голосу.'
                         bot.send_message(message.chat.id, msg)
                     elif a[1].endswith('h'):
                         bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
                                                  until_date=datetime.now() + timedelta(hours=int(a[1][:-1])),
                                                  can_send_messages=False)
-                        msg += ' посидить ' + a[[1][:-1]] + ' годин без права голосу.'
+                        msg += ' посидить ' + a[1][:-1] + ' годин без права голосу.'
                         bot.send_message(message.chat.id, msg)
                     elif a[1].endswith('d'):
                         bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
                                                  until_date=datetime.now() + timedelta(days=int(a[1][:-1])),
                                                  can_send_messages=False)
-                        msg += ' посидить ' + a[[1][:-1]] + ' днів без права голосу.'
+                        msg += ' посидить ' + a[1][:-1] + ' днів без права голосу.'
                         bot.send_message(message.chat.id, msg)
                     elif a[1].endswith('f'):
                         bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
