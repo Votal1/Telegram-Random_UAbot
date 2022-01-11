@@ -67,32 +67,37 @@ def toggle_admin(message):
             bot.reply_to(message, 'Адмінські команди ВИМКНЕНО')
 
 
-@bot.message_handler(commands=['ban'])
+@bot.message_handler(commands=['ban', 'unban'])
 def ban(message):
     try:
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
             if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
                     bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
                 msg = message.reply_to_message.from_user.first_name + 'вигнаний з чату'
-                try:
-                    a = message.text.split(' ')
-                    if a[1].endswith('m'):
-                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
-                                             until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])))
-                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' хвилин.')
-                    elif a[1].endswith('h'):
-                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
-                                             until_date=datetime.now() + timedelta(hours=int(a[1][:-1])))
-                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' годин.')
-                    elif a[1].endswith('d'):
-                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
-                                             until_date=datetime.now() + timedelta(days=int(a[1][:-1])))
-                        bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' днів.')
-                    else:
-                        raise Exception
-                except:
-                    bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id)
-                    bot.send_message(message.chat.id, msg + '.')
+                if message.text.startswith('/unban'):
+                    bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id, only_if_banned=True)
+                    bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name +
+                                     ' може повертатись в чат.')
+                else:
+                    try:
+                        a = message.text.split(' ')
+                        if a[1].endswith('m'):
+                            bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])))
+                            bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' хвилин.')
+                        elif a[1].endswith('h'):
+                            bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(hours=int(a[1][:-1])))
+                            bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' годин.')
+                        elif a[1].endswith('d'):
+                            bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                                 until_date=datetime.now() + timedelta(days=int(a[1][:-1])))
+                            bot.send_message(message.chat.id, msg + ' на ' + a[1][:-1] + ' днів.')
+                        else:
+                            raise Exception
+                    except:
+                        bot.kick_chat_member(message.chat.id, message.reply_to_message.from_user.id)
+                        bot.send_message(message.chat.id, msg + '.')
     except:
         pass
 
@@ -109,6 +114,8 @@ def ban(message):
                                              can_send_messages=True, can_send_media_messages=True, can_send_polls=True,
                                              can_send_other_messages=True, can_add_web_page_previews=True,
                                              can_change_info=True, can_invite_users=True, can_pin_messages=True)
+                    bot.send_message(message.chat.id, 'З ' + message.reply_to_message.from_user.first_name +
+                                     ' знято всі обмеження.')
                 else:
                     try:
                         a = message.text.split(' ')
