@@ -218,7 +218,7 @@ def my_rusak(message):
         if int(stats[3]) > 0:
             inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
         if int(stats[6]) > 0:
-            inj += '\n\U0001fac0 Шизофренія: ' + stats[6].decode()
+            inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
         if int(stats[4]) > 0:
             ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
