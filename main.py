@@ -1722,8 +1722,8 @@ def handle_query(call):
                                    'Адміністраторські команди (боту потрібне право банити, та адмін з правом редагув'
                                    'ання групи має увімкнути їх командою /toggle_admin; використовувати команди '
                                    'можуть адміни з правом банити):\n'
-                                   '/ban [number][m/h/d] \ /unban\n'
-                                   '/mute [number][m/h/d/f] \ /unmute\n'
+                                   '/ban [number][m/h/d] /unban\n'
+                                   '/mute [number][m/h/d/f] /unmute\n'
                                    '/moxir [number][m/h/d] - забрати стікери і медіа',
                               chat_id=call.message.chat.id, message_id=call.message.id)
 
