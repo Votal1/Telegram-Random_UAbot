@@ -5,6 +5,7 @@ from flask import Flask, request
 import redis
 from random import randint, choice, choices
 from datetime import datetime
+from datetime import timedelta
 from time import sleep
 
 from variables import names, icons, class_name, weapons, defenses, supports, photos, sudoers
@@ -85,8 +86,9 @@ def ban(message):
             if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
                     bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
                 bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
-                                         can_send_messages=False, )
-                bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name + ' вигнаний з чату.')
+                                         until_date=datetime.now() + timedelta(hours=12), can_send_messages=False)
+                bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name + ' посидить 12 годин'
+                                                                                                  ' без прав.')
     except:
         pass
 
