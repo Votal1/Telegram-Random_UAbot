@@ -78,6 +78,19 @@ def ban(message):
         pass
 
 
+@bot.message_handler(commands=['mute'])
+def ban(message):
+    try:
+        if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
+            if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' or \
+                    bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
+                bot.restrict_chat_member(message.chat.id, message.reply_to_message.from_user.id,
+                                         can_send_messages=False, )
+                bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name + ' вигнаний з чату.')
+    except:
+        pass
+
+
 @bot.message_handler(commands=['moxir'])
 def moxir(message):
     try:
@@ -1392,7 +1405,7 @@ def handle_query(call):
                 else:
                     if int(r.hget(call.from_user.id, 'class')) == 29:
                         bot.edit_message_text(
-                            text='\u26D1 ' + call.from_user.first_name + 'відправив свого русака надати медичну допомо'
+                            text='\u26D1 ' + call.from_user.first_name + ' відправив свого русака надати медичну допомо'
                                                                          'гу пораненому.\n\U0001fac0 +20 \U0001F4B5 +5',
                             inline_message_id=call.inline_message_id)
                         hp(20, uid1, r)
