@@ -75,7 +75,7 @@ def ban(message):
                     bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True:
                 msg = message.reply_to_message.from_user.first_name + 'вигнаний з чату'
                 if message.text.startswith('/unban'):
-                    bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id, only_if_banned=False)
+                    bot.unban_chat_member(message.chat.id, message.reply_to_message.from_user.id, only_if_banned=True)
                     bot.send_message(message.chat.id, message.reply_to_message.from_user.first_name +
                                      ' може повертатись в чат.')
                 else:
