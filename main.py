@@ -2514,7 +2514,7 @@ def handle_query(call):
                 bot.edit_message_text('\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).',
                                       call.message.chat.id, call.message.id)
                 if cl == 6 or cl == 16 or cl == 26:
-                    if int(r.hget(uid, 'defense')) != 0:
+                    if int(r.hget(uid, 'defense')) == 0:
                         r.hset(uid, 'defense', 1)
                 else:
                     if int(r.hget(uid, 'weapon')) == 0:
