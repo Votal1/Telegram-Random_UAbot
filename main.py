@@ -1,3 +1,5 @@
+import random
+
 import telebot
 from telebot import types
 import os
@@ -8,7 +10,8 @@ from datetime import datetime
 from datetime import timedelta
 from time import sleep
 
-from variables import names, icons, class_name, weapons, defenses, supports, photos, sudoers
+from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp
@@ -211,21 +214,35 @@ def my_rusak(message):
         if c != 0:
             cl = '\n' + icons[c] + ' Клас: ' + class_name[c]
         try:
-            r_photo = photos[int(r.hget(message.from_user.id, 'photo'))]
+            r_photo = r.hget(message.from_user.id, 'photo').decode()
+            stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
+            if int(stats[3]) > 0:
+                inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
+            if int(stats[6]) > 0:
+                inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
+            if int(stats[4]) > 0:
+                ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
+            photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
+                         '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
+                         '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
+                             5].decode() \
+                         + cl + ms + inj
+            bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
         except:
-            r_photo = photos[0]
-        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
-        if int(stats[3]) > 0:
-            inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
-        if int(stats[6]) > 0:
-            inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
-        if int(stats[4]) > 0:
-            ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
-        photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
-                     '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[5].decode() \
-                     + cl + ms + inj
-        bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
+            r_photo = 'https://i.ibb.co/rGd7L5n/rusnya.jpg'
+            stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
+            if int(stats[3]) > 0:
+                inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
+            if int(stats[6]) > 0:
+                inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
+            if int(stats[4]) > 0:
+                ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
+            photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
+                         '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
+                         '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
+                             5].decode() \
+                         + cl + ms + inj
+            bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
@@ -352,7 +369,7 @@ def sacrifice(message):
                      reply_markup=markup.add(types.InlineKeyboardButton(text='Принести в жертву русака',
                                                                         callback_data='sacrifice')))
     else:
-        bot.reply_to(message, 'Робити пожертвування русаків можна раз в день, і якщо є живий русак.')
+        bot.reply_to(message, 'Робити жертвоприношення русаків можна раз в день, і якщо є живий русак.')
 
 
 @bot.message_handler(commands=['fascist'])
@@ -634,7 +651,8 @@ def merchant(message):
                                         'інтелект, додає +1 інтелекту (не діє проти фокусників). На бій зменшує свою '
                                         'силу на 50%. Максимальна кількість покупок на русака - 3.\n'
                                         '\U0001F452 Шапочка з фольги [Допомога, міцність=10, ціна=50] - захищає від вт'
-                                        'рати бойового духу при пожертвах, при купівлі русак отримує 20 шизофренії.\n\n'
+                                        'рати бойового духу при жертвоприношеннях, при купівлі русак отримує '
+                                        '20 шизофренії.\n\n'
                                         '\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій '
                                         'на 50%.\n\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=12] - збільшує '
                                         'силу, інтелект і бойовий дух на 10%.\n\U0001F52E Колода з кіоску [Атака, міцні'
@@ -2175,7 +2193,7 @@ def handle_query(call):
     elif call.data.startswith('tf2'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
             r.hincrby(call.from_user.id, 'strap', -1)
-            r.hset(call.from_user.id, 'photo', 41)
+            r.hset(call.from_user.id, 'photo', pd[0])
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно змінили фото русаку')
         else:
@@ -2184,7 +2202,7 @@ def handle_query(call):
     elif call.data.startswith('ricardo'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
             r.hincrby(call.from_user.id, 'strap', -1)
-            r.hset(call.from_user.id, 'photo', 42)
+            r.hset(call.from_user.id, 'photo', pd[1])
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно змінили фото русаку')
         else:
@@ -2206,23 +2224,23 @@ def handle_query(call):
             r.hincrby(call.from_user.id, 'strap', -1)
             cl = int(r.hget(call.from_user.id, 'class'))
             if cl == 1 or cl == 11 or cl == 21:
-                r.hset(call.from_user.id, 'photo', 43)
+                r.hset(call.from_user.id, 'photo', pd[2])
             if cl == 2 or cl == 12 or cl == 22:
-                r.hset(call.from_user.id, 'photo', 44)
+                r.hset(call.from_user.id, 'photo', pd[3])
             if cl == 3 or cl == 13 or cl == 23:
-                r.hset(call.from_user.id, 'photo', 45)
+                r.hset(call.from_user.id, 'photo', pd[4])
             if cl == 4 or cl == 14 or cl == 24:
-                r.hset(call.from_user.id, 'photo', 46)
+                r.hset(call.from_user.id, 'photo', pd[5])
             if cl == 5 or cl == 15 or cl == 25:
-                r.hset(call.from_user.id, 'photo', 47)
+                r.hset(call.from_user.id, 'photo', pd[6])
             if cl == 6 or cl == 16 or cl == 26:
-                r.hset(call.from_user.id, 'photo', 48)
+                r.hset(call.from_user.id, 'photo', pd[7])
             if cl == 7 or cl == 17 or cl == 27:
-                r.hset(call.from_user.id, 'photo', 49)
+                r.hset(call.from_user.id, 'photo', pd[8])
             if cl == 8 or cl == 18 or cl == 28:
-                r.hset(call.from_user.id, 'photo', 50)
+                r.hset(call.from_user.id, 'photo', pd[9])
             if cl == 9 or cl == 19 or cl == 29:
-                r.hset(call.from_user.id, 'photo', 56)
+                r.hset(call.from_user.id, 'photo', pd[10])
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно змінили фото русаку')
         else:
@@ -2248,8 +2266,6 @@ def handle_query(call):
             r.hset(call.from_user.id, 'class', 0)
             if int(r.hget(call.from_user.id, 'intellect')) < 5:
                 r.hset(call.from_user.id, 'intellect', 5)
-            if int(r.hget(call.from_user.id, 'photo')) <= 40:
-                r.hset(call.from_user.id, 'photo', 0)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно купили курс перекваліфікаації русаку')
         else:
@@ -2666,55 +2682,55 @@ def messages(message):
                         int(r.hget(message.from_user.id, 'class')) == 0:
                     if message.text.startswith('Обираю клас '):
                         if 'Хач' in message.text or 'хач' in message.text:
-                            ran = randint(1, 5)
+                            ran = random.choice(p1)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Хач.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Хач.')
                             r.hset(message.from_user.id, 'class', 1)
                             r.hincrby(message.from_user.id, 'strength', 100)
                             r.hset(message.from_user.id, 'hach_time', 0)
                         elif 'Роботяга' in message.text or 'роботяга' in message.text:
-                            ran = randint(6, 10)
+                            ran = random.choice(p2)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Роботяга.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Роботяга.')
                             r.hset(message.from_user.id, 'class', 2)
                         elif 'Фокусник' in message.text or 'фокусник' in message.text:
-                            ran = randint(11, 15)
+                            ran = random.choice(p3)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Фокусник.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Фокусник.')
                             r.hset(message.from_user.id, 'class', 3)
                             r.hincrby(message.from_user.id, 'intellect', 1)
                             intellect(1, message.from_user.id, r)
                         elif 'Язичник' in message.text or 'язичник' in message.text:
-                            ran = randint(16, 20)
+                            ran = random.choice(p4)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Язичник.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Язичник.')
                             r.hset(message.from_user.id, 'class', 4)
                         elif 'Гарматне' in message.text or 'гарматне' in message.text:
-                            ran = randint(21, 25)
+                            ran = random.choice(p5)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Гарматне м`ясо.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Гарматне м`ясо.')
                             r.hset(message.from_user.id, 'class', 5)
                         elif 'Мусор' in message.text or 'мусор' in message.text:
-                            ran = randint(26, 30)
+                            ran = random.choice(p6)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Мусор.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Мусор.')
                             r.hset(message.from_user.id, 'class', 6)
                             r.hset(message.from_user.id, 'weapon', 16)
                         elif 'Малорос' in message.text or 'малорос' in message.text:
-                            ran = randint(31, 35)
+                            ran = random.choice(p7)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Малорос.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Малорос.')
                             r.hset(message.from_user.id, 'class', 7)
                             intellect(-2, message.from_user.id, r)
                         elif 'Хакер' in message.text or 'хакер' in message.text:
-                            ran = randint(36, 40)
+                            ran = random.choice(p8)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Хакер.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Хакер.')
                             r.hset(message.from_user.id, 'class', 8)
                         elif 'Медик' in message.text or 'медик' in message.text:
-                            ran = randint(51, 55)
+                            ran = random.choice(p9)
                             r.hset(message.from_user.id, 'photo', ran)
-                            bot.send_photo(message.chat.id, photo=photos[ran], caption='Ти вибрав клас Медик.')
+                            bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Медик.')
                             r.hset(message.from_user.id, 'class', 9)
             if int(r.hget(message.from_user.id, 'intellect')) >= 12:
                 if message.text == 'Покращити русака':
