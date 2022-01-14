@@ -250,7 +250,8 @@ def feed(message):
         if not datetime.now().day == int(r.hget(message.from_user.id, 'time')):
             r.hset(message.from_user.id, 'time', datetime.now().day)
             r.hset(message.from_user.id, 'hp', 100)
-            fr = feed_rusak(int(r.hget(message.from_user.id, 'intellect')))
+            stats = r.hmget(message.from_user.id, 'strength', 'intellect')
+            fr = feed_rusak(int(stats[1]))
             r.hincrby(message.from_user.id, 'eat', 1)
             success = fr[0]
             cl = int(r.hget(message.from_user.id, 'class'))
@@ -258,7 +259,7 @@ def feed(message):
                 success = 1
             if success == 1:
                 try:
-                    if int(r.hget(message.from_user.id, 'cabin')) == 1:
+                    if int(r.hget(message.from_user.id, 'cabin')) == 1 and int(stats[0]) <= 2000:
                         r.hincrby(message.from_user.id, 'strength', fr[1] + 15)
                         ran = fr[1] + 15
                     else:
@@ -268,8 +269,14 @@ def feed(message):
                     r.hincrby(message.from_user.id, 'strength', fr[1])
                     ran = fr[1]
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                word = 'зросла'
+                if int(stats[0]) > 3000:
+                    decrease = int(choice(['1', '1', '1', '1', '0']))
+                    if decrease == 0:
+                        word = 'зменшилась'
+                        r.hincrby(message.from_user.id, 'strength', -2 * ran)
                 msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
-                              ' смачно поїв.\n\nСила зросла на ' + str(ran) + '.\n'
+                              ' смачно поїв.\n\nСила ' + word + ' на ' + str(ran) + '.\n'
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, message.from_user.id, r)
