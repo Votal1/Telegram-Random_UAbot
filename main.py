@@ -13,7 +13,7 @@ from time import sleep
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
-    question, zradoMoga, penis, choose, beer, generator, race, gender
+    question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp
 from buttons import goods, merchant_goods, donate_goods, skill_set,\
     battle_button, battle_button_2, battle_button_3, invent, unpack
@@ -207,42 +207,30 @@ def donbass(message):
 @bot.message_handler(commands=['rusak'])
 def my_rusak(message):
     try:
-        cl, inj, ms = '', '', ''
+        r_photo, cl, inj, ms = '', '', '', ''
         name = int(r.hget(message.from_user.id, 'name'))
         name = names[name]
         c = int(r.hget(message.from_user.id, 'class'))
         if c != 0:
             cl = '\n' + icons[c] + ' Клас: ' + class_name[c]
         try:
-            r_photo = r.hget(message.from_user.id, 'photo').decode()
-            stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
-            if int(stats[3]) > 0:
-                inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
-            if int(stats[6]) > 0:
-                inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
-            if int(stats[4]) > 0:
-                ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
-            photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
-                         '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                         '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
-                             5].decode() \
-                         + cl + ms + inj
-            bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
+            if int(r.hget(message.from_user.id, 'photo')) == 0:
+                r_photo = 'https://i.ibb.co/rGd7L5n/rusnya.jpg'
         except:
-            r_photo = 'https://i.ibb.co/rGd7L5n/rusnya.jpg'
-            stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
-            if int(stats[3]) > 0:
-                inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
-            if int(stats[6]) > 0:
-                inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
-            if int(stats[4]) > 0:
-                ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
-            photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
-                         '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                         '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
-                             5].decode() \
-                         + cl + ms + inj
-            bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
+            r_photo = r.hget(message.from_user.id, 'photo').decode()
+        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
+        if int(stats[3]) > 0:
+            inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
+        if int(stats[6]) > 0:
+            inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
+        if int(stats[4]) > 0:
+            ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
+        photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
+                     '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
+                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
+                         5].decode() \
+                     + cl + ms + inj
+        bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
     except:
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
@@ -2872,7 +2860,12 @@ def default_query(inline_query):
                                              types.InputTextMessageContent(gender()),
                                              thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
                                              description='все дуже серйозно')
-        bot.answer_inline_query(inline_query.id, [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13], cache_time=0)
+        r14 = types.InlineQueryResultArticle('14', 'Віджимайся!',
+                                             types.InputTextMessageContent(roll_push_ups()),
+                                             thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
+                                             description='ти ж цього не зробиш, чи не так?')
+        bot.answer_inline_query(inline_query.id, [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14],
+                                cache_time=0)
     except Exception as e:
         print(e)
 
