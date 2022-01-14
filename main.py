@@ -863,9 +863,6 @@ def war(cid, location, big_battle):
         else:
             class_reward = '\U0001F5FA: \U0001F464 +10'
             r.hincrby(win, 'sch', 10)
-    elif location == 'Битва біля новорічної ялинки':
-        class_reward = '\U0001F381 +1'
-        r.hincrby(win, 'n_packs', 1)
 
     sleep(10)
     r.hdel('battle' + str(cid), 'start')
@@ -1538,9 +1535,7 @@ def handle_query(call):
                 ran = choice(['Битва в Соледарі', 'Битва на овечій фермі', 'Битва на покинутому заводі',
                               'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
                               'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
-                              'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні',
-                              'Битва біля новорічної ялинки', 'Битва біля новорічної ялинки',
-                              'Битва біля новорічної ялинки'])
+                              'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні'])
                 big_battle = True
                 try:
                     bot.unpin_chat_message(chat_id=call.message.chat.id,
@@ -2174,7 +2169,7 @@ def handle_query(call):
 
     elif call.data.startswith('donate'):
         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                  text='Один погон коштує 25 гривень. Для отримання погонів скиньте на карту потрібну'
+                                  text='Один погон коштує 30 гривень. Для отримання погонів скиньте на карту потрібну'
                                        ' суму і введіть боту в пп \n/donated <будь-яке повідомлення>'
                                        '\nНарахування погонів триватиме до 24 годин.')
 
@@ -2334,111 +2329,7 @@ def handle_query(call):
         uid = call.from_user.id
         cl = int(r.hget(uid, 'class'))
 
-        n_packs = 0
-        if r.hexists(uid, 'n_packs') == 1:
-            if int(r.hget(uid, 'n_packs')) > 0:
-                n_packs = 1
-        if n_packs == 1:
-            r.hincrby(uid, 'n_packs', -1)
-            r.hincrby(uid, 'opened', 1)
-
-            ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], weights=[20, 15, 14, 13, 12, 10, 5, 4, 3, 2, 1, 1])
-            if ran == [1]:
-                msg = '\u26AA В пакунку була загадкова цукерка. Русак її з`їв...'
-                ran2 = randint(1, 5)
-                if ran2 == 1:
-                    r.hincrby(uid, 'strength', 1)
-                    msg += '\n\U0001F4AA +1'
-                elif ran2 == 2:
-                    intellect(1, uid, r)
-                    msg += '\n\U0001F9E0 +1'
-                elif ran2 == 3:
-                    spirit(1, uid, cl, False, r)
-                    msg += '\n\U0001F54A +1'
-                elif ran2 == 4:
-                    r.hincrby(uid, 'injure', 1)
-                    msg += '\n\U0001fa78 +1'
-                elif ran2 == 5:
-                    hp(1, uid, r)
-                    msg += '\n\U0001fac0 +1'
-                bot.edit_message_text(msg, call.message.chat.id, call.message.id)
-            elif ran == [2]:
-                spirit(2000, uid, cl, False, r)
-                bot.edit_message_text('\u26AA В цьому пакунку лежить торбинка мандаринів.\n\U0001F54A +2000',
-                                      call.message.chat.id, call.message.id)
-            elif ran == [3]:
-                spirit(1000, uid, cl, False, r)
-                msg = '\u26AA В цьому пакунку знайдено дві упаковки бенгальських вогнів.\n\U0001F54A +1000'
-                if r.hexists(uid, 'name2') == 1:
-                    msg += ' \U0001F54A +1000'
-                    r.hincrby(uid, 'spirit2', 1000)
-                    if int(r.hget(uid, 'class2')) == 4 or int(r.hget(uid, 'class2')) == 14 or \
-                            int(r.hget(uid, 'class2')) == 24:
-                        if int(r.hget(uid, 'spirit2')) > 20000:
-                            r.hset(uid, 'spirit2', 20000)
-                    elif int(r.hget(uid, 'spirit2')) > 10000:
-                        r.hset(uid, 'spirit2', 10000)
-                bot.edit_message_text(msg, call.message.chat.id, call.message.id)
-            elif ran == [4]:
-                r.hincrby(uid, 'money', 40)
-                bot.edit_message_text('\u26AA Знайдено новорічну листівку з невеликим вкладенням.\n\U0001F4B5 +40',
-                                      call.message.chat.id, call.message.id)
-            elif ran == [5]:
-                if int(r.hget(uid, 'support')) == 3:
-                    r.hincrby(uid, 's_support', 5)
-                else:
-                    r.hset(uid, 'support', 3)
-                    r.hset(uid, 's_support', 5)
-                bot.edit_message_text('\U0001f535 В пакунку лежить Совєтскоє Шампанскоє. '
-                                      'Його можна застосувати в боях...',
-                                      call.message.chat.id, call.message.id)
-            elif ran == [6]:
-                r.hincrby(uid, 'strength', 10)
-                bot.edit_message_text('\U0001f535 В пакунку лежить Тульський пряник.\n\U0001F4AA +10',
-                                      call.message.chat.id, call.message.id)
-            elif ran == [7]:
-                r.hincrby(uid, 'money', 100)
-                bot.edit_message_text('\U0001f535 В цьому новорічному подарунку знайдено багато грошей.'
-                                      '\n\U0001F4B5 +100',
-                                      call.message.chat.id, call.message.id)
-            elif ran == [8]:
-                msg = '\U0001f7e3 Пакунок виявився доволі важким, адже там цілий ящик мандаринів!'
-                if int(r.hget(uid, 'intellect')) >= 20:
-                    spirit(5000, uid, cl, False, r)
-                    msg += '\n\U0001F54A +5000'
-                else:
-                    intellect(1, uid, r)
-                    msg += '\n\U0001F9E0 +1'
-                bot.edit_message_text(msg, call.message.chat.id, call.message.id)
-            elif ran == [9]:
-                r.hset(uid, 'time', 0)
-                emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                bot.edit_message_text('\U0001f7e3 В цьому широкому пакунку знаходиться тазік олів`є. Русак також отри'
-                                      'мав невелику порцію.\n' + emoji + ' +1', call.message.chat.id, call.message.id)
-            elif ran == [10]:
-                r.hincrby(uid, 'money', 400)
-                bot.edit_message_text('\U0001f7e3 В цьому пакунку знайдено велиику заначку.'
-                                      '\n\U0001F4B5 +400', call.message.chat.id, call.message.id)
-            elif ran == [11]:
-                for member in r.smembers(call.message.chat.id):
-                    spirit(2000, int(member), int(r.hget(int(member), 'class')), False, r)
-                bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено феєрверк. Після його запуску всі русаки '
-                                      'чату насолоджувались видовищем.\n\U0001F54A +2000',
-                                      call.message.chat.id, call.message.id)
-            elif ran == [12]:
-                if cl != 6 and cl != 16 and cl != 26:
-                    r.hset(uid, 'weapon', 3)
-                    r.hset(uid, 's_weapon', 10)
-                    bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено посох Діда Мороза - легендарного '
-                                          'персонажа, в якого вірять русаки.', call.message.chat.id, call.message.id)
-                else:
-                    for member in r.smembers(call.message.chat.id):
-                        spirit(2000, int(member), int(r.hget(int(member), 'class')), False, r)
-                    bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено феєрверк. Після його запуску всі русаки '
-                                          'чату насолоджувались видовищем.\n\U0001F54A +2000',
-                                          call.message.chat.id, call.message.id)
-
-        elif int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
+        if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
             if int(r.hget(uid, 'packs')) > 0:
                 r.hincrby(uid, 'packs', -1)
             else:
@@ -2601,39 +2492,6 @@ def handle_query(call):
                 r.hincrby(uid, 'strap', 1)
         else:
             bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id, call.message.id)
-
-    elif call.data.startswith('boost2'):
-        if r.hexists(call.from_user.id, 'gift2') == 0:
-            if bot.get_chat_member(call.message.chat.id, call.from_user.id).status == 'left':
-                r.hincrby(call.from_user.id, 'n_packs', 5)
-                r.hset(call.from_user.id, 'gift2', 1)
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                          text='Дякую за інтерес проявлений до бота! '
-                                               'Буду вдячний за його поширення.\n\n'
-                                               '\U0001F4E6 Отримано 5 новорічних пакунків\n\n'
-                                               'Підпишись на канал щоб отримати більше!')
-            else:
-                r.hincrby(call.from_user.id, 'n_packs', 10)
-                r.hset(call.from_user.id, 'gift2', 2)
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                          text='Дякую за інтерес проявлений до бота! '
-                                               'Буду вдячний за його поширення.\n\n'
-                                               '\U0001F4E6 Отримано 10 новорічних пакунків')
-        else:
-            if int(r.hget(call.from_user.id, 'gift2')) == 1:
-                if bot.get_chat_member(call.message.chat.id, call.from_user.id).status != 'left':
-                    r.hincrby(call.from_user.id, 'n_packs', 5)
-                    r.hset(call.from_user.id, 'gift2', 2)
-                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                              text='Дякую за інтерес проявлений до бота! '
-                                                   'Буду вдячний за його поширення.\n\n'
-                                                   '\U0001F4E6 Отримано 5 новорічних пакунків')
-                else:
-                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                              text='Підпишись на канал, щоб отримати більше подарунків.')
-            else:
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                          text='Ти вже забрав свої пакунки.')
 
 
 @bot.message_handler()

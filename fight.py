@@ -312,14 +312,6 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             r.hset(uid1, 's_support', 0)
             r.hset(uid2, 'weapon', 0)
             r.hset(uid2, 's_weapon', 0)
-        elif weapon2 == 3:
-            weapon = '\n\n\U0001F381 ' + names[name2] + ' прийшов на бій з посохом Діда Мороза і вручив ворогу ' \
-                                                        'подарунок!\n\U0001F54A +1000'
-            r.hincrby(uid1, 'n_packs', 1)
-            spirit(1000, uid2, c2, False, r)
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
 
         if defense1 == 9:
             s1 = int(s1 * 1.3)
@@ -700,26 +692,11 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if weapon1 == 15:
                 meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1, 5, r)
             hp(-1, uid2, r)
-            bottle = ''
-            if int(r.hget(uid1, 'support')) == 3:
-                bottle = '\n\U0001F37E ' + names[name1] + ' випив шампанського, а ' + names[name2] + \
-                         ' сів на пляшку.\n\u2622 +5'
-                r.hincrby(uid1, 'vodka', 5)
-                r.hincrby(uid1, 's_support', -1)
-                if int(r.hget(uid1, 's_support')) <= 0:
-                    r.hset(uid1, 'support', 0)
-            elif int(r.hget(uid2, 'support')) == 3:
-                bottle = '\n\U0001F37E ' + names[name1] + ' випив шампанського, а ' + names[name2] + \
-                         ' сів на пляшку.\n\u2622 +5'
-                r.hincrby(uid1, 'vodka', 5)
-                r.hincrby(uid2, 's_support', -1)
-                if int(r.hget(uid2, 's_support')) <= 0:
-                    r.hset(uid2, 'support', 0)
             info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)' + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
                                                                    ' стільки ж втрачає.' +
-                           hach + worker + meat + cop + pag + fsb + hack + bottle)
+                           hach + worker + meat + cop + pag + fsb + hack)
             return info + win_info
         elif win == ['2']:
             if s22 / s11 > 2:
@@ -814,24 +791,9 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if weapon2 == 15:
                 meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5, r)
             hp(-1, uid1, r)
-            bottle = ''
-            if int(r.hget(uid2, 'support')) == 3:
-                bottle = '\n\U0001F37E ' + names[name2] + ' випив шампанського, а ' + names[name1] + \
-                         ' сів на пляшку.\n\u2622 +5'
-                r.hincrby(uid2, 'vodka', 5)
-                r.hincrby(uid2, 's_support', -1)
-                if int(r.hget(uid2, 's_support')) <= 0:
-                    r.hset(uid2, 'support', 0)
-            elif int(r.hget(uid1, 'support')) == 3:
-                bottle = '\n\U0001F37E ' + names[name2] + ' випив шампанського, а ' + names[name1] + \
-                         ' сів на пляшку.\n\u2622 +5'
-                r.hincrby(uid2, 'vodka', 5)
-                r.hincrby(uid1, 's_support', -1)
-                if int(r.hget(uid1, 's_support')) <= 0:
-                    r.hset(uid1, 'support', 0)
             info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode() + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
                                                                    ' стільки ж втрачає.' +
-                           hach + worker + meat + cop + pag + fsb + hack + bottle)
+                           hach + worker + meat + cop + pag + fsb + hack)
             return info + win_info
