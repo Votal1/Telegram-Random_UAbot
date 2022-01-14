@@ -286,12 +286,10 @@ def gender():
 
 
 def roll_push_ups():
-    emoji = ['\ud83d\udcaa', '\ud83e\uddbe', '\ud83d\udcaa\ud83c\udffb', '\ud83d\udcaa\ud83c\udffc',
-             '\ud83d\udcaa\ud83c\udffd', '\ud83d\udcaa\ud83c\udffe', '\ud83d\udcaa\ud83c\udfff']
     n = randint(1, 3)
     if n == 1:
         step = ' підхід.'
     else:
         step = ' підходи.'
-    ran = choice(emoji) + ' Роби ' + str(randint(15, 50)) + ' віджимань за ' + str(n) + step
+    ran = str(randint(15, 50)) + ' віджимань за ' + str(n) + step
     return ran

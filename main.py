@@ -2861,7 +2861,7 @@ def default_query(inline_query):
                                              thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
                                              description='все дуже серйозно')
         r14 = types.InlineQueryResultArticle('14', 'Віджимайся!',
-                                             types.InputTextMessageContent(roll_push_ups()),
+                                             types.InputTextMessageContent('\ud83d\udcaa Роби ' + roll_push_ups()),
                                              thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
                                              description='ти ж цього не зробиш, чи не так?')
         bot.answer_inline_query(inline_query.id, [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14],
@@ -2977,7 +2977,12 @@ def custom_query(inline_query):
                                              types.InputTextMessageContent(gender()),
                                              thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
                                              description='все дуже серйозно')
-        bot.answer_inline_query(inline_query.id, [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12], cache_time=0)
+        r13 = types.InlineQueryResultArticle('13', 'Віджимайся!',
+                                             types.InputTextMessageContent('\ud83d\udcaa ' + inline_query.query +
+                                                                           ', роби ' + roll_push_ups()),
+                                             thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
+                                             description='ти ж цього не зробиш, чи не так?')
+        bot.answer_inline_query(inline_query.id, [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13], cache_time=0)
     except Exception as e:
         print(e)
 
