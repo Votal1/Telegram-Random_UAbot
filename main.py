@@ -1201,7 +1201,7 @@ def inventory(message):
             rep = invent()
         else:
             rep = None
-        if int(inv[0]) == 1 or int(inv[0]) == 14 or int(inv[0]) == 2:
+        if int(inv[0]) == 1 or int(inv[0]) == 2:
             m1 = '\nМіцність: 1'
         elif int(inv[0]) == 16:
             m1 = '\nМіцність: ∞'
