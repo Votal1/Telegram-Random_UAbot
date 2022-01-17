@@ -73,7 +73,27 @@ def hp(value, uid, r):
             r.hset(uid, 'hp', 0)
 
 
-def weapon(uid, r):
+def damage_weapon(uid, w, cl, r):
     r.hincrby(uid, 's_weapon', -1)
     if int(r.hget(uid, 's_weapon')) <= 0:
-        r.hset(uid, 'weapon', 0)
+        if w == 15 or w == 17:
+            r.hset(uid, 'weapon', 0)
+            r.hset(uid, 'defense', 0)
+        elif cl == 6 or cl == 16 or cl == 26:
+            r.hset(uid, 'weapon', 16)
+        else:
+            r.hset(uid, 'weapon', 0)
+
+
+def damage_defense(uid, d, r):
+    r.hincrby(uid, 's_defense', -1)
+    if int(r.hget(uid, 's_defense')) <= 0:
+        r.hset(uid, 'defense', 0)
+        if d == 9:
+            r.hincrby(uid, 'money', 4)
+
+
+def damage_support(uid, r):
+    r.hincrby(uid, 's_support', -1)
+    if int(r.hget(uid, 's_support')) <= 0:
+        r.hset(uid, 'support', 0)

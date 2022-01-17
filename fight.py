@@ -1,7 +1,8 @@
 from random import randint, choice, choices
 from datetime import datetime
 from time import sleep
-from parameters import spirit, vodka, intellect, injure, schizophrenia, hp
+from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, \
+    damage_weapon, damage_defense, damage_support
 from variables import names, icons, p7
 
 
@@ -66,11 +67,8 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                         if weapon2 == 15 or weapon2 == 17:
                             r.hset(uid2, 'weapon', 0)
                             r.hset(uid2, 'defense', 0)
-                            r.hset(uid2, 's_weapon', 0)
-                            r.hset(uid2, 's_defense', 0)
                         else:
                             r.hset(uid2, 'weapon', 0)
-                            r.hset(uid2, 's_weapon', 0)
                         if defense1 == 0:
                             r.hset(uid1, 'defense', 16)
                             r.hset(uid1, 's_defense', 10)
@@ -86,11 +84,8 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                         if defense1 == 15 or defense1 == 17:
                             r.hset(uid1, 'weapon', 0)
                             r.hset(uid1, 'defense', 0)
-                            r.hset(uid1, 's_weapon', 0)
-                            r.hset(uid1, 's_defense', 0)
                         else:
                             r.hset(uid1, 'defense', 0)
-                            r.hset(uid1, 's_defense', 0)
                         if defense2 == 0:
                             r.hset(uid2, 'defense', 16)
                             r.hset(uid2, 's_defense', 10)
@@ -140,9 +135,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             else:
                 chance = choice([2.5, 3.333, 5])
                 r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
+            damage_weapon(uid2, 4, c2, r)
             weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' прийшов на бій з битою, опонента це' \
                                                                   ' неабияк злякало!'
 
@@ -159,14 +152,10 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
 
         if int(r.hget(uid1, 'support')) == 1:
             hp(10, uid1, r)
-            r.hincrby(uid1, 's_support', -1)
-            if int(r.hget(uid1, 's_support')) <= 0:
-                r.hset(uid1, 'support', 0)
+            damage_support(uid1, r)
         if int(r.hget(uid2, 'support')) == 1:
             hp(10, uid2, r)
-            r.hincrby(uid2, 's_support', -1)
-            if int(r.hget(uid2, 's_support')) <= 0:
-                r.hset(uid2, 'support', 0)
+            damage_support(uid2, r)
 
         stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp')
         stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp')
@@ -200,17 +189,13 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
         if weapon2 == 11:
             s1 = int(s1 / 2)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав травмат і прострелив ворогу коліно!'
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
+            damage_weapon(uid2, 11, c2, r)
         elif weapon2 == 12:
             s2 = int(s2 * 1.1)
             i2 = int(i2 * 1.1)
             bd2 = int(bd2 * 1.1)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з діамантовим кайлом.'
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
+            damage_weapon(uid2, 12, c2, r)
         elif weapon2 == 13:
             if c2 == 13 or c2 == 23:
                 if i1 > i2:
@@ -236,16 +221,11 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 bd2 = bd1
                 bd1 = bt
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' поміняв характеристики місцями!'
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
+            damage_weapon(uid2, 13, c2, r)
         elif weapon2 == 15:
             s2 = int(s2 * 1.75)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...'
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
-                r.hset(uid2, 'defense', 0)
+            damage_weapon(uid2, 15, c2, r)
             ran = choices([1, 2], weights=[98, 2])
             if ran == [2] and defense1 != 2:
                 weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
@@ -255,7 +235,6 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
                 r.hset(uid2, 'support', 0)
-                r.hset(uid2, 's_support', 0)
                 r.hincrby(uid2, 'injure', 100)
                 if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...' \
@@ -265,25 +244,17 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     r.hset(uid1, 'hp', 0)
                     if c1 != 6 and c1 != 16 and c1 != 26:
                         r.hset(uid1, 'weapon', 0)
-                        r.hset(uid1, 's_weapon', 0)
                     r.hset(uid1, 'defense', 0)
-                    r.hset(uid1, 's_defense', 0)
                     r.hset(uid1, 'support', 0)
-                    r.hset(uid1, 's_support', 0)
                     r.hincrby(uid1, 'injure', 100)
         elif defense2 == 16:
             s1 = int(s1 * 0.8)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' атакує, прикрившись поліцейським щитом.'
-            r.hincrby(uid2, 's_defense', -1)
-            if int(r.hget(uid2, 's_defense')) <= 0:
-                r.hset(uid2, 'defense', 0)
+            damage_defense(uid2, 16, r)
         elif weapon2 == 17:
             bd2 = 10000
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' кинувся на ворога, тримаючи в руках прапор новоросії.'
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
-                r.hset(uid2, 'defense', 0)
+            damage_weapon(uid2, 17, c2, r)
         elif weapon2 == 19:
             if int(r.hget(uid1, 'injure')) == 0:
                 r.hincrby(uid1, 'injure', 1)
@@ -294,9 +265,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     r.hset(uid1, 'injure', 0)
                 hp(-10, uid1, r)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' припинив ворогу кровотечу.\n\U0001fa78 -10 \U0001fac0 -10'
-            r.hincrby(uid2, 's_weapon', -1)
-            if int(r.hget(uid2, 's_weapon')) <= 0:
-                r.hset(uid2, 'weapon', 0)
+            damage_weapon(uid2, 19, c2, r)
 
         elif weapon2 == 2 and defense1 != 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
@@ -304,22 +273,15 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             r.hset(uid1, 'spirit', 0)
             if c1 != 6 and c1 != 16 and c1 != 26:
                 r.hset(uid1, 'weapon', 0)
-                r.hset(uid1, 's_weapon', 0)
             r.hset(uid1, 'hp', 0)
             r.hset(uid1, 'defense', 0)
-            r.hset(uid1, 's_defense', 0)
             r.hset(uid1, 'support', 0)
-            r.hset(uid1, 's_support', 0)
-            r.hset(uid2, 'weapon', 0)
-            r.hset(uid2, 's_weapon', 0)
+            damage_weapon(uid2, 2, c2, r)
 
         if defense1 == 9:
             s1 = int(s1 * 1.3)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
-            r.hincrby(uid1, 's_defense', -1)
-            if int(r.hget(uid1, 's_defense')) <= 0:
-                r.hset(uid1, 'defense', 0)
-                r.hincrby(uid1, 'money', 4)
+            damage_defense(uid1, 9, r)
         elif defense1 == 10 and t == 1:
             if i2 > i1:
                 if c2 != 3 and c2 != 13 and c2 != 23:
@@ -331,10 +293,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
         elif weapon1 == 15:
             s1 = int(s1 * 1.75)
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
-            r.hincrby(uid1, 's_weapon', -1)
-            if int(r.hget(uid1, 's_weapon')) <= 0:
-                r.hset(uid1, 'weapon', 0)
-                r.hset(uid1, 'defense', 0)
+            damage_weapon(uid1, 15, c1, r)
             ran = choices([1, 2], weights=[98, 2])
             if ran == [2] and defense2 != 2:
                 defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
@@ -344,7 +303,6 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
                 r.hset(uid1, 'support', 0)
-                r.hset(uid1, 's_support', 0)
                 r.hincrby(uid1, 'injure', 100)
                 if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
                     defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...' \
@@ -354,31 +312,21 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     r.hset(uid2, 'hp', 0)
                     if c2 != 6 and c2 != 16 and c2 != 26:
                         r.hset(uid2, 'weapon', 0)
-                        r.hset(uid2, 's_weapon', 0)
                     r.hset(uid2, 'defense', 0)
-                    r.hset(uid2, 's_defense', 0)
                     r.hset(uid2, 'support', 0)
-                    r.hset(uid2, 's_support', 0)
                     r.hincrby(uid2, 'injure', 100)
         elif defense1 == 16:
             s2 = int(s2 * 0.8)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'
-            r.hincrby(uid1, 's_defense', -1)
-            if int(r.hget(uid1, 's_defense')) <= 0:
-                r.hset(uid1, 'defense', 0)
+            damage_defense(uid1, 16, r)
         elif weapon1 == 17:
             bd1 = 10000
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' гордо стоїть, тримаючи в руках прапор новоросії.'
-            r.hincrby(uid1, 's_weapon', -1)
-            if int(r.hget(uid1, 's_weapon')) <= 0:
-                r.hset(uid1, 'weapon', 0)
-                r.hset(uid1, 'defense', 0)
+            damage_weapon(uid1, 17, c1, r)
         elif defense1 == 2:
             s2 = int(s2 * 0.25)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' б`ється в бронежилеті.'
-            r.hincrby(uid1, 's_defense', -1)
-            if int(r.hget(uid1, 's_defense')) <= 0:
-                r.hset(uid1, 'defense', 0)
+            damage_defense(uid1, 2, r)
 
         if c1 == 6 or c2 == 6 or c1 == 16 or c2 == 16 or c1 == 26 or c2 == 26:
             if c1 == 6 or c1 == 16 or c1 == 26:
@@ -654,9 +602,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if weapon2 == 14:
                 r.hincrby(uid1, 'spirit', int(r.hget(uid2, 'spirit')))
                 r.hincrby(uid2, 'spirit', -int(r.hget(uid2, 'spirit')))
-                r.hincrby(uid2, 's_weapon', -1)
-                if int(r.hget(uid2, 's_weapon')) == 0:
-                    r.hset(uid2, 'weapon', 0)
+                damage_weapon(uid2, 14, c2, r)
                 pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли русак програв' \
                                                        ', його бойовий дух влився у ворога...'
 
@@ -670,9 +616,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 if weapon2 == 18:
                     hack1 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name2] + ' використав експлойт...'
-                    r.hincrby(uid2, 's_weapon', -1)
-                    if int(r.hget(uid2, 's_weapon')) <= 0:
-                        r.hset(uid2, 'weapon', 0)
+                    damage_weapon(uid2, 18, c2, r)
                 if hack1 == [1]:
                     spirit(bonus * 2, uid2, c2, False, r)
                     spirit(-bonus, uid1, c1, False, r)
@@ -753,9 +697,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if weapon2 == 14:
                 r.hincrby(uid2, 'spirit', int(r.hget(uid1, 'spirit')))
                 r.hincrby(uid1, 'spirit', -int(r.hget(uid1, 'spirit')))
-                r.hincrby(uid2, 's_weapon', -1)
-                if int(r.hget(uid2, 's_weapon')) == 0:
-                    r.hset(uid2, 'weapon', 0)
+                damage_weapon(uid2, 14, c2, r)
                 pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли ворог програв' \
                                                        ', його бойовий дух влився у русака...'
 
@@ -769,9 +711,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 if weapon1 == 18:
                     hack2 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name1] + ' використав експлойт...'
-                    r.hincrby(uid1, 's_weapon', -1)
-                    if int(r.hget(uid1, 's_weapon')) <= 0:
-                        r.hset(uid1, 'weapon', 0)
+                    damage_weapon(uid1, 18, c1, r)
                 if hack2 == [1]:
                     spirit(bonus * 2, uid1, c1, False, r)
                     spirit(-bonus, uid2, c2, False, r)

@@ -12,7 +12,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, injure, schizophrenia, hp
+from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, damage_support
 from buttons import goods, merchant_goods, donate_goods, skill_set,\
     battle_button, battle_button_2, battle_button_3, invent, unpack
 from fight import fight
@@ -1199,18 +1199,14 @@ def inventory(message):
             rep = invent()
         else:
             rep = None
-        if int(inv[0]) == 1 or int(inv[0]) == 2:
-            m1 = '\nМіцність: 1'
-        elif int(inv[0]) == 16:
+        if int(inv[0]) == 16:
             m1 = '\nМіцність: ∞'
         elif int(inv[0]) == 0:
             m1 = '[Порожньо]'
         else:
             m1 = '\nМіцність: ' + inv[3].decode()
 
-        if int(inv[1]) == 1 or int(inv[1]) == 10:
-            m2 = '\nМіцність: 1'
-        elif int(inv[1]) == 15 or int(inv[1]) == 17:
+        if int(inv[1]) == 15 or int(inv[1]) == 17:
             m2 = '\nМіцність: ' + inv[3].decode()
         elif int(inv[1]) == 0:
             m2 = '[Порожньо]'
@@ -1645,9 +1641,7 @@ def handle_query(call):
                         r.hset(mem, 'spirit', int(i))
                 if int(r.hget(mem, 'support')) == 2:
                     r.hset(mem, 'spirit', i1)
-                    r.hincrby(mem, 's_support', -1)
-                    if int(r.hget(mem, 's_support')) <= 0:
-                        r.hset(mem, 'support', 0)
+                    damage_support(mem, r)
         except:
             pass
         name = int(r.hget(call.from_user.id, 'name'))
@@ -2293,6 +2287,9 @@ def handle_query(call):
                 else:
                     r.hset(call.from_user.id, 'weapon', 0)
                     r.hset(call.from_user.id, 's_weapon', 0)
+                cl = int(r.hget(call.from_user.id, 'class'))
+                if cl == 6 or cl == 16 or cl == 26:
+                    r.hset(call.from_user.id, 'weapon', 16)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Русак викинув зброю')
         else:
@@ -2408,17 +2405,16 @@ def handle_query(call):
             elif ran == [3]:
                 bot.edit_message_text('\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).',
                                       call.message.chat.id, call.message.id)
-                if cl == 6 or cl == 16 or cl == 26:
-                    if int(r.hget(uid, 'defense')) == 0:
-                        r.hset(uid, 'defense', 1)
-                        r.hset(uid, 's_defense', 1)
-                else:
-                    if int(r.hget(uid, 'weapon')) == 0:
-                        r.hset(uid, 'weapon', 1)
-                        r.hset(uid, 's_weapon', 1)
-                    if int(r.hget(uid, 'defense')) == 0:
-                        r.hset(uid, 'defense', 1)
-                        r.hset(uid, 's_defense', 1)
+                if int(r.hget(uid, 'weapon')) == 0:
+                    r.hset(uid, 'weapon', 1)
+                    r.hset(uid, 's_weapon', 1)
+                elif int(r.hget(uid, 'weapon')) == 1:
+                    r.hincrby(uid, 's_weapon', 1)
+                if int(r.hget(uid, 'defense')) == 0:
+                    r.hset(uid, 'defense', 1)
+                    r.hset(uid, 's_defense', 1)
+                elif int(r.hget(uid, 'defense')) == 1:
+                    r.hincrby(uid, 's_defense', 1)
             elif ran == [4]:
                 bot.edit_message_text('\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).'
                                       '\n\U0001F4B5 + 4', call.message.chat.id, call.message.id)
@@ -2479,27 +2475,16 @@ def handle_query(call):
                     r.hset(uid, 'defense', 2)
                     r.hset(uid, 's_defense', 50)
             elif ran == [13]:
-                if cl != 6 or cl != 16 or cl != 26:
-                    bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
-                                          'РПГ-7 і одну гранату до нього [Атака, міцність=1] - завдає ворогу важке пор'
-                                          'анення (віднімає бойовий дух, здоров`я і все спорядження, на 300 боїв '
-                                          'бойовий дух впаде вдвічі а сила втричі).',
-                                          call.message.chat.id, call.message.id)
-                    if int(r.hget(uid, 'weapon')) == 2:
-                        r.hincrby(uid, 's_weapon', 1)
-                    else:
-                        r.hset(uid, 'weapon', 2)
-                        r.hset(uid, 's_weapon', 1)
+                bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
+                                      'РПГ-7 і одну гранату до нього [Атака, міцність=1] - завдає ворогу важке пор'
+                                      'анення (віднімає бойовий дух, здоров`я і все спорядження, на 300 боїв '
+                                      'бойовий дух впаде вдвічі а сила втричі).',
+                                      call.message.chat.id, call.message.id)
+                if int(r.hget(uid, 'weapon')) == 2:
+                    r.hincrby(uid, 's_weapon', 1)
                 else:
-                    bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця '
-                                          '[Захист, міцність=50] - зменшує силу ворога на бій на 75%, захищає від '
-                                          'важких поранень.',
-                                          call.message.chat.id, call.message.id)
-                    if int(r.hget(uid, 'defense')) == 2:
-                        r.hincrby(uid, 's_defense', 50)
-                    else:
-                        r.hset(uid, 'defense', 2)
-                        r.hset(uid, 's_defense', 50)
+                    r.hset(uid, 'weapon', 2)
+                    r.hset(uid, 's_weapon', 1)
             elif ran == [14]:
                 bot.edit_message_text('\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.'
                                       '\n\U0001F31F +1',
