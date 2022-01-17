@@ -1234,14 +1234,7 @@ def inventory(message):
 def pack(message):
     if r.hexists(message.from_user.id, 'name') == 1:
         packs = int(r.hget(message.from_user.id, 'packs'))
-        n_packs = 0
-        if r.hexists(message.from_user.id, 'n_packs'):
-            if int(r.hget(message.from_user.id, 'n_packs')) > 0:
-                n_packs = 1
-        if n_packs == 1:
-            bot.reply_to(message, '\U0001F381 Новорічні пакунки: ' +
-                         r.hget(message.from_user.id, 'n_packs').decode() + '\n\nВідкрити?', reply_markup=unpack())
-        elif packs != 0:
+        if packs != 0:
             bot.reply_to(message, '\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
                          reply_markup=unpack())
         else:
