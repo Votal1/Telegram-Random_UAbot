@@ -28,21 +28,21 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
         if c2 == 1 or c2 == 11 or c2 == 21:
             if weapon1 == 0:
                 hach2 = 1
-        if c1 == 21:
+        if c1 == 21 and t == 1:
             if c2 == 1 or c2 == 11 or c2 == 21:
                 if int(r.hget(uid1, 'hach_time2')) != datetime.now().day:
                     hach += '\n' + names[name1] + ': брат за брата! \U0001F919\n\U0001F4AA + 10 \U0001F54A +1000\n'
                     r.hset(uid1, 'hach_time2', datetime.now().day)
                     r.hincrby(uid1, 'strength', 10)
                     spirit(1000, uid1, 21, False, r)
-        if c2 == 21:
+        if c2 == 21 and t == 1:
             if c1 == 1 or c1 == 11 or c1 == 21:
                 if int(r.hget(uid2, 'hach_time2')) != datetime.now().day:
                     hach += '\n' + names[name2] + ': брат за брата! \U0001F919\n\U0001F4AA + 10 \U0001F54A +1000\n'
                     r.hset(uid2, 'hach_time2', datetime.now().day)
                     r.hincrby(uid2, 'strength', 10)
                     spirit(1000, uid2, 21, False, r)
-        if c1 == 22:
+        if c1 == 22 and t == 1:
             if int(r.hget(uid1, 'worker')) != datetime.now().day and int(r.hget(uid1, 'time')) == datetime.now().day:
                 alcohol = int(r.hget(uid1, 's1'))
                 ran = choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
@@ -50,7 +50,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     worker += '\n\U0001F9F0 ' + names[name1] + ' отримує від начальника талон на їжу.\n'
                     r.hset(uid1, 'worker', datetime.now().day)
                     r.hset(uid1, 'time', 0)
-        if c2 == 22:
+        if c2 == 22 and t == 1:
             if int(r.hget(uid2, 'worker')) != datetime.now().day and int(r.hget(uid2, 'time')) == datetime.now().day:
                 alcohol = int(r.hget(uid2, 's1'))
                 ran = choices([0, 1], weights=[100 - int(alcohol/2), int(alcohol/2)])
@@ -58,7 +58,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     worker += '\n\U0001F9F0 ' + names[name2] + ' отримує від начальника талон на їжу.\n'
                     r.hset(uid2, 'worker', datetime.now().day)
                     r.hset(uid2, 'time', 0)
-        if c1 == 26:
+        if c1 == 26 and t == 1:
             if c2 != 6 and c2 != 16 and c2 != 26:
                 if weapon2 != 0:
                     cop1 = choices([1, 0], weights=[20, 80])
@@ -78,7 +78,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                             r.hincrby(uid1, 's_defense', 10)
                         cop += '\n\U0001F46E ' + names[name1] + \
                                ' вилучив у ворога зброю! За це він отримав поліцейський щит.\n'
-        if c2 == 26:
+        if c2 == 26 and t == 1:
             if c1 != 6 and c1 != 16 and c1 != 26:
                 if weapon1 != 0:
                     cop2 = choices([1, 0], weights=[20, 80])
@@ -99,14 +99,14 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                         cop += '\n\U0001F46E ' + names[name2] + \
                                ' вилучив у ворога захисне спорядження! За це він отримав поліцейський щит.\n'
 
-        if c1 == 27 and c2 == 0:
+        if c1 == 27 and c2 == 0 and t == 1:
             fsb1 = choices([1, 0], weights=[5, 95])
             if fsb1 == [1]:
                 r.hset(uid2, 'class', 7)
                 r.hset(uid2, 'photo', choice(p7))
                 r.hincrby(uid1, 'money', 20)
                 fsb += '\n\U0001F921 ' + names[name1] + ' завербував ворога!\n\U0001F4B5 +20\n'
-        if c2 == 27 and c1 == 0:
+        if c2 == 27 and c1 == 0 and t == 1:
             fsb2 = choices([1, 0], weights=[5, 95])
             if fsb2 == [1]:
                 r.hset(uid1, 'class', 7)
@@ -298,7 +298,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if int(r.hget(uid2, 's_weapon')) <= 0:
                 r.hset(uid2, 'weapon', 0)
 
-        elif weapon2 == 2 and defense1 != 2:
+        elif weapon2 == 2 and defense1 != 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
             r.hincrby(uid1, 'injure', 300)
             r.hset(uid1, 'spirit', 0)
@@ -320,7 +320,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             if int(r.hget(uid1, 's_defense')) <= 0:
                 r.hset(uid1, 'defense', 0)
                 r.hincrby(uid1, 'money', 4)
-        elif defense1 == 10:
+        elif defense1 == 10 and t == 1:
             if i2 > i1:
                 if c2 != 3 and c2 != 13 and c2 != 23:
                     s1 = int(s1 * 0.5)
