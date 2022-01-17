@@ -1,13 +1,12 @@
-import telebot
 from telebot import types
-import os
 from flask import Flask, request
-import redis
+from os import environ
 from random import randint, choice, choices
 from datetime import datetime
 from datetime import timedelta
 from time import sleep
 
+from config import r, TOKEN, bot
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
@@ -17,12 +16,6 @@ from buttons import goods, merchant_goods, donate_goods, skill_set,\
     battle_button, battle_button_2, battle_button_3, invent, unpack
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
-
-r = redis.Redis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT')),
-                password=os.environ.get('REDIS_PASSWORD'), db=0)
-
-TOKEN = os.environ.get('TOKEN')
-bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(commands=['start'])
@@ -2850,16 +2843,16 @@ server = Flask(__name__)
 
 @server.route('/' + TOKEN, methods=['POST'])
 def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    bot.process_new_updates([types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
 
 
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url=os.environ.get('APP_URL') + TOKEN)
+    bot.set_webhook(url=environ.get('APP_URL') + TOKEN)
     return "!", 200
 
 
 if __name__ == "__main__":
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    server.run(host="0.0.0.0", port=int(environ.get('PORT', 5000)))
