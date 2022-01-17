@@ -1611,29 +1611,30 @@ def handle_query(call):
         try:
             cl = int(r.hget(call.from_user.id, 'class'))
             for member in r.smembers(call.message.chat.id):
-                mem = int(member)
                 try:
-                    if bot.get_chat_member(call.message.chat.id, mem).status == 'left':
-                        r.srem(call.message.chat.id, mem)
-                        continue
-                except:
-                    r.srem(call.message.chat.id, mem)
-                i1 = int(r.hget(mem, 'spirit'))
-                i = int(i1 / 10)
-                r.hincrby(mem, 'spirit', -i)
-                if cl == 7 or cl == 17 or cl == 27:
+                    mem = int(member)
                     try:
+                        if bot.get_chat_member(call.message.chat.id, mem).status == 'left':
+                            r.srem(call.message.chat.id, mem)
+                            continue
+                    except:
+                        r.srem(call.message.chat.id, mem)
+                    i1 = int(r.hget(mem, 'spirit'))
+                    i = int(i1 / 10)
+                    r.hincrby(mem, 'spirit', -i)
+                    if cl == 7 or cl == 17 or cl == 27:
                         mush = int(r.hget(mem, 'mushrooms'))
                         if mush > 0:
                             r.hset(mem, 'mushrooms', 0)
                             intellect(-mush, mem)
                         else:
                             r.hset(mem, 'spirit', i)
-                    except:
-                        r.hset(mem, 'spirit', int(i))
-                if int(r.hget(mem, 'support')) == 2:
-                    r.hset(mem, 'spirit', i1)
-                    damage_support(mem)
+                    if int(r.hget(mem, 'support')) == 2:
+                        r.hset(mem, 'spirit', i1)
+                        damage_support(mem)
+                except Exception as e:
+                    bot.send_message(456514639, 'test' + str(e))
+            bot.send_message(456514639, 'test_success')
         except Exception as e:
             bot.send_message(456514639, e)
         name = int(r.hget(call.from_user.id, 'name'))
