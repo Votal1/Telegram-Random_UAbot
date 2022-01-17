@@ -71,3 +71,9 @@ def hp(value, uid, r):
         r.hincrby(uid, 'hp', value)
         if int(r.hget(uid, 'hp')) < 0:
             r.hset(uid, 'hp', 0)
+
+
+def weapon(uid, r):
+    r.hincrby(uid, 's_weapon', -1)
+    if int(r.hget(uid, 's_weapon')) <= 0:
+        r.hset(uid, 'weapon', 0)

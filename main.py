@@ -1847,6 +1847,7 @@ def handle_query(call):
                     msg = 'Ви успішно купили биту'
                 else:
                     r.hset(call.from_user.id, 'weapon', 1)
+                    r.hset(call.from_user.id, 's_weapon', 1)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text=msg)
             else:
@@ -1861,6 +1862,7 @@ def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= 8:
                 r.hincrby(call.from_user.id, 'money', -8)
                 r.hset(call.from_user.id, 'defense', 1)
+                r.hset(call.from_user.id, 's_defense', 1)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Ви успішно купили колючий щит')
             else:
@@ -1977,6 +1979,7 @@ def handle_query(call):
                         if int(r.hget(call.from_user.id, 'money')) >= 60:
                             r.hincrby(call.from_user.id, 'money', -60)
                             r.hset(call.from_user.id, 'defense', 10)
+                            r.hset(call.from_user.id, 's_defense', 1)
                             r.hincrby(call.from_user.id, 'mushrooms', 1)
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                       text='Ви успішно купили мухомор королівський')
@@ -2408,11 +2411,14 @@ def handle_query(call):
                 if cl == 6 or cl == 16 or cl == 26:
                     if int(r.hget(uid, 'defense')) == 0:
                         r.hset(uid, 'defense', 1)
+                        r.hset(uid, 's_defense', 1)
                 else:
                     if int(r.hget(uid, 'weapon')) == 0:
                         r.hset(uid, 'weapon', 1)
+                        r.hset(uid, 's_weapon', 1)
                     if int(r.hget(uid, 'defense')) == 0:
                         r.hset(uid, 'defense', 1)
+                        r.hset(uid, 's_defense', 1)
             elif ran == [4]:
                 bot.edit_message_text('\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).'
                                       '\n\U0001F4B5 + 4', call.message.chat.id, call.message.id)
@@ -2441,8 +2447,11 @@ def handle_query(call):
                 if int(r.hget(uid, 'intellect')) < 20:
                     bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
                                           call.message.chat.id, call.message.id)
-                    if int(r.hget(uid, 'defense')) != 2:
+                    if int(r.hget(uid, 'defense')) != 2 and int(r.hget(uid, 'defense')) != 10:
                         r.hset(uid, 'defense', 10)
+                        r.hset(uid, 's_defense', 1)
+                    elif int(r.hget(uid, 'defense')) == 10:
+                        r.hincrby(uid, 's_defense', 1)
                 else:
                     bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                           call.message.chat.id, call.message.id)
@@ -2464,8 +2473,11 @@ def handle_query(call):
                 bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця [Захист, '
                                       'міцність=50] - зменшує силу ворога на бій на 75%.',
                                       call.message.chat.id, call.message.id)
-                r.hset(uid, 'defense', 2)
-                r.hset(uid, 's_defense', 50)
+                if int(r.hget(uid, 'defense')) == 2:
+                    r.hincrby(uid, 's_defense', 50)
+                else:
+                    r.hset(uid, 'defense', 2)
+                    r.hset(uid, 's_defense', 50)
             elif ran == [13]:
                 if cl != 6 or cl != 16 or cl != 26:
                     bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
@@ -2473,15 +2485,21 @@ def handle_query(call):
                                           'анення (віднімає бойовий дух, здоров`я і все спорядження, на 300 боїв '
                                           'бойовий дух впаде вдвічі а сила втричі).',
                                           call.message.chat.id, call.message.id)
-                    r.hset(uid, 'weapon', 2)
-                    r.hset(uid, 's_weapon', 1)
+                    if int(r.hget(uid, 'weapon')) == 2:
+                        r.hincrby(uid, 's_weapon', 1)
+                    else:
+                        r.hset(uid, 'weapon', 2)
+                        r.hset(uid, 's_weapon', 1)
                 else:
                     bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця '
                                           '[Захист, міцність=50] - зменшує силу ворога на бій на 75%, захищає від '
                                           'важких поранень.',
                                           call.message.chat.id, call.message.id)
-                    r.hset(uid, 'defense', 2)
-                    r.hset(uid, 's_defense', 50)
+                    if int(r.hget(uid, 'defense')) == 2:
+                        r.hincrby(uid, 's_defense', 50)
+                    else:
+                        r.hset(uid, 'defense', 2)
+                        r.hset(uid, 's_defense', 50)
             elif ran == [14]:
                 bot.edit_message_text('\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.'
                                       '\n\U0001F31F +1',
