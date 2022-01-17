@@ -1,5 +1,3 @@
-import random
-
 import telebot
 from telebot import types
 import os
@@ -2527,53 +2525,53 @@ def messages(message):
                         int(r.hget(message.from_user.id, 'class')) == 0:
                     if message.text.startswith('Обираю клас '):
                         if 'Хач' in message.text or 'хач' in message.text:
-                            ran = random.choice(p1)
+                            ran = choice(p1)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Хач.')
                             r.hset(message.from_user.id, 'class', 1)
                             r.hincrby(message.from_user.id, 'strength', 100)
                             r.hset(message.from_user.id, 'hach_time', 0)
                         elif 'Роботяга' in message.text or 'роботяга' in message.text:
-                            ran = random.choice(p2)
+                            ran = choice(p2)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Роботяга.')
                             r.hset(message.from_user.id, 'class', 2)
                         elif 'Фокусник' in message.text or 'фокусник' in message.text:
-                            ran = random.choice(p3)
+                            ran = choice(p3)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Фокусник.')
                             r.hset(message.from_user.id, 'class', 3)
                             r.hincrby(message.from_user.id, 'intellect', 1)
                             intellect(1, message.from_user.id, r)
                         elif 'Язичник' in message.text or 'язичник' in message.text:
-                            ran = random.choice(p4)
+                            ran = choice(p4)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Язичник.')
                             r.hset(message.from_user.id, 'class', 4)
                         elif 'Гарматне' in message.text or 'гарматне' in message.text:
-                            ran = random.choice(p5)
+                            ran = choice(p5)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Гарматне м`ясо.')
                             r.hset(message.from_user.id, 'class', 5)
                         elif 'Мусор' in message.text or 'мусор' in message.text:
-                            ran = random.choice(p6)
+                            ran = choice(p6)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Мусор.')
                             r.hset(message.from_user.id, 'class', 6)
                             r.hset(message.from_user.id, 'weapon', 16)
                         elif 'Малорос' in message.text or 'малорос' in message.text:
-                            ran = random.choice(p7)
+                            ran = choice(p7)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Малорос.')
                             r.hset(message.from_user.id, 'class', 7)
                             intellect(-2, message.from_user.id, r)
                         elif 'Хакер' in message.text or 'хакер' in message.text:
-                            ran = random.choice(p8)
+                            ran = choice(p8)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Хакер.')
                             r.hset(message.from_user.id, 'class', 8)
                         elif 'Медик' in message.text or 'медик' in message.text:
-                            ran = random.choice(p9)
+                            ran = choice(p9)
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Медик.')
                             r.hset(message.from_user.id, 'class', 9)

@@ -2,7 +2,7 @@ from random import randint, choice, choices
 from datetime import datetime
 from time import sleep
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp
-from variables import names, icons
+from variables import names, icons, p7
 
 
 def fight(uid1, uid2, un1, un2, t, r, bot, mid):
@@ -103,14 +103,14 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             fsb1 = choices([1, 0], weights=[5, 95])
             if fsb1 == [1]:
                 r.hset(uid2, 'class', 7)
-                r.hset(uid2, 'photo', randint(31, 35))
+                r.hset(uid2, 'photo', choice(p7))
                 r.hincrby(uid1, 'money', 20)
                 fsb += '\n\U0001F921 ' + names[name1] + ' завербував ворога!\n\U0001F4B5 +20\n'
         if c2 == 27 and c1 == 0:
             fsb2 = choices([1, 0], weights=[5, 95])
             if fsb2 == [1]:
                 r.hset(uid1, 'class', 7)
-                r.hset(uid1, 'photo', randint(31, 35))
+                r.hset(uid1, 'photo', choice(p7))
                 r.hincrby(uid2, 'money', 20)
                 fsb += '\n\U0001F921 ' + names[name2] + ' завербував ворога!\n\U0001F4B5 +20\n'
 
