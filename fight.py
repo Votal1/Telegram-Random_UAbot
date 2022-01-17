@@ -121,7 +121,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                 else:
                     chance = choice([2.5, 3.333, 5])
                     r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
-                r.hset(uid2, 'weapon', 0)
+                damage_weapon(uid2, 1, c2, r)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій колючий дрин, опонента це' \
                                                             ' неабияк злякало!'
             else:
@@ -147,7 +147,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
             else:
                 chance = choice([2.5, 3.333, 5])
                 r.hincrby(uid2, 'spirit', -int(int(r.hget(uid2, 'spirit')) / chance))
-            r.hset(uid1, 'defense', 0)
+            damage_defense(uid1, 1, r)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
 
         if int(r.hget(uid1, 'support')) == 1:
@@ -289,7 +289,7 @@ def fight(uid1, uid2, un1, un2, t, r, bot, mid):
                     intellect(1, uid1, r)
                     defense = '\n\n\U0001F6E1 ' + names[name1] + ' прийшов на бій під мухоморами. Він був' \
                                                                  ' обезсилений, але запам`ятав тактику ворога.'
-                    r.hset(uid1, 'defense', 0)
+                    damage_defense(uid1, 10, r)
         elif weapon1 == 15:
             s1 = int(s1 * 1.75)
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
