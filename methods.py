@@ -1,4 +1,5 @@
 from random import randint, choice
+from config import r, bot
 from variables import names, icons
 
 
@@ -34,7 +35,7 @@ def mine_salt(s2):
     return success, money, mind
 
 
-def top(sett, bot, r):
+def top(sett):
     try:
         everyone = r.smembers(sett)
         rating = {}
@@ -82,7 +83,7 @@ def top(sett, bot, r):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-def itop(uid, cid, chat, r):
+def itop(uid, cid, chat):
     try:
         result = ''
         if chat == 'supergroup':
@@ -139,7 +140,7 @@ def itop(uid, cid, chat, r):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-def ctop(sett, r):
+def ctop(sett):
     try:
         everyone = r.hkeys(sett)
         rating = {}

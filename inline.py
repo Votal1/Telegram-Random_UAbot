@@ -1,9 +1,10 @@
 from random import randint, choice, uniform, randrange, sample
+from config import r
 from variables import names, icons
 from parameters import injure, schizophrenia
 
 
-def prepare_to_fight(uid, fn, q, r):
+def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
         return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
     elif int(r.hget(uid, 'hp')) > 0:
@@ -17,9 +18,9 @@ def prepare_to_fight(uid, fn, q, r):
         bd = int(stats[4])
 
         if int(r.hget(uid, 'injure')) > 0:
-            s, bd = injure(uid, s, bd, False, r)
+            s, bd = injure(uid, s, bd, False)
         if int(r.hget(uid, 'sch')) > 0:
-            i, bd = schizophrenia(uid, i, bd, False, r)
+            i, bd = schizophrenia(uid, i, bd, False)
 
         if c == 3:
             s = randint(10, 1000)

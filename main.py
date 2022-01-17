@@ -270,10 +270,10 @@ def feed(message):
                               ' смачно поїв.\n\nСила ' + word + ' на ' + str(ran) + '.\n'
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
-                    intellect(1, message.from_user.id, r)
+                    intellect(1, message.from_user.id)
                 if fr[3] == 1:
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
-                    spirit(1000, message.from_user.id, int(r.hget(message.from_user.id, 'class')), False, r)
+                    spirit(1000, message.from_user.id, int(r.hget(message.from_user.id, 'class')), False)
                     bot.send_photo(message.chat.id, photo='https://i.ibb.co/bK2LrSD/feed.jpg',
                                    caption=msg, reply_to_message_id=message.id)
                 else:
@@ -314,7 +314,7 @@ def mine(message):
                         msg += '\nРусак сьогодні працював з новітніми технологіями.\n'
                         if int(r.hget(message.from_user.id, 'intellect')) < 20:
                             msg += '\U0001F9E0 +1'
-                            intellect(1, message.from_user.id, r)
+                            intellect(1, message.from_user.id)
                         else:
                             msg += '\U0001F4B5 +20'
                             r.hincrby(message.from_user.id, 'money', 20)
@@ -498,22 +498,22 @@ def woman(message):
 
 @bot.message_handler(commands=['ltop'])
 def l_top(message):
-    bot.reply_to(message, top(message.chat.id, bot, r))
+    bot.reply_to(message, top(message.chat.id))
 
 
 @bot.message_handler(commands=['gtop'])
 def g_top(message):
-    bot.reply_to(message, top(111, None, r))
+    bot.reply_to(message, top(111))
 
 
 @bot.message_handler(commands=['itop'])
 def i_top(message):
-    bot.reply_to(message, itop(message.from_user.id, message.chat.id, message.chat.type, r))
+    bot.reply_to(message, itop(message.from_user.id, message.chat.id, message.chat.type))
 
 
 @bot.message_handler(commands=['ctop'])
 def c_top(message):
-    bot.reply_to(message, ctop(222, r))
+    bot.reply_to(message, ctop(222))
 
 
 @bot.message_handler(commands=['class'])
@@ -745,9 +745,9 @@ def war(cid, location, big_battle):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, bd = injure(int(member), s, bd, True, r)
+                s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                i, bd = schizophrenia(int(member), i, bd, True, r)
+                i, bd = schizophrenia(int(member), i, bd, True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -804,7 +804,7 @@ def war(cid, location, big_battle):
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
             if int(r.hget(win, 'hach_time')) == datetime.now().day:
-                spirit(1000, win, wc, False, r)
+                spirit(1000, win, wc, False)
                 class_reward = '\U0001F919: \U0001F54A +1000'
             else:
                 r.hincrby(win, 'strength', 10)
@@ -820,12 +820,12 @@ def war(cid, location, big_battle):
             class_reward = '\U0001F52E: \U0001F54A +2000\n\U0001F54A -1000 всім іншим учасникам битви.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
-                spirit(-1000, member, int(r.hget(member, 'class')), False, r)
-            spirit(2000, win, wc, False, r)
+                spirit(-1000, member, int(r.hget(member, 'class')), False)
+            spirit(2000, win, wc, False)
     elif location == 'Битва біля старого дуба':
         if wc == 4 or wc == 14 or wc == 24:
             class_reward = '\U0001F5FF: \U0001F54A +10000'
-            spirit(10000, win, wc, False, r)
+            spirit(10000, win, wc, False)
     elif location == 'Битва в житловому районі':
         if wc == 5 or wc == 15 or wc == 25:
             class_reward = '\U0001fa96: \u2622 +15'
@@ -856,7 +856,7 @@ def war(cid, location, big_battle):
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
                 r.hincrby(member, 'sch', 10)
-            hp(100, win, r)
+            hp(100, win)
         else:
             class_reward = '\U0001F5FA: \U0001F464 +10'
             r.hincrby(win, 'sch', 10)
@@ -890,9 +890,9 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, bd = injure(int(member), s, bd, True, r)
+                s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                i, bd = schizophrenia(int(member), i, bd, True, r)
+                i, bd = schizophrenia(int(member), i, bd, True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -918,9 +918,9 @@ def great_war(cid1, cid2, a, b):
             i = int(stats[1])
             bd = int(stats[2])
             if int(stats[5]) > 0:
-                s, bd = injure(int(member), s, bd, True, r)
+                s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                i, bd = schizophrenia(int(member), i, bd, True, r)
+                i, bd = schizophrenia(int(member), i, bd, True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -1433,8 +1433,7 @@ def handle_query(call):
                         if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
                                 int(r.hget(uid1, 'strength')) + diff:
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
-                                                             call.inline_message_id),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, call.inline_message_id),
                                                   inline_message_id=call.inline_message_id)
                         else:
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1454,17 +1453,17 @@ def handle_query(call):
                                     try:
                                         q = cdata[2].split()
                                         if q[1][1:].lower() == call.from_user.username.lower():
-                                            fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
+                                            fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
                                         else:
                                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                       text='Цей бій не для тебе.')
                                     except:
-                                        fight(uid1, uid2, un1, un2, 5, r, bot, call.inline_message_id)
+                                        fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
                             elif cdata[1] == 'pr':
                                 try:
                                     q = cdata[2].split()
                                     if q[1][1:].lower() == call.from_user.username.lower():
-                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot,
+                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1,
                                                                          call.inline_message_id),
                                                               inline_message_id=call.inline_message_id)
                                     else:
@@ -1477,7 +1476,7 @@ def handle_query(call):
                         except:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, r, bot, call.inline_message_id),
+                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, call.inline_message_id),
                                                   inline_message_id=call.inline_message_id)
                 else:
                     if int(r.hget(call.from_user.id, 'class')) == 29:
@@ -1485,7 +1484,7 @@ def handle_query(call):
                             text='\u26D1 ' + call.from_user.first_name + ' відправив свого русака надати медичну допомо'
                                                                          'гу пораненому.\n\U0001fac0 +20 \U0001F4B5 +5',
                             inline_message_id=call.inline_message_id)
-                        hp(20, uid1, r)
+                        hp(20, uid1)
                         r.hincrby(call.from_user.id, 'money', 5)
                     else:
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -1627,14 +1626,14 @@ def handle_query(call):
                         mush = int(r.hget(mem, 'mushrooms'))
                         if mush > 0:
                             r.hset(mem, 'mushrooms', 0)
-                            intellect(-mush, mem, r)
+                            intellect(-mush, mem)
                         else:
                             r.hset(mem, 'spirit', i)
                     except:
                         r.hset(mem, 'spirit', int(i))
                 if int(r.hget(mem, 'support')) == 2:
                     r.hset(mem, 'spirit', i1)
-                    damage_support(mem, r)
+                    damage_support(mem)
         except:
             pass
         name = int(r.hget(call.from_user.id, 'name'))
@@ -1643,7 +1642,7 @@ def handle_query(call):
         r.hset(call.from_user.id, 'photo', 0)
         r.hset(call.from_user.id, 'mushrooms', 0)
         r.hset(call.from_user.id, 'spirit', 0)
-        spirit(5 * int(r.hget(call.from_user.id, 'strength')), call.from_user.id, 0, False, r)
+        spirit(5 * int(r.hget(call.from_user.id, 'strength')), call.from_user.id, 0, False)
         r.hset(call.from_user.id, 'strength', 0)
         r.hset(call.from_user.id, 'class', 0)
         r.hset(call.from_user.id, 'intellect', 0)
@@ -1744,7 +1743,7 @@ def handle_query(call):
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text='\u26CF Ви підняли рівень майстерності до ' + str(s2 + 1) + '.')
                     if s2 + 1 == 5:
-                        intellect(2, call.from_user.id, r)
+                        intellect(2, call.from_user.id)
                         bot.send_message(call.message.chat.id, 'За досягнення найвищого рівня майстерності твій'
                                                                ' русак отримує \U0001F9E0 +2 інтелекту.')
                 else:
@@ -1818,7 +1817,7 @@ def handle_query(call):
             cl = int(r.hget(call.from_user.id, 'class'))
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
-                                           vodka(call.from_user.id, cl, r))
+                                           vodka(call.from_user.id, cl))
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Недостатньо коштів на рахунку')
@@ -2538,7 +2537,7 @@ def messages(message):
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Фокусник.')
                             r.hset(message.from_user.id, 'class', 3)
                             r.hincrby(message.from_user.id, 'intellect', 1)
-                            intellect(1, message.from_user.id, r)
+                            intellect(1, message.from_user.id)
                         elif 'Язичник' in message.text or 'язичник' in message.text:
                             ran = choice(p4)
                             r.hset(message.from_user.id, 'photo', ran)
@@ -2560,7 +2559,7 @@ def messages(message):
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Малорос.')
                             r.hset(message.from_user.id, 'class', 7)
-                            intellect(-2, message.from_user.id, r)
+                            intellect(-2, message.from_user.id)
                         elif 'Хакер' in message.text or 'хакер' in message.text:
                             ran = choice(p8)
                             r.hset(message.from_user.id, 'photo', ran)
@@ -2584,7 +2583,7 @@ def messages(message):
                     if cl == 3:
                         bot.reply_to(message, 'Ти покращив фокусника до Злого генія.')
                         r.hset(message.from_user.id, 'class', 13)
-                        intellect(2, message.from_user.id, r)
+                        intellect(2, message.from_user.id)
                     if cl == 4:
                         bot.reply_to(message, 'Ти покращив язичника до Скінхеда.')
                         r.hset(message.from_user.id, 'class', 14)
@@ -2653,7 +2652,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     inline_query.query, r))),
+                                                                     inline_query.query))),
                                             reply_markup=markup.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                callback_data=call)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
@@ -2734,7 +2733,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     inline_query.query, r))),
+                                                                     inline_query.query))),
                                             reply_markup=markup.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                callback_data=call)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
@@ -2743,8 +2742,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     'pr' + inline_query.query,
-                                                                     r))),
+                                                                     'pr' + inline_query.query))),
                                             reply_markup=markup2.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                 callback_data=call1)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
@@ -2753,7 +2751,7 @@ def default_query(inline_query):
                                             types.InputTextMessageContent(
                                                 str(prepare_to_fight(inline_query.from_user.id,
                                                                      inline_query.from_user.first_name,
-                                                                     'tr' + inline_query.query, r))),
+                                                                     'tr' + inline_query.query))),
                                             reply_markup=markup3.add(types.InlineKeyboardButton(text='Атакувати!',
                                                                                                 callback_data=call2)),
                                             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
