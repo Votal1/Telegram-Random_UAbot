@@ -1632,11 +1632,10 @@ def handle_query(call):
                     if int(r.hget(mem, 'support')) == 2:
                         r.hset(mem, 'spirit', i1)
                         damage_support(mem)
-                except Exception as e:
-                    bot.send_message(456514639, 'test' + str(e))
-            bot.send_message(456514639, 'test_success')
-        except Exception as e:
-            bot.send_message(456514639, e)
+                except:
+                    pass
+        except:
+            pass
         name = int(r.hget(call.from_user.id, 'name'))
         clm = int(r.hget(call.from_user.id, 'class'))
         r.hdel(call.from_user.id, 'name')
