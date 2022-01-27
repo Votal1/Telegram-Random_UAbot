@@ -1445,6 +1445,7 @@ def work(message):
                         ran = randint(1, 5)
                         resources += '\U0001faa8 +' + str(ran)
                         r.hincrby(c, 'stone', ran)
+                    damage_support(message.from_user.id)
                     bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                  ' попрацював на благо громади.\n' + resources)
 
@@ -1813,7 +1814,7 @@ def handle_query(call):
     elif call.data.startswith('toggle_allow'):
         c = int(r.hget(call.from_user.id, 'clan'))
         if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
-            if r.hget('c' + str(c), 'allow') == 0:
+            if int(r.hget('c' + str(c), 'allow')) == 0:
                 r.hset('c' + str(c), 'allow', 1)
             else:
                 r.hset('c' + str(c), 'allow', 0)
