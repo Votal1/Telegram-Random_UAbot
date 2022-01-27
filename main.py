@@ -1386,6 +1386,7 @@ def join(message):
                     r.hset(message.from_user.id, 'clan', message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
                                                                            'clan_time': 0})
                     r.sadd('cl' + str(message.chat.id), message.from_user.id)
+                    r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
                     bot.reply_to(message, '\U0001F4E5 Ти вступив в клан ' +
                                  r.hget('c' + str(message.chat.id), 'title').decode() + '.')
                 else:
@@ -1763,7 +1764,8 @@ def handle_query(call):
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             r.hset(call.message.reply_to_message.from_user.id, 'clan', call.message.chat.id,
-                   {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+                   {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0,
+                    'firstname': call.from_user.first_name})
             r.sadd('cl' + str(call.message.chat.id), call.message.reply_to_message.from_user.id)
             bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
                                   r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
