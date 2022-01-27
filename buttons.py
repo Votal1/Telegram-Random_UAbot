@@ -78,3 +78,35 @@ def unpack():
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
+
+def create_clan():
+    markup = types.InlineKeyboardMarkup()
+    items = {'\U0001F4B5 250': 'create_hrn', '\U0001F31F 1': 'create_strap'}
+    for key, value in items.items():
+        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
+    return markup
+
+
+def invite():
+    markup = types.InlineKeyboardMarkup()
+    items = {'Прийняти в клан': 'invite'}
+    for key, value in items.items():
+        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
+    return markup
+
+
+def buy_tools():
+    markup = types.InlineKeyboardMarkup()
+    items = {'Купити сокиру': 'buy_axe', 'Купити кайло': 'buy_pickaxe'}
+    for key, value in items.items():
+        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
+    return markup
+
+
+def clan_set():
+    markup = types.InlineKeyboardMarkup()
+    items = {'Змінити назву на актуальну назву чату - \U0001F4B5 100': 'change_title',
+             'Змінити режим набору': 'toggle_allow'}
+    for key, value in items.items():
+        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
+    return markup
