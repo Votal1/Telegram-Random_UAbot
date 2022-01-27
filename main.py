@@ -361,7 +361,7 @@ def sacrifice(message):
 @bot.message_handler(commands=['fascist'])
 def fascist(message):
     try:
-        if message.chat.type != 'private' and len(r.smembers(message.chat.id)) >= 14:
+        if int(r.hget('c' + str(message.chat.id), 'base')) > 0 and len(r.smembers(message.chat.id)) >= 14:
             if r.hexists('f' + str(message.chat.id), 'time3') == 0:
                 r.hset('f' + str(message.chat.id), 'time3', 0)
             if int(r.hget('f' + str(message.chat.id), 'time3')) != int(datetime.now().day):
@@ -401,7 +401,7 @@ def fascist(message):
             print(1 / 0)
     except:
         bot.reply_to(message, 'Фашиста дня можна обирати раз в добу і в чатах,'
-                              ' де є від 14 власників русаків (з юзернеймами).')
+                              ' де є від 14 власників русаків (з юзернеймами) та заснований клан.')
 
 
 @bot.message_handler(commands=['shop'])
