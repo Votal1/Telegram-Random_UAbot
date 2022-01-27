@@ -1750,6 +1750,8 @@ def handle_query(call):
                         r.hincrby(call.from_user.id, 'money', -250)
                     else:
                         r.hincrby(call.from_user.id, 'strap', -1)
+                    bot.edit_message_text('\U0001F3D7 Засновано банду ' + call.message.chat.title + '!',
+                                          call.message.chat.id, call.message.id)
                 else:
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                               text='Недостатньо коштів на рахунку.')
