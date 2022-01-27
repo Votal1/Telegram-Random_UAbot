@@ -1358,6 +1358,18 @@ def clan(message):
                                  '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
 
 
+@bot.message_handler(commands=['upgrade'])
+def upgrade(message):
+    try:
+        c = 'c' + str(message.chat.id)
+        base = int(r.hget(c, 'base'))
+        if base == 1:
+            bot.send_message(message.chat.id, '\U0001F3D7 Покращення Банди до Клану коштує \U0001F333 100, '
+                             '\U0001faa8 20 і \U0001F4B5 120.')
+    except:
+        pass
+
+
 @bot.message_handler(commands=['clan_settings'])
 def clan_settings(message):
     c = 'c' + r.hget(message.from_user.id, 'clan').decode()
