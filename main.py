@@ -12,8 +12,8 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, damage_support
-from buttons import goods, merchant_goods, donate_goods, skill_set, \
-    battle_button, battle_button_2, battle_button_3, invent, unpack, create_clan, clan_set, invite, buy_tools
+from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3,\
+    invent, unpack, create_clan, clan_set, invite, buy_tools, buildings
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
 
@@ -267,7 +267,7 @@ def feed(message):
                         word = 'зменшилась'
                         r.hincrby(message.from_user.id, 'strength', -2 * ran)
                 msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
-                      ' смачно поїв.\n\nСила ' + word + ' на ' + str(ran) + '.\n'
+                              ' смачно поїв.\n\nСила ' + word + ' на ' + str(ran) + '.\n'
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, message.from_user.id)
@@ -1281,7 +1281,7 @@ def skills(message):
                     s1 = s1 - 1
 
             msg = msg + '\n\n\u26CF Майстерність:\n\nЗараз русак в шахті може заробити від ' + str(s221) + ' до ' + \
-                  str(s222) + intel + up2 + '\n'
+                        str(s222) + intel + up2 + '\n'
 
             for a in range(5):
                 if s2 <= 0:
@@ -1357,6 +1357,23 @@ def clan(message):
                                      '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
                                      '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
                                      '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
+                elif base == 2:
+                    building = '\U0001F3E0 Притулок\nІнформація поки відсутня.\n\U0001F3ED Інфраструктура:'
+                    resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +\
+                                '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
+                                '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode()
+                    if int(r.hget(c, 'sawmill')) == 1:
+                        building += ' пилорама'
+                    if int(r.hget(c, 'mine')) == 1:
+                        building += ', шахта'
+                    if int(r.hget(c, 'craft')) == 1:
+                        building += ', цех'
+                    if int(r.hget(c, 'storage')) == 1:
+                        building += ', склад'
+                        resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode() + \
+                                     '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
+                    bot.send_message(message.chat.id, '<i>Клан</i> ' + r.hget(c, 'title').decode() + '\n\n' +
+                                     building + resources, parse_mode='HTML')
 
 
 @bot.message_handler(commands=['upgrade'])
@@ -1376,6 +1393,9 @@ def upgrade(message):
                     bot.send_message(message.chat.id, '\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
                 elif int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and \
                         int(r.hget(c, 'money')) >= 120 and message.from_user.id in admins:
+                    r.hincrby(c, 'money', -120)
+                    r.hincrby(c, 'wood', -100)
+                    r.hincrby(c, 'stone', -20)
                     r.hset(c, 'title', 2)
                     bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
     except:
@@ -1395,7 +1415,11 @@ def build(message):
                 if base == 2:
                     bot.send_message(message.chat.id, '\U0001F3D7 Для подальшого розвитку клану потрібно збудувати:\n'
                                                       '\nПилорама (\U0001F4B5 200) - \U0001F333 5-15 від роботи\n'
-                                                      'Шахта (\U0001F4B5 300) - \U0001faa8 2-10 від роботи')
+                                                      'Шахта (\U0001F4B5 300) - \U0001faa8 2-10 від роботи\n'
+                                                      'Цех (\U0001F333 300, \U0001faa8 200, \U0001F4B5 100) - '
+                                                      '\U0001F9F6 2-5 від роботи\nСклад (\U0001F333 200, \U0001faa8'
+                                                      ' 100) - доступ до всіх видів ресурсів.',
+                                     reply_markup=buildings())
     except:
         pass
 
@@ -1467,31 +1491,51 @@ def leave(message):
 def work(message):
     try:
         c = 'c' + str(message.chat.id)
-        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id and \
-                int(r.hget(message.from_user.id, 'clan_time')) != datetime.now().day:
-            resources = ''
-            if int(r.hget(c, 'base')) == 1:
-                if int(r.hget(message.from_user.id, 'support')) != 3 and \
-                        int(r.hget(message.from_user.id, 'support')) != 4:
-                    bot.reply_to(message, '\u26CF Банді потрібна деревина і камінь.\nЗбігати в магазин за '
-                                          'інструментами?\n\nСокира [Допомога, міцність=3, ціна=5]  1-10 дере'
-                                          'вини в день.\nКайло [Допомога, міцність=3, ціна=10] 1-5 каміння в день.',
-                                 reply_markup=buy_tools())
-                elif int(r.hget(message.from_user.id, 'support')) == 3 or \
-                        int(r.hget(message.from_user.id, 'support')) == 4:
-                    r.hset(message.from_user.id, 'clan_time', datetime.now().day)
-                    if int(r.hget(message.from_user.id, 'support')) == 3:
-                        ran = randint(1, 5)
-                        resources += '\U0001F333 +' + str(ran)
-                        r.hincrby(c, 'wood', ran)
-                    elif int(r.hget(message.from_user.id, 'support')) == 4:
-                        ran = randint(1, 5)
-                        resources += '\U0001faa8 +' + str(ran)
-                        r.hincrby(c, 'stone', ran)
-                    damage_support(message.from_user.id)
-                    bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
-                                 ' попрацював на благо громади.\n' + resources)
-
+        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
+            if int(r.hget(message.from_user.id, 'clan_time')) != datetime.now().day:
+                resources = ''
+                base = int(r.hget(c, 'base'))
+                if base == 1:
+                    if int(r.hget(message.from_user.id, 'support')) != 3 and \
+                            int(r.hget(message.from_user.id, 'support')) != 4:
+                        bot.reply_to(message, '\u26CF Банді потрібна деревина і камінь.\nЗбігати в магазин за '
+                                              'інструментами?\n\nСокира [Допомога, міцність=3, ціна=5]  1-10 дере'
+                                              'вини в день.\nКайло [Допомога, міцність=3, ціна=10] 1-5 каміння в день.',
+                                     reply_markup=buy_tools())
+                    elif int(r.hget(message.from_user.id, 'support')) == 3 or \
+                            int(r.hget(message.from_user.id, 'support')) == 4:
+                        r.hset(message.from_user.id, 'clan_time', datetime.now().day)
+                        if int(r.hget(message.from_user.id, 'support')) == 3:
+                            ran = randint(1, 5)
+                            resources += '\U0001F333 +' + str(ran)
+                            r.hincrby(c, 'wood', ran)
+                        elif int(r.hget(message.from_user.id, 'support')) == 4:
+                            ran = randint(1, 5)
+                            resources += '\U0001faa8 +' + str(ran)
+                            r.hincrby(c, 'stone', ran)
+                        damage_support(message.from_user.id)
+                        bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
+                                     ' попрацював на благо громади.\n' + resources)
+                elif base == 2:
+                    if int(r.hget(c, 'sawmill')) == 1 and int(r.hget(c, 'mine')) == 1 and int(r.hget(c, 'craft')) == 1:
+                        bot.reply_to(message, 'Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
+                    else:
+                        if int(r.hget(c, 'sawmill')) == 1:
+                            ran = randint(5, 15)
+                            resources += '\U0001F333 +' + str(ran)
+                            r.hincrby(c, 'wood', ran)
+                        if int(r.hget(c, 'mine')) == 1:
+                            ran = randint(2, 10)
+                            resources += ' \U0001faa8 +' + str(ran)
+                            r.hincrby(c, 'stone', ran)
+                        if int(r.hget(c, 'craft')) == 1:
+                            ran = randint(2, 5)
+                            resources += ' \U0001F9F6 +' + str(ran)
+                            r.hincrby(c, 'cloth', ran)
+                        bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
+                                     ' попрацював на благо громади.\n' + resources)
+            else:
+                bot.reply_to(message, 'Твій русак сьогодні вже своє відпрацював.')
     except Exception as e:
         print(e)
 
@@ -1866,6 +1910,53 @@ def handle_query(call):
                 r.hset('c' + str(c), 'allow', 0)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Режим набору змінено.')
+
+    elif call.data.startswith('build_sawmill') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'sawmill')) == 0:
+            if int(r.hget(c, 'money')) >= 200:
+                r.hincrby(c, 'money', -200)
+                r.hset(c, 'sawmill', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано пилораму.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_mine') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'mine')) == 0:
+            if int(r.hget(c, 'money')) >= 300:
+                r.hincrby(c, 'money', -300)
+                r.hset(c, 'mine', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану відкрито шахту!'
+                                                       ' Русаки можуть приступати до роботи.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_craft') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'craft')) == 0:
+            if int(r.hget(c, 'storage')) != 0:
+                if int(r.hget(c, 'money')) >= 100 and int(r.hget(c, 'wood')) >= 300 and int(r.hget(c, 'stone')) >= 200:
+                    r.hincrby(c, 'money', -100)
+                    r.hincrby(c, 'wood', -300)
+                    r.hincrby(c, 'stone', -200)
+                    r.hset(c, 'craft', 1)
+                    bot.send_message(call.message.chat.id, 'На території вашого клану побудовано цех.')
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Потрібен склад')
+
+    elif call.data.startswith('build_storage') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'storage')) == 0:
+            if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 100:
+                r.hincrby(c, 'wood', -200)
+                r.hincrby(c, 'stone', -100)
+                r.hset(c, 'storage', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано склад.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
