@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, damage_support
 from buttons import goods, merchant_goods, donate_goods, skill_set,\
-    battle_button, battle_button_2, battle_button_3, invent, unpack
+    battle_button, battle_button_2, battle_button_3, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
 
@@ -1339,6 +1339,119 @@ def swap(message):
         pass
 
 
+@bot.message_handler(commands=['clan'])
+def clan(message):
+    c = 'c' + str(message.chat.id)
+    chats = [-1001211933154]  # -1001733230634
+    if message.chat.type == 'supergroup' and message.chat.id not in chats:
+        if r.hexists(c, 'base') == 0:
+            bot.reply_to(message, '\U0001F3D7 В чаті нема клану.\n\nАдміністратор може заснувати банду за \U0001F4B5'
+                                  ' 250 гривень або \U0001F31F 1 погон російського генерала і стати лідером.',
+                         reply_markup=create_clan())
+        else:
+            base = int(r.hget(c, 'base'))
+            if base == 1:
+                bot.send_message(message.chat.id, '<i>Банда</i> ' + r.hget(c, 'title').decode() +
+                                 '\n\n\U0001f6d6 Барак\nМожливість обирати фашиста дня та зберігати деякі ресурси.'
+                                 '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
+                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
+                                 '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
+
+
+@bot.message_handler(commands=['clan_settings'])
+def clan_settings(message):
+    c = 'c' + r.hget(message.from_user.id, 'clan').decode()
+    try:
+        bot.delete_message(message.chat.id, message.id)
+    except:
+        pass
+    if message.from_user.id == int(r.hget(c, 'leader')):
+        if int(r.hget(c, 'allow')) == 0:
+            allow = '\nВ клан може приєднатись кожен бажаючий.'
+        else:
+            allow = '\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
+        bot.send_message(message.from_user.id, 'Які налаштування бажаєте змінити?\n\nНазва: ' +
+                         r.hget(c, 'title').decode() + allow, reply_markup=clan_set())
+
+
+@bot.message_handler(commands=['join'])
+def join(message):
+    c = 'c' + str(message.chat.id)
+    if r.hexists(message.from_user.id, 'clan_ts') == 0:
+        r.hset(message.from_user.id, 'clan_ts', 0)
+    try:
+        if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5:
+            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > 604800:
+                if int(r.hget(c, 'allow')) == 0:
+                    r.hset(message.from_user.id, 'clan', message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
+                                                                           'clan_time': 0})
+                    r.sadd('cl' + str(message.chat.id), message.from_user.id)
+                    bot.reply_to(message, '\U0001F4E5 Ти вступив в клан ' +
+                                 r.hget('c' + str(message.chat.id), 'title').decode() + '.')
+                else:
+                    bot.reply_to(message, '\U0001F4E5 Прийняти в клан ' + message.from_user.first_name + '?',
+                                 reply_markup=invite())
+            else:
+                bot.reply_to(message, '\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+    except Exception as e:
+        print(e)
+
+
+@bot.message_handler(commands=['kick'])
+def kick(message):
+    try:
+        if message.from_user.id == int(r.hget('c' + str(message.chat.id), 'leader')):
+            if message.chat.id == int(r.hget(message.from_user.id, 'clan')) or message.chat.type == 'private':
+                uid = int(message.text.split(' ')[1])
+                if str(uid).encode() in r.smembers('cl' + str(message.chat.id)):
+                    r.hset(uid, 'clan', 0)
+                    r.srem('cl' + str(message.chat.id), uid)
+                    bot.reply_to(message, '\u2705')
+    except Exception as e:
+        print(e)
+
+
+@bot.message_handler(commands=['leave'])
+def leave(message):
+    if len(str(r.hget(message.from_user.id, 'clan'))) >= 5:
+        if message.chat.id == int(r.hget(message.from_user.id, 'clan')) or message.chat.type == 'private':
+            markup = types.InlineKeyboardMarkup()
+            bot.reply_to(message, '\U0001F4E4 Покинути клан?', reply_markup=markup.add(types.InlineKeyboardButton(
+                text='Так', callback_data='leave_from_clan')))
+
+
+@bot.message_handler(commands=['work'])
+def work(message):
+    try:
+        c = 'c' + str(message.chat.id)
+        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id and \
+                int(r.hget(message.from_user.id, 'clan_time')) != datetime.now().day:
+            resources = ''
+            if int(r.hget(c, 'base')) == 1:
+                if int(r.hget(message.from_user.id, 'support')) != 3 and \
+                        int(r.hget(message.from_user.id, 'support')) != 4:
+                    bot.reply_to(message, '\u26CF Банді потрібна деревина і камінь.\nЗбігати в магазин за '
+                                          'інструментами?\n\nСокира [Допомога, міцність=3, ціна=5]  1-10 дере'
+                                          'вини в день.\nКайло [Допомога, міцність=3, ціна=10] 1-5 каміння в день.',
+                                 reply_markup=buy_tools())
+                elif int(r.hget(message.from_user.id, 'support')) == 3 or \
+                        int(r.hget(message.from_user.id, 'support')) == 4:
+                    r.hset(message.from_user.id, 'clan_time', datetime.now().day)
+                    if int(r.hget(message.from_user.id, 'support')) == 3:
+                        ran = randint(1, 5)
+                        resources += '\U0001F333 +' + str(ran)
+                        r.hincrby(c, 'wood', ran)
+                    elif int(r.hget(message.from_user.id, 'support')) == 4:
+                        ran = randint(1, 5)
+                        resources += '\U0001faa8 +' + str(ran)
+                        r.hincrby(c, 'stone', ran)
+                    bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
+                                 ' попрацював на благо громади.\n' + resources)
+
+    except Exception as e:
+        print(e)
+
+
 @bot.message_handler(commands=['commands'])
 def commands(message):
     markup = types.InlineKeyboardMarkup()
@@ -1605,6 +1718,107 @@ def handle_query(call):
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти або вже в битві, або в тебе'
                                                                                        ' нема русака')
+
+    elif call.data.startswith('create_'):
+        if r.hexists('c' + str(call.message.chat.id), 'base') == 0:
+            admins = []
+            for admin in bot.get_chat_administrators(call.message.chat.id):
+                admins.append(admin.user.id)
+            if call.from_user.id in admins and len(str(r.hget(call.from_user.id, 'clan'))) < 5:
+                money = 0
+                if call.data == 'create_hrn':
+                    if int(r.hget(call.from_user.id, 'money')) >= 250:
+                        money = 1
+                else:
+                    if r.hexists(call.from_user.id, 'strap') == 0:
+                        r.hset(call.from_user.id, 'strap', 0)
+                    if int(r.hget(call.from_user.id, 'strap')) >= 1:
+                        money = 1
+                if money == 1:
+                    r.hset('c' + str(call.message.chat.id), 'base', 1,
+                           {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
+                            'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'quarry': 0, 'craft': 0, 'silicate': 0,
+                            'shop': 0, 'gulag': 0, 'dungeon': 0,
+                            'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
+                    r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
+                    r.sadd('clans', call.message.chat.id)
+                    r.hset(call.from_user.id, 'clan', call.message.chat.id,
+                           {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+                    if call.data == 'create_hrn':
+                        r.hincrby(call.from_user.id, 'money', -250)
+                    else:
+                        r.hincrby(call.from_user.id, 'strap', -1)
+                else:
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Недостатньо коштів на рахунку.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не адміністратор.')
+
+    elif call.data.startswith('invite'):
+        admins = []
+        for admin in bot.get_chat_administrators(call.message.chat.id):
+            admins.append(admin.user.id)
+        print(r.smembers('cl' + str(call.message.chat.id)))
+        if call.from_user.id in admins and \
+                str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            r.hset(call.message.reply_to_message.from_user.id, 'clan', call.message.chat.id,
+                   {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+            r.sadd('cl' + str(call.message.chat.id), call.message.reply_to_message.from_user.id)
+            bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
+                                  r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
+                                  call.message.chat.id, call.message.id)
+    elif call.data.startswith('buy_axe'):
+        if int(r.hget(call.from_user.id, 'support')) == 0:
+            if int(r.hget(call.from_user.id, 'money')) >= 5:
+                r.hincrby(call.from_user.id, 'money', -5)
+                r.hset(call.from_user.id, 'support', 3)
+                r.hset(call.from_user.id, 's_support', 3)
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Ви успішно купили сокиру')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Недостатньо коштів на рахунку')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='У вас вже є допоміжне спорядження')
+
+    elif call.data.startswith('buy_pickaxe'):
+        if int(r.hget(call.from_user.id, 'support')) == 0:
+            if int(r.hget(call.from_user.id, 'money')) >= 10:
+                r.hincrby(call.from_user.id, 'money', -10)
+                r.hset(call.from_user.id, 'support', 4)
+                r.hset(call.from_user.id, 's_support', 3)
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Ви успішно купили кайло')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Недостатньо коштів на рахунку')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='У вас вже є допоміжне спорядження')
+
+    elif call.data.startswith('leave_from_clan') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        if len(str(r.hget(call.from_user.id, 'clan'))) >= 5:
+            r.hset(call.from_user.id, 'clan', 0)
+            r.srem('cl' + str(call.message.chat.id), call.from_user.id)
+            bot.edit_message_text('\U0001F4E4 Ти покинув клан', call.message.chat.id, call.message.id)
+
+    elif call.data.startswith('change_title'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+            r.hset('c' + str(c), 'title', bot.get_chat(c).title)
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Назву клану оновлено.')
+
+    elif call.data.startswith('toggle_allow'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+            if r.hget('c' + str(c), 'allow') == 0:
+                r.hset('c' + str(c), 'allow', 1)
+            else:
+                r.hset('c' + str(c), 'allow', 0)
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Режим набору змінено.')
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
