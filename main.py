@@ -1462,6 +1462,28 @@ def join(message):
         print(e)
 
 
+@bot.message_handler(commands=['invest'])
+def invest(message):
+    try:
+        if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
+            c = 'c' + str(message.chat.id)
+            if message.text == '/invest':
+                bot.reply_to(message, '\U0001F4B5 Щоб інвестувати гроші в клан напиши після команди кількість.\n'
+                                      'Наприклад: /invest 50')
+            else:
+                m = int(message.text.split(' ')[1])
+                if m > 0:
+                    if m <= int(r.hget(message.from_user.id, 'money')):
+                        r.hincrby(c, 'money', m)
+                        r.hincrby(message.from_user.id, 'money', -m)
+                        bot.reply_to(message, '\U0001F4B5 Клановий рахунок попонено на ' + str(m) + ' гривень.')
+                    else:
+                        bot.reply_to(message, 'Недостатньо коштів на рахунку.')
+
+    except:
+        pass
+
+
 @bot.message_handler(commands=['kick'])
 def kick(message):
     try:
