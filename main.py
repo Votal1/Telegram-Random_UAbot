@@ -1517,7 +1517,7 @@ def work(message):
                         bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                      ' попрацював на благо громади.\n' + resources)
                 elif base == 2:
-                    if int(r.hget(c, 'sawmill')) == 1 and int(r.hget(c, 'mine')) == 1 and int(r.hget(c, 'craft')) == 1:
+                    if int(r.hget(c, 'sawmill')) == 0 and int(r.hget(c, 'mine')) == 0 and int(r.hget(c, 'craft')) == 0:
                         bot.reply_to(message, 'Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
                     else:
                         if int(r.hget(c, 'sawmill')) == 1:
