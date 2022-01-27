@@ -1396,7 +1396,7 @@ def upgrade(message):
                     r.hincrby(c, 'money', -120)
                     r.hincrby(c, 'wood', -100)
                     r.hincrby(c, 'stone', -20)
-                    r.hset(c, 'title', 2)
+                    r.hset(c, 'base', 2)
                     bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
     except:
         pass
