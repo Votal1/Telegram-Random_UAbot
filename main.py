@@ -12,7 +12,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, damage_support
-from buttons import goods, merchant_goods, donate_goods, skill_set,\
+from buttons import goods, merchant_goods, donate_goods, skill_set, \
     battle_button, battle_button_2, battle_button_3, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
@@ -267,7 +267,7 @@ def feed(message):
                         word = 'зменшилась'
                         r.hincrby(message.from_user.id, 'strength', -2 * ran)
                 msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
-                              ' смачно поїв.\n\nСила ' + word + ' на ' + str(ran) + '.\n'
+                      ' смачно поїв.\n\nСила ' + word + ' на ' + str(ran) + '.\n'
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, message.from_user.id)
@@ -454,14 +454,14 @@ def passport(message):
             except:
                 pass
         bot.reply_to(message, '\U0001F4DC ' + message.from_user.first_name +
-                              '\n\n\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
-                              '\n\U0001F3C5 Кількість трофеїв: ' + stats[1].decode() +
-                              '\n\u2620\uFE0F Вбито русаків: ' + stats[2].decode() +
-                              '\n\U0001F476 З`їдено немовлят: ' + stats[3].decode() +
-                              '\n\u2622 Випито горілки: ' + stats[4].decode() +
-                              '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() +
-                              '\n\u26CF Скіли: ' + str(skill) + '%' +
-                              '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 26)) + '%')
+                     '\n\n\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
+                     '\n\U0001F3C5 Кількість трофеїв: ' + stats[1].decode() +
+                     '\n\u2620\uFE0F Вбито русаків: ' + stats[2].decode() +
+                     '\n\U0001F476 З`їдено немовлят: ' + stats[3].decode() +
+                     '\n\u2622 Випито горілки: ' + stats[4].decode() +
+                     '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() +
+                     '\n\u26CF Скіли: ' + str(skill) + '%' +
+                     '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 26)) + '%')
 
 
 @bot.message_handler(commands=['woman'])
@@ -1009,7 +1009,7 @@ def war_battle(message):
     banned = [-1001646765307, -1001475102262, -714355096, 557298328, 530769095, 470411500, 1767253195]
     if message.chat.type != 'private' and bot.get_chat_members_count(message.chat.id) >= 10 \
             and '@' not in message.chat.title \
-            and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False'\
+            and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False' \
             and message.chat.id not in banned and message.from_user.id not in banned:
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
@@ -1281,7 +1281,7 @@ def skills(message):
                     s1 = s1 - 1
 
             msg = msg + '\n\n\u26CF Майстерність:\n\nЗараз русак в шахті може заробити від ' + str(s221) + ' до ' + \
-                        str(s222) + intel + up2 + '\n'
+                  str(s222) + intel + up2 + '\n'
 
             for a in range(5):
                 if s2 <= 0:
@@ -1349,23 +1349,53 @@ def clan(message):
                                   ' 250 гривень або \U0001F31F 1 погон російського генерала і стати лідером.',
                          reply_markup=create_clan())
         else:
-            base = int(r.hget(c, 'base'))
-            if base == 1:
-                bot.send_message(message.chat.id, '<i>Банда</i> ' + r.hget(c, 'title').decode() +
-                                 '\n\n\U0001f6d6 Барак\nМожливість обирати фашиста дня та зберігати деякі ресурси.'
-                                 '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
-                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
-                                 '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
+            if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
+                base = int(r.hget(c, 'base'))
+                if base == 1:
+                    bot.send_message(message.chat.id, '<i>Банда</i> ' + r.hget(c, 'title').decode() +
+                                     '\n\n\U0001f6d6 Барак\nМожливість обирати фашиста дня та зберігати деякі ресурси.'
+                                     '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
+                                     '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
+                                     '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
 
 
 @bot.message_handler(commands=['upgrade'])
 def upgrade(message):
     try:
-        c = 'c' + str(message.chat.id)
-        base = int(r.hget(c, 'base'))
-        if base == 1:
-            bot.send_message(message.chat.id, '\U0001F3D7 Покращення Банди до Клану коштує \U0001F333 100, '
-                             '\U0001faa8 20 і \U0001F4B5 120.')
+        if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
+            c = 'c' + str(message.chat.id)
+            base = int(r.hget(c, 'base'))
+            if base == 1:
+                bot.send_message(message.chat.id, '\U0001F3D7 Покращення Банди до Клану коштує \U0001F333 100, '
+                                                  '\U0001faa8 20 і \U0001F4B5 120.')
+                admins = []
+                for admin in bot.get_chat_administrators(message.chat.id):
+                    admins.append(admin.user.id)
+                if int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and int(r.hget(c, 'money')) >= 120 \
+                        and message.from_user.id not in admins:
+                    bot.send_message(message.chat.id, '\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
+                elif int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and \
+                        int(r.hget(c, 'money')) >= 120 and message.from_user.id in admins:
+                    r.hset(c, 'title', 2)
+                    bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
+    except:
+        pass
+
+
+@bot.message_handler(commands=['build'])
+def build(message):
+    try:
+        admins = []
+        for admin in bot.get_chat_administrators(message.chat.id):
+            admins.append(admin.user.id)
+        if message.from_user.id in admins:
+            if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
+                c = 'c' + str(message.chat.id)
+                base = int(r.hget(c, 'base'))
+                if base == 2:
+                    bot.send_message(message.chat.id, '\U0001F3D7 Для подальшого розвитку клану потрібно збудувати:\n'
+                                                      '\nПилорама (\U0001F4B5 200) - \U0001F333 5-15 від роботи\n'
+                                                      'Шахта (\U0001F4B5 300) - \U0001faa8 2-10 від роботи')
     except:
         pass
 
@@ -1597,9 +1627,9 @@ def handle_query(call):
                                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                   text='Цей бій не для тебе.')
                                 except:
-                                    print(1/0)
+                                    print(1 / 0)
                             else:
-                                print(1/0)
+                                print(1 / 0)
                         except:
                             uid2 = call.from_user.id
                             un2 = call.from_user.first_name
@@ -1619,7 +1649,7 @@ def handle_query(call):
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
-                                          'битись поки не поїсть, або не полікується.')
+                                               'битись поки не поїсть, або не полікується.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти хочеш атакувати свого русака'
                                                                                        ', але розумієш, що він зараз ма'
@@ -1751,7 +1781,7 @@ def handle_query(call):
                 if money == 1:
                     r.hset('c' + str(call.message.chat.id), 'base', 1,
                            {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
-                            'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'quarry': 0, 'craft': 0, 'silicate': 0,
+                            'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
                             'shop': 0, 'gulag': 0, 'dungeon': 0,
                             'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
                     r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
@@ -3041,7 +3071,7 @@ def custom_query(inline_query):
                                             description='наприклад, "Бути чи/або не бути?"')
         r9 = types.InlineQueryResultArticle('9', 'Вибери для ' + inline_query.query + ' пиво',
                                             types.InputTextMessageContent(
-                                                 inline_query.query + ', я рекомендую тобі тобі...\n\n' + beer()),
+                                                inline_query.query + ', я рекомендую тобі тобі...\n\n' + beer()),
                                             thumb_url='https://i.ibb.co/rZbG1fD/image.jpg',
                                             description='або для когось іншого')
         r10 = types.InlineQueryResultArticle('10', 'Генератор випадкових чисел',
