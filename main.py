@@ -1457,7 +1457,7 @@ def clan_settings(message):
         bot.delete_message(message.chat.id, message.id)
     except:
         pass
-    if message.from_user.id == int(r.hget(c, 'leader')):
+    if message.from_user.id == int(r.hget(c, 'leader')) or message.from_user.id in sudoers:
         if int(r.hget(c, 'allow')) == 0:
             allow = '\nВ клан може приєднатись кожен бажаючий.'
         else:
@@ -1959,6 +1959,15 @@ def handle_query(call):
                 r.hset('c' + str(c), 'allow', 0)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Режим набору змінено.')
+
+    elif call.data.startswith('get_members'):
+        if call.from_user.id == int(r.hget('c' + r.hget(call.from_user.id, 'clan').decode(), 'leader')) or \
+                call.from_user.id in sudoers:
+            msg = ''
+            for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
+                name = r.hget(mem, 'firstname').decode()
+                msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
+            bot.send_message(msg, parse_mode='HTML')
 
     elif call.data.startswith('build_sawmill') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
