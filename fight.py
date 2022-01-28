@@ -193,9 +193,9 @@ def fight(uid1, uid2, un1, un2, t, mid):
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав травмат і прострелив ворогу коліно!'
             damage_weapon(uid2, 11, c2)
         elif weapon2 == 12:
-            s2 = int(s2 * 1.1)
-            i2 = int(i2 * 1.1)
-            bd2 = int(bd2 * 1.1)
+            s2 = int(s2 * 1.2)
+            i2 = int(i2 * 1.2)
+            bd2 = int(bd2 * 1.2)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з діамантовим кайлом.'
             damage_weapon(uid2, 12, c2)
         elif weapon2 == 13:
