@@ -1967,7 +1967,7 @@ def handle_query(call):
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
                 name = r.hget(mem, 'firstname').decode()
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
-            bot.send_message(msg, parse_mode='HTML')
+            bot.send_message(call.message.chat.id, msg, parse_mode='HTML')
 
     elif call.data.startswith('build_sawmill') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
