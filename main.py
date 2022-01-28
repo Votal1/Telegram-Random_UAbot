@@ -2857,6 +2857,11 @@ def handle_query(call):
                 bot.edit_message_text('\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20',
                                       call.message.chat.id, call.message.id)
                 r.hincrby(uid, 'vodka', 20)
+                vo = 0
+                for v in range(20):
+                    vo += vodka(uid, cl)
+                bot.edit_message_text('\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 \U0001F54A +' +
+                                      str(vo), call.message.chat.id, call.message.id)
             elif ran == [8]:
                 bot.edit_message_text('\U0001f535 В цьому пакунку лежить мертвий русак...\n\u2620\uFE0F +1',
                                       call.message.chat.id, call.message.id)
