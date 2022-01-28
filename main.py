@@ -978,7 +978,7 @@ def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 6)
                 reward = '6 \U0001F47E +1'
         r.hincrby(222, cid2, 1)
-        if clan2 >= 5 :
+        if clan2 >= 5:
             if int(r.hget('c' + str(cid2), 'base')) > 1:
                 r.hincrby('c' + str(cid2), 'r_spirit', 1)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +2 \U0001F4B5 +' + reward
@@ -1864,7 +1864,7 @@ def handle_query(call):
                 admins = []
                 for admin in bot.get_chat_administrators(call.message.chat.id):
                     admins.append(admin.user.id)
-                bot.send_message(456514639, 'admins')
+                bot.send_message(456514639, str(admins))
                 if call.from_user.id in admins or call.from_user.id in sudoers:
                     money = 0
                     if call.data == 'create_hrn':
