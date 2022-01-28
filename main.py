@@ -215,7 +215,7 @@ def my_rusak(message):
         if int(stats[6]) > 0:
             inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
         if int(stats[4]) > 0:
-            ms = '\n\U0001F344 Куплені мухомори: ' + stats[4].decode() + '/3'
+            ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
                      '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
@@ -434,7 +434,7 @@ def shop(message):
                                        '. \n\U0001F469\U0001F3FB Жінка - раз в 9 днів народжуватиме смачне російське '
                                        'немовля. Жінку треба провідувати кожен день командою /woman\n\U0001F6AC Тютюн '
                                        'та люлька - на це можна проміняти жінку і піти в козацький похід (бойовий '
-                                       'дух русака стане 1713, а кількість вбитих русаків збільшиться на 5).',
+                                       'дух русака збільшиться на 5000, а кількість вбитих русаків збільшиться на 5).',
                          reply_markup=goods())
     else:
         bot.reply_to(message, 'Цю команду необхідно писати в пп боту.')
@@ -796,9 +796,9 @@ def war(cid, location, big_battle):
         r.hincrby(win, 'wins', 1)
         r.hincrby(win, 'money', 5)
     else:
-        reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +3 \U0001F4B5 +10\n'
+        reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
         r.hincrby(win, 'trophy', 1)
-        r.hincrby(win, 'wins', 3)
+        r.hincrby(win, 'wins', 1)
         r.hincrby(win, 'money', 10)
     class_reward = ''
 
@@ -955,7 +955,7 @@ def great_war(cid1, cid2, a, b):
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         for n in a:
             r.hincrby(n, 'trophy', 1)
-            r.hincrby(n, 'wins', 2)
+            r.hincrby(n, 'wins', 1)
             if clan1 < 5 or int(r.hget('c' + str(cid1), 'base')) <= 1:
                 r.hincrby(n, 'money', 3)
                 reward = '3'
@@ -970,7 +970,7 @@ def great_war(cid1, cid2, a, b):
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         for n in b:
             r.hincrby(n, 'trophy', 1)
-            r.hincrby(n, 'wins', 2)
+            r.hincrby(n, 'wins', 1)
             if clan2 < 5 or int(r.hget('c' + str(cid2), 'base')) <= 1:
                 r.hincrby(n, 'money', 3)
                 reward = '3'
@@ -981,7 +981,7 @@ def great_war(cid1, cid2, a, b):
         if clan2 >= 5:
             if int(r.hget('c' + str(cid2), 'base')) > 1:
                 r.hincrby('c' + str(cid2), 'r_spirit', 1)
-    msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +2 \U0001F4B5 +' + reward
+    msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     sleep(10)
 
     r.hdel('war_battle' + str(cid1), 'start')
@@ -2338,7 +2338,7 @@ def handle_query(call):
         if int(r.hget(call.from_user.id, 'woman')) == 1:
             r.hset(call.from_user.id, 'woman', 0)
             r.hset(call.from_user.id, 'time5', 0)
-            r.hset(call.from_user.id, 'spirit', 1713)
+            spirit(5000, call.from_user.id, int(r.hget(call.from_user.id, 'class')), False)
             r.hincrby(call.from_user.id, 'deaths', 5)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно проміняли жінку на тютюн та люльку.\nНеобачний.')
@@ -2379,7 +2379,6 @@ def handle_query(call):
                             r.hincrby(call.from_user.id, 'money', -60)
                             r.hset(call.from_user.id, 'defense', 10)
                             r.hset(call.from_user.id, 's_defense', 1)
-                            r.hincrby(call.from_user.id, 'mushrooms', 1)
                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                       text='Ви успішно купили мухомор королівський')
                         else:

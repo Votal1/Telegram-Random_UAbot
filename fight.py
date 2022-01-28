@@ -289,6 +289,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
                 if c2 != 3 and c2 != 13 and c2 != 23:
                     s1 = int(s1 * 0.5)
                     intellect(1, uid1)
+                    r.hincrby(uid1, 'mushrooms', 1)
                     defense = '\n\n\U0001F6E1 ' + names[name1] + ' прийшов на бій під мухоморами. Він був' \
                                                                  ' обезсилений, але запам`ятав тактику ворога.'
                     damage_defense(uid1, 10)

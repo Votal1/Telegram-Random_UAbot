@@ -61,7 +61,7 @@ def top(sett):
                                            ' \U0001F9E0 ' + str(i) + ' \u2620\uFE0F ' + str(d) + \
                                            ' \U0001F476 ' + str(c) + '\n\U0001F3C6 ' + str(w) + \
                                            ' \U0001F3C5 ' + str(t) + '\n'
-                rate = s + i * 10 + w + t * 20 + d * 30 + c * 88
+                rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
                 rating.update({line: rate})
             except:
                 continue
@@ -99,7 +99,7 @@ def itop(uid, cid, chat):
                     c = int(stats[4])
                     t = int(stats[5])
                     line = stats[6].decode()
-                    rate = s + i * 10 + w + t * 20 + d * 30 + c * 88
+                    rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
                     rating.update({line: rate})
                 except:
                     continue
