@@ -545,7 +545,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
             sleep(3)
             continue
 
-        info = str('\u2744\uFE0F ' + un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' +
+        info = str(un1 + ' vs ' + un2 + '\n\n\U0001F3F7 ' + inj1 + names[name1] + ' ' +
                    icons[c1] + ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
                    '\n\U0001F4AA ' + str(s1) + ' | ' + str(s2) +
                    '\n\U0001F9E0 ' + str(i1) + ' | ' + str(i2) +
