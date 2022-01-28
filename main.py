@@ -1834,40 +1834,41 @@ def handle_query(call):
 
     elif call.data.startswith('create_'):
         if r.hexists('c' + str(call.message.chat.id), 'base') == 0:
-            admins = []
-            for admin in bot.get_chat_administrators(call.message.chat.id):
-                admins.append(admin.user.id)
-            if call.from_user.id in admins and len(str(r.hget(call.from_user.id, 'clan'))) < 5:
-                money = 0
-                if call.data == 'create_hrn':
-                    if int(r.hget(call.from_user.id, 'money')) >= 250:
-                        money = 1
-                else:
-                    if r.hexists(call.from_user.id, 'strap') == 0:
-                        r.hset(call.from_user.id, 'strap', 0)
-                    if int(r.hget(call.from_user.id, 'strap')) >= 1:
-                        money = 1
-                if money == 1:
-                    r.hset('c' + str(call.message.chat.id), 'base', 1,
-                           {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
-                            'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
-                            'shop': 0, 'gulag': 0, 'dungeon': 0,
-                            'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
-                    r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
-                    r.sadd('clans', call.message.chat.id)
-                    r.hset(call.from_user.id, 'clan', call.message.chat.id,
-                           {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+            if len(str(r.hget(call.from_user.id, 'clan'))) < 5:
+                admins = []
+                for admin in bot.get_chat_administrators(call.message.chat.id):
+                    admins.append(admin.user.id)
+                if call.from_user.id in admins or call.from_user.id in sudoers:
+                    money = 0
                     if call.data == 'create_hrn':
-                        r.hincrby(call.from_user.id, 'money', -250)
+                        if int(r.hget(call.from_user.id, 'money')) >= 250:
+                            money = 1
                     else:
-                        r.hincrby(call.from_user.id, 'strap', -1)
-                    bot.edit_message_text('\U0001F3D7 Засновано банду ' + call.message.chat.title + '!',
-                                          call.message.chat.id, call.message.id)
+                        if r.hexists(call.from_user.id, 'strap') == 0:
+                            r.hset(call.from_user.id, 'strap', 0)
+                        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+                            money = 1
+                    if money == 1:
+                        r.hset('c' + str(call.message.chat.id), 'base', 1,
+                               {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
+                                'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
+                                'shop': 0, 'gulag': 0, 'dungeon': 0,
+                                'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
+                        r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
+                        r.sadd('clans', call.message.chat.id)
+                        r.hset(call.from_user.id, 'clan', call.message.chat.id,
+                               {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+                        if call.data == 'create_hrn':
+                            r.hincrby(call.from_user.id, 'money', -250)
+                        else:
+                            r.hincrby(call.from_user.id, 'strap', -1)
+                        bot.edit_message_text('\U0001F3D7 Засновано банду ' + call.message.chat.title + '!',
+                                              call.message.chat.id, call.message.id)
+                    else:
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Недостатньо коштів на рахунку.')
                 else:
-                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                              text='Недостатньо коштів на рахунку.')
-            else:
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не адміністратор.')
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не адміністратор.')
 
     elif call.data.startswith('invite'):
         admins = []
