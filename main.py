@@ -1420,7 +1420,7 @@ def clan(message):
                         r.hincrby(message.from_user.id, 'money', 5)
                         r.hincrby(c, 'money', -5)
                     else:
-                        bot.send_message(message.from_user.id, 'Агент ФСБ хотів вкрасти гроші з кланової скрабниці, '
+                        bot.send_message(message.chat.id, 'Агент ФСБ хотів вкрасти гроші з кланової скрабниці, '
                                                                'але його помітили...\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
 
