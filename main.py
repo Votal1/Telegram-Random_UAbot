@@ -1355,7 +1355,7 @@ def clan(message):
                 if base == 1:
                     bot.send_message(message.chat.id, '<i>Банда</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
-                                     'Кількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
+                                     '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
                                      '\n\n\U0001f6d6 Барак\nМожливість обирати фашиста дня та зберігати деякі ресурси.'
                                      '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
                                      '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
@@ -1375,8 +1375,10 @@ def clan(message):
                         building += ', склад'
                         resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode() + \
                                      '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
-                    bot.send_message(message.chat.id, '<i>Клан</i> ' + r.hget(c, 'title').decode() + '\n\n' +
-                                     building + resources, parse_mode='HTML')
+                    bot.send_message(message.chat.id, '<i>Клан</i> ' + r.hget(c, 'title').decode() +
+                                     '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
+                                     '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
+                                     '\n\n' + building + resources, parse_mode='HTML')
 
 
 @bot.message_handler(commands=['upgrade'])
