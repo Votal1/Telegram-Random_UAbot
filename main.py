@@ -361,7 +361,7 @@ def sacrifice(message):
 @bot.message_handler(commands=['fascist'])
 def fascist(message):
     try:
-        if (int(r.hget('c' + str(message.chat.id), 'base')) > 0 and len(r.smembers(message.chat.id)) >= 14) \
+        if int(r.hget('c' + str(message.chat.id), 'base')) > 0 and len(r.smembers(message.chat.id)) >= 14 \
                 or message.chat.id == -1001211933154:
             if r.hexists('f' + str(message.chat.id), 'time3') == 0:
                 r.hset('f' + str(message.chat.id), 'time3', 0)
@@ -3044,6 +3044,7 @@ def messages(message):
                     if cl == 17:
                         bot.reply_to(message, 'Ти покращив кремлебота до Агента ФСБ.')
                         r.hset(message.from_user.id, 'class', 27)
+                        r.hset(message.from_user.id, 'fsb', 0)
                         r.hincrby(message.from_user.id, 'money', 100)
                     if cl == 18:
                         bot.reply_to(message, 'Ти покращив кіберзлочинця до Black Hat.')
