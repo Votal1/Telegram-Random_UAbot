@@ -2884,11 +2884,11 @@ def handle_query(call):
                                       call.message.chat.id, call.message.id)
                 if int(r.hget(uid, 'support')) == 2:
                     r.hincrby(uid, 'sch', 30)
-                    r.hset(uid, 's_support', 30)
+                    r.hset(uid, 's_support', 20)
                 else:
                     r.hset(uid, 'sch', 30)
                     r.hset(uid, 'support', 2)
-                    r.hset(uid, 's_support', 30)
+                    r.hset(uid, 's_support', 20)
             elif ran == [11]:
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої бараболі'
