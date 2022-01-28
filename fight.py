@@ -361,17 +361,17 @@ def fight(uid1, uid2, un1, un2, t, mid):
                         i1, i2 = 0, 0
 
         if hach1 == 1:
-            s1 = int(s1 * 1.1)
+            s1 = int(s1 * 1.15)
             spirit(30, uid1, c1, True)
         elif hach1 == 0:
             if c1 == 1 or c1 == 11 or c1 == 21:
-                s1 = int(s1 * 0.9)
+                s1 = int(s1 * 0.85)
         if hach2 == 1:
-            s2 = int(s2 * 1.1)
+            s2 = int(s2 * 1.15)
             spirit(30, uid2, c2, True)
         elif hach2 == 0:
             if c2 == 1 or c2 == 11 or c2 == 21:
-                s2 = int(s2 * 0.9)
+                s2 = int(s2 * 0.85)
 
         if c1 == 23:
             magic = int(r.hget(uid1, 'deaths')) * 5

@@ -521,9 +521,8 @@ def c_top(message):
 def classes(message):
     if message.chat.type == 'private':
         bot.reply_to(message, 'Класи русаків:\n\n\n'
-                              'Хач \U0001F919 - моментально додає +100 сили. Якщо у ворога нема зброї'
-                              ', додає 30 бойового духу та збільшує свою силу на 13%, а якщо є зброя - зменшує'
-                              ' силу на 13%.\n\n'
+                              'Хач \U0001F919 - якщо у ворога нема зброї - додає 30 бойового духу та збільшує свою '
+                              'силу на 15%, а якщо є - зменшує силу на 15%.\n\n'
                               'Роботяга \U0001F9F0 - йому заборонено хворіти. В шахті заробляє втричі більше грошей,'
                               ' але вдвічі більший шанс забухати (п`є в 5 раз більше). \n\n'
                               'Фокусник \U0001F52E - моментально додає 1 інтелекту. 80% шанс ігнорувати дрин ворога, '
@@ -555,7 +554,7 @@ def classes(message):
 def classes_2(message):
     if message.chat.type == 'private':
         bot.reply_to(message, 'Класи русаків:\n\n\n'
-                              'Борцуха \U0001F919\U0001F919 - моментально додає ще +100 сили. Якщо у ворога нема зброї'
+                              'Борцуха \U0001F919\U0001F919 - якщо у ворога нема зброї'
                               ', є шанс активувати один з прийомів при перемозі. Чим більша сила ворога, тим більший '
                               'цей шанс. Кидок через стегно: -50-100 бойового духу ворогу. Млин: +50-100 бойового духу.'
                               ' Кидок прогином: +2 гривні (10% шанс).\n\n'
@@ -588,8 +587,8 @@ def classes_2(message):
 def classes_3(message):
     if message.chat.type == 'private':
         bot.reply_to(message, 'Класи русаків:\n\n\n'
-                              'Гроза Кавказу \U0001F919\U0001F919\U0001F919 - Збільшує силу на 100. +10 сили і +1000 '
-                              'бойового духу якщо вперше за день в бою зустрів хача.\n\n'
+                              'Гроза Кавказу \U0001F919\U0001F919\U0001F919 - моментально збільшує силу на 200. '
+                              '+10 сили і +1000 бойового духу якщо вперше за день в бою зустрів хача.\n\n'
                               'П`яний майстер \U0001F9F0\U0001F9F0\U0001F9F0 - якщо русак вже їв, 0% шанс в бою '
                               'отримати талон на їжу (додаткове годування). Шанс збільшується на 1% за кожні два рівня '
                               'алкоголізму.\n\n'
@@ -804,13 +803,9 @@ def war(cid, location, big_battle):
 
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
-            if int(r.hget(win, 'hach_time')) == datetime.now().day:
-                spirit(1000, win, wc, False)
-                class_reward = '\U0001F919: \U0001F54A +1000'
-            else:
-                r.hincrby(win, 'strength', 10)
-                class_reward = '\U0001F919: \U0001F4AA +10'
-                r.hset(win, 'hach_time', datetime.now().day)
+            spirit(3000, win, wc, False)
+            r.hincrby(win, 'money', 5)
+            class_reward = '\U0001F919: \U0001F4B5 +5 \U0001F54A +3000'
     elif location == 'Битва на покинутому заводі':
         if wc == 2 or wc == 12 or wc == 22:
             class_reward = '\U0001F9F0: \U0001F4B5 +5 \u2622 +10'
@@ -1528,7 +1523,7 @@ def invest(message):
                     if m <= int(r.hget(message.from_user.id, 'money')):
                         r.hincrby(c, 'money', m)
                         r.hincrby(message.from_user.id, 'money', -m)
-                        bot.reply_to(message, '\U0001F4B5 Клановий рахунок попонено на ' + str(m) + ' гривень.')
+                        bot.reply_to(message, '\U0001F4B5 Клановий рахунок поповнено на ' + str(m) + ' гривень.')
                     else:
                         bot.reply_to(message, 'Недостатньо коштів на рахунку.')
 
@@ -2665,6 +2660,8 @@ def handle_query(call):
     elif call.data.startswith('course'):
         if int(r.hget(call.from_user.id, 'strap')) >= 2 and int(r.hget(call.from_user.id, 'class')) > 0:
             r.hincrby(call.from_user.id, 'strap', -2)
+            if int(r.hget(call.from_user.id, 'class')) == 21:
+                r.hincrby(call.from_user.id, 'strength', -200)
             r.hset(call.from_user.id, 'class', 0)
             if int(r.hget(call.from_user.id, 'intellect')) < 5:
                 r.hset(call.from_user.id, 'intellect', 5)
@@ -2957,8 +2954,6 @@ def messages(message):
                             r.hset(message.from_user.id, 'photo', ran)
                             bot.send_photo(message.chat.id, photo=ran, caption='Ти вибрав клас Хач.')
                             r.hset(message.from_user.id, 'class', 1)
-                            r.hincrby(message.from_user.id, 'strength', 100)
-                            r.hset(message.from_user.id, 'hach_time', 0)
                         elif 'Роботяга' in message.text or 'роботяга' in message.text:
                             ran = choice(p2)
                             r.hset(message.from_user.id, 'photo', ran)
@@ -3009,7 +3004,6 @@ def messages(message):
                     if cl == 1:
                         bot.reply_to(message, 'Ти покращив хача до Борцухи.')
                         r.hset(message.from_user.id, 'class', 11)
-                        r.hincrby(message.from_user.id, 'strength', 100)
                     if cl == 2:
                         bot.reply_to(message, 'Ти покращив роботягу до Почесного алкаша.')
                         r.hset(message.from_user.id, 'class', 12)
@@ -3044,7 +3038,7 @@ def messages(message):
                         bot.reply_to(message, 'Ти покращив борцуху до Грози Кавказу.')
                         r.hset(message.from_user.id, 'class', 21)
                         r.hset(message.from_user.id, 'hach_time2', 0)
-                        r.hincrby(message.from_user.id, 'strength', 100)
+                        r.hincrby(message.from_user.id, 'strength', 200)
                     if cl == 12:
                         bot.reply_to(message, 'Ти покращив почесного алкаша до П`яного майстра.')
                         r.hset(message.from_user.id, 'class', 22)

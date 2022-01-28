@@ -79,6 +79,7 @@ def unpack():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
 
+
 def create_clan():
     markup = types.InlineKeyboardMarkup()
     items = {'\U0001F4B5 250': 'create_hrn', '\U0001F31F 1': 'create_strap'}
