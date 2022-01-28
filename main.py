@@ -1767,12 +1767,12 @@ def handle_query(call):
                             un2 = call.from_user.first_name
                             if cdata[1] == 'tr':
                                 timestamp = int(datetime.now().timestamp())
-                                if r.hexists(call.from_user.id, 'timestamp') == 0:
-                                    r.hset(call.from_user.id, 'timestamp', 0)
-                                if timestamp - int(r.hget(call.from_user.id, 'timestamp')) < 15:
+                                if r.hexists(uid1, 'timestamp') == 0:
+                                    r.hset(uid1, 'timestamp', 0)
+                                if timestamp - int(r.hget(uid1, 'timestamp')) < 15:
                                     pass
                                 else:
-                                    r.hset(call.from_user.id, 'timestamp', timestamp)
+                                    r.hset(uid1, 'timestamp', timestamp)
                                     try:
                                         q = cdata[2].split()
                                         if q[1][1:].lower() == call.from_user.username.lower():
