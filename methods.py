@@ -146,7 +146,15 @@ def ctop(sett):
         rating = {}
         for member in everyone:
             try:
-                title = r.hget('war_battle' + member.decode(), 'title').decode()
+                try:
+                    i = int(r.hget('c' + member.decode(), 'base'))
+                    if i > 0:
+                        prefix = ['', 'Банда', 'Клан']
+                        title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + member.decode(), 'title')
+                    else:
+                        title = r.hget('war_battle' + member.decode(), 'title').decode()
+                except:
+                    title = r.hget('war_battle' + member.decode(), 'title').decode()
                 if '@' in title:
                     continue
                 stats = int(r.hget(222, member))
@@ -163,7 +171,7 @@ def ctop(sett):
             place += 1
             if place == 11:
                 break
-        return 'Рейтинг найсильніших банд русаків\n\n' + result
+        return 'Рейтинг найсильніших чатів\n\n' + result
 
     except:
         return 'Недостатньо інформації для створення рейтингу.'

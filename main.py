@@ -513,7 +513,7 @@ def i_top(message):
 
 @bot.message_handler(commands=['ctop'])
 def c_top(message):
-    bot.reply_to(message, ctop(222))
+    bot.reply_to(message, ctop(222), parse_mode='HTML')
 
 
 @bot.message_handler(commands=['class'])
