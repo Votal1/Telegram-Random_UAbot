@@ -1864,7 +1864,6 @@ def handle_query(call):
                 admins = []
                 for admin in bot.get_chat_administrators(call.message.chat.id):
                     admins.append(admin.user.id)
-                bot.send_message(456514639, str(admins))
                 if call.from_user.id in admins or call.from_user.id in sudoers:
                     money = 0
                     if call.data == 'create_hrn':
