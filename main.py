@@ -1386,7 +1386,8 @@ def clan(message):
                                      '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
                                      '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
                 elif base == 2:
-                    building = '\U0001F3E0 Притулок\nІнформація поки відсутня.\n\U0001F3ED Інфраструктура:'
+                    building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, якщо ' \
+                               'серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
                     resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +\
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
                                 '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode()
@@ -1863,6 +1864,7 @@ def handle_query(call):
                 admins = []
                 for admin in bot.get_chat_administrators(call.message.chat.id):
                     admins.append(admin.user.id)
+                bot.send_message(456514639, 'admins')
                 if call.from_user.id in admins or call.from_user.id in sudoers:
                     money = 0
                     if call.data == 'create_hrn':
