@@ -727,6 +727,61 @@ def donate_shop(message):
         bot.reply_to(message, 'Цю команду необхідно писати в пп боту.')
 
 
+@bot.message_handler(commands=['promo_code'])
+def promo_code(message):
+    if message.chat.type != 'private':
+        try:
+            bot.delete_message(message.chat.id, message.id)
+        except:
+            pass
+    else:
+        msg = message.text.split(' ')[1]
+        uid = str(message.from_user.id).encode()
+        if msg.encode() in r.smembers('promo_codes'):
+            if msg.startswith('soledar') and uid not in r.smembers('first_code'):
+                if len(r.smembers('first_code')) == 0:
+                    r.sadd('first_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 20)
+                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    bot.reply_to(message, '\u26CF Соледарський промокод вперше активовано!\n\U0001F4E6 +20 \u2622 +100')
+                else:
+                    r.sadd('first_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 10)
+                    r.hincrby(message.from_user.id, 'vodka', 50)
+                    bot.reply_to(message, '\u26CF Соледарський промокод активовано!\n\U0001F4E6 +10 \u2622 +50')
+            elif msg.startswith('GET_') and uid not in r.smembers('second_code'):
+                if len(r.smembers('second_code')) == 0:
+                    r.sadd('second_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 20)
+                    r.hincrby(message.from_user.id, 'money', 50)
+                    r.hincrby(message.from_user.id, 'vodka', 50)
+                    bot.reply_to(message, '\u26CF Хакерський промокод вперше активовано!\n\U0001F4E6 +20 '
+                                          '\U0001F4B5 +50 \u2622 +50')
+                else:
+                    r.sadd('second_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 10)
+                    r.hincrby(message.from_user.id, 'money', 50)
+                    r.hincrby(message.from_user.id, 'vodka', 25)
+                    bot.reply_to(message, '\u26CF Хакерський промокод активовано!\n\U0001F4E6 +10 '
+                                          '\U0001F4B5 +50 \u2622 +25')
+            elif msg.startswith('mine') and uid not in r.smembers('third_code'):
+                if len(r.smembers('third_code')) == 0:
+                    r.sadd('third_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 30)
+                    r.hincrby(message.from_user.id, 'strap', 1)
+                    r.hset(message.from_user.id, 'weapon', 12)
+                    r.hset(message.from_user.id, 's_weapon', 100)
+                    bot.reply_to(message, '\u26CF Промокод Майнкрафту вперше активовано!\n\U0001F31F +1 \U0001F4E6 +30 '
+                                          '\U0001F5E1 +100')
+                else:
+                    r.sadd('third_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 30)
+                    r.hset(message.from_user.id, 'weapon', 12)
+                    r.hset(message.from_user.id, 's_weapon', 50)
+                    bot.reply_to(message, '\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 '
+                                          '\U0001F5E1 +50')
+
+
 def war(cid, location, big_battle):
     bot.send_message(cid, '\U0001F5FA Починається ' + location + '!',
                      reply_to_message_id=int(r.hget('battle' + str(cid), 'start')))

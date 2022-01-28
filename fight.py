@@ -636,6 +636,9 @@ def fight(uid1, uid2, un1, un2, t, mid):
                     r.hincrby(uid2, 'money', money)
                     hack = hack + '\n\U0001F4DF ' + names[name2] + ' зламав бота, і переписав бонусний бойовий дух ' \
                                                                    'собі.\n\U0001F4B5 +' + str(money)
+                    ran = choices([1, 0], weights=[0.1, 99.9])
+                    if ran == [1]:
+                        hack += '\nGET_.../watch?v=dQw4w9WgXcQ'
 
             if weapon1 == 15:
                 meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1, 5)
@@ -731,6 +734,9 @@ def fight(uid1, uid2, un1, un2, t, mid):
                     r.hincrby(uid1, 'money', money)
                     hack = hack + '\n\U0001F4DF ' + names[name1] + ' зламав бота, і переписав бонусний бойовий дух ' \
                                                                    'собі.\n\U0001F4B5 +' + str(money)
+                    ran = choices([1, 0], weights=[0.1, 99.9])
+                    if ran == [1]:
+                        hack += '\nGET_.../watch?v=dQw4w9WgXcQ'
 
             if weapon2 == 15:
                 meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2, 5)
