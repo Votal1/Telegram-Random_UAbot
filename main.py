@@ -1642,6 +1642,7 @@ def work(message):
                     if int(r.hget(c, 'sawmill')) == 0 and int(r.hget(c, 'mine')) == 0 and int(r.hget(c, 'craft')) == 0:
                         bot.reply_to(message, 'Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
                     else:
+                        r.hset(message.from_user.id, 'clan_time', datetime.now().day)
                         if int(r.hget(c, 'sawmill')) == 1:
                             ran = randint(5, 15)
                             resources += '\U0001F333 +' + str(ran)
