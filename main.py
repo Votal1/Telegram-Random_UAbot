@@ -635,9 +635,9 @@ def merchant(message):
                                         'Мухомор королівський [Захист, міцність=1, ціна=60] - якщо у ворога більший '
                                         'інтелект, додає +1 інтелекту (не діє проти фокусників). На бій зменшує свою '
                                         'силу на 50%. Максимальна кількість покупок на русака - 3.\n'
-                                        '\U0001F452 Шапочка з фольги [Допомога, міцність=10, ціна=50] - захищає від вт'
+                                        '\U0001F452 Шапочка з фольги [Допомога, міцність=10, ціна=30] - захищає від вт'
                                         'рати бойового духу при жертвоприношеннях, при купівлі русак отримує '
-                                        '20 шизофренії.\n\n'
+                                        '30 шизофренії.\n\n'
                                         '\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій '
                                         'на 50%.\n\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=15] - збільшує '
                                         'силу, інтелект і бойовий дух на 20%.\n\U0001F52E Колода з кіоску [Атака, міцні'
@@ -2417,9 +2417,9 @@ def handle_query(call):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
             if int(r.hget(call.from_user.id, 'support')) == 0:
-                if int(r.hget(call.from_user.id, 'money')) >= 50:
-                    r.hincrby(call.from_user.id, 'money', -50)
-                    r.hincrby(call.from_user.id, 'sch', 20)
+                if int(r.hget(call.from_user.id, 'money')) >= 30:
+                    r.hincrby(call.from_user.id, 'money', -30)
+                    r.hincrby(call.from_user.id, 'sch', 30)
                     r.hset(call.from_user.id, 'support', 2)
                     r.hset(call.from_user.id, 's_support', 10)
                     bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -2874,9 +2874,16 @@ def handle_query(call):
                     bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                           call.message.chat.id, call.message.id)
             elif ran == [10]:
-                bot.edit_message_text('\U0001f7e3 Дивно, але в цьому пакунку знайдено тютюн та люльку...'
-                                      '\n\u2620\uFE0F +5', call.message.chat.id, call.message.id)
-                r.hincrby(uid, 'deaths', 5)
+                bot.edit_message_text('\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити '
+                                      'непоганий шолом для русака.\n\U0001F464 +30',
+                                      call.message.chat.id, call.message.id)
+                if int(r.hget(uid, 'support')) == 2:
+                    r.hincrby(uid, 'sch', 30)
+                    r.hset(uid, 's_support', 30)
+                else:
+                    r.hset(uid, 'sch', 30)
+                    r.hset(uid, 'support', 2)
+                    r.hset(uid, 's_support', 30)
             elif ran == [11]:
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої бараболі'
