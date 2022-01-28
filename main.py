@@ -878,9 +878,6 @@ def war(cid, location, big_battle):
 def great_war(cid1, cid2, a, b):
     sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...')
-    bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...')
-    sleep(3)
     chance1, chance2, m1, m2, clan1, clan2 = 0, 0, 0, 0, 0, 0
     for member in a:
         try:
@@ -947,6 +944,12 @@ def great_war(cid1, cid2, a, b):
             continue
     if m2 == 1:
         chance2 = chance2 * 2
+
+    bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
+                     + str(int(chance1)) + ' | ' + str(int(chance2)))
+    bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
+                     + str(int(chance1)) + ' | ' + str(int(chance2)))
+    sleep(3)
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
@@ -1421,7 +1424,7 @@ def clan(message):
                         r.hincrby(c, 'money', -5)
                     else:
                         bot.send_message(message.chat.id, 'Агент ФСБ хотів вкрасти гроші з кланової скрабниці, '
-                                                               'але його помітили...\n\U0001fac0 -100')
+                                                          'але його помітили...\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
 
 
