@@ -1349,10 +1349,13 @@ def clan(message):
                                   ' 250 гривень або \U0001F31F 1 погон російського генерала і стати лідером.',
                          reply_markup=create_clan())
         else:
-            if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
+            if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)) \
+                    or message.from_user.id in sudoers:
                 base = int(r.hget(c, 'base'))
                 if base == 1:
                     bot.send_message(message.chat.id, '<i>Банда</i> ' + r.hget(c, 'title').decode() +
+                                     '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
+                                     'Кількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
                                      '\n\n\U0001f6d6 Барак\nМожливість обирати фашиста дня та зберігати деякі ресурси.'
                                      '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
                                      '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
