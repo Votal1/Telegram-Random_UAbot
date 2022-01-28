@@ -963,8 +963,9 @@ def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 6)
                 reward = '6 \U0001F47E +1'
         r.hincrby(222, cid1, 1)
-        if clan1 >= 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
-            r.hincrby('c' + str(cid1), 'r_spirit', 1)
+        if clan1 >= 5:
+            if int(r.hget('c' + str(cid1), 'base')) > 1:
+                r.hincrby('c' + str(cid1), 'r_spirit', 1)
     elif win == ['b']:
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         for n in b:
@@ -977,8 +978,9 @@ def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 6)
                 reward = '6 \U0001F47E +1'
         r.hincrby(222, cid2, 1)
-        if clan2 >= 5 or int(r.hget('c' + str(cid2), 'base')) > 1:
-            r.hincrby('c' + str(cid2), 'r_spirit', 1)
+        if clan2 >= 5 :
+            if int(r.hget('c' + str(cid2), 'base')) > 1:
+                r.hincrby('c' + str(cid2), 'r_spirit', 1)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +2 \U0001F4B5 +' + reward
     sleep(10)
 
