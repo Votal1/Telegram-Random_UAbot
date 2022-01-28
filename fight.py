@@ -229,7 +229,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
             s2 = int(s2 * 1.75)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...'
             damage_weapon(uid2, 15, c2)
-            ran = choices([1, 2], weights=[98, 2])
+            ran = choices([1, 2], weights=[99, 1])
             if ran == [2] and defense1 != 2:
                 weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                   'і отримав важкі поранення.'
@@ -238,7 +238,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
                 r.hset(uid2, 'weapon', 0)
                 r.hset(uid2, 'defense', 0)
                 r.hset(uid2, 'support', 0)
-                r.hincrby(uid2, 'injure', 100)
+                r.hincrby(uid2, 'injure', 150)
                 if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...' \
                               + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
@@ -249,7 +249,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
                         r.hset(uid1, 'weapon', 0)
                     r.hset(uid1, 'defense', 0)
                     r.hset(uid1, 'support', 0)
-                    r.hincrby(uid1, 'injure', 100)
+                    r.hincrby(uid1, 'injure', 150)
         elif defense2 == 16:
             s1 = int(s1 * 0.8)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' атакує, прикрившись поліцейським щитом.'
@@ -298,7 +298,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
             s1 = int(s1 * 1.75)
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
             damage_weapon(uid1, 15, c1)
-            ran = choices([1, 2], weights=[98, 2])
+            ran = choices([1, 2], weights=[99, 1])
             if ran == [2] and defense2 != 2:
                 defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                     'і отримав важкі поранення.'
@@ -307,7 +307,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
                 r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'defense', 0)
                 r.hset(uid1, 'support', 0)
-                r.hincrby(uid1, 'injure', 100)
+                r.hincrby(uid1, 'injure', 150)
                 if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
                     defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...' \
                               + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
@@ -318,7 +318,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
                         r.hset(uid2, 'weapon', 0)
                     r.hset(uid2, 'defense', 0)
                     r.hset(uid2, 'support', 0)
-                    r.hincrby(uid2, 'injure', 100)
+                    r.hincrby(uid2, 'injure', 150)
         elif defense1 == 16:
             s2 = int(s2 * 0.8)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'
