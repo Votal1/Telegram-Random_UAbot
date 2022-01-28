@@ -881,12 +881,14 @@ def great_war(cid1, cid2, a, b):
     bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...')
     bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...')
     sleep(3)
-    chance1 = 0
-    chance2 = 0
-    m1, m2 = 0, 0
+    chance1, chance2, m1, m2, clan1, clan2 = 0, 0, 0, 0, 0, 0
     for member in a:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
+                            'clan')
+            if len(str(stats[8])) >= 5:
+                if int(stats[8]) == cid1:
+                    clan1 += 1
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -894,6 +896,7 @@ def great_war(cid1, cid2, a, b):
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
                 i, bd = schizophrenia(int(member), i, bd, True)
+
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -914,7 +917,11 @@ def great_war(cid1, cid2, a, b):
         chance1 = chance1 * 2
     for member in b:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
+                            'clan')
+            if len(str(stats[8])) >= 5:
+                if int(stats[8]) == cid2:
+                    clan2 += 1
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -943,21 +950,36 @@ def great_war(cid1, cid2, a, b):
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
+    reward = ''
     if win == ['a']:
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         for n in a:
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 2)
-            r.hincrby(n, 'money', 3)
+            if clan1 < 5:
+                r.hincrby(n, 'money', 3)
+                reward = '3'
+            else:
+                r.hincrby(n, 'money', 6)
+                reward = '6 \U0001F47E +1'
         r.hincrby(222, cid1, 1)
+        if clan1 >= 5:
+            r.hincrby('c' + str(cid1), 'r_spirit', 1)
     elif win == ['b']:
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         for n in b:
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 2)
-            r.hincrby(n, 'money', 3)
+            if clan2 < 5:
+                r.hincrby(n, 'money', 3)
+                reward = '3'
+            else:
+                r.hincrby(n, 'money', 6)
+                reward = '6 \U0001F47E +1'
         r.hincrby(222, cid2, 1)
-    msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +2 \U0001F4B5 +3'
+        if clan2 >= 5:
+            r.hincrby('c' + str(cid2), 'r_spirit', 1)
+    msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +2 \U0001F4B5 +' + reward
     sleep(10)
 
     r.hdel('war_battle' + str(cid1), 'start')
