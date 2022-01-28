@@ -127,7 +127,8 @@ def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій колючий дрин, опонента це' \
                                                             ' неабияк злякало!'
             else:
-                weapon = '\n\n\U0001F52E ' + names[name1] + ' ухилився від дрина!'
+                weapon = '\n\n\U0001F52E ' + names[name1] + ' ухилився від дрина!\n\U0001F464 +5'
+                r.hincrby(uid2, 'sch', 5)
 
         if weapon2 == 4 and int(r.hget(uid1, 'spirit')) >= 300:
             if int(r.hget(uid1, 'spirit')) <= 1000:

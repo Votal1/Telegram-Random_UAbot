@@ -3,7 +3,7 @@ from telebot import types
 
 def goods():
     markup = types.InlineKeyboardMarkup()
-    items = {'Горілка "Козаки" - 2 грн': 'vodka', 'Колючий дрин - 7 грн': 'weapon', 'Колючий щит - 8 грн': 'defense',
+    items = {'Горілка "Козаки" - 2 грн': 'vodka', 'Колючий дрин - 4 грн': 'weapon', 'Колючий щит - 5 грн': 'defense',
              'Аптечка - 4 грн': 'aid_kit', 'Трофейний паспорт - 10 грн': 'passport', 'Утеплена будка - 30 грн': 'cabin',
              'Жінка - 150 грн': 'woman', 'Тютюн та люлька - 1 жінка': 'pipe'}
     for key, value in items.items():

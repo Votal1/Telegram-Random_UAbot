@@ -525,8 +525,8 @@ def classes(message):
                               'силу на 15%, а якщо є - зменшує силу на 15%.\n\n'
                               'Роботяга \U0001F9F0 - йому заборонено хворіти. В шахті заробляє втричі більше грошей,'
                               ' але вдвічі більший шанс забухати (п`є в 5 раз більше). \n\n'
-                              'Фокусник \U0001F52E - моментально додає 1 інтелекту. 80% шанс ігнорувати дрин ворога, '
-                              'перед початком бою показує випадкові характеристики.\n\n'
+                              'Фокусник \U0001F52E - моментально додає 1 інтелекту. 80% шанс ігнорувати дрин ворога '
+                              'і навести на нього шизофренію, перед початком бою показує випадкові характеристики.\n\n'
                               'Язичник \U0001F5FF - вдвічі збільшує максимальний бойовий дух. При перемозі отримує'
                               ' втричі більше бойового духу, але при поразці вдвічі більше втрачає.\n\n'
                               'Гарматне м`ясо \U0001fa96 - +50% сили в бою, якщо є АК-47 (зброя, яку можна придбати в '
@@ -2253,8 +2253,8 @@ def handle_query(call):
 
     elif call.data.startswith('weapon'):
         if int(r.hget(call.from_user.id, 'weapon')) == 0:
-            if int(r.hget(call.from_user.id, 'money')) >= 7:
-                r.hincrby(call.from_user.id, 'money', -7)
+            if int(r.hget(call.from_user.id, 'money')) >= 4:
+                r.hincrby(call.from_user.id, 'money', -4)
                 msg = 'Ви успішно купили колючий дрин'
                 if int(r.hget(call.from_user.id, 'class')) == 14 or int(r.hget(call.from_user.id, 'class')) == 24:
                     r.hset(call.from_user.id, 'weapon', 4)
@@ -2274,8 +2274,8 @@ def handle_query(call):
 
     elif call.data.startswith('defense'):
         if int(r.hget(call.from_user.id, 'defense')) == 0:
-            if int(r.hget(call.from_user.id, 'money')) >= 8:
-                r.hincrby(call.from_user.id, 'money', -8)
+            if int(r.hget(call.from_user.id, 'money')) >= 5:
+                r.hincrby(call.from_user.id, 'money', -5)
                 r.hset(call.from_user.id, 'defense', 1)
                 r.hset(call.from_user.id, 's_defense', 1)
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -2455,8 +2455,8 @@ def handle_query(call):
 
             elif cl == 2 or cl == 12 or cl == 22:
                 if int(r.hget(call.from_user.id, 'weapon')) == 0:
-                    if int(r.hget(call.from_user.id, 'money')) >= 12:
-                        r.hincrby(call.from_user.id, 'money', -12)
+                    if int(r.hget(call.from_user.id, 'money')) >= 15:
+                        r.hincrby(call.from_user.id, 'money', -15)
                         r.hset(call.from_user.id, 'weapon', 12)
                         r.hset(call.from_user.id, 's_weapon', 25)
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
