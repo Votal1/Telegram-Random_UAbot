@@ -2937,7 +2937,7 @@ def handle_query(call):
                                       call.message.chat.id, call.message.id)
                 if int(r.hget(uid, 'support')) == 2:
                     r.hincrby(uid, 'sch', 30)
-                    r.hset(uid, 's_support', 20)
+                    r.hincrby(uid, 's_support', 20)
                 else:
                     r.hset(uid, 'sch', 30)
                     r.hset(uid, 'support', 2)
