@@ -1405,6 +1405,24 @@ def clan(message):
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
                                      '\n\n' + building + resources, parse_mode='HTML')
+            elif int(r.hget(message.from_user.id, 'class')) == 27 and int(r.hget(c, 'money')) >= 10:
+                if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
+                    r.hset(message.from_user.id, 'fsb', datetime.now().day)
+                    ran = choice([2, 1, 1, 1, 0])
+                    if ran == 2:
+                        bot.send_message(message.from_user.id, 'Агент втервся в довіру до керівництва і випросив '
+                                                               'трохи грошей.\n\U0001F4B5 +10')
+                        r.hincrby(message.from_user.id, 'money', 10)
+                        r.hincrby(c, 'money', -10)
+                    elif ran == 2:
+                        bot.send_message(message.from_user.id, 'Агент непомітно забрав собі кілька гривень.'
+                                                               'грошей.\n\U0001F4B5 +5')
+                        r.hincrby(message.from_user.id, 'money', 5)
+                        r.hincrby(c, 'money', -5)
+                    else:
+                        bot.send_message(message.from_user.id, 'Агент ФСБ хотів вкрасти гроші з кланової скрабниці, '
+                                                               'але його помітили...\n\U0001fac0 -100')
+                        r.hset(message.from_user.id, 'hp', 0)
 
 
 @bot.message_handler(commands=['upgrade'])
