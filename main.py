@@ -1751,14 +1751,15 @@ def handle_query(call):
         cdata = call.data[5:].split(',', 3)
         uid1 = cdata[0]
         un1 = r.hget(uid1, 'firstname').decode()
-        timestamp = int(datetime.now().timestamp())
+        timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
         if call.from_user.id != int(uid1):
             if int(r.hget(call.from_user.id, 'hp')) > 0:
                 if int(r.hget(uid1, 'hp')) > 0:
-                    if timestamp - int(r.hget(uid1, 'timestamp')) < 1:
-                        pass
+                    if timestamp - float(r.hget(uid1, 'timestamp')) < 1:
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Не спіши.')
                     else:
                         try:
                             q = cdata[1].split()
