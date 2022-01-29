@@ -123,7 +123,7 @@ def itop(uid, cid, chat):
                 c = int(stats[4])
                 t = int(stats[5])
                 line = stats[6].decode()
-                rate = s + i * 10 + w + t * 20 + d * 30 + c * 88
+                rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
                 rating.update({line: rate})
             except:
                 continue
