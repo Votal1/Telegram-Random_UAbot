@@ -1779,9 +1779,12 @@ def handle_query(call):
                                 uid2 = call.from_user.id
                                 un2 = call.from_user.first_name
                                 if cdata[1] == 'tr':
-                                    if timestamp - float(r.hget(uid1, 'timestamp')) < 15:
+                                    if r.hexists(uid1, 't_ts') == 0:
+                                        r.hset(uid1, 't_ts', 0)
+                                    if timestamp - float(r.hget(uid1, 't_ts')) < 15:
                                         pass
                                     else:
+                                        r.hset(uid1, 't_ts', timestamp)
                                         try:
                                             q = cdata[2].split()
                                             if q[1][1:].lower() == call.from_user.username.lower():
