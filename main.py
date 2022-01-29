@@ -1757,9 +1757,8 @@ def handle_query(call):
         if call.from_user.id != int(uid1):
             if int(r.hget(call.from_user.id, 'hp')) > 0:
                 if int(r.hget(uid1, 'hp')) > 0:
-                    if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
-                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                  text='Не спіши.')
+                    if timestamp - float(r.hget(uid1, 'timestamp')) < 0.25:
+                        pass
                     else:
                         r.hset(uid1, 'timestamp', timestamp)
                         try:
@@ -2025,8 +2024,8 @@ def handle_query(call):
 
     elif call.data.startswith('leave_from_clan') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if len(str(r.hget(call.from_user.id, 'clan'))) >= 5:
+            r.srem('cl' + r.hget(call.from_user.id, 'clan').decode(), call.from_user.id)
             r.hset(call.from_user.id, 'clan', 0)
-            r.srem('cl' + str(call.message.chat.id), call.from_user.id)
             bot.edit_message_text('\U0001F4E4 Ти покинув клан', call.message.chat.id, call.message.id)
 
     elif call.data.startswith('change_title'):
