@@ -1751,61 +1751,64 @@ def handle_query(call):
         cdata = call.data[5:].split(',', 3)
         uid1 = cdata[0]
         un1 = r.hget(uid1, 'firstname').decode()
+        timestamp = int(datetime.now().timestamp())
+        if r.hexists(uid1, 'timestamp') == 0:
+            r.hset(uid1, 'timestamp', 0)
         if call.from_user.id != int(uid1):
             if int(r.hget(call.from_user.id, 'hp')) > 0:
                 if int(r.hget(uid1, 'hp')) > 0:
-                    try:
-                        q = cdata[1].split()
-                        diff = int(q[1])
-                        uid2 = call.from_user.id
-                        if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
-                                int(r.hget(uid1, 'strength')) + diff:
-                            un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, call.inline_message_id),
-                                                  inline_message_id=call.inline_message_id)
-                        else:
-                            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                      text='Твій русак не підходить по силі для цього бою.')
-                    except:
+                    if timestamp - int(r.hget(uid1, 'timestamp')) < 1:
+                        pass
+                    else:
                         try:
+                            q = cdata[1].split()
+                            diff = int(q[1])
                             uid2 = call.from_user.id
-                            un2 = call.from_user.first_name
-                            if cdata[1] == 'tr':
-                                timestamp = int(datetime.now().timestamp())
-                                if r.hexists(uid1, 'timestamp') == 0:
-                                    r.hset(uid1, 'timestamp', 0)
-                                if timestamp - int(r.hget(uid1, 'timestamp')) < 15:
-                                    pass
-                                else:
-                                    r.hset(uid1, 'timestamp', timestamp)
+                            if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
+                                    int(r.hget(uid1, 'strength')) + diff:
+                                un2 = call.from_user.first_name
+                                bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, call.inline_message_id),
+                                                      inline_message_id=call.inline_message_id)
+                            else:
+                                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                          text='Твій русак не підходить по силі для цього бою.')
+                        except:
+                            try:
+                                uid2 = call.from_user.id
+                                un2 = call.from_user.first_name
+                                if cdata[1] == 'tr':
+                                    if timestamp - int(r.hget(uid1, 'timestamp')) < 15:
+                                        pass
+                                    else:
+                                        r.hset(uid1, 'timestamp', timestamp)
+                                        try:
+                                            q = cdata[2].split()
+                                            if q[1][1:].lower() == call.from_user.username.lower():
+                                                fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
+                                            else:
+                                                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                          text='Цей бій не для тебе.')
+                                        except:
+                                            fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
+                                elif cdata[1] == 'pr':
                                     try:
                                         q = cdata[2].split()
                                         if q[1][1:].lower() == call.from_user.username.lower():
-                                            fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
+                                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1,
+                                                                             call.inline_message_id),
+                                                                  inline_message_id=call.inline_message_id)
                                         else:
                                             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                       text='Цей бій не для тебе.')
                                     except:
-                                        fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
-                            elif cdata[1] == 'pr':
-                                try:
-                                    q = cdata[2].split()
-                                    if q[1][1:].lower() == call.from_user.username.lower():
-                                        bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1,
-                                                                         call.inline_message_id),
-                                                              inline_message_id=call.inline_message_id)
-                                    else:
-                                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                  text='Цей бій не для тебе.')
-                                except:
+                                        print(1 / 0)
+                                else:
                                     print(1 / 0)
-                            else:
-                                print(1 / 0)
-                        except:
-                            uid2 = call.from_user.id
-                            un2 = call.from_user.first_name
-                            bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, call.inline_message_id),
-                                                  inline_message_id=call.inline_message_id)
+                            except:
+                                uid2 = call.from_user.id
+                                un2 = call.from_user.first_name
+                                bot.edit_message_text(text=fight(uid1, uid2, un1, un2, 1, call.inline_message_id),
+                                                      inline_message_id=call.inline_message_id)
                 else:
                     if int(r.hget(call.from_user.id, 'class')) == 29:
                         bot.edit_message_text(
