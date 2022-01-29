@@ -1761,6 +1761,7 @@ def handle_query(call):
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                   text='Не спіши.')
                     else:
+                        r.hset(uid1, 'timestamp', timestamp)
                         try:
                             q = cdata[1].split()
                             diff = int(q[1])
@@ -1781,7 +1782,6 @@ def handle_query(call):
                                     if timestamp - int(r.hget(uid1, 'timestamp')) < 15:
                                         pass
                                     else:
-                                        r.hset(uid1, 'timestamp', timestamp)
                                         try:
                                             q = cdata[2].split()
                                             if q[1][1:].lower() == call.from_user.username.lower():
