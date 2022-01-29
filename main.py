@@ -1779,7 +1779,7 @@ def handle_query(call):
                                 uid2 = call.from_user.id
                                 un2 = call.from_user.first_name
                                 if cdata[1] == 'tr':
-                                    if timestamp - int(r.hget(uid1, 'timestamp')) < 15:
+                                    if timestamp - float(r.hget(uid1, 'timestamp')) < 15:
                                         pass
                                     else:
                                         try:
