@@ -1056,15 +1056,19 @@ def great_war(cid1, cid2, a, b):
 def battle(message):
     if message.chat.type != 'private':
         if r.hexists('battle' + str(message.chat.id), 'start') == 0:
-            bot.delete_message(message.chat.id, message.id)
-            a = bot.send_message(message.chat.id, '\u2694 Починається битва...\n\n', reply_markup=battle_button())
-            r.hset('battle' + str(message.chat.id), 'start', a.message_id)
-            r.hset('battle' + str(message.chat.id), 'starter', message.from_user.id)
-            try:
-                bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
-                r.hset('battle' + str(message.chat.id), 'pin', a.message_id)
-            except:
-                pass
+            if r.hexists('battle' + str(message.chat.id), 'ts') == 0:
+                r.hset('battle' + str(message.chat.id), 'ts', 0)
+            if int(datetime.now().timestamp()) - int(r.hget('battle' + str(message.chat.id), 'ts')) > 5:
+                r.hset('battle' + str(message.chat.id), 'ts', int(datetime.now().timestamp()))
+                bot.delete_message(message.chat.id, message.id)
+                a = bot.send_message(message.chat.id, '\u2694 Починається битва...\n\n', reply_markup=battle_button())
+                r.hset('battle' + str(message.chat.id), 'start', a.message_id)
+                r.hset('battle' + str(message.chat.id), 'starter', message.from_user.id)
+                try:
+                    bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
+                    r.hset('battle' + str(message.chat.id), 'pin', a.message_id)
+                except:
+                    pass
         else:
             try:
                 bot.send_message(message.chat.id, '\U0001F5E1 Підготовка до битви тут\n\nКількість бійців: ' +
