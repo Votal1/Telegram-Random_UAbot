@@ -1757,7 +1757,7 @@ def handle_query(call):
         if call.from_user.id != int(uid1):
             if int(r.hget(call.from_user.id, 'hp')) > 0:
                 if int(r.hget(uid1, 'hp')) > 0:
-                    if timestamp - float(r.hget(uid1, 'timestamp')) < 0.25:
+                    if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
                         pass
                     else:
                         r.hset(uid1, 'timestamp', timestamp)
