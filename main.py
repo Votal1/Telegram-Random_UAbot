@@ -1495,15 +1495,16 @@ def upgrade(message):
                 for admin in bot.get_chat_administrators(message.chat.id):
                     admins.append(admin.user.id)
                 if int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and int(r.hget(c, 'money')) >= 120 \
-                        and message.from_user.id not in admins:
+                        and message.from_user.id not in sudoers and message.from_user.id not in admins:
                     bot.send_message(message.chat.id, '\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
                 elif int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and \
-                        int(r.hget(c, 'money')) >= 120 and message.from_user.id in admins:
-                    r.hincrby(c, 'money', -120)
-                    r.hincrby(c, 'wood', -100)
-                    r.hincrby(c, 'stone', -20)
-                    r.hset(c, 'base', 2)
-                    bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
+                        int(r.hget(c, 'money')) >= 120:
+                    if message.from_user.id in admins or message.from_user.id in sudoers:
+                        r.hincrby(c, 'money', -120)
+                        r.hincrby(c, 'wood', -100)
+                        r.hincrby(c, 'stone', -20)
+                        r.hset(c, 'base', 2)
+                        bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
     except:
         pass
 
