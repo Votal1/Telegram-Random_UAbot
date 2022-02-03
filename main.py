@@ -1963,9 +1963,10 @@ def handle_query(call):
                     bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                         message_id=call.message.id, reply_markup=battle_button_3())
-            bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не можеш брати участь в цій'
-                                                                                       ' битві, бо ти не в цьому '
-                                                                                       'клані.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не можеш брати участь в '
+                                                                                           'цій битві, бо ти не в цьому'
+                                                                                           ' клані.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти або вже в битві, або в тебе'
                                                                                        ' нема русака')
