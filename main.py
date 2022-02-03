@@ -1917,7 +1917,7 @@ def handle_query(call):
             allow = True
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
-                    if call.message.from_user.id not in r.smembers('cl' + str(call.message.chat.id)) and \
+                    if str(call.message.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)) and \
                             int(datetime.now().timestamp()) -\
                             int(r.hget('war_battle' + str(call.message.chat.id), 'war_ts')) < 300:
                         allow = False
