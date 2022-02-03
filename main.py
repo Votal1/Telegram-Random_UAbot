@@ -1919,7 +1919,7 @@ def handle_query(call):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
                     if call.message.from_user.id not in r.smembers('cl' + str(call.message.chat.id)) and \
                             int(datetime.now().timestamp()) -\
-                            int(r.hget('war_battle' + str(call.message.chat.id), 'clan_ts')) < 300:
+                            int(r.hget('war_battle' + str(call.message.chat.id), 'war_ts')) < 300:
                         allow = False
             if allow:
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
