@@ -1657,6 +1657,7 @@ def work(message):
                             resources += ' \U0001F4B5 +5'
                             r.hincrby(c, 'money', -8)
                             r.hincrby(message.from_user.id, 'money', 5)
+                            r.hincrby('soledar', 'money', 3)
                         damage_support(message.from_user.id)
                         bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                      ' попрацював на благо громади.\n' + resources)
@@ -1681,6 +1682,7 @@ def work(message):
                             resources += ' \U0001F4B5 +5'
                             r.hincrby(c, 'money', -8)
                             r.hincrby(message.from_user.id, 'money', 5)
+                            r.hincrby('soledar', 'money', 3)
                         bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                      ' попрацював на благо громади.\n' + resources)
             else:
