@@ -443,7 +443,7 @@ def shop(message):
 @bot.message_handler(commands=['passport'])
 def passport(message):
     if r.hexists(message.from_user.id, 'wins') == 1:
-        stats = r.hmget(message.from_user.id, 'wins', 'trophy', 'deaths', 'childs', 'vodka', 'opened')
+        stats = r.hmget(message.from_user.id, 'wins', 'trophy', 'deaths', 'childs', 'vodka', 'opened', 'clan')
         sk = r.hmget(message.from_user.id, 's1', 's2', 's3')
         skill = int((int(sk[0]) + int(sk[1]) + int(sk[2])) * 100 / 20)
         ac = 0
@@ -454,13 +454,16 @@ def passport(message):
                 ac += int(a)
             except:
                 pass
+        clan1 = ''
+        if len(str(stats[6])) > 5:
+            clan1 = '\n\U0001F3E0 Клан: ' + r.hget('c' + stats[6].decode(), 'title').decode()
         bot.reply_to(message, '\U0001F4DC ' + message.from_user.first_name +
                      '\n\n\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
                      '\n\U0001F3C5 Кількість трофеїв: ' + stats[1].decode() +
                      '\n\u2620\uFE0F Вбито русаків: ' + stats[2].decode() +
                      '\n\U0001F476 З`їдено немовлят: ' + stats[3].decode() +
                      '\n\u2622 Випито горілки: ' + stats[4].decode() +
-                     '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() +
+                     '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() + clan1 +
                      '\n\u26CF Скіли: ' + str(skill) + '%' +
                      '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 26)) + '%')
 
