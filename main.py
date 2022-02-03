@@ -1967,9 +1967,9 @@ def handle_query(call):
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                         message_id=call.message.id, reply_markup=battle_button_3())
             else:
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не можеш брати участь в '
-                                                                                           'цій битві, бо ти не в цьому'
-                                                                                           ' клані.')
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Ти не в цьому клані, тому зайти зможеш через 5 хвилин після'
+                                               ' початку набору.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти або вже в битві, або в тебе'
                                                                                        ' нема русака')
