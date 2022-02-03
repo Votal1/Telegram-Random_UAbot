@@ -1893,6 +1893,8 @@ def handle_query(call):
                 str(call.from_user.id).encode() not in r.smembers('fighters_2' + enemy.decode()) and \
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
+            #if int(r.hget('c' + str(call.message.chat.id), 'war')) == 1:
+            #    if call.message.from_user.id not in r.smembers('cl' + str(call.message.chat.id)):
             r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             fighters = r.scard('fighters_2' + str(call.message.chat.id))
@@ -1961,7 +1963,7 @@ def handle_query(call):
                         r.hset('c' + str(call.message.chat.id), 'base', 1,
                                {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
-                                'shop': 0, 'gulag': 0, 'dungeon': 0,
+                                'shop': 0, 'gulag': 0, 'dungeon': 0, 'salary': 0, 'war_allow': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
