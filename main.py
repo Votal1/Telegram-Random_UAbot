@@ -1112,6 +1112,8 @@ def war_battle(message):
                             r.hset('battles', int(k), message.chat.id)
                             r.hset('war_battle' + str(message.chat.id), 'enemy', int(k))
                             r.hset('war_battle' + k.decode(), 'enemy', message.chat.id)
+                            r.hset('war_battle' + str(message.chat.id), 'war_ts', int(datetime.now().timestamp()))
+                            r.hset('war_battle' + k.decode(), 'war_ts', int(datetime.now().timestamp()))
                             a = bot.send_message(message.chat.id, '\u2694 Починається міжчатова битва проти ' +
                                                  r.hget('war_battle' + k.decode(), 'title').decode() + '...\n\n',
                                                  reply_markup=battle_button_3())
@@ -1538,11 +1540,19 @@ def clan_settings(message):
         pass
     if message.from_user.id == int(r.hget(c, 'leader')) or message.from_user.id in sudoers:
         if int(r.hget(c, 'allow')) == 0:
-            allow = '\nВ клан може приєднатись кожен бажаючий.'
+            allow = '\n\nВ клан може приєднатись кожен бажаючий.'
         else:
-            allow = '\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
+            allow = '\n\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
+        if int(r.hget(c, 'war_allow')) == 0:
+            allow2 = '\n\nВ міжчатову битву може зайти кожен бажаючий.'
+        else:
+            allow2 = '\n\nВ міжчатову битву в перші 5 хвилин може зайти тільки учасник клану.'
+        if int(r.hget(c, 'salary')) == 0:
+            salary = '\n\nЗа роботу не видається зарплата з кланових ресурсів.'
+        else:
+            salary = '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
         bot.send_message(message.from_user.id, 'Які налаштування бажаєте змінити?\n\nНазва: ' +
-                         r.hget(c, 'title').decode() + allow, reply_markup=clan_set())
+                         r.hget(c, 'title').decode() + allow + allow2 + salary, reply_markup=clan_set())
 
 
 @bot.message_handler(commands=['join'])
@@ -1640,6 +1650,10 @@ def work(message):
                             ran = randint(1, 5)
                             resources += '\U0001faa8 +' + str(ran)
                             r.hincrby(c, 'stone', ran)
+                        if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 8:
+                            resources += ' \U0001F4B5 +5'
+                            r.hincrby(c, 'money', -8)
+                            r.hincrby(message.from_user.id, 'money', 5)
                         damage_support(message.from_user.id)
                         bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                      ' попрацював на благо громади.\n' + resources)
@@ -1660,6 +1674,10 @@ def work(message):
                             ran = randint(2, 5)
                             resources += ' \U0001F9F6 +' + str(ran)
                             r.hincrby(c, 'cloth', ran)
+                        if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 8:
+                            resources += ' \U0001F4B5 +5'
+                            r.hincrby(c, 'money', -8)
+                            r.hincrby(message.from_user.id, 'money', 5)
                         bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                      ' попрацював на благо громади.\n' + resources)
             else:
@@ -1893,52 +1911,61 @@ def handle_query(call):
                 str(call.from_user.id).encode() not in r.smembers('fighters_2' + enemy.decode()) and \
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
-            #if int(r.hget('c' + str(call.message.chat.id), 'war')) == 1:
-            #    if call.message.from_user.id not in r.smembers('cl' + str(call.message.chat.id)):
-            r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
-            r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-            fighters = r.scard('fighters_2' + str(call.message.chat.id))
-            fighters2 = r.scard('fighters_2' + enemy.decode())
-            if fighters == 1:
-                bot.edit_message_text(
-                    text=call.message.text + '\n\nБійці: ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                    message_id=call.message.id, reply_markup=battle_button_3())
-            elif fighters >= 5 and fighters2 < 5:
-                bot.edit_message_text(
-                    text=call.message.text + ', ' + call.from_user.first_name + '\n\nЧекаємо поки інший чат набере'
-                                                                                ' 5 бійців...',
-                    chat_id=call.message.chat.id, message_id=call.message.id)
-            elif fighters >= 5 and fighters2 >= 5:
-                bot.edit_message_text(
-                    text=call.message.text + '\n\nБій почався...',
-                    chat_id=call.message.chat.id, message_id=call.message.id)
-                a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
-                b = list(r.smembers('fighters_2' + enemy.decode()))
-                msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
-                      r.hget('war_battle' + str(call.message.chat.id), 'title').decode() + ' | ' + \
-                      r.hget('war_battle' + enemy.decode(), 'title').decode() + \
-                      '\n1. ' + r.hget(a[0], 'firstname').decode() + ' | ' + r.hget(b[0], 'firstname').decode() + \
-                      '\n2. ' + r.hget(a[1], 'firstname').decode() + ' | ' + r.hget(b[1], 'firstname').decode() + \
-                      '\n3. ' + r.hget(a[2], 'firstname').decode() + ' | ' + r.hget(b[2], 'firstname').decode() + \
-                      '\n4. ' + r.hget(a[3], 'firstname').decode() + ' | ' + r.hget(b[3], 'firstname').decode() + \
-                      '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + r.hget(b[4], 'firstname').decode()
-                bot.send_message(int(call.message.chat.id), msg)
-                bot.send_message(int(enemy), msg)
-                great_war(call.message.chat.id, int(enemy), a, b)
-                try:
-                    bot.unpin_chat_message(chat_id=call.message.chat.id,
-                                           message_id=int(r.hget('war_battle' + str(call.message.chat.id), 'pin')))
-                except:
-                    pass
-                try:
-                    bot.unpin_chat_message(chat_id=int(enemy),
-                                           message_id=int(r.hget('war_battle' + enemy.decode(), 'pin')))
-                except:
-                    pass
-            else:
-                bot.edit_message_text(
-                    text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                    message_id=call.message.id, reply_markup=battle_button_3())
+            allow = True
+            if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
+                if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
+                    if call.message.from_user.id not in r.smembers('cl' + str(call.message.chat.id)) and \
+                            int(datetime.now().timestamp()) -\
+                            int(r.hget('war_battle' + str(call.message.chat.id), 'clan_ts')) < 300:
+                        allow = False
+            if allow:
+                r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
+                r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
+                fighters = r.scard('fighters_2' + str(call.message.chat.id))
+                fighters2 = r.scard('fighters_2' + enemy.decode())
+                if fighters == 1:
+                    bot.edit_message_text(
+                        text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
+                        chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_3())
+                elif fighters >= 5 and fighters2 < 5:
+                    bot.edit_message_text(
+                        text=call.message.text + ', ' + call.from_user.first_name + '\n\nЧекаємо поки інший чат набере'
+                                                                                    ' 5 бійців...',
+                        chat_id=call.message.chat.id, message_id=call.message.id)
+                elif fighters >= 5 and fighters2 >= 5:
+                    bot.edit_message_text(
+                        text=call.message.text + '\n\nБій почався...',
+                        chat_id=call.message.chat.id, message_id=call.message.id)
+                    a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
+                    b = list(r.smembers('fighters_2' + enemy.decode()))
+                    msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
+                          r.hget('war_battle' + str(call.message.chat.id), 'title').decode() + ' | ' + \
+                          r.hget('war_battle' + enemy.decode(), 'title').decode() + \
+                          '\n1. ' + r.hget(a[0], 'firstname').decode() + ' | ' + r.hget(b[0], 'firstname').decode() + \
+                          '\n2. ' + r.hget(a[1], 'firstname').decode() + ' | ' + r.hget(b[1], 'firstname').decode() + \
+                          '\n3. ' + r.hget(a[2], 'firstname').decode() + ' | ' + r.hget(b[2], 'firstname').decode() + \
+                          '\n4. ' + r.hget(a[3], 'firstname').decode() + ' | ' + r.hget(b[3], 'firstname').decode() + \
+                          '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + r.hget(b[4], 'firstname').decode()
+                    bot.send_message(int(call.message.chat.id), msg)
+                    bot.send_message(int(enemy), msg)
+                    great_war(call.message.chat.id, int(enemy), a, b)
+                    try:
+                        bot.unpin_chat_message(chat_id=call.message.chat.id,
+                                               message_id=int(r.hget('war_battle' + str(call.message.chat.id), 'pin')))
+                    except:
+                        pass
+                    try:
+                        bot.unpin_chat_message(chat_id=int(enemy),
+                                               message_id=int(r.hget('war_battle' + enemy.decode(), 'pin')))
+                    except:
+                        pass
+                else:
+                    bot.edit_message_text(
+                        text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
+                        message_id=call.message.id, reply_markup=battle_button_3())
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не можеш брати участь в цій'
+                                                                                       ' битві, бо ти не в цьому '
+                                                                                       'клані.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти або вже в битві, або в тебе'
                                                                                        ' нема русака')
@@ -2047,6 +2074,26 @@ def handle_query(call):
                 r.hset('c' + str(c), 'allow', 0)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Режим набору змінено.')
+
+    elif call.data.startswith('toggle_war'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+            if int(r.hget('c' + str(c), 'war_allow')) == 0:
+                r.hset('c' + str(c), 'war_allow', 1)
+            else:
+                r.hset('c' + str(c), 'war_allow', 0)
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Режим входу в міжчатові битви змінено.')
+
+    elif call.data.startswith('salary'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+            if int(r.hget('c' + str(c), 'salary')) == 0:
+                r.hset('c' + str(c), 'salary', 1)
+            else:
+                r.hset('c' + str(c), 'salary', 0)
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Режим видачі зарплати за роботу змінено.')
 
     elif call.data.startswith('get_members'):
         if call.from_user.id == int(r.hget('c' + r.hget(call.from_user.id, 'clan').decode(), 'leader')) or \
