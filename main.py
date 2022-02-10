@@ -1476,7 +1476,7 @@ def clan(message):
                                                                'трохи грошей.\n\U0001F4B5 +10')
                         r.hincrby(message.from_user.id, 'money', 10)
                         r.hincrby(c, 'money', -10)
-                    elif ran == 2:
+                    elif ran == 1:
                         bot.send_message(message.from_user.id, 'Агент непомітно забрав собі кілька гривень.'
                                                                'грошей.\n\U0001F4B5 +5')
                         r.hincrby(message.from_user.id, 'money', 5)
