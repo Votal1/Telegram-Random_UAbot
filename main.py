@@ -44,7 +44,7 @@ def handle_links(message):
                           "@ukrnastup - осередок сучасного українського націоналізму\n"
                           "@golovkaothuya - крінж і шітпост, рекомендую\n@digital_anon - подкасти\n"
                           "@archive_st - брендові стікери\n"
-                          "@vota_l - завдяки ньому ти натиснув цю кнопку")
+                          "@vota_l - завдяки ньому ти натиснув цю кнопку", disable_notification=True)
 
 
 @bot.message_handler(commands=['toggle_admin'])
