@@ -43,8 +43,9 @@ def handle_links(message):
                           "@borykva - осередок цебулізму\n"
                           "@ukrnastup - осередок сучасного українського націоналізму\n"
                           "@golovkaothuya - крінж і шітпост, рекомендую\n@digital_anon - подкасти\n"
-                          "@archive_st - брендові стікери\n"
-                          "@vota_l - завдяки ньому ти натиснув цю кнопку", disable_notification=True)
+                          "@archive_st - брендові стікери\n" +
+                          f'<a href="tg://user?id={456514639}">{"@vota_l"}</a>' +
+                          " - завдяки ньому ти натиснув цю кнопку", disable_notification=True, parse_mode='HTML')
 
 
 @bot.message_handler(commands=['toggle_admin'])
