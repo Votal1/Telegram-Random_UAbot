@@ -270,7 +270,7 @@ def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' припинив ворогу кровотечу.\n\U0001fa78 -10 \U0001fac0 -10'
             damage_weapon(uid2, 19, c2)
 
-        elif weapon2 == 2 and defense1 != 2 and t == 1:
+        if weapon2 == 2 and defense1 != 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
             r.hincrby(uid1, 'injure', 300)
             r.hset(uid1, 'spirit', 0)
