@@ -37,15 +37,15 @@ def handle_help(message):
 
 @bot.message_handler(commands=['links'])
 def handle_links(message):
-    bot.reply_to(message, "@soledar1 - місце, де збираються люди з усіх куточків України, "
-                          "щоб похизуватись своїми бойовими русаками!\n"
-                          "@randomuanews - новини, патчноути, опитування\n\n"
-                          "@borykva - осередок цебулізму\n"
-                          "@ukrnastup - осередок сучасного українського націоналізму\n"
-                          "@golovkaothuya - крінж і шітпост, рекомендую\n@digital_anon - подкасти\n"
-                          "@archive_st - брендові стікери\n" +
-                          f'<a href="tg://user?id={456514639}">{"@vota_l"}</a>' +
-                          " - завдяки ньому ти натиснув цю кнопку", disable_notification=True, parse_mode='HTML')
+    bot.reply_to(message, '@soledar1 - місце, де збираються люди з усіх куточків України, '
+                          'щоб похизуватись своїми бойовими русаками!\n'
+                          '@randomuanews - новини, патчноути, опитування\n\n'
+                          '@borykva - осередок цебулізму\n'
+                          '@ukrnastup - осередок сучасного українського націоналізму\n'
+                          '@golovkaothuya - крінж і шітпост, рекомендую\n@digital_anon - подкасти\n'
+                          '@archive_st - брендові стікери\n'
+                          '<a href="https://t.me/vota_l">@vota_l</a> - завдяки ньому ти натиснув цю кнопку',
+                 parse_mode='HTML', disable_web_page_preview=True)
 
 
 @bot.message_handler(commands=['toggle_admin'])
