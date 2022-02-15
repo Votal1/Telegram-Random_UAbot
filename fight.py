@@ -385,6 +385,11 @@ def fight(uid1, uid2, un1, un2, t, mid):
                 magic = 33
             s2 = int(s2 * (1 + magic / 100))
 
+        if c1 == 4 or c1 == 14 or c1 == 24:
+            bd1 = bd1 * 2
+        if c2 == 4 or c2 == 14 or c2 == 24:
+            bd2 = bd2 * 2
+
         if c1 == 14 or c1 == 24:
             if c2 == 1 or c2 == 11 or c2 == 21:
                 bd1 = bd1 * 2

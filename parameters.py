@@ -13,8 +13,8 @@ def spirit(value, uid, c, fi):
                 r.hincrby(uid, 'spirit', int(value / 2))
             else:
                 r.hincrby(uid, 'spirit', value * 3)
-            if int(r.hget(uid, 'spirit')) > 20000:
-                r.hset(uid, 'spirit', 20000)
+            if int(r.hget(uid, 'spirit')) > 10000:
+                r.hset(uid, 'spirit', 10000)
         else:
             r.hincrby(uid, 'spirit', value)
             if int(r.hget(uid, 'spirit')) > 10000:
