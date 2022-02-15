@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, damage_support
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3,\
-    invent, unpack, create_clan, clan_set, invite, buy_tools, buildings
+    invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
 
@@ -1524,13 +1524,25 @@ def build(message):
         if message.from_user.id in admins:
             if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
                 c = 'c' + str(message.chat.id)
-                base = int(r.hget(c, 'base'))
-                if base == 2:
-                    bot.reply_to(message, '\U0001F3D7 Для подальшого розвитку клану потрібно збудувати:\n\nПилорама '
-                                          '(\U0001F4B5 200) - \U0001F333 5-15 від роботи\nШахта (\U0001F4B5 300) -'
-                                          ' \U0001faa8 2-10 від роботи\nЦех (\U0001F333 300, \U0001faa8 200, '
-                                          '\U0001F4B5 100) - \U0001F9F6 2-5 від роботи\nСклад (\U0001F333 200, '
-                                          '\U0001faa8 100) - доступ до всіх видів ресурсів.', reply_markup=buildings())
+                if int(r.hget(c, 'base')) == 2:
+                    msg = '\U0001F3D7 Для подальшого розвитку клану потрібно збудувати:\n'
+                    markup = types.InlineKeyboardMarkup()
+                    if int(r.hget(c, 'sawmill')) == 0:
+                        markup.add(
+                            types.InlineKeyboardButton(text='Побудувати пилораму', callback_data='build_sawmill'))
+                        msg += '\nПилорама (\U0001F4B5 200) - \U0001F333 5-15 від роботи'
+                    if int(r.hget(c, 'mine')) == 0:
+                        markup.add(types.InlineKeyboardButton(text='Побудувати шахту', callback_data='build_mine'))
+                        msg += '\nШахта (\U0001F4B5 300) - \U0001faa8 2-10 від роботи'
+                    if int(r.hget(c, 'craft')) == 0:
+                        markup.add(types.InlineKeyboardButton(text='Побудувати цех', callback_data='build_craft'))
+                        msg += '\nЦех (\U0001F333 300, \U0001faa8 200, \U0001F4B5 100) - \U0001F9F6 2-5 від роботи'
+                    if int(r.hget(c, 'storage')) == 0:
+                        markup.add(types.InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
+                        msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
+                    if len(markup.keyboard) == 0:
+                        msg = '\U0001F3D7 Більше нічого будувати...'
+                    bot.reply_to(message, msg, reply_markup=markup)
     except:
         pass
 

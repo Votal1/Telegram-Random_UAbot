@@ -112,14 +112,3 @@ def clan_set():
     for key, value in items.items():
         markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
     return markup
-
-
-def buildings():
-    markup = types.InlineKeyboardMarkup()
-    items = {'Побудувати пилораму': 'build_sawmill',
-             'Побудувати шахту': 'build_mine',
-             'Побудувати цех': 'build_craft',
-             'Побудувати склад': 'build_storage'}
-    for key, value in items.items():
-        markup.add(types.InlineKeyboardButton(text=key, callback_data=value))
-    return markup
