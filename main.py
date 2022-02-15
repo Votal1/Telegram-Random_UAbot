@@ -601,7 +601,8 @@ def classes_3(message):
                               'алкоголізму.\n\n'
                               'Некромант \U0001F52E\U0001F52E\U0001F52E - при захисті збільшує інтелект на 5% за кожну'
                               ' смерть (максимум 35%). При атаці збільшує силу на 3% за кожну смерть ворога '
-                              '(максимум 33%).\n\n'
+                              '(максимум 33%). Якщо у ворога 0 хп - лікує його на 10 і збільнує свій \U0001F44A '
+                              'бойовий транс на 5.\n\n'
                               'Білий вождь \U0001F5FF\U0001F5FF\U0001F5FF - збільшує бойовий дух на 1% за кожен трофей '
                               '(максимум 50%). Якщо весь загін міжчатової битви з одного клану - збільшує загальну силу'
                               ' на 25% і додає кожному 250 бойового духу.\n\n'
@@ -1855,6 +1856,14 @@ def handle_query(call):
                             inline_message_id=call.inline_message_id)
                         hp(20, uid1)
                         r.hincrby(call.from_user.id, 'money', 5)
+                    elif int(r.hget(call.from_user.id, 'class')) == 23:
+                        bot.edit_message_text(
+                            text='\U0001F52E ' + call.from_user.first_name + ' Некромант проводить дивні ритуали над '
+                                                                             'напівживим русаком...'
+                                                                             '\n\U0001fac0 +10 \U0001F44A +5',
+                            inline_message_id=call.inline_message_id)
+                        hp(10, uid1)
+                        r.hincrby(call.from_user.id, 'buff', 5)
                     else:
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                   text='\U0001fac0 Зараз цей русак не може битись.')
