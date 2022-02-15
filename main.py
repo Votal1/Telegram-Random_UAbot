@@ -930,7 +930,7 @@ def war(cid, location, big_battle):
 
 
 def war_power(sett, cid):
-    chance, clan5, m = 0, 0, 0
+    chance, clan5, m, pag = 0, 0, 0, 0
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -958,12 +958,21 @@ def war_power(sett, cid):
                 d = 1
             if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
                 m = 1
+            if int(stats[7]) == 24:
+                pag = 1
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
             chance += chance
         except:
             continue
     if m == 1:
         chance = chance * 2
+    if pag == 1 and clan5 == 5:
+        chance = chance * 25
+        for member in sett:
+            try:
+                spirit(250, int(member), 0, False)
+            except:
+                pass
     return chance, clan5
 
 
