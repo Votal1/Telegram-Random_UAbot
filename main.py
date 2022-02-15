@@ -967,7 +967,7 @@ def war_power(sett, cid):
     if m == 1:
         chance = chance * 2
     if pag == 1 and clan5 == 5:
-        chance = chance * 25
+        chance = chance * 1.25
         for member in sett:
             try:
                 spirit(250, int(member), 0, False)
