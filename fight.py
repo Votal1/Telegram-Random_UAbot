@@ -393,9 +393,9 @@ def fight(uid1, uid2, un1, un2, t, mid):
         if c1 == 14 or c1 == 24:
             if c2 == 1 or c2 == 11 or c2 == 21:
                 bd1 = bd1 * 2
+            if int(r.hget(uid1, 'trophy')) > int(r.hget(uid2, 'trophy')):
+                s1 = int(s1 * 1.2)
             if c1 == 24:
-                if int(r.hget(uid1, 'trophy')) > int(r.hget(uid2, 'trophy')):
-                    s1 = int(s1 * 1.2)
                 white = int(r.hget(uid1, 'trophy'))
                 if white > 50:
                     white = 50
@@ -404,9 +404,9 @@ def fight(uid1, uid2, un1, un2, t, mid):
         if c2 == 14 or c2 == 24:
             if c1 == 1 or c1 == 11 or c1 == 21:
                 bd2 = bd2 * 2
+            if int(r.hget(uid2, 'trophy')) > int(r.hget(uid1, 'trophy')):
+                s2 = int(s2 * 1.2)
             if c2 == 24:
-                if int(r.hget(uid2, 'trophy')) > int(r.hget(uid1, 'trophy')):
-                    s2 = int(s2 * 1.2)
                 white = int(r.hget(uid2, 'trophy'))
                 if white > 50:
                     white = 50
