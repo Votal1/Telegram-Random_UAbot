@@ -929,17 +929,15 @@ def war(cid, location, big_battle):
                      + ' перемагає!' + reward + class_reward, parse_mode='HTML')
 
 
-def great_war(cid1, cid2, a, b):
-    sleep(2)
-    ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, chance2, m1, m2, clan1, clan2 = 0, 0, 0, 0, 0, 0
-    for member in a:
+def war_power(sett, cid):
+    chance, clan5, m = 0, 0, 0
+    for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
                             'clan')
             if len(str(stats[8])) >= 5:
-                if int(stats[8]) == cid1:
-                    clan1 += 1
+                if int(stats[8]) == cid:
+                    clan5 += 1
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -959,45 +957,21 @@ def great_war(cid1, cid2, a, b):
             else:
                 d = 1
             if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
-                m1 = 1
+                m = 1
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
-            chance1 += chance
+            chance += chance
         except:
             continue
-    if m1 == 1:
-        chance1 = chance1 * 2
-    for member in b:
-        try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'clan')
-            if len(str(stats[8])) >= 5:
-                if int(stats[8]) == cid2:
-                    clan2 += 1
-            s = int(stats[0])
-            i = int(stats[1])
-            bd = int(stats[2])
-            if int(stats[5]) > 0:
-                s, bd = injure(int(member), s, bd, True)
-            if int(stats[6]) > 0:
-                i, bd = schizophrenia(int(member), i, bd, True)
-            w = int(stats[3])
-            if w > 0:
-                w = 1.5
-            else:
-                w = 1
-            d = int(stats[4])
-            if d > 0:
-                d = 1.5
-            else:
-                d = 1
-            if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
-                m2 = 1
-            chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
-            chance2 += chance
-        except:
-            continue
-    if m2 == 1:
-        chance2 = chance2 * 2
+    if m == 1:
+        chance = chance * 2
+    return chance, clan5
+
+
+def great_war(cid1, cid2, a, b):
+    sleep(2)
+    ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
+    chance1, clan1 = war_power(a, cid1)
+    chance2, clan2 = war_power(b, cid2)
 
     bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
                      + str(int(chance1)) + ' | ' + str(int(chance2)))
