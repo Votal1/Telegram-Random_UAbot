@@ -274,7 +274,7 @@ def feed(message):
                     intellect(1, message.from_user.id)
                 if fr[3] == 1:
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
-                    spirit(1000, message.from_user.id, int(r.hget(message.from_user.id, 'class')), False)
+                    spirit(1000, message.from_user.id, 0)
                     bot.send_photo(message.chat.id, photo='https://i.ibb.co/bK2LrSD/feed.jpg',
                                    caption=msg, reply_to_message_id=message.id)
                 else:
@@ -531,7 +531,7 @@ def classes(message):
                               ' але вдвічі більший шанс забухати (п`є в 5 раз більше). \n\n'
                               'Фокусник \U0001F52E - моментально додає 1 інтелекту. 80% шанс ігнорувати дрин ворога '
                               'і навести на нього шизофренію, перед початком бою показує випадкові характеристики.\n\n'
-                              'Язичник \U0001F5FF - вдвічі збільшує максимальний бойовий дух. При перемозі отримує'
+                              'Язичник \U0001F5FF - вдвічі збільшує бойовий дух в дуелях. При перемозі отримує'
                               ' втричі більше бойового духу, але при поразці вдвічі більше втрачає.\n\n'
                               'Гарматне м`ясо \U0001fa96 - +50% сили в бою, якщо є АК-47 (зброя, яку можна придбати в '
                               'мандрівного торговця). 1% шанс отримати поранення в бою від АК-47 (втрачає весь бойовий'
@@ -862,7 +862,7 @@ def war(cid, location, big_battle):
 
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
-            spirit(3000, win, wc, False)
+            spirit(3000, win, 0)
             r.hincrby(win, 'money', 5)
             class_reward = '\U0001F919: \U0001F4B5 +5 \U0001F54A +3000'
     elif location == 'Битва на покинутому заводі':
@@ -875,12 +875,12 @@ def war(cid, location, big_battle):
             class_reward = '\U0001F52E: \U0001F54A +2000\n\U0001F54A -1000 всім іншим учасникам битви.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
-                spirit(-1000, member, int(r.hget(member, 'class')), False)
-            spirit(2000, win, wc, False)
+                spirit(-1000, member, 0)
+            spirit(2000, win, 0)
     elif location == 'Битва біля старого дуба':
         if wc == 4 or wc == 14 or wc == 24:
             class_reward = '\U0001F5FF: \U0001F54A +10000'
-            spirit(10000, win, wc, False)
+            spirit(10000, win, 0)
     elif location == 'Битва в житловому районі':
         if wc == 5 or wc == 15 or wc == 25:
             class_reward = '\U0001fa96: \u2622 +15'
@@ -970,7 +970,7 @@ def war_power(sett, cid):
         chance = chance * 1.25
         for member in sett:
             try:
-                spirit(250, int(member), 0, False)
+                spirit(250, int(member), 0)
             except:
                 pass
     return chance, clan5
@@ -2191,7 +2191,7 @@ def handle_query(call):
         r.hset(call.from_user.id, 'photo', 0)
         r.hset(call.from_user.id, 'mushrooms', 0)
         r.hset(call.from_user.id, 'spirit', 0)
-        spirit(5 * int(r.hget(call.from_user.id, 'strength')), call.from_user.id, 0, False)
+        spirit(5 * int(r.hget(call.from_user.id, 'strength')), call.from_user.id, 0)
         r.hset(call.from_user.id, 'strength', 0)
         r.hset(call.from_user.id, 'class', 0)
         r.hset(call.from_user.id, 'intellect', 0)
@@ -2363,10 +2363,9 @@ def handle_query(call):
     elif call.data.startswith('vodka'):
         if int(r.hget(call.from_user.id, 'money')) >= 2:
             r.hincrby(call.from_user.id, 'money', -2)
-            cl = int(r.hget(call.from_user.id, 'class'))
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
-                                           vodka(call.from_user.id, cl))
+                                           vodka(call.from_user.id))
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Недостатньо коштів на рахунку')
@@ -2474,7 +2473,7 @@ def handle_query(call):
         if int(r.hget(call.from_user.id, 'woman')) == 1:
             r.hset(call.from_user.id, 'woman', 0)
             r.hset(call.from_user.id, 'time5', 0)
-            spirit(5000, call.from_user.id, int(r.hget(call.from_user.id, 'class')), False)
+            spirit(5000, call.from_user.id, 0)
             r.hincrby(call.from_user.id, 'deaths', 5)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно проміняли жінку на тютюн та люльку.\nНеобачний.')
@@ -2977,7 +2976,7 @@ def handle_query(call):
                 r.hincrby(uid, 'vodka', 20)
                 vo = 0
                 for v in range(20):
-                    vo += int(vodka(uid, cl))
+                    vo += int(vodka(uid))
                 bot.edit_message_text('\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 \U0001F54A +' +
                                       str(vo), call.message.chat.id, call.message.id)
             elif ran == [8]:

@@ -2,40 +2,21 @@ from random import randint
 from config import r
 
 
-def spirit(value, uid, c, fi):
-    if fi is True:
-        if c == 4 or c == 14 or c == 24:
-            if value < 0 and c == 4:
-                r.hincrby(uid, 'spirit', value * 2)
-            elif value < 0 and c == 14:
-                r.hincrby(uid, 'spirit', value)
-            elif value < 0 and c == 24:
-                r.hincrby(uid, 'spirit', int(value / 2))
-            else:
-                r.hincrby(uid, 'spirit', value * 3)
-            if int(r.hget(uid, 'spirit')) > 10000:
-                r.hset(uid, 'spirit', 10000)
-        else:
-            r.hincrby(uid, 'spirit', value)
-            if int(r.hget(uid, 'spirit')) > 10000:
-                r.hset(uid, 'spirit', 10000)
-        if int(r.hget(uid, 'spirit')) < 0:
-            r.hset(uid, 'spirit', 0)
-    elif fi is False:
+def spirit(value, uid, c):
+    if c == 4 or c == 14 or c == 24:
+        r.hincrby(uid, 'spirit', value * 3)
+    else:
         r.hincrby(uid, 'spirit', value)
-        if c == 4 or c == 14 or c == 24:
-            if int(r.hget(uid, 'spirit')) > 20000:
-                r.hset(uid, 'spirit', 20000)
-        elif int(r.hget(uid, 'spirit')) > 10000:
-            r.hset(uid, 'spirit', 10000)
-        if int(r.hget(uid, 'spirit')) < 0:
-            r.hset(uid, 'spirit', 0)
+    if int(r.hget(uid, 'spirit')) > 10000:
+        r.hset(uid, 'spirit', 10000)
+    if int(r.hget(uid, 'spirit')) < 0:
+        r.hset(uid, 'spirit', 0)
 
 
-def vodka(uid, cl):
+def vodka(uid):
     ran = randint(10, 70)
     increase = ran * int(r.hget(uid, 's1'))
-    spirit(increase, uid, cl, False)
+    spirit(increase, uid, 0)
     r.hincrby(uid, 'vodka', 1)
     return str(increase)
 
