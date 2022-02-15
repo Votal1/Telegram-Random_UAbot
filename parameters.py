@@ -44,6 +44,12 @@ def schizophrenia(uid, i, bd, fi):
     return int(i * (1 / 3)), int(bd * (1 / 2))
 
 
+def trance(uid, s, bd, fi):
+    if fi:
+        r.hincrby(uid, 'buff', -1)
+    return int(s * 1.2), int(bd * 1.8)
+
+
 def hp(value, uid):
     if value > 0:
         r.hincrby(uid, 'hp', value)

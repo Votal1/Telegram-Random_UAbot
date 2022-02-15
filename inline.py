@@ -1,7 +1,7 @@
 from random import randint, choice, uniform, randrange, sample
 from config import r
 from variables import names, icons
-from parameters import injure, schizophrenia
+from parameters import injure, schizophrenia, trance
 
 
 def prepare_to_fight(uid, fn, q):
@@ -21,6 +21,8 @@ def prepare_to_fight(uid, fn, q):
             s, bd = injure(uid, s, bd, False)
         if int(r.hget(uid, 'sch')) > 0:
             i, bd = schizophrenia(uid, i, bd, False)
+        if int(r.hget(uid, 'buff')) > 0:
+            s, bd = trance(uid, s, bd, False)
 
         if c == 3:
             s = randint(10, 1000)

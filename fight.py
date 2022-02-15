@@ -3,7 +3,7 @@ from datetime import datetime
 from time import sleep
 
 from config import r, bot
-from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, \
+from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support
 from variables import names, icons, p7
 
@@ -188,6 +188,14 @@ def fight(uid1, uid2, un1, un2, t, mid):
         if int(r.hget(uid2, 'sch')) > 0:
             i2, bd2 = schizophrenia(uid2, i2, bd2, True)
             inj2 += '\U0001F464 '
+        if int(r.hget(uid1, 'buff')) > 0:
+            s1, bd1 = trance(uid1, s1, bd1, True)
+            s11 = s1
+            inj1 = '\U0001F44A '
+        if int(r.hget(uid2, 'buff')) > 0:
+            s2, bd2 = trance(uid2, s2, bd2, True)
+            s22 = s2
+            inj2 = '\U0001F44A '
 
         if weapon2 == 11:
             s1 = int(s1 / 2)

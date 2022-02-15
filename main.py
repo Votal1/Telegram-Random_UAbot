@@ -11,7 +11,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, injure, schizophrenia, hp, damage_support
+from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, damage_support
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3,\
     invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
@@ -210,11 +210,14 @@ def my_rusak(message):
                 r_photo = 'https://i.ibb.co/rGd7L5n/rusnya.jpg'
         except:
             r_photo = r.hget(message.from_user.id, 'photo').decode()
-        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch')
+        stats = r.hmget(message.from_user.id, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp',
+                        'sch', 'buff')
         if int(stats[3]) > 0:
             inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
         if int(stats[6]) > 0:
             inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
+        if int(stats[7]) > 0:
+            inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
         if int(stats[4]) > 0:
             ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
@@ -799,7 +802,7 @@ def war(cid, location, big_battle):
     fighters = {}
     for member in everyone:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'buff')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -807,6 +810,8 @@ def war(cid, location, big_battle):
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
                 i, bd = schizophrenia(int(member), i, bd, True)
+            if int(stats[7]) > 0:
+                s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
             if w > 0:
                 w = 1.5
@@ -863,8 +868,8 @@ def war(cid, location, big_battle):
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
             spirit(3000, win, 0)
-            r.hincrby(win, 'money', 5)
-            class_reward = '\U0001F919: \U0001F4B5 +5 \U0001F54A +3000'
+            r.hincrby(win, 'buff', 5)
+            class_reward = '\U0001F919: \U0001F44A +5 \U0001F54A +3000'
     elif location == 'Битва на покинутому заводі':
         if wc == 2 or wc == 12 or wc == 22:
             class_reward = '\U0001F9F0: \U0001F4B5 +5 \u2622 +10'
@@ -934,7 +939,7 @@ def war_power(sett, cid):
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'clan')
+                            'clan', 'buff')
             if len(str(stats[8])) >= 5:
                 if int(stats[8]) == cid:
                     clan5 += 1
@@ -945,6 +950,8 @@ def war_power(sett, cid):
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
                 i, bd = schizophrenia(int(member), i, bd, True)
+            if int(stats[9]) > 0:
+                s, bd = trance(int(member), s, bd, True)
 
             w = int(stats[3])
             if w > 0:
@@ -1735,6 +1742,7 @@ def handle_query(call):
             r.hset(call.from_user.id, 'mushrooms', 0)
             r.hset(call.from_user.id, 'injure', 0)
             r.hset(call.from_user.id, 'sch', 0)
+            r.hset(call.from_user.id, 'buff', 0)
             r.hset(call.from_user.id, 'hp', 100)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
