@@ -969,8 +969,7 @@ def war_power(sett, cid):
                 m = 1
             if int(stats[7]) == 24:
                 pag = 1
-            chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
-            chance += chance
+            chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
         except:
             continue
     if m == 1:
