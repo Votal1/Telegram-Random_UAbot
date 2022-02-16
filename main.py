@@ -1470,8 +1470,12 @@ def clan(message):
                         building += ', склад'
                         resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode() + \
                                      '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
+                        if base >= 3:
+                            resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
                     if int(r.hget(c, 'complex')) == 1:
                         building += ', житловий комплекс'
+                    if int(r.hget(c, 'silicate')) == 1:
+                        building += ', силікатний завод'
                     bot.send_message(message.chat.id, '<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
@@ -1559,13 +1563,13 @@ def build(message):
                     if int(r.hget(c, 'sawmill')) == 0:
                         markup.add(
                             types.InlineKeyboardButton(text='Побудувати пилораму', callback_data='build_sawmill'))
-                        msg += '\nПилорама (\U0001F4B5 200) - \U0001F333 5-15 від роботи'
+                        msg += '\nПилорама (\U0001F4B5 200) - \U0001F333 5-15 від роботи.'
                     if int(r.hget(c, 'mine')) == 0:
                         markup.add(types.InlineKeyboardButton(text='Побудувати шахту', callback_data='build_mine'))
-                        msg += '\nШахта (\U0001F4B5 300) - \U0001faa8 2-10 від роботи'
+                        msg += '\nШахта (\U0001F4B5 300) - \U0001faa8 2-10 від роботи.'
                     if int(r.hget(c, 'craft')) == 0:
                         markup.add(types.InlineKeyboardButton(text='Побудувати цех', callback_data='build_craft'))
-                        msg += '\nЦех (\U0001F333 300, \U0001faa8 200, \U0001F4B5 100) - \U0001F9F6 2-5 від роботи'
+                        msg += '\nЦех (\U0001F333 300, \U0001faa8 200, \U0001F4B5 100) - \U0001F9F6 2-5 від роботи.'
                     if int(r.hget(c, 'storage')) == 0:
                         markup.add(types.InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
                         msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
@@ -1575,6 +1579,11 @@ def build(message):
                                                                   callback_data='build_complex'))
                             msg += '\nЖитловий комплекс (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 1000, ' \
                                    '\U0001F4B5 1000) - розширення максимальної кількості учасників з 25 до 50.'
+                        if int(r.hget(c, 'silicate')) == 0:
+                            markup.add(types.InlineKeyboardButton(text='Побудувати силікатний завод',
+                                                                  callback_data='build_silicate'))
+                            msg += '\nСилікатний завод (\U0001F333 1050, \U0001faa8 750, \U0001F9F6 200, ' \
+                                   '\U0001F4B5 2000) - \U0001F9F1 1-3 від роботи.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
@@ -1731,6 +1740,10 @@ def work(message):
                             ran = randint(2, 5)
                             resources += ' \U0001F9F6 +' + str(ran)
                             r.hincrby(c, 'cloth', ran)
+                        if int(r.hget(c, 'silicate')) == 1:
+                            ran = randint(1, 3)
+                            resources += ' \U0001F9F1 +' + str(ran)
+                            r.hincrby(c, 'brick', ran)
                         if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 8:
                             resources += ' \U0001F4B5 +5'
                             r.hincrby(c, 'money', -8)
@@ -2233,6 +2246,20 @@ def handle_query(call):
                 r.hincrby(c, 'money', -1000)
                 r.hset(c, 'complex', 1)
                 bot.send_message(call.message.chat.id, 'На території вашого клану побудовано житловий комплекс.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_silicate') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'complex')) == 0:
+            if int(r.hget(c, 'wood')) >= 1050 and int(r.hget(c, 'stone')) >= 750 \
+                    and int(r.hget(c, 'cloth')) >= 200 and int(r.hget(c, 'money')) >= 2000:
+                r.hincrby(c, 'wood', -1050)
+                r.hincrby(c, 'stone', -750)
+                r.hincrby(c, 'cloth', -200)
+                r.hincrby(c, 'money', -2000)
+                r.hset(c, 'silicate', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано силікатний завод.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
 
