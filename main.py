@@ -2364,6 +2364,7 @@ def handle_query(call):
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': 0, 'injure2': 0, 'hp2': 100,
                         'support2': 0, 's_support2': 0, 'sch2': 0, 'buff2': 0})
+                r.sadd('swappers', call.from_user.id)
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='У вас немає русака.')
@@ -2828,6 +2829,7 @@ def handle_query(call):
                         'support2': 0, 's_support2': 0, 'sch2': 0, 'buff2': 0})
                 r.hset(call.from_user.id, 'time22', 0)
                 r.hset(call.from_user.id, 'time23', 0)
+                r.sadd('swappers', call.from_user.id)
                 bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
                                                        'Змінити бойового русака можна командою /swap.')
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
