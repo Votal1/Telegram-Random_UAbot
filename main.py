@@ -2518,6 +2518,7 @@ def handle_query(call):
             r.hincrby(call.from_user.id, 'deaths', 5)
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Ви успішно проміняли жінку на тютюн та люльку.\nНеобачний.')
+            bot.send_message(call.message.chat.id, 'Ви успішно проміняли жінку на тютюн та люльку.\nНеобачний.')
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Недостатньо жінок на рахунку')
