@@ -1607,8 +1607,8 @@ def build(message):
                             markup.add(types.InlineKeyboardButton(text='Побудувати монумент',
                                                                   callback_data='build_monument'))
                             msg += '\nМонумент (\U0001F333 200, \U0001faa8 1000, \U0001F9F6 50, ' \
-                                   '\U0001F9F1 20, \U0001F4B5 500, \U0001F47E 50) - можливість для лідера у /clan_shop'\
-                                   'тратити \U0001F47E.'
+                                   '\U0001F9F1 20, \U0001F4B5 500, \U0001F47E 50) - можливість для лідера у \n' \
+                                   '/clan_shop тратити \U0001F47E.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
