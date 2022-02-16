@@ -520,12 +520,12 @@ def woman(message):
 
 @bot.message_handler(commands=['ltop'])
 def l_top(message):
-    bot.reply_to(message, top(message.chat.id))
+    bot.reply_to(message, top(message.chat.id, message.from_user.id))
 
 
 @bot.message_handler(commands=['gtop'])
 def g_top(message):
-    bot.reply_to(message, top(111))
+    bot.reply_to(message, top(111, message.from_user.id))
 
 
 @bot.message_handler(commands=['itop'])
@@ -535,7 +535,7 @@ def i_top(message):
 
 @bot.message_handler(commands=['ctop'])
 def c_top(message):
-    bot.reply_to(message, ctop(222), parse_mode='HTML')
+    bot.reply_to(message, ctop(222, message.from_user.id), parse_mode='HTML')
 
 
 @bot.message_handler(commands=['class'])

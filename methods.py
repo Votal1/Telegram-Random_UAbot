@@ -1,6 +1,7 @@
 from random import randint, choice
 from config import r, bot
 from variables import names, icons
+from datetime import datetime
 
 
 def get_rusak():
@@ -36,49 +37,53 @@ def mine_salt(s2):
     return success, money, mind
 
 
-def top(sett):
+def top(sett, uid):
     try:
-        everyone = r.smembers(sett)
-        rating = {}
-        for member in everyone:
-            if sett != 111:
-                try:
-                    if bot.get_chat_member(sett, int(member)).status == 'left':
+        if r.hexists(uid, 'top_ts') == 0:
+            r.hset(uid, 'top_ts', 0)
+        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
+            r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
+            everyone = r.smembers(sett)
+            rating = {}
+            for member in everyone:
+                if sett != 111:
+                    try:
+                        if bot.get_chat_member(sett, int(member)).status == 'left':
+                            r.srem(sett, int(member))
+                            continue
+                    except:
                         r.srem(sett, int(member))
-                        continue
+                try:
+                    stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy',
+                                    'class', 'username')
+                    s = int(stats[0])
+                    i = int(stats[1])
+                    w = int(stats[2])
+                    d = int(stats[3])
+                    c = int(stats[4])
+                    t = int(stats[5])
+                    cl = int(stats[6])
+                    line = stats[7].decode() + ' ' + icons[cl] + '\n\U0001F4AA ' + str(s) + \
+                                               ' \U0001F9E0 ' + str(i) + ' \u2620\uFE0F ' + str(d) + \
+                                               ' \U0001F476 ' + str(c) + '\n\U0001F3C6 ' + str(w) + \
+                                               ' \U0001F3C5 ' + str(t) + '\n'
+                    rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
+                    rating.update({line: rate})
                 except:
-                    r.srem(sett, int(member))
-            try:
-                stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy',
-                                'class', 'username')
-                s = int(stats[0])
-                i = int(stats[1])
-                w = int(stats[2])
-                d = int(stats[3])
-                c = int(stats[4])
-                t = int(stats[5])
-                cl = int(stats[6])
-                line = stats[7].decode() + ' ' + icons[cl] + '\n\U0001F4AA ' + str(s) + \
-                                           ' \U0001F9E0 ' + str(i) + ' \u2620\uFE0F ' + str(d) + \
-                                           ' \U0001F476 ' + str(c) + '\n\U0001F3C6 ' + str(w) + \
-                                           ' \U0001F3C5 ' + str(t) + '\n'
-                rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
-                rating.update({line: rate})
-            except:
-                continue
-        s_rating = sorted(rating, key=rating.get, reverse=True)
-        result = ''
-        place = 1
-        for n in s_rating:
-            place1 = str(place) + '. '
-            result += place1 + n
-            place += 1
-            if place == 11:
-                break
-        if sett == 111:
-            return 'Глобальний рейтинг власників русаків \n\n' + result
-        else:
-            return 'Чатовий рейтинг власників русаків \n\n' + result
+                    continue
+            s_rating = sorted(rating, key=rating.get, reverse=True)
+            result = ''
+            place = 1
+            for n in s_rating:
+                place1 = str(place) + '. '
+                result += place1 + n
+                place += 1
+                if place == 11:
+                    break
+            if sett == 111:
+                return 'Глобальний рейтинг власників русаків \n\n' + result
+            else:
+                return 'Чатовий рейтинг власників русаків \n\n' + result
 
     except:
         return 'Недостатньо інформації для створення рейтингу.'
@@ -86,13 +91,42 @@ def top(sett):
 
 def itop(uid, cid, chat):
     try:
-        result = ''
-        if chat == 'supergroup':
-            everyone = r.smembers(cid)
+        if r.hexists(uid, 'top_ts') == 0:
+            r.hset(uid, 'top_ts', 0)
+        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
+            r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
+            result = ''
+            if chat == 'supergroup':
+                everyone = r.smembers(cid)
+                rating = {}
+                for member in everyone:
+                    try:
+                        stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs',
+                                        'trophy',  'username')
+                        s = int(stats[0])
+                        i = int(stats[1])
+                        w = int(stats[2])
+                        d = int(stats[3])
+                        c = int(stats[4])
+                        t = int(stats[5])
+                        line = stats[6].decode()
+                        rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
+                        rating.update({line: rate})
+                    except:
+                        continue
+                s_rating = sorted(rating, key=rating.get, reverse=True)
+                place = 1
+                for n in s_rating:
+                    place1 = str(place) + '. '
+                    place += 1
+                    if r.hget(uid, 'username').decode() == n:
+                        result = '\U0001F3C6 Твоє місце в чатовому рейтингу: \n' + place1 + n + '\n'
+                        break
+            everyone = r.smembers(111)
             rating = {}
             for member in everyone:
                 try:
-                    stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy',  'username')
+                    stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy', 'username')
                     s = int(stats[0])
                     i = int(stats[1])
                     w = int(stats[2])
@@ -110,69 +144,49 @@ def itop(uid, cid, chat):
                 place1 = str(place) + '. '
                 place += 1
                 if r.hget(uid, 'username').decode() == n:
-                    result = '\U0001F3C6 Твоє місце в чатовому рейтингу: \n' + place1 + n + '\n'
+                    result += '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1 + n
                     break
-        everyone = r.smembers(111)
-        rating = {}
-        for member in everyone:
-            try:
-                stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy', 'username')
-                s = int(stats[0])
-                i = int(stats[1])
-                w = int(stats[2])
-                d = int(stats[3])
-                c = int(stats[4])
-                t = int(stats[5])
-                line = stats[6].decode()
-                rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
-                rating.update({line: rate})
-            except:
-                continue
-        s_rating = sorted(rating, key=rating.get, reverse=True)
-        place = 1
-        for n in s_rating:
-            place1 = str(place) + '. '
-            place += 1
-            if r.hget(uid, 'username').decode() == n:
-                result += '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1 + n
-                break
-        return result
+            return result
     except:
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-def ctop(sett):
+def ctop(sett, uid):
     try:
-        everyone = r.hkeys(sett)
-        rating = {}
-        for member in everyone:
-            try:
+        if r.hexists(uid, 'top_ts') == 0:
+            r.hset(uid, 'top_ts', 0)
+        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
+            r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
+            everyone = r.hkeys(sett)
+            rating = {}
+            for member in everyone:
                 try:
-                    i = int(r.hget('c' + member.decode(), 'base'))
-                    if i > 0:
-                        prefix = ['', 'Банда', 'Клан', 'Гільдія']
-                        title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + member.decode(), 'title').decode()
-                    else:
+                    try:
+                        i = int(r.hget('c' + member.decode(), 'base'))
+                        if i > 0:
+                            prefix = ['', 'Банда', 'Клан', 'Гільдія']
+                            title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + member.decode(), 'title').decode()
+                        else:
+                            title = r.hget('war_battle' + member.decode(), 'title').decode()
+                    except:
                         title = r.hget('war_battle' + member.decode(), 'title').decode()
+                    if '@' in title:
+                        continue
+                    stats = int(r.hget(222, member))
+                    line = title + '\n\U0001F3C5 ' + str(stats) + '\n'
+                    rating.update({line: stats})
                 except:
-                    title = r.hget('war_battle' + member.decode(), 'title').decode()
-                if '@' in title:
                     continue
-                stats = int(r.hget(222, member))
-                line = title + '\n\U0001F3C5 ' + str(stats) + '\n'
-                rating.update({line: stats})
-            except:
-                continue
-        s_rating = sorted(rating, key=rating.get, reverse=True)
-        result = ''
-        place = 1
-        for n in s_rating:
-            place1 = str(place) + '. '
-            result += place1 + n
-            place += 1
-            if place == 11:
-                break
-        return 'Рейтинг найсильніших чатів\n\n' + result
+            s_rating = sorted(rating, key=rating.get, reverse=True)
+            result = ''
+            place = 1
+            for n in s_rating:
+                place1 = str(place) + '. '
+                result += place1 + n
+                place += 1
+                if place == 11:
+                    break
+            return 'Рейтинг найсильніших чатів\n\n' + result
 
     except:
         return 'Недостатньо інформації для створення рейтингу.'
