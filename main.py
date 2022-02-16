@@ -1606,8 +1606,8 @@ def build(message):
                         if int(r.hget(c, 'monument')) == 0:
                             markup.add(types.InlineKeyboardButton(text='Побудувати монумент',
                                                                   callback_data='build_monument'))
-                            msg += '\nМонумент (\U0001F333 200, \U0001faa8 1000, \U0001F9F6 50, ' \
-                                   '\U0001F9F1 20, \U0001F4B5 500, \U0001F47E 50) - можливість для лідера у \n' \
+                            msg += '\nМонумент (\U0001F333 100, \U0001faa8 1000, \U0001F9F6 50, ' \
+                                   '\U0001F9F1 100, \U0001F4B5 2000, \U0001F47E 50) - можливість для лідера у \n' \
                                    '/clan_shop витрачати \U0001F47E.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
@@ -2330,14 +2330,14 @@ def handle_query(call):
     elif call.data.startswith('build_monument') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
         if int(r.hget(c, 'monument')) == 0:
-            if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 50 \
-                    and int(r.hget(c, 'brick')) >= 20 and int(r.hget(c, 'money')) >= 500 \
+            if int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 50 \
+                    and int(r.hget(c, 'brick')) >= 100 and int(r.hget(c, 'money')) >= 2000 \
                     and int(r.hget(c, 'r_spirit')) >= 50:
-                r.hincrby(c, 'wood', -200)
+                r.hincrby(c, 'wood', -100)
                 r.hincrby(c, 'stone', -1000)
                 r.hincrby(c, 'cloth', -50)
-                r.hincrby(c, 'brick', -20)
-                r.hincrby(c, 'money', -500)
+                r.hincrby(c, 'brick', -100)
+                r.hincrby(c, 'money', -2000)
                 r.hincrby(c, 'r_spirit', -50)
                 r.hset(c, 'monument', 1)
                 bot.send_message(call.message.chat.id, 'На території вашого клану побудовано монумент.')
