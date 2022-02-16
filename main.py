@@ -1484,6 +1484,8 @@ def clan(message):
                         building += ', силікатний завод'
                     if int(r.hget(c, 'complex')) == 1:
                         building += ', житловий комплекс'
+                    if int(r.hget(c, 'shop')) == 1:
+                        building += ', їдальня'
                     bot.send_message(message.chat.id, '<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
@@ -1596,7 +1598,7 @@ def build(message):
                         if int(r.hget(c, 'shop')) == 0:
                             markup.add(types.InlineKeyboardButton(text='Побудувати магазин',
                                                                   callback_data='build_shop'))
-                            msg += '\nМагазин (\U0001F333 1000, \U0001faa8 200, \U0001F9F6 400, ' \
+                            msg += '\nЇдальня (\U0001F333 1000, \U0001faa8 200, \U0001F9F6 400, ' \
                                    '\U0001F9F1 40, \U0001F4B5 300) - доступ до команди /clan_shop. Кілька товарів, ' \
                                    'що збільшують бойовий дух русаків.'
                     if len(markup.keyboard) == 0:
@@ -2308,7 +2310,7 @@ def handle_query(call):
                 r.hincrby(c, 'brick', -40)
                 r.hincrby(c, 'money', -300)
                 r.hset(c, 'shop', 1)
-                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано силікатний завод.')
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано їдальню.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
 
