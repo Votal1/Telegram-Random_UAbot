@@ -376,7 +376,8 @@ def fascist(message):
                 for member in r.smembers(message.chat.id):
                     mem = int(member)
                     try:
-                        if bot.get_chat_member(message.chat.id, mem).status == 'left':
+                        st = bot.get_chat_member(message.chat.id, mem).status
+                        if st == 'left' or st == 'kicked':
                             r.srem(message.chat.id, mem)
                         else:
                             ran.append(member)
@@ -1702,14 +1703,6 @@ def work(message):
         print(e)
 
 
-@bot.message_handler(commands=['debug'])
-def debug(message):
-    if message.from_user.id == 456514639:
-        msg = '-----\n'
-        msg += bot.get_chat_member(-1001712463938, 642580488).status
-        bot.reply_to(message, msg)
-
-
 @bot.message_handler(commands=['commands'])
 def commands(message):
     markup = types.InlineKeyboardMarkup()
@@ -2193,7 +2186,8 @@ def handle_query(call):
                 try:
                     mem = int(member)
                     try:
-                        if bot.get_chat_member(call.message.chat.id, mem).status == 'left':
+                        st = bot.get_chat_member(call.message.chat.id, mem).status
+                        if st == 'left' or st == 'kicked':
                             r.srem(call.message.chat.id, mem)
                             continue
                     except:
