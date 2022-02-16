@@ -1417,7 +1417,7 @@ def swap(message):
                 r.hset(message.from_user.id, 'time22', a1)
                 r.hset(message.from_user.id, 'time1', b2)
                 r.hset(message.from_user.id, 'time23', a2)
-            bot.reply_to(message, 'Бойового русака змінено.')
+            bot.reply_to(message, 'Бойового русака змінено. ')
     except:
         pass
 
