@@ -1515,7 +1515,7 @@ def upgrade(message):
                         r.hincrby(c, 'stone', -20)
                         r.hset(c, 'base', 2)
                         bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
-            elif base == 2 and message.chat.id == 1733230634:
+            elif base == 2 and message.chat.id == -1001733230634:
                 bot.send_message(message.chat.id, '\U0001F3D7 Покращення Клану до Гільдії коштує \U0001F333 1000, '
                                                   '\U0001faa8 600, \U0001F9F6 300 \U0001F47E 20 і \U0001F4B5 1500.')
                 admins = []
