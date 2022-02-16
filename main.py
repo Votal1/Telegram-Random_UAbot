@@ -3283,6 +3283,7 @@ def handle_query(call):
                 r.hincrby(c, 'r_spirit', -10)
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     increase_trance(5, mem)
+                bot.send_message(call.message.chat.id, '\U0001F44A Клан готовий йти в бій.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
         else:
