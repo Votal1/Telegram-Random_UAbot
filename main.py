@@ -1706,18 +1706,22 @@ def work(message):
 def debug(message):
     if message.from_user.id == 456514639:
         msg, tru, fal = '-----\n', [], []
-        for k in r.keys():
-            try:
-                if r.hexists(k, 'spirit') == 1:
-                    if r.hexists(k, 'buff') == 1:
-                        tru.append('1')
-                    else:
-                        fal.append('1')
-                    print('-----------')
-                    if int(r.hget(k, 'name')) == int(r.hget(k, 'name2')):
-                        msg += str(r.hgetall(k)) + '\n'
-            except:
-                pass
+        msg += bot.get_chat_member(-1001712463938, 642580488).status
+        try:
+            for k in r.keys():
+                try:
+                    if r.hexists(k, 'spirit') == 1:
+                        if r.hexists(k, 'buff') == 1:
+                            tru.append('1')
+                        else:
+                            fal.append('1')
+                        print('-----------')
+                        if int(r.hget(k, 'name')) == int(r.hget(k, 'name2')):
+                            msg += str(r.hgetall(k)) + '\n'
+                except:
+                    pass
+        except:
+            pass
         bot.reply_to(message, msg + '\n' + str(len(tru)) + '\n' + str(len(fal)))
 
 
