@@ -1702,6 +1702,24 @@ def work(message):
         print(e)
 
 
+@bot.message_handler(commands=['debug'])
+def debug(message):
+    if message.from_user.id == 456514639:
+        msg, tru, fal = '-----\n', [], []
+        for k in r.keys():
+            try:
+                if r.hexists(k, 'spirit') == 1:
+                    if r.hexists(k, 'buff') == 1:
+                        tru.append('1')
+                    else:
+                        fal.append('1')
+                    if int(r.hget(k, 'name')) == int(r.hget(k, 'name2')):
+                        msg += str(r.hgetall(k)) + '\n'
+            except:
+                pass
+        bot.reply_to(message, msg)
+
+
 @bot.message_handler(commands=['commands'])
 def commands(message):
     markup = types.InlineKeyboardMarkup()
