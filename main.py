@@ -283,7 +283,7 @@ def feed(message):
                     intellect(1, message.from_user.id)
                 if bd == 2:
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 10000.'
-                    spirit(1000, message.from_user.id, 0)
+                    spirit(10000, message.from_user.id, 0)
                     bot.send_photo(message.chat.id, photo='https://i.ibb.co/bK2LrSD/feed.jpg',
                                    caption=msg, reply_to_message_id=message.id)
                 elif bd == 1:
@@ -1615,7 +1615,8 @@ def build(message):
                 msg = '\U0001F3EC Список доступних товарів:\n\nСовєцкій пайок - видаєцься випадкова їжа:\n' \
                       '\U0001F366 Пломбір натуральний - \U0001F54A +1000\n' \
                       '\U0001F953 Ковбаса докторська - \U0001F54A +1000; \U0001F464 +5 або \U0001F44A +5\n' \
-                      '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає \U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
+                      '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
+                      '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
                 markup = types.InlineKeyboardMarkup()
                 markup.add(types.InlineKeyboardButton(text='Совєцкій пайок - 10 грн', callback_data='ration'))
                 bot.reply_to(message, msg, reply_markup=markup)
