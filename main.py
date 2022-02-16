@@ -216,8 +216,8 @@ def my_rusak(message):
             inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
         if int(stats[6]) > 0:
             inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
-        if int(stats[7]) > 0:
-            inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
+        # if int(stats[7]) > 0:
+        #    inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
         if int(stats[4]) > 0:
             ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
@@ -1856,7 +1856,7 @@ def handle_query(call):
                             inline_message_id=call.inline_message_id)
                         hp(20, uid1)
                         r.hincrby(call.from_user.id, 'money', 5)
-                    elif int(r.hget(call.from_user.id, 'class')) == 23:
+                    elif int(r.hget(call.from_user.id, 'class')) == 233:
                         bot.edit_message_text(
                             text='\U0001F52E ' + call.from_user.first_name + ' Некромант проводить дивні ритуали над '
                                                                              'напівживим русаком...'
