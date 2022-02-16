@@ -226,7 +226,8 @@ def my_rusak(message):
                          5].decode() \
                      + cl + ms + inj
         bot.send_photo(message.chat.id, photo=r_photo, caption=photo_text)
-    except:
+    except Exception as e:
+        bot.send_message(456514639, str(e))
         bot.reply_to(message, '\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на /donbass')
 
 
