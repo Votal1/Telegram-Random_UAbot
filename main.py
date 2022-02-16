@@ -1613,7 +1613,7 @@ def build(message):
     try:
         if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
             c = 'c' + str(message.chat.id)
-            if int(r.hget(c, 'shop')) == 0:
+            if int(r.hget(c, 'shop')) == 1:
                 msg = '\U0001F3EC Список доступних товарів:\n\nСовєцкій пайок - видаєцься випадкова їжа:\n' \
                       '\U0001F366 Пломбір натуральний - \U0001F54A +1000\n' \
                       '\U0001F953 Ковбаса докторська - \U0001F54A +1000; \U0001F464 +5 або \U0001F44A +5\n' \
