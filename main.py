@@ -1565,6 +1565,8 @@ def build(message):
                     if int(r.hget(c, 'storage')) == 0:
                         markup.add(types.InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
                         msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
+                    #if int(r.hget(c, 'base')) >= 3:
+
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
@@ -2044,7 +2046,8 @@ def handle_query(call):
                         r.hset('c' + str(call.message.chat.id), 'base', 1,
                                {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
-                                'shop': 0, 'gulag': 0, 'dungeon': 0, 'salary': 0, 'war_allow': 0,
+                                'shop': 0, 'complex': 0, 'monument': 0, 'gulag': 0, 'dungeon': 0,
+                                'salary': 0, 'war_allow': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
