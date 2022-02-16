@@ -1517,7 +1517,7 @@ def upgrade(message):
                         bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
             elif base == 2 and message.chat.id == -1001733230634:
                 bot.send_message(message.chat.id, '\U0001F3D7 Покращення Клану до Гільдії коштує \U0001F333 1000, '
-                                                  '\U0001faa8 600, \U0001F9F6 300 \U0001F47E 20 і \U0001F4B5 1500.')
+                                                  '\U0001faa8 600, \U0001F9F6 300, \U0001F47E 20 і \U0001F4B5 1500.')
                 admins = []
                 for admin in bot.get_chat_administrators(message.chat.id):
                     admins.append(admin.user.id)
@@ -1604,16 +1604,18 @@ def join(message):
     try:
         if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5:
             if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > 604800:
-                if int(r.hget(c, 'allow')) == 0:
+                if int(r.hget(c, 'allow')) == 0 and r.scard('cl' + str(message.chat.id)) < 25:
                     r.hset(message.from_user.id, 'clan', message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
                                                                            'clan_time': 0})
                     r.sadd('cl' + str(message.chat.id), message.from_user.id)
                     r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
                     bot.reply_to(message, '\U0001F4E5 Ти вступив в клан ' +
                                  r.hget('c' + str(message.chat.id), 'title').decode() + '.')
-                else:
+                elif int(r.hget(c, 'allow')) == 1 and r.scard('cl' + str(message.chat.id)) < 25:
                     bot.reply_to(message, '\U0001F4E5 Прийняти в клан ' + message.from_user.first_name + '?',
                                  reply_markup=invite())
+                else:
+                    bot.reply_to(message, '\U0001F4E5 Неможливо вступити в клан, оскільки він переповнений.')
             else:
                 bot.reply_to(message, '\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
     except Exception as e:
@@ -2066,7 +2068,8 @@ def handle_query(call):
             admins.append(admin.user.id)
         print(r.smembers('cl' + str(call.message.chat.id)))
         if call.from_user.id in admins and \
-                str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
+                r.scard('cl' + str(call.message.chat.id)) < 25:
             r.hset(call.message.reply_to_message.from_user.id, 'clan', call.message.chat.id,
                    {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0,
                     'firstname': call.from_user.first_name})
