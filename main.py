@@ -1713,11 +1713,12 @@ def debug(message):
                         tru.append('1')
                     else:
                         fal.append('1')
+                    print('-----------')
                     if int(r.hget(k, 'name')) == int(r.hget(k, 'name2')):
                         msg += str(r.hgetall(k)) + '\n'
             except:
                 pass
-        bot.reply_to(message, msg)
+        bot.reply_to(message, msg + '\n' + str(len(tru)) + '\n' + str(len(fal)))
 
 
 @bot.message_handler(commands=['commands'])
