@@ -1472,10 +1472,10 @@ def clan(message):
                                      '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
                         if base >= 3:
                             resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
-                    if int(r.hget(c, 'complex')) == 1:
-                        building += ', житловий комплекс'
                     if int(r.hget(c, 'silicate')) == 1:
                         building += ', силікатний завод'
+                    if int(r.hget(c, 'complex')) == 1:
+                        building += ', житловий комплекс'
                     bot.send_message(message.chat.id, '<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
@@ -1574,16 +1574,17 @@ def build(message):
                         markup.add(types.InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
                         msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
                     if int(r.hget(c, 'base')) >= 3:
-                        if int(r.hget(c, 'complex')) == 0:
-                            markup.add(types.InlineKeyboardButton(text='Побудувати житловий комплекс',
-                                                                  callback_data='build_complex'))
-                            msg += '\nЖитловий комплекс (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 1000, ' \
-                                   '\U0001F4B5 1000) - розширення максимальної кількості учасників з 25 до 50.'
                         if int(r.hget(c, 'silicate')) == 0:
                             markup.add(types.InlineKeyboardButton(text='Побудувати силікатний завод',
                                                                   callback_data='build_silicate'))
                             msg += '\nСилікатний завод (\U0001F333 1050, \U0001faa8 750, \U0001F9F6 200, ' \
                                    '\U0001F4B5 2000) - \U0001F9F1 1-3 від роботи.'
+                        if int(r.hget(c, 'complex')) == 0:
+                            markup.add(types.InlineKeyboardButton(text='Побудувати житловий комплекс',
+                                                                  callback_data='build_complex'))
+                            msg += '\nЖитловий комплекс (\U0001F333 500, \U0001faa8 500, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 50, \U0001F4B5 500) - розширення максимальної кількості учасників ' \
+                                   'з 25 до 50.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
@@ -2238,12 +2239,13 @@ def handle_query(call):
     elif call.data.startswith('build_complex') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
         if int(r.hget(c, 'complex')) == 0:
-            if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 1000 \
-                    and int(r.hget(c, 'cloth')) >= 1000 and int(r.hget(c, 'money')) >= 1000:
-                r.hincrby(c, 'wood', -1000)
-                r.hincrby(c, 'stone', -1000)
-                r.hincrby(c, 'cloth', -1000)
-                r.hincrby(c, 'money', -1000)
+            if int(r.hget(c, 'wood')) >= 500 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 500\
+                    and int(r.hget(c, 'brick')) >= 50 and int(r.hget(c, 'money')) >= 500:
+                r.hincrby(c, 'wood', -500)
+                r.hincrby(c, 'stone', -500)
+                r.hincrby(c, 'cloth', -500)
+                r.hincrby(c, 'brick', -50)
+                r.hincrby(c, 'money', -500)
                 r.hset(c, 'complex', 1)
                 bot.send_message(call.message.chat.id, 'На території вашого клану побудовано житловий комплекс.')
             else:
