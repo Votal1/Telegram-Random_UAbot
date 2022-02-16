@@ -12,7 +12,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, damage_support
-from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3,\
+from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
@@ -1455,7 +1455,7 @@ def clan(message):
                     elif base == 3:
                         building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.' \
                                    '\n\U0001F3ED Інфраструктура:'
-                    resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +\
+                    resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() + \
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
                                 '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode()
                     if int(r.hget(c, 'sawmill')) == 1:
@@ -1565,8 +1565,12 @@ def build(message):
                     if int(r.hget(c, 'storage')) == 0:
                         markup.add(types.InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
                         msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
-                    #if int(r.hget(c, 'base')) >= 3:
-
+                    if int(r.hget(c, 'base')) >= 3:
+                        if int(r.hget(c, 'complex')) == 0:
+                            markup.add(types.InlineKeyboardButton(text='Побудувати житловий комплекс',
+                                                                  callback_data='build_complex'))
+                            msg += '\nЖитловий комплекс (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 1000, ' \
+                                   '\U0001F4B5 1000) - розширення максимальної кількості учасників з 25 до 50.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
@@ -1601,19 +1605,22 @@ def clan_settings(message):
 @bot.message_handler(commands=['join'])
 def join(message):
     c = 'c' + str(message.chat.id)
+    num = 25
     if r.hexists(message.from_user.id, 'clan_ts') == 0:
         r.hset(message.from_user.id, 'clan_ts', 0)
     try:
         if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5:
             if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > 604800:
-                if int(r.hget(c, 'allow')) == 0 and r.scard('cl' + str(message.chat.id)) < 25:
+                if int(r.hget(c, 'complex')) >= 1:
+                    num = 50
+                if int(r.hget(c, 'allow')) == 0 and r.scard('cl' + str(message.chat.id)) < num:
                     r.hset(message.from_user.id, 'clan', message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
                                                                            'clan_time': 0})
                     r.sadd('cl' + str(message.chat.id), message.from_user.id)
                     r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
                     bot.reply_to(message, '\U0001F4E5 Ти вступив в клан ' +
                                  r.hget('c' + str(message.chat.id), 'title').decode() + '.')
-                elif int(r.hget(c, 'allow')) == 1 and r.scard('cl' + str(message.chat.id)) < 25:
+                elif int(r.hget(c, 'allow')) == 1 and r.scard('cl' + str(message.chat.id)) < num:
                     bot.reply_to(message, '\U0001F4E5 Прийняти в клан ' + message.from_user.first_name + '?',
                                  reply_markup=invite())
                 else:
@@ -1970,7 +1977,7 @@ def handle_query(call):
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
                     if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)) and \
-                            int(datetime.now().timestamp()) -\
+                            int(datetime.now().timestamp()) - \
                             int(r.hget('war_battle' + str(call.message.chat.id), 'war_ts')) < 300:
                         allow = False
             if allow:
@@ -2067,12 +2074,14 @@ def handle_query(call):
 
     elif call.data.startswith('invite'):
         admins = []
+        num = 25
         for admin in bot.get_chat_administrators(call.message.chat.id):
             admins.append(admin.user.id)
-        print(r.smembers('cl' + str(call.message.chat.id)))
+        if int(r.hget('c' + str(call.message.chat.id), 'complex')) >= 1:
+            num = 50
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
-                r.scard('cl' + str(call.message.chat.id)) < 25:
+                r.scard('cl' + str(call.message.chat.id)) < num:
             r.hset(call.message.reply_to_message.from_user.id, 'clan', call.message.chat.id,
                    {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0,
                     'firstname': call.from_user.first_name})
@@ -2206,6 +2215,20 @@ def handle_query(call):
                 r.hincrby(c, 'stone', -100)
                 r.hset(c, 'storage', 1)
                 bot.send_message(call.message.chat.id, 'На території вашого клану побудовано склад.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_complex') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'complex')) == 0:
+            if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 1000 \
+                    and int(r.hget(c, 'cloth')) >= 1000 and int(r.hget(c, 'money')) >= 1000:
+                r.hincrby(c, 'wood', -1000)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby(c, 'cloth', -1000)
+                r.hincrby(c, 'money', -1000)
+                r.hset(c, 'complex', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано житловий комплекс.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
 
@@ -3076,7 +3099,7 @@ def handle_query(call):
                     r.hset(uid, 'ac13', 1)
             elif ran == [12]:
                 bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця [Захист, '
-                                      'міцність=50] - зменшує силу ворога на бій на 75%.',
+                                      'міцність=50] - зменшує силу ворога на бій на 75% та захищає від РПГ-7.',
                                       call.message.chat.id, call.message.id)
                 if int(r.hget(uid, 'defense')) == 2:
                     r.hincrby(uid, 's_defense', 50)
