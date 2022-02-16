@@ -1447,8 +1447,10 @@ def clan(message):
                                      '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
                                      '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
                 elif base >= 2:
-                    building = ''
+                    building, wins = '', ''
                     prefix = ['', 'Банда', 'Клан', 'Гільдія']
+                    if r.hexists(222, message.chat.id) == 1:
+                        wins = '\nКількість перемог: ' + r.hget(222, message.chat.id).decode()
                     if base == 2:
                         building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, ' \
                                    'якщо серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
@@ -1468,10 +1470,12 @@ def clan(message):
                         building += ', склад'
                         resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode() + \
                                      '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
+                    if int(r.hget(c, 'complex')) == 1:
+                        building += ', житловий комплекс'
                     bot.send_message(message.chat.id, '<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
-                                     '\n\n' + building + resources, parse_mode='HTML')
+                                     wins + '\n\n' + building + resources, parse_mode='HTML')
             elif int(r.hget(message.from_user.id, 'class')) == 27 and int(r.hget(c, 'money')) >= 10:
                 if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
                     r.hset(message.from_user.id, 'fsb', datetime.now().day)
