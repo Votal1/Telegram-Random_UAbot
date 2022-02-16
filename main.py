@@ -883,7 +883,7 @@ def war(cid, location, big_battle):
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
             spirit(3000, win, 0)
-            r.hincrby(win, 'buff', 5)
+            increase_trance(5, win)
             class_reward = '\U0001F919: \U0001F44A +5 \U0001F54A +3000'
     elif location == 'Битва на покинутому заводі':
         if wc == 2 or wc == 12 or wc == 22:
@@ -1486,6 +1486,8 @@ def clan(message):
                         building += ', житловий комплекс'
                     if int(r.hget(c, 'shop')) == 1:
                         building += ', їдальня'
+                    if int(r.hget(c, 'monument')) == 1:
+                        building += ', монумент'
                     bot.send_message(message.chat.id, '<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
@@ -1601,6 +1603,12 @@ def build(message):
                             msg += '\nЇдальня (\U0001F333 1000, \U0001faa8 200, \U0001F9F6 400, ' \
                                    '\U0001F9F1 40, \U0001F4B5 300) - доступ до команди /clan_shop. Кілька товарів, ' \
                                    'що збільшують бойовий дух русаків.'
+                        if int(r.hget(c, 'monument')) == 0:
+                            markup.add(types.InlineKeyboardButton(text='Побудувати монумент',
+                                                                  callback_data='build_monument'))
+                            msg += '\nМонумент (\U0001F333 200, \U0001faa8 1000, \U0001F9F6 50, ' \
+                                   '\U0001F9F1 20, \U0001F4B5 500, \U0001F47E 50) - можливість для лідера у /clan_shop'\
+                                   'тратити \U0001F47E.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
@@ -1621,6 +1629,10 @@ def build(message):
                       '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
                 markup = types.InlineKeyboardMarkup()
                 markup.add(types.InlineKeyboardButton(text='Совєцкій пайок - 10 грн', callback_data='ration'))
+                if int(r.hget(c, 'monument')) == 1:
+                    msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
+                    markup.add(types.InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
+                                                          callback_data='monument'))
                 bot.reply_to(message, msg, reply_markup=markup)
     except:
         pass
@@ -1953,6 +1965,7 @@ def handle_query(call):
                             inline_message_id=call.inline_message_id)
                         hp(10, uid1)
                         r.hincrby(call.from_user.id, 'buff', 5)
+                        increase_trance(5, call.from_user.id)
                     else:
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                   text='\U0001fac0 Зараз цей русак не може битись.')
@@ -2311,6 +2324,23 @@ def handle_query(call):
                 r.hincrby(c, 'money', -300)
                 r.hset(c, 'shop', 1)
                 bot.send_message(call.message.chat.id, 'На території вашого клану побудовано їдальню.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_monument') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'monument')) == 0:
+            if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 50 \
+                    and int(r.hget(c, 'brick')) >= 20 and int(r.hget(c, 'money')) >= 500 \
+                    and int(r.hget(c, 'r_spirit')) >= 50:
+                r.hincrby(c, 'wood', -200)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby(c, 'cloth', -50)
+                r.hincrby(c, 'brick', -20)
+                r.hincrby(c, 'money', -500)
+                r.hincrby(c, 'r_spirit', -50)
+                r.hset(c, 'monument', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано монумент.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
 
@@ -3245,6 +3275,18 @@ def handle_query(call):
         else:
             bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                       text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('monument'):
+        c = 'c' + str(call.message.chat.id)
+        if call.from_user.id == int(r.hget(c, 'leader')):
+            if int(r.hget(c, 'r_spirit')) >= 10:
+                r.hincrby(c, 'r_spirit', -10)
+                for mem in r.smembers('cl' + str(call.message.chat.id)):
+                    increase_trance(5, mem)
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Це може зробити тільки лідер.')
 
 
 @bot.message_handler()
