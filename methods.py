@@ -16,7 +16,8 @@ def feed_rusak(intel):
     mind = 0
     if intel < 20:
         mind = int(choice(['1', '0', '0', '0', '0']))
-    bd = int(choice(['1', '0', '0']))
+    bd = int(choice(['2', '1', '1', '1', '1', '1', '1', '0', '0', '0',
+                     '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']))
     return success, strength, mind, bd
 
 

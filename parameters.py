@@ -50,6 +50,13 @@ def trance(uid, s, bd, fi):
     return int(s * 1.2), int(bd * 1.8)
 
 
+def increase_trance(value, uid):
+    r.hincrby(uid, 'buff', value)
+    mind = int(r.hget(uid, 'intellect'))
+    if int(r.hget(uid, 'buff')) > mind:
+        r.hset(uid, 'buff', mind)
+
+
 def hp(value, uid):
     if value > 0:
         r.hincrby(uid, 'hp', value)

@@ -11,7 +11,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, damage_support
+from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
@@ -265,6 +265,10 @@ def feed(message):
                 except:
                     r.hincrby(message.from_user.id, 'strength', fr[1])
                     ran = fr[1]
+                bd = fr[3]
+                if int(r.hget(message.from_user.id, 'support')) == 5:
+                    bd = 2
+                    damage_support(message.from_user.id)
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 word = 'зросла'
                 if int(stats[0]) > 3000:
@@ -277,11 +281,15 @@ def feed(message):
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, message.from_user.id)
-                if fr[3] == 1:
-                    msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
+                if bd == 2:
+                    msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 10000.'
                     spirit(1000, message.from_user.id, 0)
                     bot.send_photo(message.chat.id, photo='https://i.ibb.co/bK2LrSD/feed.jpg',
                                    caption=msg, reply_to_message_id=message.id)
+                elif bd == 1:
+                    msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
+                    spirit(1000, message.from_user.id, 0)
+                    bot.reply_to(message, msg)
                 else:
                     bot.reply_to(message, msg)
             else:
@@ -1585,9 +1593,32 @@ def build(message):
                             msg += '\nЖитловий комплекс (\U0001F333 500, \U0001faa8 500, \U0001F9F6 500, ' \
                                    '\U0001F9F1 50, \U0001F4B5 500) - розширення максимальної кількості учасників ' \
                                    'з 25 до 50.'
+                        if int(r.hget(c, 'shop')) == 0:
+                            markup.add(types.InlineKeyboardButton(text='Побудувати магазин',
+                                                                  callback_data='build_shop'))
+                            msg += '\nМагазин (\U0001F333 1000, \U0001faa8 200, \U0001F9F6 400, ' \
+                                   '\U0001F9F1 40, \U0001F4B5 300) - доступ до команди /clan_shop. Кілька товарів, ' \
+                                   'що збільшують бойовий дух русаків.'
                     if len(markup.keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     bot.reply_to(message, msg, reply_markup=markup)
+    except:
+        pass
+
+
+@bot.message_handler(commands=['clan_shop'])
+def build(message):
+    try:
+        if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
+            c = 'c' + str(message.chat.id)
+            if int(r.hget(c, 'shop')) == 0:
+                msg = '\U0001F3EC Список доступних товарів:\n\nСовєцкій пайок - видаєцься випадкова їжа:\n' \
+                      '\U0001F366 Пломбір натуральний - \U0001F54A +1000\n' \
+                      '\U0001F953 Ковбаса докторська - \U0001F54A +1000; \U0001F464 +5 або \U0001F44A +5\n' \
+                      '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає \U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
+                markup = types.InlineKeyboardMarkup()
+                markup.add(types.InlineKeyboardButton(text='Совєцкій пайок - 10 грн', callback_data='ration'))
+                bot.reply_to(message, msg, reply_markup=markup)
     except:
         pass
 
@@ -2261,6 +2292,21 @@ def handle_query(call):
                 r.hincrby(c, 'cloth', -200)
                 r.hincrby(c, 'money', -2000)
                 r.hset(c, 'silicate', 1)
+                bot.send_message(call.message.chat.id, 'На території вашого клану побудовано силікатний завод.')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_shop') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'shop')) == 0:
+            if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 200 and int(r.hget(c, 'cloth')) >= 400 \
+                    and int(r.hget(c, 'brick')) >= 40 and int(r.hget(c, 'money')) >= 300:
+                r.hincrby(c, 'wood', -1000)
+                r.hincrby(c, 'stone', -200)
+                r.hincrby(c, 'cloth', -400)
+                r.hincrby(c, 'brick', -40)
+                r.hincrby(c, 'money', -300)
+                r.hset(c, 'shop', 1)
                 bot.send_message(call.message.chat.id, 'На території вашого клану побудовано силікатний завод.')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Недостатньо ресурсів.')
@@ -3157,6 +3203,45 @@ def handle_query(call):
                 r.hincrby(uid, 'strap', 1)
         else:
             bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id, call.message.id)
+
+    elif call.data.startswith('ration'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 10:
+                r.hincrby(call.from_user.id, 'money', -10)
+                ran = randint(1, 3)
+                if ran == 1:
+                    spirit(1000, call.from_user.id, 0)
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Русак їсть пломбір, і думає про те, як '
+                                                   'класно жилось при Сталінє...\n\U0001F54A +1000')
+                elif ran == 2:
+                    spirit(1000, call.from_user.id, 0)
+                    if randint(1, 2) == 1:
+                        msg = '\U0001F464 +5'
+                        r.hincrby(call.from_user.id, 'sch', 5)
+                    else:
+                        increase_trance(5, call.from_user.id)
+                        msg = '\U0001F44A +5'
+                    bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                              text='Русак їсть ковбасу і згадує про воювавших '
+                                                   'дідів...\n\U0001F54A 1000 ' + msg)
+                elif ran == 3:
+                    if int(r.hget(call.from_user.id, 'support')) > 0:
+                        spirit(3000, call.from_user.id, 0)
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Русак їсть хліб, і сумує через розпад совка...'
+                                                       '\n\U0001F54A +3000')
+                    else:
+                        r.hset(call.from_user.id, 'support', 5)
+                        r.hset(call.from_user.id, 's_support', 1)
+                        bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                  text='Русак покадкушував хліб і залишив на потім...')
+            else:
+                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                          text='Недостатньо коштів на рахунку.')
+        else:
+            bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                      text='Клановий магазин тільки для учасників клану.')
 
 
 @bot.message_handler()
