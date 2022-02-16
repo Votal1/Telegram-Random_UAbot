@@ -149,7 +149,7 @@ def ctop(sett):
                 try:
                     i = int(r.hget('c' + member.decode(), 'base'))
                     if i > 0:
-                        prefix = ['', 'Банда', 'Клан']
+                        prefix = ['', 'Банда', 'Клан', 'Гільдія']
                         title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + member.decode(), 'title').decode()
                     else:
                         title = r.hget('war_battle' + member.decode(), 'title').decode()

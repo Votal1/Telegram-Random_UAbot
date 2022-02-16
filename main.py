@@ -312,6 +312,9 @@ def mine(message):
                     money = ms[1]
                     if cl == 2 or cl == 12 or cl == 22:
                         money = money * 3
+                    if len(str(r.hget(message.from_user.id, 'clan'))) > 5:
+                        if int(r.hget('c' + r.hget(message.from_user.id, 'clan').decode(), 'base')) >= 3:
+                            money = int(money * 1.34)
                     r.hincrby(message.from_user.id, 'money', money)
                     msg = '\u26CF Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
                           ' успішно відпрацював зміну на соляній шахті.\n\n\U0001F4B5 ' \
@@ -1417,7 +1420,7 @@ def swap(message):
                 r.hset(message.from_user.id, 'time22', a1)
                 r.hset(message.from_user.id, 'time1', b2)
                 r.hset(message.from_user.id, 'time23', a2)
-            bot.reply_to(message, 'Бойового русака змінено. ')
+            bot.reply_to(message, 'Бойового русака змінено.')
     except:
         pass
 
@@ -1443,9 +1446,15 @@ def clan(message):
                                      '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
                                      '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
                                      '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
-                elif base == 2:
-                    building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, якщо ' \
-                               'серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
+                elif base >= 2:
+                    building = ''
+                    prefix = ['', 'Банда', 'Клан', 'Гільдія']
+                    if base == 2:
+                        building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, ' \
+                                   'якщо серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
+                    elif base == 3:
+                        building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.' \
+                                   '\n\U0001F3ED Інфраструктура:'
                     resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +\
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
                                 '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode()
@@ -1459,7 +1468,7 @@ def clan(message):
                         building += ', склад'
                         resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode() + \
                                      '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
-                    bot.send_message(message.chat.id, '<i>Клан</i> ' + r.hget(c, 'title').decode() +
+                    bot.send_message(message.chat.id, '<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                      '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                      '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
                                      '\n\n' + building + resources, parse_mode='HTML')
@@ -1506,6 +1515,27 @@ def upgrade(message):
                         r.hincrby(c, 'stone', -20)
                         r.hset(c, 'base', 2)
                         bot.send_message(message.chat.id, '\U0001F3D7 Покращено Банду до Клану.')
+            elif base == 2 and message.chat.id == 1733230634:
+                bot.send_message(message.chat.id, '\U0001F3D7 Покращення Клану до Гільдії коштує \U0001F333 1000, '
+                                                  '\U0001faa8 600, \U0001F9F6 300 \U0001F47E 20 і \U0001F4B5 1500.')
+                admins = []
+                for admin in bot.get_chat_administrators(message.chat.id):
+                    admins.append(admin.user.id)
+                if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 600 \
+                        and int(r.hget(c, 'cloth')) >= 300 and int(r.hget(c, 'money')) >= 1500 \
+                        and int(r.hget(c, 'r_spirit')) >= 20 and message.from_user.id not in admins:
+                    bot.send_message(message.chat.id, '\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
+                if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 600 \
+                        and int(r.hget(c, 'cloth')) >= 300 and int(r.hget(c, 'money')) >= 1500 \
+                        and int(r.hget(c, 'r_spirit')) >= 20:
+                    if message.from_user.id in admins:
+                        r.hincrby(c, 'money', -1500)
+                        r.hincrby(c, 'wood', -1000)
+                        r.hincrby(c, 'stone', -600)
+                        r.hincrby(c, 'cloth', -300)
+                        r.hincrby(c, 'r_spirit', -20)
+                        r.hset(c, 'base', 3)
+                        bot.send_message(message.chat.id, '\U0001F3D7 Покращено Клан до Гільдії.')
     except:
         pass
 
@@ -1519,7 +1549,7 @@ def build(message):
         if message.from_user.id in admins:
             if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
                 c = 'c' + str(message.chat.id)
-                if int(r.hget(c, 'base')) == 2:
+                if int(r.hget(c, 'base')) >= 2:
                     msg = '\U0001F3D7 Для подальшого розвитку клану потрібно збудувати:\n'
                     markup = types.InlineKeyboardMarkup()
                     if int(r.hget(c, 'sawmill')) == 0:
@@ -1669,7 +1699,7 @@ def work(message):
                         damage_support(message.from_user.id)
                         bot.reply_to(message, names[int(r.hget(message.from_user.id, 'name'))] +
                                      ' попрацював на благо громади.\n' + resources)
-                elif base == 2:
+                elif base >= 2:
                     if int(r.hget(c, 'sawmill')) == 0 and int(r.hget(c, 'mine')) == 0 and int(r.hget(c, 'craft')) == 0:
                         bot.reply_to(message, 'Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
                     else:
@@ -1777,7 +1807,7 @@ def handle_query(call):
             if r.hexists(call.from_user.id, 's3') == 0:
                 r.hset(call.from_user.id, 's3', 1)
             bot.edit_message_text(text='\U0001F3DA Ти приходиш на Донбас - чудове місце для полювання на'
-                                       ' русаків\n\n\U0001F412 Русака взято в полон... ',
+                                       ' русаків\n\n\U0001F412 Русака взято в полон...',
                                   chat_id=call.message.chat.id, message_id=call.message.id)
 
     elif call.data.startswith('fight') and r.hexists(call.from_user.id, 'name') != 0:
