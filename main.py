@@ -2251,7 +2251,7 @@ def handle_query(call):
 
     elif call.data.startswith('build_silicate') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
-        if int(r.hget(c, 'complex')) == 0:
+        if int(r.hget(c, 'silicate')) == 0:
             if int(r.hget(c, 'wood')) >= 1050 and int(r.hget(c, 'stone')) >= 750 \
                     and int(r.hget(c, 'cloth')) >= 200 and int(r.hget(c, 'money')) >= 2000:
                 r.hincrby(c, 'wood', -1050)
