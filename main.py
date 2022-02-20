@@ -2227,10 +2227,9 @@ def handle_query(call):
                         text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
                         chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_4())
                 elif fighters >= 5 and r.scard('battles2') == 0:
-                    bot.send_message(call.message.chat.id, '\u2694 Пошук ворогів...')
-                    bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name + '\n\n\u2694 Пошук ворогів...',
-                        chat_id=call.message.chat.id, message_id=call.message.id)
+                    bot.reply_to(call.message, '\u2694 Пошук ворогів...')
+                    bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name,
+                                          chat_id=call.message.chat.id, message_id=call.message.id)
                     r.sadd('battles2', call.message.chat.id)
                 elif fighters >= 5 and r.scard('battles2') >= 1:
                     enemy = r.spop('battles2')
