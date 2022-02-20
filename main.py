@@ -2257,7 +2257,7 @@ def handle_query(call):
                 else:
                     bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                        message_id=call.message.id, reply_markup=battle_button_3())
+                        message_id=call.message.id, reply_markup=battle_button_4())
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Ти не в цьому клані, тому зайти зможеш через 5 хвилин після'
