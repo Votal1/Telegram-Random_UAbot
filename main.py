@@ -1158,6 +1158,20 @@ def crash(message):
         bot.reply_to(message, '\u2705')
 
 
+@bot.message_handler(commands=['quit'])
+def quit_from_battle(message):
+    try:
+        if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'w_ts')) > 1800:
+            cid = r.hget(message.from_user.id, 'in_war').decode()
+            r.hdel(message.from_user.id, 'in_war')
+            r.srem('fighters_2' + cid, message.chat.id)
+            bot.reply_to(message, '\u2705')
+        else:
+            bot.send_message(message.from_user.id, 'Покидати міжчатові битви можна тільки раз в пів години.')
+    except:
+        pass
+
+
 @bot.message_handler(commands=['achieve'])
 def achievements(message):
     try:
@@ -1999,7 +2013,8 @@ def handle_query(call):
             if allow:
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-                r.hset(call.from_user.id, 'in_war', 1)
+                r.hset(call.from_user.id, 'in_war', call.message.chat.id)
+                r.hset(call.from_user.id, 'w_ts', datetime.now().timestamp())
                 r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2' + str(call.message.chat.id))
                 if fighters == 1:
