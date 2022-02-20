@@ -1106,7 +1106,8 @@ def war_battle(message):
                 bot.delete_message(message.chat.id, message.id)
             except:
                 pass
-            a = bot.send_message(message.chat.id, '\u2694 Починається міжчатова битва...\n\n',
+            emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
+            a = bot.send_message(message.chat.id, emoji + ' Починається міжчатова битва...\n\n',
                                  reply_markup=battle_button_3())
             r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
             r.hset('war_battle' + str(message.chat.id), 'title', message.chat.title)
