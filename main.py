@@ -2220,7 +2220,7 @@ def handle_query(call):
                 if fighters == 1:
                     bot.edit_message_text(
                         text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
-                        chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_3())
+                        chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_4())
                 elif fighters >= 5 and r.scard('battles2') == 0:
                     bot.send_message(call.message.chat.id, '\n\nПошук ворогів...')
                     bot.edit_message_text(
