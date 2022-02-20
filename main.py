@@ -1138,36 +1138,21 @@ def war_battle(message):
                     r.srem('fighters_2' + str(message.chat.id), member)
 
 
-'''
 @bot.message_handler(commands=['crash'])
 def crash(message):
     if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' \
             or bot.get_chat_member(message.chat.id, message.from_user.id).can_restrict_members is True \
             or message.from_user.id in sudoers:
         r.hdel('war_battle' + str(message.chat.id), 'start')
-        r.hdel('battles', message.chat.id)
+        r.srem('battles', message.chat.id)
         for member in r.smembers('fighters_2' + str(message.chat.id)):
+            r.hdel(member, 'in_war')
             r.srem('fighters_2' + str(message.chat.id), member)
-        if r.hexists('war_battle' + str(message.chat.id), 'enemy') == 1:
-            enemy = int(r.hget('war_battle' + str(message.chat.id), 'enemy'))
-            r.hdel('war_battle' + str(enemy), 'start')
-            r.hdel('battles', enemy)
-            for member in r.smembers('fighters_2' + str(enemy)):
-                r.srem('fighters_2' + str(enemy), member)
-            bot.send_message(enemy, 'Ворожий чат вирішив здатись.')
         try:
             bot.unpin_chat_message(message.chat.id, int(r.hget('war_battle' + str(message.chat.id), 'pin')))
         except:
             pass
-        try:
-            enemy = int(r.hget('war_battle' + str(message.chat.id), 'enemy'))
-            r.hdel('war_battle' + str(enemy), 'enemy')
-            bot.unpin_chat_message(enemy, int(r.hget('war_battle' + str(enemy), 'pin')))
-        except:
-            pass
-        r.hdel('war_battle' + str(message.chat.id), 'enemy')
         bot.reply_to(message, '\u2705')
-'''
 
 
 @bot.message_handler(commands=['achieve'])
