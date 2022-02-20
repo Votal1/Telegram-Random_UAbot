@@ -1113,6 +1113,7 @@ def great_war2(cid1, cid2, a, b):
         r.srem('fighters_2_2' + str(cid1), member)
     r.hdel('war_battle2' + str(cid2), 'start')
     for member in r.smembers('fighters_2_2' + str(cid2)):
+        r.hdel(member, 'in_war')
         r.srem('fighters_2_2' + str(cid2), member)
 
     bot.send_message(cid1, msg)
@@ -1276,6 +1277,7 @@ def war_battle2(message):
                 r.hdel('war_battle2' + str(message.chat.id), 'start')
                 r.srem('battles2', message.chat.id)
                 for member in r.smembers('fighters_2_2' + str(message.chat.id)):
+                    r.hdel(member, 'in_war')
                     r.srem('fighters_2_2' + str(message.chat.id), member)
 
 
@@ -2204,7 +2206,7 @@ def handle_query(call):
 
     elif call.data.startswith('war_test_join'):
         if str(call.from_user.id).encode() not in r.smembers('fighters_2_2' + str(call.message.chat.id)) and \
-                r.hexists(call.from_user.id, 'name') == 1 and \
+                r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
                 call.message.id == int(r.hget('war_battle2' + str(call.message.chat.id), 'start')):
             allow = True
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
@@ -2216,6 +2218,7 @@ def handle_query(call):
             if allow:
                 r.sadd('fighters_2_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
+                r.hset(call.from_user.id, 'in_war', 1)
                 fighters = r.scard('fighters_2_2' + str(call.message.chat.id))
                 if fighters == 1:
                     bot.edit_message_text(
