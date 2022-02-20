@@ -1053,6 +1053,8 @@ def great_war(cid1, cid2, a, b):
     for member in r.smembers('fighters_2' + str(cid2)):
         r.hdel(member, 'in_war')
         r.srem('fighters_2' + str(cid2), member)
+    r.srem('started_battles', cid1)
+    r.srem('started_battles', cid2)
 
     bot.send_message(cid1, msg)
     bot.send_message(cid2, msg)
@@ -1110,6 +1112,7 @@ def war_battle(message):
             r.hset('war_battle' + str(message.chat.id), 'title', message.chat.title)
             r.hset('war_battle' + str(message.chat.id), 'starter', message.from_user.id)
             r.hset('war_battle' + str(message.chat.id), 'war_ts', int(datetime.now().timestamp()))
+            r.sadd('started_battles', message.chat.id)
             try:
                 bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
                 r.hset('war_battle' + str(message.chat.id), 'pin', a.message_id)
