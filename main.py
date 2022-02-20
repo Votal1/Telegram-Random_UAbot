@@ -1110,6 +1110,7 @@ def great_war2(cid1, cid2, a, b):
 
     r.hdel('war_battle2' + str(cid1), 'start')
     for member in r.smembers('fighters_2_2' + str(cid1)):
+        r.hdel(member, 'in_war')
         r.srem('fighters_2_2' + str(cid1), member)
     r.hdel('war_battle2' + str(cid2), 'start')
     for member in r.smembers('fighters_2_2' + str(cid2)):
@@ -2219,15 +2220,16 @@ def handle_query(call):
                 r.sadd('fighters_2_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
                 r.hset(call.from_user.id, 'in_war', 1)
+                r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2_2' + str(call.message.chat.id))
                 if fighters == 1:
                     bot.edit_message_text(
                         text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
                         chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_4())
                 elif fighters >= 5 and r.scard('battles2') == 0:
-                    bot.send_message(call.message.chat.id, '\n\nПошук ворогів...')
+                    bot.send_message(call.message.chat.id, '\u2694 Пошук ворогів...')
                     bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name + '\n\nПошук ворогів...',
+                        text=call.message.text + ', ' + call.from_user.first_name + '\n\n\u2694 Пошук ворогів...',
                         chat_id=call.message.chat.id, message_id=call.message.id)
                     r.sadd('battles2', call.message.chat.id)
                 elif fighters >= 5 and r.scard('battles2') >= 1:
