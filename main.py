@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
-    invent, unpack, create_clan, clan_set, invite, buy_tools, battle_button_4
+    invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
 
@@ -1046,76 +1046,13 @@ def great_war(cid1, cid2, a, b):
     sleep(10)
 
     r.hdel('war_battle' + str(cid1), 'start')
-    r.hdel('war_battle' + str(cid1), 'enemy')
-    r.hdel('battles', cid1)
     for member in r.smembers('fighters_2' + str(cid1)):
+        r.hdel(member, 'in_war')
         r.srem('fighters_2' + str(cid1), member)
     r.hdel('war_battle' + str(cid2), 'start')
-    r.hdel('war_battle' + str(cid2), 'enemy')
-    r.hdel('battles', cid2)
     for member in r.smembers('fighters_2' + str(cid2)):
+        r.hdel(member, 'in_war')
         r.srem('fighters_2' + str(cid2), member)
-
-    bot.send_message(cid1, msg)
-    bot.send_message(cid2, msg)
-
-
-def great_war2(cid1, cid2, a, b):
-    sleep(2)
-    ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, clan1 = war_power(a, cid1)
-    chance2, clan2 = war_power(b, cid2)
-
-    bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
-                     + str(int(chance1)) + ' | ' + str(int(chance2)))
-    bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
-                     + str(int(chance1)) + ' | ' + str(int(chance2)))
-    sleep(3)
-
-    win = choices(['a', 'b'], weights=[chance1, chance2])
-    msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
-    reward = ''
-    if win == ['a']:
-        msg += r.hget('war_battle2' + str(cid1), 'title').decode()
-        for n in a:
-            r.hincrby(n, 'trophy', 1)
-            r.hincrby(n, 'wins', 1)
-            if clan1 < 5 or int(r.hget('c' + str(cid1), 'base')) <= 1:
-                r.hincrby(n, 'money', 3)
-                reward = '3'
-            else:
-                r.hincrby(n, 'money', 6)
-                reward = '6 \U0001F47E +1'
-        r.hincrby(222, cid1, 1)
-        if clan1 >= 5:
-            if int(r.hget('c' + str(cid1), 'base')) > 1:
-                r.hincrby('c' + str(cid1), 'r_spirit', 1)
-    elif win == ['b']:
-        msg += r.hget('war_battle2' + str(cid2), 'title').decode()
-        for n in b:
-            r.hincrby(n, 'trophy', 1)
-            r.hincrby(n, 'wins', 1)
-            if clan2 < 5 or int(r.hget('c' + str(cid2), 'base')) <= 1:
-                r.hincrby(n, 'money', 3)
-                reward = '3'
-            else:
-                r.hincrby(n, 'money', 6)
-                reward = '6 \U0001F47E +1'
-        r.hincrby(222, cid2, 1)
-        if clan2 >= 5:
-            if int(r.hget('c' + str(cid2), 'base')) > 1:
-                r.hincrby('c' + str(cid2), 'r_spirit', 1)
-    msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
-    sleep(10)
-
-    r.hdel('war_battle2' + str(cid1), 'start')
-    for member in r.smembers('fighters_2_2' + str(cid1)):
-        r.hdel(member, 'in_war')
-        r.srem('fighters_2_2' + str(cid1), member)
-    r.hdel('war_battle2' + str(cid2), 'start')
-    for member in r.smembers('fighters_2_2' + str(cid2)):
-        r.hdel(member, 'in_war')
-        r.srem('fighters_2_2' + str(cid2), member)
 
     bot.send_message(cid1, msg)
     bot.send_message(cid2, msg)
@@ -1167,57 +1104,21 @@ def war_battle(message):
                 bot.delete_message(message.chat.id, message.id)
             except:
                 pass
+            a = bot.send_message(message.chat.id, '\u2694 Починається міжчатова битва...\n\n',
+                                 reply_markup=battle_button_3())
+            r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
             r.hset('war_battle' + str(message.chat.id), 'title', message.chat.title)
-            if len(r.hgetall('battles')) == 0:
-                a = bot.send_message(message.chat.id, '\u2694 Пошук ворогів...\n\n')
-                r.hset('battles', a.chat.id, 0)
-                r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
-                r.hset('war_battle' + str(message.chat.id), 'starter', message.from_user.id)
-            else:
-                i = len(r.hkeys('battles'))
-                for k in r.hkeys('battles'):
-                    if int(k) != message.chat.id:
-                        if int(r.hget('battles', int(k))) == 0:
-                            r.hset('battles', int(k), message.chat.id)
-                            r.hset('war_battle' + str(message.chat.id), 'enemy', int(k))
-                            r.hset('war_battle' + k.decode(), 'enemy', message.chat.id)
-                            r.hset('war_battle' + str(message.chat.id), 'war_ts', int(datetime.now().timestamp()))
-                            r.hset('war_battle' + k.decode(), 'war_ts', int(datetime.now().timestamp()))
-                            a = bot.send_message(message.chat.id, '\u2694 Починається міжчатова битва проти ' +
-                                                 r.hget('war_battle' + k.decode(), 'title').decode() + '...\n\n',
-                                                 reply_markup=battle_button_3())
-                            b = bot.send_message(int(k), '\u2694 Починається міжчатова битва проти ' +
-                                                 r.hget('war_battle' + str(message.chat.id), 'title').decode() +
-                                                 '...\n\n', reply_markup=battle_button_3())
-                            try:
-                                bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
-                                r.hset('war_battle' + str(message.chat.id), 'pin', a.message_id)
-                            except:
-                                pass
-                            try:
-                                bot.pin_chat_message(b.chat.id, b.message_id, disable_notification=True)
-                                r.hset('war_battle' + k.decode(), 'pin', b.message_id)
-                            except:
-                                pass
-                            r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
-                            r.hset('war_battle' + k.decode(), 'start', b.message_id)
-                            r.hset('war_battle' + str(message.chat.id), 'starter', a.from_user.id)
-                            break
-                    i -= 1
-                    if i == 0:
-                        a = bot.send_message(message.chat.id, '\u2694 Пошук ворогів...\n\n')
-                        r.hset('battles', a.chat.id, 0)
-                        r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
-                        r.hset('war_battle' + str(message.chat.id), 'starter', a.from_user.id)
+            r.hset('war_battle' + str(message.chat.id), 'starter', message.from_user.id)
+            r.hset('war_battle' + str(message.chat.id), 'war_ts', int(datetime.now().timestamp()))
+            try:
+                bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
+                r.hset('war_battle' + str(message.chat.id), 'pin', a.message_id)
+            except:
+                pass
         elif '@' not in message.chat.title:
             try:
                 msg = '\U0001F5E1 Підготовка до міжчатової битви тут.\n\nКількість наших бійців: ' \
                       + str(r.scard('fighters_2' + str(message.chat.id)))
-                try:
-                    msg += '\nКількість ворожих бійців: ' + \
-                           str(r.scard('fighters_2' + r.hget('war_battle' + str(message.chat.id), 'enemy').decode()))
-                except:
-                    pass
                 bot.send_message(message.chat.id, msg,
                                  reply_to_message_id=int(r.hget('war_battle' + str(message.chat.id), 'start')))
                 try:
@@ -1231,57 +1132,13 @@ def war_battle(message):
                 except:
                     pass
                 r.hdel('war_battle' + str(message.chat.id), 'start')
-                r.hdel('battles', message.chat.id)
+                r.srem('battles', message.chat.id)
                 for member in r.smembers('fighters_2' + str(message.chat.id)):
+                    r.hdel(member, 'in_war')
                     r.srem('fighters_2' + str(message.chat.id), member)
 
 
-@bot.message_handler(commands=['war2'])
-def war_battle2(message):
-    banned = [-1001646765307, -1001475102262, -714355096, 557298328, 530769095, 470411500, 1767253195]
-    if message.chat.type != 'private' and bot.get_chat_members_count(message.chat.id) >= 10 \
-            and '@' not in message.chat.title \
-            and str(bot.get_chat_member(message.chat.id, bot.get_me().id).can_send_messages) != 'False' \
-            and message.chat.id not in banned and message.from_user.id not in banned:
-        if r.hexists('war_battle2' + str(message.chat.id), 'start') == 0:
-            try:
-                bot.delete_message(message.chat.id, message.id)
-            except:
-                pass
-            a = bot.send_message(message.chat.id, '\u2694 Починається міжчатова битва...\n\n',
-                                 reply_markup=battle_button_4())
-            r.hset('war_battle2' + str(message.chat.id), 'start', a.message_id)
-            r.hset('war_battle2' + str(message.chat.id), 'title', message.chat.title)
-            r.hset('war_battle2' + str(message.chat.id), 'starter', message.from_user.id)
-            r.hset('war_battle2' + str(message.chat.id), 'war_ts', int(datetime.now().timestamp()))
-            try:
-                bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
-                r.hset('war_battle2' + str(message.chat.id), 'pin', a.message_id)
-            except:
-                pass
-        elif '@' not in message.chat.title:
-            try:
-                msg = '\U0001F5E1 Підготовка до міжчатової битви тут.\n\nКількість наших бійців: ' \
-                      + str(r.scard('fighters_2_2' + str(message.chat.id)))
-                bot.send_message(message.chat.id, msg,
-                                 reply_to_message_id=int(r.hget('war_battle2' + str(message.chat.id), 'start')))
-                try:
-                    bot.delete_message(message.chat.id, message.id)
-                except:
-                    pass
-            except:
-                try:
-                    bot.delete_message(message.chat.id, message.id)
-                    bot.delete_message(message.chat.id, int(r.hget('war_battle2' + str(message.chat.id), 'start')))
-                except:
-                    pass
-                r.hdel('war_battle2' + str(message.chat.id), 'start')
-                r.srem('battles2', message.chat.id)
-                for member in r.smembers('fighters_2_2' + str(message.chat.id)):
-                    r.hdel(member, 'in_war')
-                    r.srem('fighters_2_2' + str(message.chat.id), member)
-
-
+'''
 @bot.message_handler(commands=['crash'])
 def crash(message):
     if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'creator' \
@@ -1310,6 +1167,7 @@ def crash(message):
             pass
         r.hdel('war_battle' + str(message.chat.id), 'enemy')
         bot.reply_to(message, '\u2705')
+'''
 
 
 @bot.message_handler(commands=['achieve'])
@@ -2140,10 +1998,8 @@ def handle_query(call):
                                                                                        ' хто почав набір.')
 
     elif call.data.startswith('war_join'):
-        enemy = r.hget('war_battle' + str(call.message.chat.id), 'enemy')
         if str(call.from_user.id).encode() not in r.smembers('fighters_2' + str(call.message.chat.id)) and \
-                str(call.from_user.id).encode() not in r.smembers('fighters_2' + enemy.decode()) and \
-                r.hexists(call.from_user.id, 'name') == 1 and \
+                r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
                 call.message.id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
             allow = True
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
@@ -2155,21 +2011,22 @@ def handle_query(call):
             if allow:
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
+                r.hset(call.from_user.id, 'in_war', 1)
+                r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2' + str(call.message.chat.id))
-                fighters2 = r.scard('fighters_2' + enemy.decode())
                 if fighters == 1:
                     bot.edit_message_text(
                         text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
                         chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_3())
-                elif fighters >= 5 and fighters2 < 5:
-                    bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name + '\n\nЧекаємо поки інший чат набере'
-                                                                                    ' 5 бійців...',
-                        chat_id=call.message.chat.id, message_id=call.message.id)
-                elif fighters >= 5 and fighters2 >= 5:
-                    bot.edit_message_text(
-                        text=call.message.text + '\n\nБій почався...',
-                        chat_id=call.message.chat.id, message_id=call.message.id)
+                elif fighters >= 5 and r.scard('battles') == 0:
+                    bot.reply_to(call.message, '\u2694 Пошук ворогів...')
+                    bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name,
+                                          chat_id=call.message.chat.id, message_id=call.message.id)
+                    r.sadd('battles', call.message.chat.id)
+                elif fighters >= 5 and r.scard('battles') >= 1:
+                    enemy = r.spop('battles')
+                    bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
+                                          chat_id=call.message.chat.id, message_id=call.message.id)
                     a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
                     b = list(r.smembers('fighters_2' + enemy.decode()))
                     msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
@@ -2197,71 +2054,6 @@ def handle_query(call):
                     bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                         message_id=call.message.id, reply_markup=battle_button_3())
-            else:
-                bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                          text='Ти не в цьому клані, тому зайти зможеш через 5 хвилин після'
-                                               ' початку набору.')
-        else:
-            bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти або вже в битві, або в тебе'
-                                                                                       ' нема русака')
-
-    elif call.data.startswith('war_test_join'):
-        if str(call.from_user.id).encode() not in r.smembers('fighters_2_2' + str(call.message.chat.id)) and \
-                r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
-                call.message.id == int(r.hget('war_battle2' + str(call.message.chat.id), 'start')):
-            allow = True
-            if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
-                if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
-                    if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)) and \
-                            int(datetime.now().timestamp()) - \
-                            int(r.hget('war_battle2' + str(call.message.chat.id), 'war_ts')) < 300:
-                        allow = False
-            if allow:
-                r.sadd('fighters_2_2' + str(call.message.chat.id), call.from_user.id)
-                r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-                r.hset(call.from_user.id, 'in_war', 1)
-                r.sadd('in_war', call.from_user.id)
-                fighters = r.scard('fighters_2_2' + str(call.message.chat.id))
-                if fighters == 1:
-                    bot.edit_message_text(
-                        text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
-                        chat_id=call.message.chat.id, message_id=call.message.id, reply_markup=battle_button_4())
-                elif fighters >= 5 and r.scard('battles2') == 0:
-                    bot.reply_to(call.message, '\u2694 Пошук ворогів...')
-                    bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name,
-                                          chat_id=call.message.chat.id, message_id=call.message.id)
-                    r.sadd('battles2', call.message.chat.id)
-                elif fighters >= 5 and r.scard('battles2') >= 1:
-                    enemy = r.spop('battles2')
-                    bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
-                                          chat_id=call.message.chat.id, message_id=call.message.id)
-                    a = list(r.smembers('fighters_2_2' + str(call.message.chat.id)))
-                    b = list(r.smembers('fighters_2_2' + enemy.decode()))
-                    msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
-                          r.hget('war_battle' + str(call.message.chat.id), 'title').decode() + ' | ' + \
-                          r.hget('war_battle' + enemy.decode(), 'title').decode() + \
-                          '\n1. ' + r.hget(a[0], 'firstname').decode() + ' | ' + r.hget(b[0], 'firstname').decode() + \
-                          '\n2. ' + r.hget(a[1], 'firstname').decode() + ' | ' + r.hget(b[1], 'firstname').decode() + \
-                          '\n3. ' + r.hget(a[2], 'firstname').decode() + ' | ' + r.hget(b[2], 'firstname').decode() + \
-                          '\n4. ' + r.hget(a[3], 'firstname').decode() + ' | ' + r.hget(b[3], 'firstname').decode() + \
-                          '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + r.hget(b[4], 'firstname').decode()
-                    bot.send_message(int(call.message.chat.id), msg)
-                    bot.send_message(int(enemy), msg)
-                    great_war2(call.message.chat.id, int(enemy), a, b)
-                    try:
-                        bot.unpin_chat_message(chat_id=call.message.chat.id,
-                                               message_id=int(r.hget('war_battle2' + str(call.message.chat.id), 'pin')))
-                    except:
-                        pass
-                    try:
-                        bot.unpin_chat_message(chat_id=int(enemy),
-                                               message_id=int(r.hget('war_battle2' + enemy.decode(), 'pin')))
-                    except:
-                        pass
-                else:
-                    bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                        message_id=call.message.id, reply_markup=battle_button_4())
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Ти не в цьому клані, тому зайти зможеш через 5 хвилин після'
