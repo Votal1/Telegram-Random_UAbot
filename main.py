@@ -2014,7 +2014,7 @@ def handle_query(call):
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
                 r.hset(call.from_user.id, 'in_war', call.message.chat.id)
-                r.hset(call.from_user.id, 'w_ts', datetime.now().timestamp())
+                r.hset(call.from_user.id, 'w_ts', int(datetime.now().timestamp()))
                 r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2' + str(call.message.chat.id))
                 if fighters == 1:
