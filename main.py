@@ -1801,20 +1801,24 @@ def handle_query(call):
                 print(1 / 0)
         except:
             r.hset(call.from_user.id, 'name', get_rusak()[0])
-            r.hset(call.from_user.id, 'strength', get_rusak()[1])
-            r.hset(call.from_user.id, 'intellect', get_rusak()[2])
+            # r.hset(call.from_user.id, 'strength', get_rusak()[1])
+            r.hset(call.from_user.id, 'strength', randint(200, 1000))
+            # r.hset(call.from_user.id, 'intellect', get_rusak()[2])
+            r.hset(call.from_user.id, 'intellect', randint(2, 8))
             if r.hexists(call.from_user.id, 'spirit') == 0:
                 r.hset(call.from_user.id, 'spirit', 0)
             if r.hexists(call.from_user.id, 'time') == 0:
                 r.hset(call.from_user.id, 'time', 0)
-            r.hset(call.from_user.id, 'class', 0)
+            # r.hset(call.from_user.id, 'class', 0)
+            r.hset(call.from_user.id, 'class', 5)
             r.hset(call.from_user.id, 'weapon', 0)
             r.hset(call.from_user.id, 'defense', 0)
             r.hset(call.from_user.id, 'support', 0)
             r.hset(call.from_user.id, 's_weapon', 0)
             r.hset(call.from_user.id, 's_defense', 0)
             r.hset(call.from_user.id, 's_support', 0)
-            r.hset(call.from_user.id, 'photo', 0)
+            # r.hset(call.from_user.id, 'photo', 0)
+            r.hset(call.from_user.id, 'photo', choice(p5))
             r.hset(call.from_user.id, 'mushrooms', 0)
             r.hset(call.from_user.id, 'injure', 0)
             r.hset(call.from_user.id, 'sch', 0)
@@ -2352,6 +2356,7 @@ def handle_query(call):
                     pass
         except:
             pass
+        r.hset(call.from_user.id, 'time2', datetime.now().day)
         name = int(r.hget(call.from_user.id, 'name'))
         clm = int(r.hget(call.from_user.id, 'class'))
         r.hdel(call.from_user.id, 'name')
@@ -2362,7 +2367,6 @@ def handle_query(call):
         r.hset(call.from_user.id, 'strength', 0)
         r.hset(call.from_user.id, 'class', 0)
         r.hset(call.from_user.id, 'intellect', 0)
-        r.hset(call.from_user.id, 'time2', datetime.now().day)
         r.hincrby(call.from_user.id, 'deaths', 1)
         if call.message.chat.type == 'private':
             bot.edit_message_text(text='\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, '
