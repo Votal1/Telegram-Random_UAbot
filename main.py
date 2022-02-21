@@ -1802,7 +1802,7 @@ def handle_query(call):
         except:
             r.hset(call.from_user.id, 'name', get_rusak()[0])
             # r.hset(call.from_user.id, 'strength', get_rusak()[1])
-            r.hset(call.from_user.id, 'strength', randint(200, 1000))
+            r.hset(call.from_user.id, 'strength', randint(200, 800))
             # r.hset(call.from_user.id, 'intellect', get_rusak()[2])
             r.hset(call.from_user.id, 'intellect', randint(2, 8))
             if r.hexists(call.from_user.id, 'spirit') == 0:
