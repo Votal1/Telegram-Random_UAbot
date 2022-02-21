@@ -2028,32 +2028,41 @@ def handle_query(call):
                                           chat_id=call.message.chat.id, message_id=call.message.id)
                     r.sadd('battles', call.message.chat.id)
                 elif fighters >= 5 and r.scard('battles') >= 1:
-                    enemy = r.spop('battles')
-                    bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
-                                          chat_id=call.message.chat.id, message_id=call.message.id)
-                    a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
-                    b = list(r.smembers('fighters_2' + enemy.decode()))
-                    msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
-                          r.hget('war_battle' + str(call.message.chat.id), 'title').decode() + ' | ' + \
-                          r.hget('war_battle' + enemy.decode(), 'title').decode() + \
-                          '\n1. ' + r.hget(a[0], 'firstname').decode() + ' | ' + r.hget(b[0], 'firstname').decode() + \
-                          '\n2. ' + r.hget(a[1], 'firstname').decode() + ' | ' + r.hget(b[1], 'firstname').decode() + \
-                          '\n3. ' + r.hget(a[2], 'firstname').decode() + ' | ' + r.hget(b[2], 'firstname').decode() + \
-                          '\n4. ' + r.hget(a[3], 'firstname').decode() + ' | ' + r.hget(b[3], 'firstname').decode() + \
-                          '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + r.hget(b[4], 'firstname').decode()
-                    bot.send_message(int(call.message.chat.id), msg)
-                    bot.send_message(int(enemy), msg)
-                    great_war(call.message.chat.id, int(enemy), a, b)
-                    try:
-                        bot.unpin_chat_message(chat_id=call.message.chat.id,
-                                               message_id=int(r.hget('war_battle' + str(call.message.chat.id), 'pin')))
-                    except:
+                    if str(call.message.chat.id).encode() in r.smembers('battles'):
                         pass
-                    try:
-                        bot.unpin_chat_message(chat_id=int(enemy),
-                                               message_id=int(r.hget('war_battle' + enemy.decode(), 'pin')))
-                    except:
-                        pass
+                    else:
+                        enemy = r.spop('battles')
+                        bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
+                                              chat_id=call.message.chat.id, message_id=call.message.id)
+                        a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
+                        b = list(r.smembers('fighters_2' + enemy.decode()))
+                        msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
+                              r.hget('war_battle' + str(call.message.chat.id), 'title').decode() + ' | ' + \
+                              r.hget('war_battle' + enemy.decode(), 'title').decode() + \
+                              '\n1. ' + r.hget(a[0], 'firstname').decode() + ' | ' + \
+                              r.hget(b[0], 'firstname').decode() + \
+                              '\n2. ' + r.hget(a[1], 'firstname').decode() + ' | ' + \
+                              r.hget(b[1], 'firstname').decode() + \
+                              '\n3. ' + r.hget(a[2], 'firstname').decode() + ' | ' + \
+                              r.hget(b[2], 'firstname').decode() + \
+                              '\n4. ' + r.hget(a[3], 'firstname').decode() + ' | ' + \
+                              r.hget(b[3], 'firstname').decode() + \
+                              '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + \
+                              r.hget(b[4], 'firstname').decode()
+                        bot.send_message(int(call.message.chat.id), msg)
+                        bot.send_message(int(enemy), msg)
+                        great_war(call.message.chat.id, int(enemy), a, b)
+                        try:
+                            bot.unpin_chat_message(chat_id=call.message.chat.id,
+                                                   message_id=int(r.hget('war_battle' +
+                                                                         str(call.message.chat.id), 'pin')))
+                        except:
+                            pass
+                        try:
+                            bot.unpin_chat_message(chat_id=int(enemy),
+                                                   message_id=int(r.hget('war_battle' + enemy.decode(), 'pin')))
+                        except:
+                            pass
                 else:
                     bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
