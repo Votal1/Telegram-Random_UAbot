@@ -1950,8 +1950,8 @@ def handle_query(call):
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
-            r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
+            r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
             fighters = r.scard('fighters' + str(call.message.chat.id))
             if fighters == 1:
                 bot.edit_message_text(
@@ -1961,7 +1961,7 @@ def handle_query(call):
                 bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                     message_id=call.message.id, reply_markup=battle_button_2())
-            elif fighters >= 10:
+            elif fighters == 10:
                 bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name + '\n\nБій почався...',
                     chat_id=call.message.chat.id, message_id=call.message.id)
