@@ -1424,7 +1424,7 @@ def clan(message):
                                      '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
                 elif base >= 2:
                     building, wins = '', ''
-                    prefix = ['', 'Банда', 'Клан', 'Гільдія']
+                    prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання']
                     if r.hexists(222, message.chat.id) == 1:
                         wins = '\nКількість перемог: ' + r.hget(222, message.chat.id).decode()
                     if base == 2:
@@ -1432,6 +1432,9 @@ def clan(message):
                                    'якщо серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
                     elif base == 3:
                         building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.' \
+                                   '\n\U0001F3ED Інфраструктура:'
+                    elif base == 4:
+                        building = '\U0001F3D8 Штаб\n\U0001F4B5 Можливість нокаутувати ворога в дуелях.' \
                                    '\n\U0001F3ED Інфраструктура:'
                     resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() + \
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
@@ -1524,6 +1527,30 @@ def upgrade(message):
                         r.hincrby(c, 'r_spirit', -20)
                         r.hset(c, 'base', 3)
                         bot.send_message(message.chat.id, '\U0001F3D7 Покращено Клан до Гільдії.')
+            elif base == 3 and message.chat.id == -1001733230634:
+                bot.send_message(message.chat.id, '\U0001F3D7 Покращення Гільдії до Угруповання коштує '
+                                                  '\U0001F333 3000, \U0001faa8 1500, \U0001F9F6 800, \U0001F9F1 400, '
+                                                  '\U0001F47E 50 і \U0001F4B5 3000.')
+                admins = []
+                for admin in bot.get_chat_administrators(message.chat.id):
+                    admins.append(admin.user.id)
+                if int(r.hget(c, 'wood')) >= 3000 and int(r.hget(c, 'stone')) >= 1500 \
+                        and int(r.hget(c, 'cloth')) >= 800 and int(r.hget(c, 'brick')) >= 400 \
+                        and int(r.hget(c, 'money')) >= 3000 and int(r.hget(c, 'r_spirit')) >= 50 and \
+                        message.from_user.id not in admins:
+                    bot.send_message(message.chat.id, '\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
+                if int(r.hget(c, 'wood')) >= 3000 and int(r.hget(c, 'stone')) >= 1500 \
+                        and int(r.hget(c, 'cloth')) >= 800 and int(r.hget(c, 'brick')) >= 400 \
+                        and int(r.hget(c, 'money')) >= 3000 and int(r.hget(c, 'r_spirit')) >= 50:
+                    if message.from_user.id in admins:
+                        r.hincrby(c, 'money', -3000)
+                        r.hincrby(c, 'wood', -3000)
+                        r.hincrby(c, 'stone', -1500)
+                        r.hincrby(c, 'cloth', -800)
+                        r.hincrby(c, 'brick', -400)
+                        r.hincrby(c, 'r_spirit', -50)
+                        r.hset(c, 'base', 4)
+                        bot.send_message(message.chat.id, '\U0001F3D7 Покращено Гільдію до Угруповання.')
     except:
         pass
 
@@ -3249,7 +3276,7 @@ def handle_query(call):
                         r.hset(call.from_user.id, 'support', 5)
                         r.hset(call.from_user.id, 's_support', 1)
                         bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                  text='Русак покадкушував хліб і залишив на потім...')
+                                                  text='Русак понадкушував хліб і залишив на потім...')
             else:
                 bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                           text='Недостатньо коштів на рахунку.')
