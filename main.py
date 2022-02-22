@@ -1434,7 +1434,7 @@ def clan(message):
                         building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.' \
                                    '\n\U0001F3ED Інфраструктура:'
                     elif base == 4:
-                        building = '\U0001F3D8 Штаб\n\U0001F4B5 Можливість нокаутувати ворога в дуелях.' \
+                        building = '\U0001F3D8 Штаб\n\U0001F54A Можливість нокаутувати ворога в дуелях.' \
                                    '\n\U0001F3ED Інфраструктура:'
                     resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() + \
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
@@ -1828,24 +1828,20 @@ def handle_query(call):
                 print(1 / 0)
         except:
             r.hset(call.from_user.id, 'name', get_rusak()[0])
-            # r.hset(call.from_user.id, 'strength', get_rusak()[1])
-            r.hset(call.from_user.id, 'strength', randint(200, 600))
-            # r.hset(call.from_user.id, 'intellect', get_rusak()[2])
-            r.hset(call.from_user.id, 'intellect', randint(2, 6))
+            r.hset(call.from_user.id, 'strength', get_rusak()[1])
+            r.hset(call.from_user.id, 'intellect', get_rusak()[2])
             if r.hexists(call.from_user.id, 'spirit') == 0:
                 r.hset(call.from_user.id, 'spirit', 0)
             if r.hexists(call.from_user.id, 'time') == 0:
                 r.hset(call.from_user.id, 'time', 0)
-            # r.hset(call.from_user.id, 'class', 0)
-            r.hset(call.from_user.id, 'class', 5)
+            r.hset(call.from_user.id, 'class', 0)
             r.hset(call.from_user.id, 'weapon', 0)
             r.hset(call.from_user.id, 'defense', 0)
             r.hset(call.from_user.id, 'support', 0)
             r.hset(call.from_user.id, 's_weapon', 0)
             r.hset(call.from_user.id, 's_defense', 0)
             r.hset(call.from_user.id, 's_support', 0)
-            # r.hset(call.from_user.id, 'photo', 0)
-            r.hset(call.from_user.id, 'photo', choice(p5))
+            r.hset(call.from_user.id, 'photo', 0)
             r.hset(call.from_user.id, 'mushrooms', 0)
             r.hset(call.from_user.id, 'injure', 0)
             r.hset(call.from_user.id, 'sch', 0)
