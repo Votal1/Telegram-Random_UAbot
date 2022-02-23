@@ -2350,6 +2350,7 @@ def handle_query(call):
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
+        r.hset(call.from_user.id, 'time2', datetime.now().day)
         try:
             cl = int(r.hget(call.from_user.id, 'class'))
             for member in r.smembers(call.message.chat.id):
@@ -2379,7 +2380,6 @@ def handle_query(call):
                     pass
         except:
             pass
-        r.hset(call.from_user.id, 'time2', datetime.now().day)
         name = int(r.hget(call.from_user.id, 'name'))
         clm = int(r.hget(call.from_user.id, 'class'))
         r.hdel(call.from_user.id, 'name')
