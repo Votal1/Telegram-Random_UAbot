@@ -3298,10 +3298,10 @@ def handle_query(call):
 def messages(message):
     try:
         try:
-            if message.text.startswith('@') and message.text[1:].encode() in r.smembers('russian_channels_usernames'):
+            if message.text.startswith('@') and message.text[1:].encode() in r.smembers('run'):
                 bot.reply_to(message, '\u26A0\uFE0F УВАГА! \u26A0\uFE0F\n\nЦей канал розповсюджує фейки.')
-            elif str(message.forward_from_chat.id).encode() in r.smembers('russian_channels_ids') or \
-                    str(message.from_user.id).encode() in r.smembers('russian_channels_ids'):
+            elif str(message.forward_from_chat.id).encode() in r.smembers('rid') or \
+                    str(message.from_user.id).encode() in r.smembers('rid'):
                 bot.reply_to(message, '\u26A0\uFE0F УВАГА! \u26A0\uFE0F\n\nЦей канал розповсюджує фейки.')
         except:
             pass
