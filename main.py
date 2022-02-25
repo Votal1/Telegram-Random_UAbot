@@ -3297,6 +3297,14 @@ def handle_query(call):
 @bot.message_handler()
 def messages(message):
     try:
+        try:
+            if message.text.startswith('@') and message.text[1:].encode() in r.smembers('russian_channels_usernames'):
+                bot.reply_to(message, '\u26A0\uFE0F УВАГА! \u26A0\uFE0F\n\nЦей канал розповсюджує фейки.')
+            elif str(message.forward_from_chat.id).encode() in r.smembers('russian_channels_ids') or \
+                    str(message.from_user.id).encode() in r.smembers('russian_channels_ids'):
+                bot.reply_to(message, '\u26A0\uFE0F УВАГА! \u26A0\uFE0F\n\nЦей канал розповсюджує фейки.')
+        except:
+            pass
         if 'Кубик' in message.text or 'кубик' in message.text:
             bot.send_dice(chat_id=message.chat.id, reply_to_message_id=message.id)
 
