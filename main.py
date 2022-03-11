@@ -33,8 +33,6 @@ def handle_help(message):
                           "Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n"
                           "Щоб взяти русака напиши команду \n/donbass\nВсі команди - /commands\nДетальна інформація про"
                           " русаків -\nhttps://t.me/randomuanews/4")
-    if message.from_user.id == 456514639:
-        bot.leave_chat(-1001784732970)
 
 
 @bot.message_handler(commands=['links'])
