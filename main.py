@@ -33,6 +33,8 @@ def handle_help(message):
                           "Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n"
                           "Щоб взяти русака напиши команду \n/donbass\nВсі команди - /commands\nДетальна інформація про"
                           " русаків -\nhttps://t.me/randomuanews/4")
+    if message.from_user.id == 456514639:
+        bot.leave_chat(-1001784732970)
 
 
 @bot.message_handler(commands=['links'])
@@ -3641,7 +3643,7 @@ def custom_query(inline_query):
                                              thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
                                              description='все дуже серйозно')
         r13 = types.InlineQueryResultArticle('13', 'Віджимайся!',
-                                             types.InputTextMessageContent('\ud83d\udcaa ' + inline_query.query +
+                                             types.InputTextMessageContent('\U0001F4AA ' + inline_query.query +
                                                                            ', роби ' + roll_push_ups()),
                                              thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
                                              description='ти ж цього не зробиш, чи не так?')
