@@ -3412,7 +3412,7 @@ async def inline_echo(inline_query):
 
 
 async def on_startup(dp):
-    await bot.set_webhook('https://testrandombot.herokuapp.com/' + TOKEN)
+    await bot.set_webhook(environ.get('APP_URL') + TOKEN)
     print(dp.get_current())
 
 
