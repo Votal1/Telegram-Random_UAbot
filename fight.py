@@ -4,7 +4,7 @@ from asyncio import sleep
 
 from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
-    damage_weapon, damage_defense, damage_support
+    damage_weapon, damage_defense, damage_support, increase_trance
 from variables import names, icons, p7
 
 
@@ -959,8 +959,8 @@ async def war_power(sett, cid):
 async def great_war(cid1, cid2, a, b):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, clan1 = war_power(a, cid1)
-    chance2, clan2 = war_power(b, cid2)
+    chance1, clan1 = await war_power(a, cid1)
+    chance2, clan2 = await war_power(b, cid2)
 
     await bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
                            + str(int(chance1)) + ' | ' + str(int(chance2)))
