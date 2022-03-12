@@ -511,26 +511,38 @@ async def woman(message):
 
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
-    msg = await top(message.chat.id, message.from_user.id)
-    await message.reply(msg)
+    try:
+        msg = await top(message.chat.id, message.from_user.id)
+        await message.reply(msg)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['gtop'])
 async def g_top(message):
-    msg = await top(111, message.from_user.id)
-    await message.reply(msg)
+    try:
+        msg = await top(111, message.from_user.id)
+        await message.reply(msg)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['itop'])
 async def i_top(message):
-    msg = await itop(message.from_user.id, message.chat.id, message.chat.type)
-    await message.reply(msg)
+    try:
+        msg = await itop(message.from_user.id, message.chat.id, message.chat.type)
+        await message.reply(msg)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['ctop'])
 async def c_top(message):
-    msg = await ctop(222, message.from_user.id)
-    await message.reply(msg, parse_mode='HTML')
+    try:
+        msg = await ctop(222, message.from_user.id)
+        await message.reply(msg, parse_mode='HTML')
+    except:
+        pass
 
 
 @dp.message_handler(commands=['class'])
