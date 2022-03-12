@@ -37,7 +37,7 @@ def mine_salt(s2):
     return success, money, mind
 
 
-async def top(sett, uid):
+def top(sett, uid):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
@@ -48,8 +48,7 @@ async def top(sett, uid):
             for member in everyone:
                 if sett != 111:
                     try:
-                        st = await bot.get_chat_member(sett, int(member))
-                        if st.status == 'left':
+                        if bot.get_chat_member(sett, int(member)).status == 'left':
                             r.srem(sett, int(member))
                             continue
                     except:
@@ -90,7 +89,7 @@ async def top(sett, uid):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-async def itop(uid, cid, chat):
+def itop(uid, cid, chat):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
@@ -152,7 +151,7 @@ async def itop(uid, cid, chat):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-async def ctop(sett, uid):
+def ctop(sett, uid):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)

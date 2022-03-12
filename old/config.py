@@ -1,10 +1,9 @@
-from redis import Redis
+import redis
+import telebot
 from os import environ
-from aiogram import Bot, Dispatcher
 
 r = redis.Redis(host=environ.get('REDIS_HOST'), port=int(environ.get('REDIS_PORT')),
                 password=environ.get('REDIS_PASSWORD'), db=0)
 
 TOKEN = environ.get('TOKEN')
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+bot = telebot.TeleBot(TOKEN)
