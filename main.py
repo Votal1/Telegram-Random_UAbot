@@ -1,11 +1,8 @@
 import logging
 from random import randint, choice, choices
 from datetime import datetime, timedelta
-from asyncio import sleep
 from os import environ
-from aiogram import executor
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineQuery, InputTextMessageContent, \
-    InlineQueryResultArticle, ChatPermissions
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
@@ -13,10 +10,10 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, damage_support, increase_trance
+from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     invent, unpack, create_clan, clan_set, invite, buy_tools
-from fight import fight, war, war_power, great_war
+from fight import fight, war, great_war
 from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
 
 logging.basicConfig(level=logging.INFO)
@@ -1693,7 +1690,7 @@ async def handle_query(call):
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                     message_id=call.message.message_id, reply_markup=battle_button_2())
-            elif fighters == 10:
+            elif fighters >= 10:
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name + '\n\nБій почався...',
                     chat_id=call.message.chat.id, message_id=call.message.message_id)
