@@ -1539,7 +1539,7 @@ async def commands(message):
                         '/war - міжчатова битва 5х5\n'
                         '...', reply_markup=markup.add(InlineKeyboardButton(text='Розгорнути',
                                                                             callback_data='full_list')),
-                        parse_mode='HTML')
+                        parse_mode='HTML', disable_web_page_preview=True)
 
 
 @dp.callback_query_handler(lambda call: True)
