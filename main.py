@@ -2184,7 +2184,8 @@ async def handle_query(call):
                                          '/ban [number][m/h/d] /unban\n'
                                          '/mute [number][m/h/d/f] /unmute\n'
                                          '/moxir [number][m/h/d] - забрати стікери і медіа',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML')
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
+                                    disable_web_page_preview=True)
 
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
