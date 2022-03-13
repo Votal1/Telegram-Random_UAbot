@@ -38,8 +38,8 @@ async def get_help(message):
 
 @dp.message_handler(commands=['links'])
 async def handle_links(message):
-    await message.reply('@soledar1 - місце, де збираються люди з усіх куточків України, '
-                        'щоб похизуватись своїми бойовими русаками!\n'
+    await message.reply('<a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a> - місце, де збираються люди з усіх '
+                        'куточків України, щоб похизуватись своїми бойовими русаками!\n'
                         '@randomuanews - новини, патчноути, опитування\n\n'
                         '@borykva - осередок цебулізму\n'
                         '@ukrnastup - осередок сучасного українського націоналізму\n'
@@ -686,16 +686,16 @@ async def merchant(message):
         else:
             msg = 'Мандрівний торговець приходить раз в день у випадкову годину (від 18 до 22).\n' \
                   'Продає універсальний захист, рідкісні гриби та спорядження для всіх класів.'
-            if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
-                    int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-                msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
+            # if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+            #        int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            #    msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
             await message.answer(msg, disable_web_page_preview=True)
     else:
-        msg = 'Мандрівний торговець приходить увечері в @soledar1.'
-        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
-                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
-        await message.answer(msg, disable_web_page_preview=True)
+        msg = 'Мандрівний торговець приходить увечері в <a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a>.'
+        # if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+        #        int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+        #    msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
+        await message.answer(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
 @dp.message_handler(commands=['donate'])
@@ -1528,7 +1528,8 @@ async def commands(message):
     markup = InlineKeyboardMarkup()
     await message.reply('/links - реклама, головний чат, творець\n'
                         '/feed - погодувати русака\n'
-                        '/mine - відправити русака заробляти гроші (доступно тільки в @soledar1)\n'
+                        '/mine - відправити русака заробляти гроші (доступно тільки в '
+                        '<a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a>)\n'
                         '/woman - провідати жінку\n'
                         '/fascist - вибрати фашиста дня\n'
                         '/achieve - досягнення\n'
@@ -1537,7 +1538,8 @@ async def commands(message):
                         '/battle - чатова битва (5-10 русаків)\n'
                         '/war - міжчатова битва 5х5\n'
                         '...', reply_markup=markup.add(InlineKeyboardButton(text='Розгорнути',
-                                                                            callback_data='full_list')))
+                                                                            callback_data='full_list')),
+                        parse_mode='HTML')
 
 
 @dp.callback_query_handler(lambda call: True)
@@ -2171,7 +2173,8 @@ async def handle_query(call):
                                          '/war - почати міжчатову битву\n'
                                          '/crash - зупинити міжчатову битву\n\n'
 
-                                         'Команди, доступні тільки в @soledar1 та тимчасові івенти:\n'
+                                         'Команди, доступні тільки в <a href="https://t.me/+AB9BCgXnQrAxMzFi">'
+                                         '@soledar1</a>:\n'
                                          '/mine - відправити русака заробляти гроші\n'
                                          '/merchant - мандрівний торговець, який продає топову снарягу\n\n'
 
@@ -2181,7 +2184,7 @@ async def handle_query(call):
                                          '/ban [number][m/h/d] /unban\n'
                                          '/mute [number][m/h/d/f] /unmute\n'
                                          '/moxir [number][m/h/d] - забрати стікери і медіа',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id)
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML')
 
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
