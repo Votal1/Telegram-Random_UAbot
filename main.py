@@ -816,7 +816,10 @@ async def battle(message):
                 r.hdel('battle' + str(message.chat.id), 'start')
                 for mem in r.smembers('fighters' + str(message.chat.id)):
                     r.srem('fighters' + str(message.chat.id), mem)
-                await bot.delete_message(message.chat.id, message.message_id)
+                try:
+                    await bot.delete_message(message.chat.id, message.message_id)
+                except:
+                    pass
 
 
 @dp.message_handler(commands=['war'])
