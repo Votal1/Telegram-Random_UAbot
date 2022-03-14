@@ -1568,7 +1568,8 @@ async def handle_query(call):
             r.hset(cid, 'name', get_rusak()[0], {'strength': get_rusak()[1], 'intellect': get_rusak()[2], 'spirit': 0,
                                                  'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
                                                  'support': 0, 's_support': 0, 'photo': 0, 'mushrooms': 0, 'hp': 100,
-                                                 'injure': 0, 'sch': 0, 'buff': 0})
+                                                 'injure': 0, 'sch': 0, 'buff': 0,
+                                                 'firstname': call.from_user.first_name})
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
                 if call.message.chat.type != 'private':
@@ -1609,7 +1610,10 @@ async def handle_query(call):
     elif call.data.startswith('fight') and r.hexists(call.from_user.id, 'name') != 0:
         cdata = call.data[5:].split(',', 3)
         uid1 = cdata[0]
-        un1 = r.hget(uid1, 'firstname').decode()
+        try:
+            un1 = r.hget(uid1, 'firstname').decode()
+        except:
+            un1 = '...'
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
