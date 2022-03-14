@@ -33,7 +33,7 @@ def prepare_to_fight(uid, fn, q):
             i = randint(10, 20)
             bd = randint(0, 10000)
             if c == 23:
-                c = randint(0, len(icons))
+                c = randint(0, len(icons) - 1)
 
         query = ''
         try:
