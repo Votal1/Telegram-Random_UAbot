@@ -3223,224 +3223,235 @@ async def echo(message):
 
 @dp.inline_handler(lambda query: len(query.query) == 0)
 async def inline_echo(inline_query):
-    markup = InlineKeyboardMarkup()
-    call = 'fight' + str(inline_query.from_user.id)
-    r1 = InlineQueryResultArticle(
-        id='1',
-        title='Бій русаків',
-        input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
-                                                                           inline_query.from_user.first_name,
-                                                                           inline_query.query))),
-        reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
-        thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
-        description='надери комусь дупу\nнапиши & щоб відкрити інші режими')
-    r2 = InlineQueryResultArticle(
-        id='2',
-        title='Ким ти був в минулому житті?',
-        input_message_content=InputTextMessageContent(str('Ким ти був в минулому житті?\n\n' + pastLife())),
-        thumb_url='https://i.ibb.co/mJ0SXzL/Past-lives-2-56a6ede63df78cf772910470.jpg',
-        description='можливо, воно було не таке нікчемне як зараз')
-    r3 = InlineQueryResultArticle(
-        id='3',
-        title='Куди ти поїдеш на заробітки?',
-        input_message_content=InputTextMessageContent(str('Куди ти поїдеш на заробітки?\n\n' + earnings())),
-        thumb_url='https://i.ibb.co/ypDcLNc/Polunytsya-e1538080073461.jpg',
-        description='добре там є, де нас нема')
-    r4 = InlineQueryResultArticle(
-        id='4',
-        title='Визнач свої політичні координати?',
-        input_message_content=InputTextMessageContent(str('Мої політичні координати\n\n' + political())),
-        thumb_url='https://i.ibb.co/XbGNVSS/maxresdefault.jpg',
-        description='правачок чи лібераха?')
-    r5 = InlineQueryResultArticle(
-        id='5',
-        title='Наскільки ви підходите один одному?',
-        input_message_content=InputTextMessageContent('*звук мовчання*'),
-        thumb_url='https://i.ibb.co/QDkHD0b/telltaale.jpg',
-        description='вибирай дівку і залицяйся')
-    r6 = InlineQueryResultArticle(
-        id='6',
-        title='Питай, що турбує',
-        input_message_content=InputTextMessageContent('*звук мовчання*'),
-        thumb_url='https://i.ibb.co/qkjYFDF/im610x343-Zelensky-notebook.jpg',
-        description='ну тобто треба щось написати')
-    r7 = InlineQueryResultArticle(
-        id='7',
-        title='Зрадометр',
-        input_message_content=InputTextMessageContent(str(zradoMoga())),
-        thumb_url='https://i.ibb.co/7GJzmc4/Ea-PHB6-EWs-AAVER4.jpg',
-        description='допоможе визначитись з певною подією')
-    r8 = InlineQueryResultArticle(
-        id='8',
-        title='Якого розміру в тебе пісюн?',
-        input_message_content=InputTextMessageContent(str(penis())),
-        thumb_url='https://i.ibb.co/3FQYpgB/photo-2020-08-27-14-49-33.jpg',
-        description='роздягайся')
-    r9 = InlineQueryResultArticle(
-        id='9',
-        title='Вибір з кількох варіантів',
-        input_message_content=InputTextMessageContent('*звук мовчання*'),
-        thumb_url='https://i.ibb.co/HtK6FTR/o-1ej2111rn189p9qrabv1au81o1o1k.jpg',
-        description='наприклад, "Бути чи/або не бути?"')
-    r10 = InlineQueryResultArticle(
-        id='10',
-        title='Вибери для себе пиво',
-        input_message_content=InputTextMessageContent('Бот радить тобі...\n\n' + beer()),
-        thumb_url='https://i.ibb.co/rZbG1fD/image.jpg',
-        description='або для когось іншого')
-    r11 = InlineQueryResultArticle(
-        id='11',
-        title='Генератор випадкових чисел',
-        input_message_content=InputTextMessageContent(generator(inline_query.query)),
-        thumb_url='https://i.ibb.co/3TZsnyj/randomn.png',
-        description='введи від 1 до 3 чисел (перші два проміжок, третє кількість)')
-    r12 = InlineQueryResultArticle(
-        id='12',
-        title='Визнач своє походження',
-        input_message_content=InputTextMessageContent('Моє походження:\n\n' + race()),
-        thumb_url='https://i.ibb.co/7V4QmDL/nations.png',
-        description='зараз бот проаналізує твої ДНК...')
-    r13 = InlineQueryResultArticle(
-        id='13',
-        title='Який в тебе гендер?',
-        input_message_content=InputTextMessageContent(gender()),
-        thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
-        description='все дуже серйозно')
-    r14 = InlineQueryResultArticle(
-        id='14',
-        title='Віджимайся!',
-        input_message_content=InputTextMessageContent('\U0001F4AA Роби ' + roll_push_ups()),
-        thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
-        description='ти ж цього не зробиш, чи не так?')
-    await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12,
-                                                            r13, r14], cache_time=0)
+    try:
+        markup = InlineKeyboardMarkup()
+        call = 'fight' + str(inline_query.from_user.id)
+        r1 = InlineQueryResultArticle(
+            id='1',
+            title='Бій русаків',
+            input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
+                                                                               inline_query.from_user.first_name,
+                                                                               inline_query.query))),
+            reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
+            thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
+            description='надери комусь дупу\nнапиши & щоб відкрити інші режими')
+        r2 = InlineQueryResultArticle(
+            id='2',
+            title='Ким ти був в минулому житті?',
+            input_message_content=InputTextMessageContent(str('Ким ти був в минулому житті?\n\n' + pastLife())),
+            thumb_url='https://i.ibb.co/mJ0SXzL/Past-lives-2-56a6ede63df78cf772910470.jpg',
+            description='можливо, воно було не таке нікчемне як зараз')
+        r3 = InlineQueryResultArticle(
+            id='3',
+            title='Куди ти поїдеш на заробітки?',
+            input_message_content=InputTextMessageContent(str('Куди ти поїдеш на заробітки?\n\n' + earnings())),
+            thumb_url='https://i.ibb.co/ypDcLNc/Polunytsya-e1538080073461.jpg',
+            description='добре там є, де нас нема')
+        r4 = InlineQueryResultArticle(
+            id='4',
+            title='Визнач свої політичні координати?',
+            input_message_content=InputTextMessageContent(str('Мої політичні координати\n\n' + political())),
+            thumb_url='https://i.ibb.co/XbGNVSS/maxresdefault.jpg',
+            description='правачок чи лібераха?')
+        r5 = InlineQueryResultArticle(
+            id='5',
+            title='Наскільки ви підходите один одному?',
+            input_message_content=InputTextMessageContent('*звук мовчання*'),
+            thumb_url='https://i.ibb.co/QDkHD0b/telltaale.jpg',
+            description='вибирай дівку і залицяйся')
+        r6 = InlineQueryResultArticle(
+            id='6',
+            title='Питай, що турбує',
+            input_message_content=InputTextMessageContent('*звук мовчання*'),
+            thumb_url='https://i.ibb.co/qkjYFDF/im610x343-Zelensky-notebook.jpg',
+            description='ну тобто треба щось написати')
+        r7 = InlineQueryResultArticle(
+            id='7',
+            title='Зрадометр',
+            input_message_content=InputTextMessageContent(str(zradoMoga())),
+            thumb_url='https://i.ibb.co/7GJzmc4/Ea-PHB6-EWs-AAVER4.jpg',
+            description='допоможе визначитись з певною подією')
+        r8 = InlineQueryResultArticle(
+            id='8',
+            title='Якого розміру в тебе пісюн?',
+            input_message_content=InputTextMessageContent(str(penis())),
+            thumb_url='https://i.ibb.co/3FQYpgB/photo-2020-08-27-14-49-33.jpg',
+            description='роздягайся')
+        r9 = InlineQueryResultArticle(
+            id='9',
+            title='Вибір з кількох варіантів',
+            input_message_content=InputTextMessageContent('*звук мовчання*'),
+            thumb_url='https://i.ibb.co/HtK6FTR/o-1ej2111rn189p9qrabv1au81o1o1k.jpg',
+            description='наприклад, "Бути чи/або не бути?"')
+        r10 = InlineQueryResultArticle(
+            id='10',
+            title='Вибери для себе пиво',
+            input_message_content=InputTextMessageContent('Бот радить тобі...\n\n' + beer()),
+            thumb_url='https://i.ibb.co/rZbG1fD/image.jpg',
+            description='або для когось іншого')
+        r11 = InlineQueryResultArticle(
+            id='11',
+            title='Генератор випадкових чисел',
+            input_message_content=InputTextMessageContent(generator(inline_query.query)),
+            thumb_url='https://i.ibb.co/3TZsnyj/randomn.png',
+            description='введи від 1 до 3 чисел (перші два проміжок, третє кількість)')
+        r12 = InlineQueryResultArticle(
+            id='12',
+            title='Визнач своє походження',
+            input_message_content=InputTextMessageContent('Моє походження:\n\n' + race()),
+            thumb_url='https://i.ibb.co/7V4QmDL/nations.png',
+            description='зараз бот проаналізує твої ДНК...')
+        r13 = InlineQueryResultArticle(
+            id='13',
+            title='Який в тебе гендер?',
+            input_message_content=InputTextMessageContent(gender()),
+            thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
+            description='все дуже серйозно')
+        r14 = InlineQueryResultArticle(
+            id='14',
+            title='Віджимайся!',
+            input_message_content=InputTextMessageContent('\U0001F4AA Роби ' + roll_push_ups()),
+            thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
+            description='ти ж цього не зробиш, чи не так?')
+        await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12,
+                                                                r13, r14], cache_time=0)
+    except:
+        pass
 
 
 @dp.inline_handler(lambda query: query.query.startswith('&'))
 async def default_query(inline_query):
-    markup = InlineKeyboardMarkup()
-    markup2 = InlineKeyboardMarkup()
-    markup3 = InlineKeyboardMarkup()
-    call = 'fight' + str(inline_query.from_user.id) + ',' + str(inline_query.query)
-    call1 = 'fight' + str(inline_query.from_user.id) + ',' + 'pr,' + str(inline_query.query)
-    call2 = 'fight' + str(inline_query.from_user.id) + ',' + 'tr,' + str(inline_query.query)
-    r1 = InlineQueryResultArticle(
-        id='1',
-        title='Пошук суперника по силі',
-        input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
-                                                                           inline_query.from_user.first_name,
-                                                                           inline_query.query))),
-        reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
-        thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
-        description='введи різницю сили (мінімум 1)')
-    r2 = InlineQueryResultArticle(
-        id='2',
-        title='Особисте запрошення',
-        input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
-                                                                           inline_query.from_user.first_name,
-                                                                           'pr' + inline_query.query))),
-        reply_markup=markup2.add(InlineKeyboardButton(text='Атакувати!', callback_data=call1)),
-        thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
-        description='введи @username')
-    r3 = InlineQueryResultArticle(
-        id='3',
-        title='Турнірний режим',
-        input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
-                                                                           inline_query.from_user.first_name,
-                                                                           'tr' + inline_query.query))),
-        reply_markup=markup3.add(InlineKeyboardButton(text='Атакувати!', callback_data=call2)),
-        thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
-        description='Режим Best of 5. Можна ввести @username. Без нагород.')
-    await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3], cache_time=0)
+    try:
+        markup = InlineKeyboardMarkup()
+        markup2 = InlineKeyboardMarkup()
+        markup3 = InlineKeyboardMarkup()
+        call = 'fight' + str(inline_query.from_user.id) + ',' + str(inline_query.query)
+        call1 = 'fight' + str(inline_query.from_user.id) + ',' + 'pr,' + str(inline_query.query)
+        call2 = 'fight' + str(inline_query.from_user.id) + ',' + 'tr,' + str(inline_query.query)
+        r1 = InlineQueryResultArticle(
+            id='1',
+            title='Пошук суперника по силі',
+            input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
+                                                                               inline_query.from_user.first_name,
+                                                                               inline_query.query))),
+            reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
+            thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
+            description='введи різницю сили (мінімум 1)')
+        r2 = InlineQueryResultArticle(
+            id='2',
+            title='Особисте запрошення',
+            input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
+                                                                               inline_query.from_user.first_name,
+                                                                               'pr' + inline_query.query))),
+            reply_markup=markup2.add(InlineKeyboardButton(text='Атакувати!', callback_data=call1)),
+            thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
+            description='введи @username')
+        r3 = InlineQueryResultArticle(
+            id='3',
+            title='Турнірний режим',
+            input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
+                                                                               inline_query.from_user.first_name,
+                                                                               'tr' + inline_query.query))),
+            reply_markup=markup3.add(InlineKeyboardButton(text='Атакувати!', callback_data=call2)),
+            thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
+            description='Режим Best of 5. Можна ввести @username. Без нагород.')
+        await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3], cache_time=0)
+    except:
+        pass
 
 
 @dp.inline_handler(lambda query: len(query.query) > 0)
 async def inline_echo(inline_query):
-    r1 = InlineQueryResultArticle(
-        id='1',
-        title='Ким ' + inline_query.query + ' був в минулому житті?',
-        input_message_content=InputTextMessageContent(str('Ким ' + inline_query.query + ' був в минулому житті?\n\n' +
-                                                          pastLife())),
-        thumb_url='https://i.ibb.co/mJ0SXzL/Past-lives-2-56a6ede63df78cf772910470.jpg',
-        description='можливо, воно було не таке нікчемне як зараз')
-    r2 = InlineQueryResultArticle(
-        id='2',
-        title='Куди ' + inline_query.query + ' поїде на заробітки?',
-        input_message_content=InputTextMessageContent(str('Куди ' + inline_query.query + ' поїде на заробітки?\n\n' +
-                                                          earnings())),
-        thumb_url='https://i.ibb.co/ypDcLNc/Polunytsya-e1538080073461.jpg',
-        description='добре там є, де нас нема')
-    r3 = InlineQueryResultArticle(
-        id='3',
-        title='Визнач ' + inline_query.query + ' політичні координати',
-        input_message_content=InputTextMessageContent(str(inline_query.query + ' політичні координати\n\n' +
-                                                          political())),
-        thumb_url='https://i.ibb.co/XbGNVSS/maxresdefault.jpg',
-        description='правачок чи лібераха?')
-    r4 = InlineQueryResultArticle(
-        id='4',
-        title='Наскільки ви з ' + inline_query.query + ' підходите один одному?',
-        input_message_content=InputTextMessageContent(str('Ви з ' + inline_query.query + ' підходите один одному на ' +
-                                                          love())),
-        thumb_url='https://i.ibb.co/QDkHD0b/telltaale.jpg',
-        description='вибирай дівку і залицяйся')
-    r5 = InlineQueryResultArticle(
-        id='5',
-        title='Питай, що турбує',
-        input_message_content=InputTextMessageContent(str('\u2753 ' + inline_query.query + '\n\n' + question())),
-        thumb_url='https://i.ibb.co/qkjYFDF/im610x343-Zelensky-notebook.jpg',
-        description='ну тобто треба щось написати')
-    r6 = InlineQueryResultArticle(
-        id='6',
-        title='Зрадометр',
-        input_message_content=InputTextMessageContent(str(inline_query.query + '\n\n' + zradoMoga())),
-        thumb_url='https://i.ibb.co/7GJzmc4/Ea-PHB6-EWs-AAVER4.jpg',
-        description='допоможе визначитись з певною подією')
-    r7 = InlineQueryResultArticle(
-        id='7',
-        title='Якого розміру в тебе пісюн?',
-        input_message_content=InputTextMessageContent(str(penis())),
-        thumb_url='https://i.ibb.co/3FQYpgB/photo-2020-08-27-14-49-33.jpg',
-        description='роздягайся')
-    r8 = InlineQueryResultArticle(
-        id='8',
-        title='Вибір з кількох варіантів',
-        input_message_content=InputTextMessageContent('\u2753' + inline_query.query +
-                                                      '\n\n' + choose(inline_query.query)),
-        thumb_url='https://i.ibb.co/HtK6FTR/o-1ej2111rn189p9qrabv1au81o1o1k.jpg',
-        description='наприклад, "Бути чи/або не бути?"')
-    r9 = InlineQueryResultArticle(
-        id='9',
-        title='Вибери для ' + inline_query.query + ' пиво',
-        input_message_content=InputTextMessageContent(inline_query.query + ', я рекомендую тобі тобі...\n\n' + beer()),
-        thumb_url='https://i.ibb.co/rZbG1fD/image.jpg',
-        description='або для когось іншого')
-    r10 = InlineQueryResultArticle(
-        id='10',
-        title='Генератор випадкових чисел',
-        input_message_content=InputTextMessageContent(generator(inline_query.query)),
-        thumb_url='https://i.ibb.co/3TZsnyj/randomn.png',
-        description='введи від 1 до 3 чисел (перші два проміжок, третє кількість)')
-    r11 = InlineQueryResultArticle(
-        id='11',
-        title='Визнач ' + inline_query.query + ' походження',
-        input_message_content=InputTextMessageContent('Походження ' + inline_query.query + ':\n\n' + race()),
-        thumb_url='https://i.ibb.co/7V4QmDL/nations.png',
-        description='зараз бот проаналізує твої ДНК...')
-    r12 = InlineQueryResultArticle(
-        id='12',
-        title='Який в тебе гендер?',
-        input_message_content=InputTextMessageContent(gender()),
-        thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
-        description='все дуже серйозно')
-    r13 = InlineQueryResultArticle(
-        id='13',
-        title='Віджимайся!',
-        input_message_content=InputTextMessageContent('\U0001F4AA ' + inline_query.query + ', роби ' + roll_push_ups()),
-        thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
-        description='ти ж цього не зробиш, чи не так?')
-    await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12,
-                                                            r13], cache_time=0)
+    try:
+        r1 = InlineQueryResultArticle(
+            id='1',
+            title='Ким ' + inline_query.query + ' був в минулому житті?',
+            input_message_content=InputTextMessageContent(str('Ким ' + inline_query.query +
+                                                              ' був в минулому житті?\n\n' + pastLife())),
+            thumb_url='https://i.ibb.co/mJ0SXzL/Past-lives-2-56a6ede63df78cf772910470.jpg',
+            description='можливо, воно було не таке нікчемне як зараз')
+        r2 = InlineQueryResultArticle(
+            id='2',
+            title='Куди ' + inline_query.query + ' поїде на заробітки?',
+            input_message_content=InputTextMessageContent(str('Куди ' + inline_query.query +
+                                                              ' поїде на заробітки?\n\n' + earnings())),
+            thumb_url='https://i.ibb.co/ypDcLNc/Polunytsya-e1538080073461.jpg',
+            description='добре там є, де нас нема')
+        r3 = InlineQueryResultArticle(
+            id='3',
+            title='Визнач ' + inline_query.query + ' політичні координати',
+            input_message_content=InputTextMessageContent(str(inline_query.query + ' політичні координати\n\n' +
+                                                              political())),
+            thumb_url='https://i.ibb.co/XbGNVSS/maxresdefault.jpg',
+            description='правачок чи лібераха?')
+        r4 = InlineQueryResultArticle(
+            id='4',
+            title='Наскільки ви з ' + inline_query.query + ' підходите один одному?',
+            input_message_content=InputTextMessageContent(str('Ви з ' + inline_query.query +
+                                                              ' підходите один одному на ' + love())),
+            thumb_url='https://i.ibb.co/QDkHD0b/telltaale.jpg',
+            description='вибирай дівку і залицяйся')
+        r5 = InlineQueryResultArticle(
+            id='5',
+            title='Питай, що турбує',
+            input_message_content=InputTextMessageContent(str('\u2753 ' + inline_query.query + '\n\n' + question())),
+            thumb_url='https://i.ibb.co/qkjYFDF/im610x343-Zelensky-notebook.jpg',
+            description='ну тобто треба щось написати')
+        r6 = InlineQueryResultArticle(
+            id='6',
+            title='Зрадометр',
+            input_message_content=InputTextMessageContent(str(inline_query.query + '\n\n' + zradoMoga())),
+            thumb_url='https://i.ibb.co/7GJzmc4/Ea-PHB6-EWs-AAVER4.jpg',
+            description='допоможе визначитись з певною подією')
+        r7 = InlineQueryResultArticle(
+            id='7',
+            title='Якого розміру в тебе пісюн?',
+            input_message_content=InputTextMessageContent(str(penis())),
+            thumb_url='https://i.ibb.co/3FQYpgB/photo-2020-08-27-14-49-33.jpg',
+            description='роздягайся')
+        r8 = InlineQueryResultArticle(
+            id='8',
+            title='Вибір з кількох варіантів',
+            input_message_content=InputTextMessageContent('\u2753' + inline_query.query +
+                                                          '\n\n' + choose(inline_query.query)),
+            thumb_url='https://i.ibb.co/HtK6FTR/o-1ej2111rn189p9qrabv1au81o1o1k.jpg',
+            description='наприклад, "Бути чи/або не бути?"')
+        r9 = InlineQueryResultArticle(
+            id='9',
+            title='Вибери для ' + inline_query.query + ' пиво',
+            input_message_content=InputTextMessageContent(inline_query.query + ', я рекомендую тобі тобі...\n\n' +
+                                                          beer()),
+            thumb_url='https://i.ibb.co/rZbG1fD/image.jpg',
+            description='або для когось іншого')
+        r10 = InlineQueryResultArticle(
+            id='10',
+            title='Генератор випадкових чисел',
+            input_message_content=InputTextMessageContent(generator(inline_query.query)),
+            thumb_url='https://i.ibb.co/3TZsnyj/randomn.png',
+            description='введи від 1 до 3 чисел (перші два проміжок, третє кількість)')
+        r11 = InlineQueryResultArticle(
+            id='11',
+            title='Визнач ' + inline_query.query + ' походження',
+            input_message_content=InputTextMessageContent('Походження ' + inline_query.query + ':\n\n' + race()),
+            thumb_url='https://i.ibb.co/7V4QmDL/nations.png',
+            description='зараз бот проаналізує твої ДНК...')
+        r12 = InlineQueryResultArticle(
+            id='12',
+            title='Який в тебе гендер?',
+            input_message_content=InputTextMessageContent(gender()),
+            thumb_url='https://i.ibb.co/LrH2D0W/gender.jpg',
+            description='все дуже серйозно')
+        r13 = InlineQueryResultArticle(
+            id='13',
+            title='Віджимайся!',
+            input_message_content=InputTextMessageContent('\U0001F4AA ' + inline_query.query + ', роби ' +
+                                                          roll_push_ups()),
+            thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
+            description='ти ж цього не зробиш, чи не так?')
+        await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12,
+                                                                r13], cache_time=0)
+    except:
+        pass
 
 
 async def on_startup(dp):
