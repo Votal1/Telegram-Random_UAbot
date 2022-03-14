@@ -572,7 +572,10 @@ async def classes(message):
           'Щоб подивитись другий рівень класів натисни /class_2\n' \
           'Якщо твій русак вже набрав 5 інтелекту, можеш вибрати один з цих класів (один раз на ' \
           'одного русака), написавши сюди "Обираю клас " і назву класу.'
-    await bot.send_message(message.from_user.id, msg)
+    try:
+        await bot.send_message(message.from_user.id, msg)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['class_2'])
@@ -603,7 +606,10 @@ async def classes_2(message):
           'Щоб подивитись третій рівень класів натисни /class_3\n' \
           'Якщо твій русак вже набрав 12 інтелекту і вибрав клас, можеш ' \
           'покращити клас, написавши сюди "Покращити русака".'
-    await bot.send_message(message.from_user.id, msg)
+    try:
+        await bot.send_message(message.from_user.id, msg)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['class_3'])
@@ -639,7 +645,10 @@ async def classes_3(message):
           'отримує 5 гривень.\n\n\n' \
           'Якщо твій русак вже набрав 20 інтелекту і покращив клас, можеш ще раз' \
           'покращити клас, написавши сюди "Вдосконалити русака".'
-    await bot.send_message(message.from_user.id, msg)
+    try:
+        await bot.send_message(message.from_user.id, msg)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['merchant'])
