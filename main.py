@@ -1710,8 +1710,8 @@ async def handle_query(call):
 
     elif call.data.startswith('join'):
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
-                r.hexists(call.from_user.id, 'name') == 1 and \
-                call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
+                r.hexists(call.from_user.id, 'name') == 1 and r.hexists('battle' + str(call.message.chat.id), 'start') \
+                and call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
             fighters = r.scard('fighters' + str(call.message.chat.id))
