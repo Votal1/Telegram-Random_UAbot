@@ -1620,9 +1620,11 @@ async def handle_query(call):
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
+        uid1_hp = int(r.hget(uid1, 'hp'))
+        uid2_hp = int(r.hget(call.from_user.id, 'hp'))
         if call.from_user.id != int(uid1):
-            if int(r.hget(call.from_user.id, 'hp')) > 0:
-                if int(r.hget(uid1, 'hp')) > 0:
+            if uid2_hp > 0:
+                if uid1_hp > 0:
                     if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
                         pass
                     else:
