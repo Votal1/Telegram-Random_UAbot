@@ -792,14 +792,17 @@ async def battle(message):
                 r.hset('battle' + str(message.chat.id), 'ts', 0)
             if int(datetime.now().timestamp()) - int(r.hget('battle' + str(message.chat.id), 'ts')) > 5:
                 r.hset('battle' + str(message.chat.id), 'ts', int(datetime.now().timestamp()))
-                await bot.delete_message(message.chat.id, message.message_id)
-                a = await bot.send_message(message.chat.id, '\u2694 Починається битва...\n\n',
-                                           reply_markup=battle_button())
-                r.hset('battle' + str(message.chat.id), 'start', a.message_id)
-                r.hset('battle' + str(message.chat.id), 'starter', message.from_user.id)
                 try:
-                    await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
-                    r.hset('battle' + str(message.chat.id), 'pin', a.message_id)
+                    await bot.delete_message(message.chat.id, message.message_id)
+                    a = await bot.send_message(message.chat.id, '\u2694 Починається битва...\n\n',
+                                               reply_markup=battle_button())
+                    r.hset('battle' + str(message.chat.id), 'start', a.message_id)
+                    r.hset('battle' + str(message.chat.id), 'starter', message.from_user.id)
+                    try:
+                        await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
+                        r.hset('battle' + str(message.chat.id), 'pin', a.message_id)
+                    except:
+                        pass
                 except:
                     pass
         else:
