@@ -2,3 +2,4 @@ aiogram
 redis
 sentry-sdk
 bs4
+requests
