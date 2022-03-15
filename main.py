@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 logging.basicConfig(level=logging.INFO)
 
 
-@dp.message_handler(commands=['gruz200', 'orki'])
+@dp.message_handler(commands=['gruz200', 'orki', 'z', 'poter_net', '/fertilizer', '/ruskie_idut_nahuy'])
 async def gruz200(message):
     try:
         url = 'https://minusrus.com/'
@@ -32,7 +32,7 @@ async def gruz200(message):
         os = soup.find('div', 'amount-details').find_all('span')
         t = soup.find_all('span', 'card__amount-total')
         msg = title + '\n\n\u2620\uFE0F Вбито: ' + os[1].text + '\n\U0001fa78 Поранено: ' + os[3].text + \
-                      '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 Бойові броньовані машини: ' + t[1].text +\
+                      '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 ББМ: ' + t[1].text +\
                       '\n\U0001F69C Танки: ' + t[2].text + '\n\U0001F525 Артилерія: ' + t[3].text + \
                       '\n\u2708\uFE0F Літаки: ' + t[4].text + '\n\U0001F681 Гелікоптери: ' + t[5].text + \
                       '\n\U0001F6A2 Кораблі та катери: ' + t[6].text
