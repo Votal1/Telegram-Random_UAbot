@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 logging.basicConfig(level=logging.INFO)
 
 
-@dp.message_handler(commands=['gruz200'])
+@dp.message_handler(commands=['gruz200', 'orki'])
 async def gruz200(message):
     try:
         url = 'https://minusrus.com/'
