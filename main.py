@@ -1,11 +1,10 @@
-import logging
 from random import randint, choice, choices
 from datetime import datetime, timedelta
 from os import environ
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.utils.executor import start_webhook
 
-from config import r, TOKEN, bot, dp, sentry_sdk
+from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
@@ -19,6 +18,10 @@ from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
 import requests
 from bs4 import BeautifulSoup
 
+import logging
+import sentry_sdk
+
+sentry_sdk.init(environ.get('SENTRY'))
 logging.basicConfig(level=logging.INFO)
 
 
