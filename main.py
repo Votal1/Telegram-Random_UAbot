@@ -32,7 +32,7 @@ async def gruz200(message):
         os = soup.find('div', 'amount-details').find_all('span')
         t = soup.find_all('span', 'card__amount-total')
         msg = title + '\n\n\u2620\uFE0F Вбито: ' + os[1].text + '\n\U0001fa78 Поранено: ' + os[3].text + \
-                      '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 ББМ: ' + t[1].text +\
+                      '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 ББМ: ' + t[1].text + \
                       '\n\U0001F69C Танки: ' + t[2].text + '\n\U0001F525 Артилерія: ' + t[3].text + \
                       '\n\u2708\uFE0F Літаки: ' + t[4].text + '\n\U0001F681 Гелікоптери: ' + t[5].text + \
                       '\n\U0001F6A2 Кораблі та катери: ' + t[6].text
@@ -1771,7 +1771,7 @@ async def handle_query(call):
                                             text='Ти або вже в битві, або в тебе'
                                                  ' нема русака')
 
-    elif call.data.startswith('start_battle'):
+    elif call.data.startswith('start_battle') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if call.from_user.id == int(r.hget('battle' + str(call.message.chat.id), 'starter')):
             await bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
@@ -1787,7 +1787,7 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Почати битву може тільки'
                                                                                              ' той, хто почав набір.')
 
-    elif call.data.startswith('war_join'):
+    elif call.data.startswith('war_join') and r.hexists('war_battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters_2' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
                 call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
