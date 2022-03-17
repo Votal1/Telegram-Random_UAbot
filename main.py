@@ -1632,9 +1632,10 @@ async def handle_query(call):
                                              ' русаків\n\n\U0001F412 Русака взято в полон...',
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
 
-    elif call.data.startswith('fight') and r.hexists(call.from_user.id, 'name') != 0:
+    elif call.data.startswith('fight') and r.hexists(call.from_user.id, 'name') == 1:
         cdata = call.data[5:].split(',', 3)
         uid1 = cdata[0]
+        uid2 = call.from_user.id
         try:
             un1 = r.hget(uid1, 'firstname').decode()
         except:
@@ -1642,11 +1643,9 @@ async def handle_query(call):
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
-        uid1_hp = int(r.hget(uid1, 'hp'))
-        uid2_hp = int(r.hget(call.from_user.id, 'hp'))
-        if call.from_user.id != int(uid1):
-            if uid2_hp > 0:
-                if uid1_hp > 0:
+        if r.hexists(uid1, 'name') == 1 and int(uid2) != int(uid1):
+            if int(r.hget(uid2, 'hp')) > 0:
+                if int(r.hget(uid1, 'hp')) > 0:
                     if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
                         pass
                     else:
@@ -1654,7 +1653,6 @@ async def handle_query(call):
                         try:
                             q = cdata[1].split()
                             diff = int(q[1])
-                            uid2 = call.from_user.id
                             if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
                                     int(r.hget(uid1, 'strength')) + diff:
                                 un2 = call.from_user.first_name
@@ -1727,6 +1725,8 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
                                                      'битись поки не поїсть, або не полікується.')
+        elif r.hexists(uid1, 'name') == 0:
+            pass
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ти хочеш атакувати свого русака, але розумієш, що він зараз має'
