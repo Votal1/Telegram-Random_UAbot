@@ -1954,11 +1954,16 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='У вас вже є допоміжне спорядження')
 
-    elif call.data.startswith('leave_from_clan') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        if len(str(r.hget(call.from_user.id, 'clan'))) >= 5:
-            r.srem('cl' + r.hget(call.from_user.id, 'clan').decode(), call.from_user.id)
-            r.hset(call.from_user.id, 'clan', 0)
-            await bot.edit_message_text('\U0001F4E4 Ти покинув клан', call.message.chat.id, call.message.message_id)
+    elif call.data.startswith('leave_from_clan'):
+        try:
+            if call.from_user.id == call.message.reply_to_message.from_user.id:
+                if len(str(r.hget(call.from_user.id, 'clan'))) >= 5:
+                    r.srem('cl' + r.hget(call.from_user.id, 'clan').decode(), call.from_user.id)
+                    r.hset(call.from_user.id, 'clan', 0)
+                    await bot.edit_message_text('\U0001F4E4 Ти покинув клан', call.message.chat.id,
+                                                call.message.message_id)
+        except:
+            pass
 
     elif call.data.startswith('change_title'):
         c = int(r.hget(call.from_user.id, 'clan'))
