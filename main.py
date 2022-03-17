@@ -3026,7 +3026,11 @@ async def handle_query(call):
                     call.message.chat.id, call.message.message_id)
                 r.hincrby(uid, 'strap', 1)
         else:
-            await bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id, call.message.message_id)
+            try:
+                await bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id,
+                                            call.message.message_id)
+            except:
+                pass
 
     elif call.data.startswith('ration'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
