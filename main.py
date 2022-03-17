@@ -2443,7 +2443,7 @@ async def handle_query(call):
                                             text='У вас вже є жінка')
 
     elif call.data.startswith('pipe'):
-        if int(r.hget(call.from_user.id, 'woman')) == 1:
+        if r.hexists(call.from_user.id, 'woman') and int(r.hget(call.from_user.id, 'woman')) == 1:
             r.hset(call.from_user.id, 'woman', 0)
             r.hset(call.from_user.id, 'time5', 0)
             spirit(5000, call.from_user.id, 0)
