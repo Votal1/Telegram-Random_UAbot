@@ -80,5 +80,5 @@ pd = ['https://i.ibb.co/GFMKxrp/9.png', 'https://i.ibb.co/nRpTjWt/10.png',
       'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png', 'https://i.ibb.co/Gdf7NP0/9m.png']
 
 default = ['https://ibb.co/PjxxLJr', 'https://ibb.co/mBLYqhC', 'https://ibb.co/vZ2R3fX', 'https://ibb.co/2SJjpqv',
-           'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https:/ibb.co/C7jCTRJ',
+           'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https://ibb.co/C7jCTRJ',
            'https://ibb.co/KK1WSyK', 'https://ibb.co/mFRGb0D']
