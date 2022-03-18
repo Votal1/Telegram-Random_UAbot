@@ -233,12 +233,7 @@ async def my_rusak(message):
         c = int(r.hget(mid, 'class'))
         if c != 0:
             cl = '\n' + icons[c] + ' Клас: ' + class_name[c]
-        try:
-            if int(r.hget(mid, 'photo')) == 0:
-                r_photo = 'https://i.ibb.co/rGd7L5n/rusnya.jpg'
-        except:
-            r_photo = r.hget(mid, 'photo').decode()
-        stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch', 'buff')
+        stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch', 'buff', 'photo')
         if int(stats[3]) > 0:
             inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
         if int(stats[6]) > 0:
@@ -252,7 +247,7 @@ async def my_rusak(message):
                      '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
                          5].decode() \
                      + cl + ms + inj
-        await message.reply_photo(r_photo, caption=photo_text)
+        await message.reply_photo(stats[8].decode(), caption=photo_text)
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
