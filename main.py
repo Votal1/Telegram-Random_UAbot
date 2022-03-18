@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, pd
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, pd, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
@@ -1596,8 +1596,8 @@ async def handle_query(call):
             cid = call.from_user.id
             r.hset(cid, 'name', get_rusak()[0], {'strength': get_rusak()[1], 'intellect': get_rusak()[2], 'spirit': 0,
                                                  'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
-                                                 'support': 0, 's_support': 0, 'photo': 0, 'mushrooms': 0, 'hp': 100,
-                                                 'injure': 0, 'sch': 0, 'buff': 0,
+                                                 'support': 0, 's_support': 0, 'mushrooms': 0, 'hp': 100, 'injure': 0,
+                                                 'sch': 0, 'buff': 0, 'photo': choice(default),
                                                  'firstname': call.from_user.first_name})
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
