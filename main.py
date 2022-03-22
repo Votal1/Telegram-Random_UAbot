@@ -482,7 +482,7 @@ async def passport(message):
         skill = int((int(sk[0]) + int(sk[1]) + int(sk[2])) * 100 / 20)
         ac = 0
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
-                      'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13')
+                      'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13', 'ac14', 'ac15', 'ac16')
         for a in acs:
             try:
                 ac += int(a)
