@@ -37,6 +37,17 @@ def mine_salt(s2):
     return success, money, mind
 
 
+def checkClan(uid, base=0):
+    if len(r.hget(uid, 'clan')) > 5:
+        cl = r.hget(uid, 'clan')
+        if base > 0:
+            if not int(r.hget('c' + cl.decode(), 'base')) >= base:
+                return False
+        return True
+    else:
+        return False
+
+
 async def top(sett, uid):
     try:
         if r.hexists(uid, 'top_ts') == 0:

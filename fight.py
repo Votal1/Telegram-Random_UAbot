@@ -6,6 +6,7 @@ from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support, increase_trance
 from variables import names, icons, p7
+from methods import checkClan
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
@@ -576,6 +577,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
             if m_bonus[0] > 0:
+                if checkClan(uid1, base=4):
+                    if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
+                        m_bonus = [m_bonus[0] * 2]
                 r.hincrby(uid1, 'money', m_bonus[0])
                 grn = '\n\U0001F4B5 +' + str(m_bonus[0])
 
@@ -656,6 +660,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
             if m_bonus[0] > 0:
+                if checkClan(uid2, base=4):
+                    if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
+                        m_bonus = [m_bonus[0] * 2]
                 r.hincrby(uid2, 'money', m_bonus[0])
                 grn = '\n\U0001F4B5 +' + str(m_bonus[0])
 
@@ -880,7 +887,7 @@ async def war_power(sett, cid):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
                             'clan', 'buff')
-            if len(str(stats[8])) >= 5:
+            if checkClan(member):
                 if int(stats[8]) == cid:
                     clan5 += 1
             s = int(stats[0])

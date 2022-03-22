@@ -13,7 +13,7 @@ from parameters import spirit, vodka, intellect, hp, damage_support, increase_tr
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war
-from methods import get_rusak, feed_rusak, mine_salt, top, itop, ctop
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
 
 import requests
 from bs4 import BeautifulSoup
@@ -339,9 +339,8 @@ async def mine(message):
                     money = ms[1]
                     if cl == 2 or cl == 12 or cl == 22:
                         money = money * 3
-                    if len(str(r.hget(message.from_user.id, 'clan'))) > 5:
-                        if int(r.hget('c' + r.hget(message.from_user.id, 'clan').decode(), 'base')) >= 3:
-                            money = int(money * 1.34)
+                    if checkClan(message.from_user.id, base=3):
+                        money = int(money * 1.34)
                     r.hincrby(message.from_user.id, 'money', money)
                     msg = '\u26CF Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
                           ' успішно відпрацював зміну на соляній шахті.\n\n\U0001F4B5 ' \
@@ -490,7 +489,7 @@ async def passport(message):
             except:
                 pass
         clan1 = ''
-        if len(str(stats[6])) > 5:
+        if checkClan(message.from_user.id):
             clan1 = '\n\U0001F3E0 Клан: ' + r.hget('c' + stats[6].decode(), 'title').decode()
         await message.reply('\U0001F4DC ' + message.from_user.first_name +
                             '\n\n\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
@@ -1187,7 +1186,7 @@ async def clan(message):
                         building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.' \
                                    '\n\U0001F3ED Інфраструктура:'
                     elif base == 4:
-                        building = '\U0001F3D8 Штаб\n\U0001F54A Можливість нокаутувати ворога в дуелях.' \
+                        building = '\U0001F3D8 Штаб\n\U0001F4B5 Шанс подвоїти грошову нагороду за перемогу в дуелях.' \
                                    '\n\U0001F3ED Інфраструктура:'
                     resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() + \
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
@@ -1484,7 +1483,7 @@ async def kick(message):
 
 @dp.message_handler(commands=['leave'])
 async def leave(message):
-    if len(str(r.hget(message.from_user.id, 'clan'))) >= 5:
+    if checkClan(message.from_user.id):
         if message.chat.id == int(r.hget(message.from_user.id, 'clan')) or message.chat.type == 'private':
             markup = InlineKeyboardMarkup()
             await message.reply('\U0001F4E4 Покинути клан?', reply_markup=markup.add(InlineKeyboardButton(
@@ -1955,7 +1954,7 @@ async def handle_query(call):
     elif call.data.startswith('leave_from_clan'):
         try:
             if call.from_user.id == call.message.reply_to_message.from_user.id:
-                if len(str(r.hget(call.from_user.id, 'clan'))) >= 5:
+                if checkClan(call.from_user.id):
                     r.srem('cl' + r.hget(call.from_user.id, 'clan').decode(), call.from_user.id)
                     r.hset(call.from_user.id, 'clan', 0)
                     await bot.edit_message_text('\U0001F4E4 Ти покинув клан', call.message.chat.id,
