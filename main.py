@@ -1548,7 +1548,8 @@ async def work(message):
                         r.hset(message.from_user.id, 'clan_time', datetime.now().day)
                         camp = 0
                         if int(r.hget(c, 'camp')) == 1:
-                            camp = 1
+                            if r.hexists(message.from_user.id, 'name2') == 1:
+                                camp = 1
                         if int(r.hget(c, 'sawmill')) == 1:
                             ran = randint(5, 15)
                             if camp == 1:
