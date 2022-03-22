@@ -579,7 +579,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if m_bonus[0] > 0:
                 if checkClan(uid1, base=4):
                     if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
-                        m_bonus = [m_bonus[0] * 2]
+                        m_bonus = [m_bonus[0] * 5]
                 r.hincrby(uid1, 'money', m_bonus[0])
                 grn = '\n\U0001F4B5 +' + str(m_bonus[0])
 
@@ -662,7 +662,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if m_bonus[0] > 0:
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
-                        m_bonus = [m_bonus[0] * 2]
+                        m_bonus = [m_bonus[0] * 5]
                 r.hincrby(uid2, 'money', m_bonus[0])
                 grn = '\n\U0001F4B5 +' + str(m_bonus[0])
 
