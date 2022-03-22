@@ -1360,6 +1360,13 @@ async def build(message):
                             msg += '\nМонумент (\U0001F333 100, \U0001faa8 1000, \U0001F9F6 50, ' \
                                    '\U0001F9F1 100, \U0001F4B5 2000, \U0001F47E 50) - можливість для лідера у \n' \
                                    '/clan_shop витрачати \U0001F47E.'
+                    if int(r.hget(c, 'base')) >= 4:
+                        if int(r.hget(c, 'morgue')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати морг',
+                                                            callback_data='build_morgue'))
+                            msg += '\nМорг (\U0001F333 1000, \U0001faa8 2000, \U0001F9F6 800, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 5000, \U0001F47E 100) - +0.2% сили в міжчатовій битві ' \
+                                   'за кожного вбитого русака (максимум 20%). \U0001F47E +1 за кожне жертвоприношення.'
                     if len(markup.inline_keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     await message.reply(msg, reply_markup=markup)
@@ -2121,6 +2128,24 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -50)
                 r.hset(c, 'monument', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано монумент.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_morgue') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'morgue')) == 0:
+            if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 2000 and int(r.hget(c, 'cloth')) >= 800 \
+                    and int(r.hget(c, 'brick')) >= 500 and int(r.hget(c, 'money')) >= 5000 \
+                    and int(r.hget(c, 'r_spirit')) >= 100:
+                r.hincrby(c, 'wood', -1000)
+                r.hincrby(c, 'stone', -2000)
+                r.hincrby(c, 'cloth', -800)
+                r.hincrby(c, 'brick', -500)
+                r.hincrby(c, 'money', -5000)
+                r.hincrby(c, 'r_spirit', -100)
+                r.hset(c, 'morgue', 1)
+                await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано морг.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
