@@ -1361,6 +1361,12 @@ async def build(message):
                                    '\U0001F9F1 100, \U0001F4B5 2000, \U0001F47E 50) - можливість для лідера у \n' \
                                    '/clan_shop витрачати \U0001F47E.'
                     if int(r.hget(c, 'base')) >= 4:
+                        if int(r.hget(c, 'camp')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати концтабір',
+                                                            callback_data='build_camp'))
+                            msg += '\nКонцтабір (\U0001F333 3000, \U0001faa8 1000, \U0001F9F6 1000, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 3000, \U0001F47E 100) - вдвічі більше ресурсів від ' \
+                                   'роботи, якщо є другий русак.'
                         if int(r.hget(c, 'morgue')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати морг',
                                                             callback_data='build_morgue'))
@@ -2128,6 +2134,24 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -50)
                 r.hset(c, 'monument', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано монумент.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_camp') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'camp')) == 0:
+            if int(r.hget(c, 'wood')) >= 3000 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 1000 \
+                    and int(r.hget(c, 'brick')) >= 400 and int(r.hget(c, 'money')) >= 3000 \
+                    and int(r.hget(c, 'r_spirit')) >= 100:
+                r.hincrby(c, 'wood', -3000)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby(c, 'cloth', -100)
+                r.hincrby(c, 'brick', -400)
+                r.hincrby(c, 'money', -3000)
+                r.hincrby(c, 'r_spirit', -100)
+                r.hset(c, 'camp', 1)
+                await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано концтабір.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
