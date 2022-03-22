@@ -499,7 +499,7 @@ async def passport(message):
                             '\n\u2622 Випито горілки: ' + stats[4].decode() +
                             '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() + clan1 +
                             '\n\u26CF Скіли: ' + str(skill) + '%' +
-                            '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 26)) + '%')
+                            '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 32)) + '%')
 
 
 @dp.message_handler(commands=['woman'])
