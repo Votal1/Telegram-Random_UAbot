@@ -897,6 +897,9 @@ async def war_power(sett, cid):
                 d = int(r.hget(member, 'deaths'))
                 if d > 100:
                     d = 100
+                if d >= 25:
+                    if r.hexists(member, 'ac16') == 0:
+                        r.hset(member, 'ac16', 1)
                 s = int(s * (1 + 0.002 * d))
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)

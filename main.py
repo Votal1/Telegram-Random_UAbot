@@ -935,10 +935,12 @@ async def achievements(message):
                      '\U0001f535 Зараз розберемося, кому належить вулиця',
                      '\U0001f535 Ах лента за лентою набої подавай', '\U0001f7e3 Ніколи не плач на радість орді',
                      '\U0001f7e3 Ворога знищено, як був наказ', '\U0001f7e3 Я заводжу хімікат, розпочинаю атентат',
+                     '\U0001f7e3 А до берега тихо хвилі несуть поранені душі живих кораблів',
+                     '\U0001f534 Я мав купу бабок, я мав купу справ', '\U0001f534 Танцюй і пий, поки живий',
                      '\U0001f534 Кривавий пастор']
 
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
-                      'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13')
+                      'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13', 'ac14', 'ac15', 'ac16')
 
         if isinstance(acs[1], type(None)):
             if int(r.hget(message.from_user.id, 'deaths')) >= 1:
@@ -970,10 +972,15 @@ async def achievements(message):
         if isinstance(acs[11], type(None)):
             if int(r.hget(message.from_user.id, 'deaths')) >= 15 and int(r.hget(message.from_user.id, 'childs')) >= 15:
                 r.hset(message.from_user.id, 'ac12', 1)
+        if isinstance(acs[13], type(None)):
+            if int(r.hget(message.from_user.id, 'injure')) > 0 and int(r.hget(message.from_user.id, 'sch')) > 0 and \
+                    int(r.hget(message.from_user.id, 'buff')) > 0:
+                r.hset(message.from_user.id, 'ac14', 1)
 
-        acl = ['', 'ac1', 'ac2', 'ac3', 'ac4', 'ac5', 'ac6', 'ac7', 'ac10', 'ac11', 'ac8', 'ac9', 'ac13', 'ac12']
+        acl = ['', 'ac1', 'ac2', 'ac3', 'ac4', 'ac5', 'ac6', 'ac7', 'ac10', 'ac11',
+               'ac8', 'ac9', 'ac13', 'ac14', 'ac15', 'ac16', 'ac12']
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
-                      'ac6', 'ac7', 'ac10', 'ac11', 'ac8', 'ac9', 'ac13', 'ac12')
+                      'ac6', 'ac7', 'ac10', 'ac11', 'ac8', 'ac9', 'ac13', 'ac14', 'ac15', 'ac16', 'ac12')
 
         reply = '\u2B50 Досягнення ' + message.from_user.first_name + ':\n\n'
         new, new_a, number = '', 0, 1
@@ -1477,6 +1484,9 @@ async def invest(message):
                         r.hincrby(c, 'money', m)
                         r.hincrby(message.from_user.id, 'money', -m)
                         await message.reply('\U0001F4B5 Клановий рахунок поповнено на ' + str(m) + ' гривень.')
+                        if m >= 500:
+                            if r.hexists(message.from_user.id, 'ac15') == 0:
+                                r.hset(message.from_user.id, 'ac15', 1)
                     else:
                         await message.reply('Недостатньо коштів на рахунку.')
 
