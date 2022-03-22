@@ -1285,7 +1285,7 @@ async def upgrade(message):
                         r.hincrby(c, 'r_spirit', -20)
                         r.hset(c, 'base', 3)
                         await message.answer('\U0001F3D7 Покращено Клан до Гільдії.')
-            elif base == 3 and message.chat.id == -1001733230634:
+            elif base == 3: # and message.chat.id == -1001733230634:
                 await message.answer('\U0001F3D7 Покращення Гільдії до Угруповання коштує '
                                      '\U0001F333 3000, \U0001faa8 1500, \U0001F9F6 800, \U0001F9F1 400, '
                                      '\U0001F47E 50 і \U0001F4B5 3000.')
