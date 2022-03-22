@@ -893,6 +893,11 @@ async def war_power(sett, cid):
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            if checkClan(member, base=4, building='morgue'):
+                d = int(r.hget(member, 'deaths'))
+                if d > 100:
+                    d = 100
+                s = int(s * (1 + 0.002 * d))
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:

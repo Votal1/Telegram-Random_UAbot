@@ -37,11 +37,14 @@ def mine_salt(s2):
     return success, money, mind
 
 
-def checkClan(uid, base=0):
+def checkClan(uid, base=0, building=''):
     if len(str(r.hget(uid, 'clan'))) > 5:
         cl = r.hget(uid, 'clan')
         if base > 0:
             if not int(r.hget('c' + cl.decode(), 'base')) >= base:
+                return False
+        if len(building) > 0:
+            if int(r.hget('c' + cl.decode(), building)) == 0:
                 return False
         return True
     else:

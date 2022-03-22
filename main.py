@@ -1211,6 +1211,10 @@ async def clan(message):
                         building += ', їдальня'
                     if int(r.hget(c, 'monument')) == 1:
                         building += ', монумент'
+                    if int(r.hget(c, 'camp')) == 1:
+                        building += ', концтабір'
+                    if int(r.hget(c, 'morgue')) == 1:
+                        building += ', морг'
                     await message.answer('<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                          '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                          '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
@@ -1542,20 +1546,31 @@ async def work(message):
                         await message.reply('Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
                     else:
                         r.hset(message.from_user.id, 'clan_time', datetime.now().day)
+                        camp = 0
+                        if int(r.hget(c, 'camp')) == 1:
+                            camp = 1
                         if int(r.hget(c, 'sawmill')) == 1:
                             ran = randint(5, 15)
+                            if camp == 1:
+                                ran *= 2
                             resources += '\U0001F333 +' + str(ran)
                             r.hincrby(c, 'wood', ran)
                         if int(r.hget(c, 'mine')) == 1:
                             ran = randint(2, 10)
+                            if camp == 1:
+                                ran *= 2
                             resources += ' \U0001faa8 +' + str(ran)
                             r.hincrby(c, 'stone', ran)
                         if int(r.hget(c, 'craft')) == 1:
                             ran = randint(2, 5)
+                            if camp == 1:
+                                ran *= 2
                             resources += ' \U0001F9F6 +' + str(ran)
                             r.hincrby(c, 'cloth', ran)
                         if int(r.hget(c, 'silicate')) == 1:
                             ran = randint(1, 3)
+                            if camp == 1:
+                                ran *= 2
                             resources += ' \U0001F9F1 +' + str(ran)
                             r.hincrby(c, 'brick', ran)
                         if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 8:
@@ -2216,25 +2231,21 @@ async def handle_query(call):
         r.hset(call.from_user.id, 'class', 0)
         r.hset(call.from_user.id, 'intellect', 0)
         r.hincrby(call.from_user.id, 'deaths', 1)
+        msg = '\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, а вторий насрав в штани.'
+        if checkClan(call.from_user.id, base=4, building='morgue'):
+            r.hincrby('c' + r.hget(call.from_user.id, 'clan').decode(), 'r_spirit', 1)
+            msg += '\n\U0001F47E +1'
         if call.message.chat.type == 'private':
-            await bot.edit_message_text(text='\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, '
-                                                                             'а вторий насрав в штани.',
-                                        chat_id=call.message.chat.id,
-                                        message_id=call.message.message_id)
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
         else:
-            money = ''
             if clm == 17 or clm == 27:
                 money = 2 * (len(r.smembers(call.message.chat.id)) - 1)
                 if money > 200:
                     money = 200
                 r.hincrby(call.from_user.id, 'money', money)
-                money = '\n\U0001F4B5 +' + str(money)
-
-            await bot.edit_message_text(text='\u2620\uFE0F ' + names[name] +
-                                             ' був убитий.\nОдним кацапом менше, а вторий насрав в штани.\n' +
-                                             str(len(r.smembers(call.message.chat.id)) - 1) +
-                                             ' русаків втратили бойовий дух.' + money,
-                                        chat_id=call.message.chat.id, message_id=call.message.message_id)
+                msg += '\n\U0001F4B5 +' + str(money)
+            msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
 
     elif call.data.startswith('full_list'):
         await bot.edit_message_text(text='Загальні:\n'
