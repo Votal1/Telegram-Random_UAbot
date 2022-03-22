@@ -24,7 +24,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         weapon1, weapon2 = int(stats1[2]), int(stats2[2])
         defense1, defense2 = int(stats1[3]), int(stats2[3])
 
-        hach1, hach2, hach, worker, meat, cop, fsb, m1, m2, inj1, inj2 = 0, 0, '', '', '', '', '', '', '', '', ''
+        grn, hach, worker, meat, cop, fsb, m1, m2, inj1, inj2 = '', '', '', '', '', '', '', '', '', ''
+        m_bonus, hach1, hach2 = [0], 0, 0
+
         if c1 == 1 or c1 == 11 or c1 == 21:
             if weapon2 == 0:
                 hach1 = 1
@@ -567,33 +569,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         if win == ['1']:
             if s11 / s22 > 2:
                 bonus = randint(1, 20)
-                grn = ''
             elif s11 / s22 < 0.5:
                 bonus = randint(60, 120)
-                grn = choices([1, 2, 3], weights=[50, 48, 2])
-                if grn == [1]:
-                    r.hincrby(uid1, 'money', 1)
-                    grn = '\n\U0001F4B5 +1'
-                elif grn == [2]:
-                    r.hincrby(uid1, 'money', 2)
-                    grn = '\n\U0001F4B5 +2'
-                elif grn == [3]:
-                    r.hincrby(uid1, 'money', 3)
-                    grn = '\n\U0001F4B5 +3'
+                m_bonus = choices([1, 2, 3], weights=[50, 48, 2])
             else:
                 bonus = randint(20, 60)
-                grn = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
-                if grn == [1]:
-                    r.hincrby(uid1, 'money', 1)
-                    grn = '\n\U0001F4B5 +1'
-                elif grn == [2]:
-                    r.hincrby(uid1, 'money', 2)
-                    grn = '\n\U0001F4B5 +2'
-                elif grn == [3]:
-                    r.hincrby(uid1, 'money', 3)
-                    grn = '\n\U0001F4B5 +3'
-                else:
-                    grn = ''
+                m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            if m_bonus[0] > 0:
+                r.hincrby(uid1, 'money', m_bonus[0])
+                grn = '\n\U0001F4B5 +' + str(m_bonus[0])
 
             if hach1 == 1:
                 if c1 != 1:
@@ -665,33 +649,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         elif win == ['2']:
             if s22 / s11 > 2:
                 bonus = randint(1, 20)
-                grn = ''
             elif s22 / s11 < 0.5:
                 bonus = randint(60, 120)
-                grn = choices([1, 2, 3], weights=[50, 48, 2])
-                if grn == [1]:
-                    r.hincrby(uid2, 'money', 1)
-                    grn = '\n\U0001F4B5 +1'
-                elif grn == [2]:
-                    r.hincrby(uid2, 'money', 2)
-                    grn = '\n\U0001F4B5 +2'
-                elif grn == [3]:
-                    r.hincrby(uid2, 'money', 3)
-                    grn = '\n\U0001F4B5 +3'
+                m_bonus = choices([1, 2, 3], weights=[50, 48, 2])
             else:
                 bonus = randint(20, 60)
-                grn = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
-                if grn == [1]:
-                    r.hincrby(uid2, 'money', 1)
-                    grn = '\n\U0001F4B5 +1'
-                elif grn == [2]:
-                    r.hincrby(uid2, 'money', 2)
-                    grn = '\n\U0001F4B5 +2'
-                elif grn == [3]:
-                    r.hincrby(uid2, 'money', 3)
-                    grn = '\n\U0001F4B5 +3'
-                else:
-                    grn = ''
+                m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            if m_bonus[0] > 0:
+                r.hincrby(uid2, 'money', m_bonus[0])
+                grn = '\n\U0001F4B5 +' + str(m_bonus[0])
 
             if hach2 == 1:
                 if c2 != 1:
