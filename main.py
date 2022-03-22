@@ -1883,7 +1883,7 @@ async def handle_query(call):
                         r.hset('c' + str(call.message.chat.id), 'base', 1,
                                {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
-                                'shop': 0, 'complex': 0, 'monument': 0, 'gulag': 0, 'dungeon': 0,
+                                'shop': 0, 'complex': 0, 'monument': 0, 'camp': 0, 'morgue': 0,
                                 'salary': 0, 'war_allow': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
