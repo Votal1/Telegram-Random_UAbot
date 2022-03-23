@@ -1226,7 +1226,8 @@ async def clan(message):
                                          '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                          '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
                                          wins + '\n\n' + building + resources, parse_mode='HTML')
-            elif int(r.hget(message.from_user.id, 'class')) == 27 and int(r.hget(c, 'money')) >= 10:
+            elif r.hexists(message.from_user.id, 'class') and int(r.hget(message.from_user.id, 'class')) == 27 and \
+                    int(r.hget(c, 'money')) >= 10:
                 if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
                     r.hset(message.from_user.id, 'fsb', datetime.now().day)
                     ran = choice([2, 1, 1, 1, 0])
