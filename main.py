@@ -531,7 +531,7 @@ async def woman(message):
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
-        msg = await top(message.chat.id, message.from_user.id)
+        msg = await top(message.chat.id, message.from_user.id, message.text)
         await message.reply(msg)
     except:
         pass
@@ -540,7 +540,7 @@ async def l_top(message):
 @dp.message_handler(commands=['gtop'])
 async def g_top(message):
     try:
-        msg = await top(111, message.from_user.id)
+        msg = await top(111, message.from_user.id, message.text)
         await message.reply(msg)
     except:
         pass

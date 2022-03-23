@@ -51,7 +51,7 @@ def checkClan(uid, base=0, building=''):
         return False
 
 
-async def top(sett, uid):
+async def top(sett, uid, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
@@ -82,7 +82,20 @@ async def top(sett, uid):
                                                ' \U0001F9E0 ' + str(i) + ' \u2620\uFE0F ' + str(d) + \
                                                ' \U0001F476 ' + str(c) + '\n\U0001F3C6 ' + str(w) + \
                                                ' \U0001F3C5 ' + str(t) + '\n'
-                    rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
+                    rate = 0
+                    try:
+                        if text.split(' ')[1] == '-s':
+                            rate = s
+                        elif text.split(' ')[1] == '-w':
+                            rate = w
+                        elif text.split(' ')[1] == '-d':
+                            rate = d
+                        elif text.split(' ')[1] == '-c':
+                            rate = c
+                        elif text.split(' ')[1] == '-t':
+                            rate = t
+                    except:
+                        rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
                     rating.update({line: rate})
                 except:
                     continue
