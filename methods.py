@@ -84,15 +84,15 @@ async def top(sett, uid, text):
                                                ' \U0001F3C5 ' + str(t) + '\n'
                     rate = 0
                     try:
-                        if text.split(' ')[1] == '-s':
+                        if text == '-s':
                             rate = s
-                        elif text.split(' ')[1] == '-w':
+                        elif text == '-w':
                             rate = w
-                        elif text.split(' ')[1] == '-d':
+                        elif text == '-d':
                             rate = d
-                        elif text.split(' ')[1] == '-c':
+                        elif text == '-c':
                             rate = c
-                        elif text.split(' ')[1] == '-t':
+                        elif text == '-t':
                             rate = t
                     except:
                         rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
