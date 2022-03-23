@@ -1293,7 +1293,7 @@ async def upgrade(message):
                         r.hincrby(c, 'r_spirit', -20)
                         r.hset(c, 'base', 3)
                         await message.answer('\U0001F3D7 Покращено Клан до Гільдії.')
-            elif base == 3: # and message.chat.id == -1001733230634:
+            elif base == 3:
                 await message.answer('\U0001F3D7 Покращення Гільдії до Угруповання коштує '
                                      '\U0001F333 3000, \U0001faa8 1500, \U0001F9F6 800, \U0001F9F1 400, '
                                      '\U0001F47E 50 і \U0001F4B5 3000.')
@@ -1522,6 +1522,7 @@ async def leave(message):
 async def work(message):
     try:
         c = 'c' + str(message.chat.id)
+        name = names[int(r.hget(message.from_user.id, 'name'))]
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if int(r.hget(message.from_user.id, 'clan_time')) != datetime.now().day:
                 resources = ''
@@ -1550,8 +1551,7 @@ async def work(message):
                             r.hincrby(message.from_user.id, 'money', 5)
                             r.hincrby('soledar', 'money', 3)
                         damage_support(message.from_user.id)
-                        await message.reply(names[int(r.hget(message.from_user.id, 'name'))] +
-                                            ' попрацював на благо громади.\n' + resources)
+                        await message.reply(name + ' попрацював на благо громади.\n' + resources)
                 elif base >= 2:
                     if int(r.hget(c, 'sawmill')) == 0 and int(r.hget(c, 'mine')) == 0 and int(r.hget(c, 'craft')) == 0:
                         await message.reply('Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
@@ -1590,8 +1590,7 @@ async def work(message):
                             r.hincrby(c, 'money', -8)
                             r.hincrby(message.from_user.id, 'money', 5)
                             r.hincrby('soledar', 'money', 3)
-                        await message.reply(names[int(r.hget(message.from_user.id, 'name'))] +
-                                            ' попрацював на благо громади.\n' + resources)
+                        await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
     except:
