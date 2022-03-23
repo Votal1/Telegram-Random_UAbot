@@ -82,18 +82,19 @@ async def top(sett, uid, text):
                                                ' \U0001F9E0 ' + str(i) + ' \u2620\uFE0F ' + str(d) + \
                                                ' \U0001F476 ' + str(c) + '\n\U0001F3C6 ' + str(w) + \
                                                ' \U0001F3C5 ' + str(t) + '\n'
-                    rate = 0
                     try:
-                        if text == '-s':
+                        if text.split(' ')[1] == '-s':
                             rate = s
-                        elif text == '-w':
+                        elif text.split(' ')[1] == '-w':
                             rate = w
-                        elif text == '-d':
+                        elif text.split(' ')[1] == '-d':
                             rate = d
-                        elif text == '-c':
+                        elif text.split(' ')[1] == '-c':
                             rate = c
-                        elif text == '-t':
+                        elif text.split(' ')[1] == '-t':
                             rate = t
+                        else:
+                            raise Exception
                     except:
                         rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
                     rating.update({line: rate})
