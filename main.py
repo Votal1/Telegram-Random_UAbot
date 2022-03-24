@@ -896,7 +896,7 @@ async def war_battle(message):
 async def crash(message):
     try:
         st = await bot.get_chat_member(message.chat.id, message.from_user.id)
-        if st.status == 'creator' or st.can_restrict_members is True or message.from_user.id in sudoers:
+        if message.from_user.id in sudoers or st.status == 'creator' or st.can_restrict_members is True:
             r.hdel('war_battle' + str(message.chat.id), 'start')
             r.srem('battles', message.chat.id)
             for member in r.smembers('fighters_2' + str(message.chat.id)):
