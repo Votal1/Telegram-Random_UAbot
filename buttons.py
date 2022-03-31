@@ -13,10 +13,9 @@ def goods():
 
 def donate_goods():
     markup = InlineKeyboardMarkup()
-    items = {'TF2_heavy - 1 погон': 'tf2', 'Слов`янин Рікардо - 1 погон': 'ricardo',
-             'Преміум-фото класу - 1 погон': 'premium', '40 пакунків - 1 погон': '40_packs',
-             'Настоянка глоду - 1 погон': 'hawthorn', 'Курс перекваліфікації - 2 погони': 'course',
-             'Велике будівництво - 3 погони': 'fast_cellar'}
+    items = {'Преміум-фото класу - 1 погон': 'premium1', 'Класовий чмоня': 'premium2',
+             '40 пакунків - 1 погон': '40_packs', 'Настоянка глоду - 1 погон': 'hawthorn',
+             'Курс перекваліфікації - 2 погони': 'course', 'Велике будівництво - 3 погони': 'fast_cellar'}
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup

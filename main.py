@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, pd, default
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
@@ -2762,25 +2762,6 @@ async def handle_query(call):
                                              'потрібну суму і введіть боту в пп \n/donated <будь-яке повідомлення>'
                                              '\nНарахування погонів триватиме до 24 годин.')
 
-    elif call.data.startswith('tf2'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hset(call.from_user.id, 'photo', pd[0])
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно змінили фото русаку')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо погонів на рахунку')
-    elif call.data.startswith('ricardo'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hset(call.from_user.id, 'photo', pd[1])
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно змінили фото русаку')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо погонів на рахунку')
-
     elif call.data.startswith('40_packs'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
@@ -2791,33 +2772,64 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
-    elif call.data.startswith('premium'):
+    elif call.data.startswith('premium1'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and int(r.hget(call.from_user.id, 'class')) > 0:
             r.hincrby(call.from_user.id, 'strap', -1)
             cl = int(r.hget(call.from_user.id, 'class'))
             if cl == 1 or cl == 11 or cl == 21:
-                r.hset(call.from_user.id, 'photo', pd[2])
-            if cl == 2 or cl == 12 or cl == 22:
-                r.hset(call.from_user.id, 'photo', pd[3])
-            if cl == 3 or cl == 13 or cl == 23:
-                r.hset(call.from_user.id, 'photo', pd[4])
-            if cl == 4 or cl == 14 or cl == 24:
-                r.hset(call.from_user.id, 'photo', pd[5])
-            if cl == 5 or cl == 15 or cl == 25:
-                r.hset(call.from_user.id, 'photo', pd[6])
-            if cl == 6 or cl == 16 or cl == 26:
-                r.hset(call.from_user.id, 'photo', pd[7])
-            if cl == 7 or cl == 17 or cl == 27:
-                r.hset(call.from_user.id, 'photo', pd[8])
-            if cl == 8 or cl == 18 or cl == 28:
-                r.hset(call.from_user.id, 'photo', pd[9])
-            if cl == 9 or cl == 19 or cl == 29:
-                r.hset(call.from_user.id, 'photo', pd[10])
+                r.hset(call.from_user.id, 'photo', premium[0])
+            elif cl == 2 or cl == 12 or cl == 22:
+                r.hset(call.from_user.id, 'photo', premium[1])
+            elif cl == 3 or cl == 13 or cl == 23:
+                r.hset(call.from_user.id, 'photo', premium[2])
+            elif cl == 4 or cl == 14 or cl == 24:
+                r.hset(call.from_user.id, 'photo', premium[3])
+            elif cl == 5 or cl == 15 or cl == 25:
+                r.hset(call.from_user.id, 'photo', premium[4])
+            elif cl == 6 or cl == 16 or cl == 26:
+                r.hset(call.from_user.id, 'photo', premium[5])
+            elif cl == 7 or cl == 17 or cl == 27:
+                r.hset(call.from_user.id, 'photo', premium[6])
+            elif cl == 8 or cl == 18 or cl == 28:
+                r.hset(call.from_user.id, 'photo', premium[7])
+            elif cl == 9 or cl == 19 or cl == 29:
+                r.hset(call.from_user.id, 'photo', premium[8])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку, або русак без класу')
+
+    elif call.data.startswith('premium2'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name'):
+            r.hincrby(call.from_user.id, 'strap', -1)
+            cl = int(r.hget(call.from_user.id, 'class'))
+            if cl == 0:
+                r.hset(call.from_user.id, 'photo', default[4])
+            elif cl == 1 or cl == 11 or cl == 21:
+                r.hset(call.from_user.id, 'photo', chm[0])
+            elif cl == 2 or cl == 12 or cl == 22:
+                r.hset(call.from_user.id, 'photo', chm[1])
+            elif cl == 3 or cl == 13 or cl == 23:
+                r.hset(call.from_user.id, 'photo', chm[2])
+            elif cl == 4 or cl == 14 or cl == 24:
+                r.hset(call.from_user.id, 'photo', chm[3])
+            elif cl == 5 or cl == 15 or cl == 25:
+                r.hset(call.from_user.id, 'photo', chm[4])
+            elif cl == 6 or cl == 16 or cl == 26:
+                r.hset(call.from_user.id, 'photo', chm[5])
+            elif cl == 7 or cl == 17 or cl == 27:
+                r.hset(call.from_user.id, 'photo', chm[6])
+            elif cl == 8 or cl == 18 or cl == 28:
+                r.hset(call.from_user.id, 'photo', chm[7])
+            elif cl == 9 or cl == 19 or cl == 29:
+                r.hset(call.from_user.id, 'photo', chm[8])
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно змінили фото русаку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку, або русак без класу')
+
     elif call.data.startswith('hawthorn'):
         if int(r.hget(call.from_user.id, 'strength')) < 400 and int(r.hget(call.from_user.id, 'intellect')) < 5:
             if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:

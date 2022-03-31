@@ -74,10 +74,13 @@ p9 = ['https://i.ibb.co/SvsNgFd/1.png', 'https://i.ibb.co/BjhBvdx/2.png', 'https
       'https://i.ibb.co/5vyTNzv/7.png', 'https://i.ibb.co/LtMLhrN/8.png', 'https://i.ibb.co/8jk78sT/9.png',
       'https://i.ibb.co/C1NxKbM/10.png']
 
-pd = ['https://i.ibb.co/GFMKxrp/9.png', 'https://i.ibb.co/nRpTjWt/10.png',
-      'https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', 'https://i.ibb.co/zmYDNrn/3.png',
-      'https://i.ibb.co/QDHLRPp/4.png', 'https://i.ibb.co/GntBLKG/5.png', 'https://i.ibb.co/b1jN3GC/6.png',
-      'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png', 'https://i.ibb.co/Gdf7NP0/9m.png']
+premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', 'https://i.ibb.co/zmYDNrn/3.png',
+           'https://i.ibb.co/QDHLRPp/4.png', 'https://i.ibb.co/GntBLKG/5.png', 'https://i.ibb.co/b1jN3GC/6.png',
+           'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png', 'https://i.ibb.co/Gdf7NP0/9m.png']
+
+chm = ['https://ibb.co/hHL9Gn6', 'https://ibb.co/2q1FRqp', 'https://ibb.co/Y0L764f', 'https://ibb.co/rdjfSxy',
+       'https://ibb.co/sRzV5Zs', 'https://ibb.co/zPx2zKK', 'https://ibb.co/dQcFyKw', 'https://ibb.co/cXvjbkD',
+       'https://ibb.co/QdP1KQZ']
 
 default = ['https://ibb.co/PjxxLJr', 'https://ibb.co/mBLYqhC', 'https://ibb.co/vZ2R3fX', 'https://ibb.co/2SJjpqv',
            'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https://ibb.co/C7jCTRJ',
