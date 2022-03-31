@@ -1632,6 +1632,7 @@ async def handle_query(call):
                                                  'support': 0, 's_support': 0, 'mushrooms': 0, 'hp': 100, 'injure': 0,
                                                  'sch': 0, 'buff': 0, 'photo': choice(default),
                                                  'firstname': call.from_user.first_name})
+            r.sadd('everyone', call.from_user.id)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
                 if call.message.chat.type != 'private':
