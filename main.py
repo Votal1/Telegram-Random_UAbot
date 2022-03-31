@@ -2239,6 +2239,7 @@ async def handle_query(call):
             pass
         name = int(r.hget(call.from_user.id, 'name'))
         clm = int(r.hget(call.from_user.id, 'class'))
+        r.srem('class-' + str(clm), call.from_user.id)
         r.hdel(call.from_user.id, 'name')
         r.hset(call.from_user.id, 'photo', 0)
         r.hset(call.from_user.id, 'mushrooms', 0)
@@ -2846,10 +2847,12 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Твій русак не отримає жодного ефекту від цього товару')
     elif call.data.startswith('course'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 2 and int(r.hget(call.from_user.id, 'class')) > 0:
+        cl = int(r.hget(call.from_user.id, 'class'))
+        if int(r.hget(call.from_user.id, 'strap')) >= 2 and cl > 0:
             r.hincrby(call.from_user.id, 'strap', -2)
-            if int(r.hget(call.from_user.id, 'class')) == 21:
+            if cl == 21:
                 r.hincrby(call.from_user.id, 'strength', -200)
+            r.srem('class-' + str(cl), call.from_user.id)
             r.hset(call.from_user.id, 'class', 0)
             if int(r.hget(call.from_user.id, 'intellect')) < 5:
                 r.hset(call.from_user.id, 'intellect', 5)
@@ -3223,11 +3226,13 @@ async def echo(message):
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Хач.')
                             r.hset(message.from_user.id, 'class', 1)
+                            r.sadd('class-1', message.from_user.id)
                         elif 'Роботяга' in message.text or 'роботяга' in message.text:
                             ran = choice(p2)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Роботяга.')
                             r.hset(message.from_user.id, 'class', 2)
+                            r.sadd('class-2', message.from_user.id)
                         elif 'Фокусник' in message.text or 'фокусник' in message.text:
                             ran = choice(p3)
                             r.hset(message.from_user.id, 'photo', ran)
@@ -3235,71 +3240,96 @@ async def echo(message):
                             r.hset(message.from_user.id, 'class', 3)
                             r.hincrby(message.from_user.id, 'intellect', 1)
                             intellect(1, message.from_user.id)
+                            r.sadd('class-3', message.from_user.id)
                         elif 'Язичник' in message.text or 'язичник' in message.text:
                             ran = choice(p4)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Язичник.')
                             r.hset(message.from_user.id, 'class', 4)
+                            r.sadd('class-4', message.from_user.id)
                         elif 'Гарматне' in message.text or 'гарматне' in message.text:
                             ran = choice(p5)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Гарматне м`ясо.')
                             r.hset(message.from_user.id, 'class', 5)
+                            r.sadd('class-5', message.from_user.id)
                         elif 'Мусор' in message.text or 'мусор' in message.text:
                             ran = choice(p6)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Мусор.')
                             r.hset(message.from_user.id, 'class', 6)
                             r.hset(message.from_user.id, 'weapon', 16)
+                            r.sadd('class-6', message.from_user.id)
                         elif 'Малорос' in message.text or 'малорос' in message.text:
                             ran = choice(p7)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Малорос.')
                             r.hset(message.from_user.id, 'class', 7)
                             intellect(-2, message.from_user.id)
+                            r.sadd('class-7', message.from_user.id)
                         elif 'Хакер' in message.text or 'хакер' in message.text:
                             ran = choice(p8)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Хакер.')
                             r.hset(message.from_user.id, 'class', 8)
+                            r.sadd('class-8', message.from_user.id)
                         elif 'Медик' in message.text or 'медик' in message.text:
                             ran = choice(p9)
                             r.hset(message.from_user.id, 'photo', ran)
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Медик.')
                             r.hset(message.from_user.id, 'class', 9)
+                            r.sadd('class-9', message.from_user.id)
             if int(r.hget(message.from_user.id, 'intellect')) >= 12:
                 if message.text == 'Покращити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))
                     if cl == 1:
                         await message.reply('Ти покращив хача до Борцухи.')
                         r.hset(message.from_user.id, 'class', 11)
+                        r.srem('class-1', message.from_user.id)
+                        r.sadd('class-11', message.from_user.id)
                     if cl == 2:
                         await message.reply('Ти покращив роботягу до Почесного алкаша.')
                         r.hset(message.from_user.id, 'class', 12)
+                        r.srem('class-2', message.from_user.id)
+                        r.sadd('class-12', message.from_user.id)
                     if cl == 3:
                         await message.reply('Ти покращив фокусника до Злого генія.')
                         r.hset(message.from_user.id, 'class', 13)
                         intellect(2, message.from_user.id)
+                        r.srem('class-3', message.from_user.id)
+                        r.sadd('class-13', message.from_user.id)
                     if cl == 4:
                         await message.reply('Ти покращив язичника до Скінхеда.')
                         r.hset(message.from_user.id, 'class', 14)
+                        r.srem('class-4', message.from_user.id)
+                        r.sadd('class-14', message.from_user.id)
                     if cl == 5:
                         await message.reply('Ти покращив гарматне м`ясо до Орка.')
                         r.hset(message.from_user.id, 'class', 15)
+                        r.srem('class-5', message.from_user.id)
+                        r.sadd('class-15', message.from_user.id)
                     if cl == 6:
                         await message.reply('Ти покращив мусора до Силовика.')
                         r.hset(message.from_user.id, 'class', 16)
+                        r.srem('class-6', message.from_user.id)
+                        r.sadd('class-16', message.from_user.id)
                     if cl == 7:
                         await message.reply('Ти покращив малороса до Кремлебота.')
                         r.hset(message.from_user.id, 'class', 17)
                         r.hincrby(message.from_user.id, 'money', 60)
                         r.hset(message.from_user.id, 'mushrooms', 0)
+                        r.srem('class-7', message.from_user.id)
+                        r.sadd('class-17', message.from_user.id)
                     if cl == 8:
                         await message.reply('Ти покращив хакера до Кіберзлочинця.')
                         r.hset(message.from_user.id, 'class', 18)
+                        r.srem('class-8', message.from_user.id)
+                        r.sadd('class-18', message.from_user.id)
                     if cl == 9:
                         await message.reply('Ти покращив медика до Нарколога.')
                         r.hset(message.from_user.id, 'class', 19)
+                        r.srem('class-9', message.from_user.id)
+                        r.sadd('class-19', message.from_user.id)
             if int(r.hget(message.from_user.id, 'intellect')) >= 20:
                 if message.text == 'Вдосконалити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))
@@ -3308,33 +3338,51 @@ async def echo(message):
                         r.hset(message.from_user.id, 'class', 21)
                         r.hset(message.from_user.id, 'hach_time2', 0)
                         r.hincrby(message.from_user.id, 'strength', 200)
+                        r.srem('class-11', message.from_user.id)
+                        r.sadd('class-21', message.from_user.id)
                     if cl == 12:
                         await message.reply('Ти покращив почесного алкаша до П`яного майстра.')
                         r.hset(message.from_user.id, 'class', 22)
                         r.hset(message.from_user.id, 'worker', 0)
+                        r.srem('class-12', message.from_user.id)
+                        r.sadd('class-22', message.from_user.id)
                     if cl == 13:
                         await message.reply('Ти покращив злого генія до Некроманта.')
                         r.hset(message.from_user.id, 'class', 23)
+                        r.srem('class-13', message.from_user.id)
+                        r.sadd('class-23', message.from_user.id)
                     if cl == 14:
                         await message.reply('Ти покращив скінхеда до Білого вождя.')
                         r.hset(message.from_user.id, 'class', 24)
+                        r.srem('class-14', message.from_user.id)
+                        r.sadd('class-24', message.from_user.id)
                     if cl == 15:
                         await message.reply('Ти покращив орка до Героя Новоросії.')
                         r.hset(message.from_user.id, 'class', 25)
+                        r.srem('class-15', message.from_user.id)
+                        r.sadd('class-25', message.from_user.id)
                     if cl == 16:
                         await message.reply('Ти покращив силовика до Товариша майора.')
                         r.hset(message.from_user.id, 'class', 26)
+                        r.srem('class-16', message.from_user.id)
+                        r.sadd('class-26', message.from_user.id)
                     if cl == 17:
                         await message.reply('Ти покращив кремлебота до Агента ФСБ.')
                         r.hset(message.from_user.id, 'class', 27)
                         r.hset(message.from_user.id, 'fsb', 0)
                         r.hincrby(message.from_user.id, 'money', 100)
+                        r.srem('class-17', message.from_user.id)
+                        r.sadd('class-27', message.from_user.id)
                     if cl == 18:
                         await message.reply('Ти покращив кіберзлочинця до Black Hat.')
                         r.hset(message.from_user.id, 'class', 28)
+                        r.srem('class-18', message.from_user.id)
+                        r.sadd('class-28', message.from_user.id)
                     if cl == 19:
                         await message.reply('Ти покращив нарколога до Патологоанатома')
                         r.hset(message.from_user.id, 'class', 29)
+                        r.srem('class-19', message.from_user.id)
+                        r.sadd('class-29', message.from_user.id)
 
     except:
         pass
