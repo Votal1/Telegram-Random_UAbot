@@ -384,7 +384,7 @@ async def sacrifice(message):
                 and r.hexists(message.from_user.id, 'strength') == 1 \
                 and int(r.hget(message.from_user.id, 'strength')) != 0:
             markup = InlineKeyboardMarkup()
-            await message.reply('\U0001F52A Вбити свого русака?\nУ всіх русаків в цьому чаті зменшиться '
+            await message.reply('\U0001F52A Вбити свого русака?\n\nУ всіх русаків в цьому чаті зменшиться '
                                 'бойовий дух на 10%.',
                                 reply_markup=markup.add(InlineKeyboardButton(text='Принести в жертву русака',
                                                                              callback_data='sacrifice')))
