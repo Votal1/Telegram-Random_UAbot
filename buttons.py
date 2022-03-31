@@ -13,7 +13,7 @@ def goods():
 
 def donate_goods():
     markup = InlineKeyboardMarkup()
-    items = {'Преміум-фото класу - 1 погон': 'premium1', 'Класовий чмоня': 'premium2',
+    items = {'Преміум-фото класу - 1 погон': 'premium1', 'Класовий чмоня - 1 погон': 'premium2',
              '40 пакунків - 1 погон': '40_packs', 'Настоянка глоду - 1 погон': 'hawthorn',
              'Курс перекваліфікації - 2 погони': 'course', 'Велике будівництво - 3 погони': 'fast_cellar'}
     for key, value in items.items():
