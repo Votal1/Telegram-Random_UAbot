@@ -811,9 +811,10 @@ async def war(cid, location, big_battle):
         r.hincrby(win, 'money', 5)
     elif location == 'Висадка в Чорнобаївці':
         winner = ''
-        reward = '\n\n\U0001F3C6 Переможців немає.\n\U0001fa78 +10'
+        n = randint(5, 10)
+        reward = '\n\n\U0001F3C6 Переможців немає.\n\U0001fa78 +' + str(n)
         for member in r.smembers('fighters' + str(cid)):
-            r.hincrby(member, 'injure', 10)
+            r.hincrby(member, 'injure', n)
     else:
         reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
         r.hincrby(win, 'trophy', 1)
