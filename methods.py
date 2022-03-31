@@ -107,7 +107,7 @@ async def top(sett, uid, text):
                 place1 = str(place) + '. '
                 result += place1 + n
                 place += 1
-                if place == 21:
+                if place == 11:
                     break
             if sett == 111:
                 return 'Глобальний рейтинг власників русаків \n\n' + result
