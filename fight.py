@@ -802,10 +802,18 @@ async def war(cid, location, big_battle):
     win = choices(list(fighters.keys()), weights=list(fighters.values()))
     win = int(str(win)[3:-2])
     wc = int(r.hget(win, 'class'))
+    user_name = r.hget(win, 'firstname').decode()
+    winner = '\n\n\U0001F3C6 ' + ' ' + f'<a href="tg://user?id={win}">{user_name}</a>' + ' перемагає!'
+
     if not big_battle:
         reward = '\n\n\U0001F3C6 +1 \U0001F4B5 +5\n'
         r.hincrby(win, 'wins', 1)
         r.hincrby(win, 'money', 5)
+    elif location == 'Висадка в Чорнобаївці':
+        winner = ''
+        reward = '\n\nПереможців немає.\n\U0001fa78 +10'
+        for member in r.smembers('fighters' + str(cid)):
+            r.hincrby(member, 'injure', 10)
     else:
         reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
         r.hincrby(win, 'trophy', 1)
@@ -876,11 +884,8 @@ async def war(cid, location, big_battle):
     end = ' завершена.'
     if location == 'Штурм Горлівки' or location == 'Штурм ДАП':
         end = ' завершено.'
-    user_name = r.hget(win, 'firstname').decode()
     await bot.delete_message(m.chat.id, m.message_id)
-    await bot.send_message(cid, location + end + '\n\n\U0001F3C6 ' + ' ' +
-                           f'<a href="tg://user?id={win}">{user_name}</a>' + ' перемагає!' + reward +
-                           class_reward, parse_mode='HTML')
+    await bot.send_message(cid, location + end + winner + reward + class_reward, parse_mode='HTML')
 
 
 async def war_power(sett, cid):
