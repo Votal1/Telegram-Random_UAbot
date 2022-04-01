@@ -105,7 +105,7 @@ async def top(sett, uid, text):
             place = 1
             for n in s_rating:
                 place1 = str(place) + '. '
-                result += place1 + n
+                result += place1 + str(n)
                 if 1 <= place <= 10:
                     r.sadd('top_10', n)
                 if 1 <= place <= 20:
