@@ -125,7 +125,8 @@ async def top(sett, uid, text):
             else:
                 return 'Чатовий рейтинг власників русаків \n\n' + result
 
-    except:
+    except Exception as e:
+        print(e)
         return 'Недостатньо інформації для створення рейтингу.'
 
 
