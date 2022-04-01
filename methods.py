@@ -55,7 +55,7 @@ async def top(sett, uid, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
-        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
+        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60 and uid == 456514639:
             r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
             everyone = r.smembers(sett)
             rating = {}
@@ -97,7 +97,7 @@ async def top(sett, uid, text):
                             raise Exception
                     except:
                         rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
-                    rating.update({line: rate})
+                    rating.update({member: rate})
                 except:
                     continue
             s_rating = sorted(rating, key=rating.get, reverse=True)
@@ -106,8 +106,19 @@ async def top(sett, uid, text):
             for n in s_rating:
                 place1 = str(place) + '. '
                 result += place1 + n
+                if 1 <= place <= 10:
+                    r.sadd('top_10', n)
+                if 1 <= place <= 20:
+                    r.sadd('top_20', n)
+                if 1 <= place <= 50:
+                    r.sadd('top_50', n)
+                if 1 <= place <= 100:
+                    r.sadd('top_100', n)
+                if 1 <= place <= 1000:
+                    r.sadd('top_1000', n)
+
                 place += 1
-                if place == 11:
+                if place == 1001:
                     break
             if sett == 111:
                 return 'Глобальний рейтинг власників русаків \n\n' + result
