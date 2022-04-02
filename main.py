@@ -3194,11 +3194,12 @@ async def echo(message):
         if 'Кубик' in message.text or 'кубик' in message.text:
             await bot.send_dice(chat_id=message.chat.id, reply_to_message_id=message.message_id)
 
-        elif 'Рандом' in message.text or 'рандом' in message.text or \
-                'Казино' in message.text or 'казино' in message.text:
+        elif 'казино' in message.text.lower():
             await bot.send_sticker(message.chat.id,
                                    'CAACAgIAAxkBAAEIjuhhS6oNEVDkBDkBUokJJLjTBRloBAACCQADT9w1GxCgVEna0OwQIQQ',
                                    reply_to_message_id=message.message_id)
+        elif message.text.lower() == 'карта':
+            await message.reply('https://deepstatemap.live')
 
         elif message.text == '\U0001F346':
             await bot.send_sticker(message.chat.id,
