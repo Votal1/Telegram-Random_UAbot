@@ -700,7 +700,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             elif weapon2 == 17:
                 r.hincrby(uid2, 'wins', 1)
                 fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор новоросії.' \
-                                                          '\n\U0001F3F7 +1'
+                                                          '\n\U0001F3C6 +1'
                 damage_weapon(uid2, c2)
 
             spirit(bonus, uid2, c2)
