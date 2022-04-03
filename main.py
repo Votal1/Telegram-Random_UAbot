@@ -2569,7 +2569,7 @@ async def handle_query(call):
     elif call.data.startswith('mushroom'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            if int(r.hget(call.from_user.id, 'defense')) == 0:
+            if int(r.hget(call.from_user.id, 'support')) == 0:
                 mushroom = int(r.hget(call.from_user.id, 'mushrooms'))
                 if int(r.hget(call.from_user.id, 'class')) == 18 or int(r.hget(call.from_user.id, 'class')) == 28:
                     mushroom = 0
@@ -2592,7 +2592,7 @@ async def handle_query(call):
                                                     text='Для вашого русака не передбачено більше трьох мухоморів')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='У вас вже є захисне спорядження')
+                                                text='У вас вже є допоміжне спорядження')
         else:
             await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
                                         call.message.message_id)
@@ -2685,8 +2685,7 @@ async def handle_query(call):
                                                     text='У вас вже є зброя')
 
             elif cl == 5 or cl == 15 or cl == 25:
-                if int(r.hget(call.from_user.id, 'weapon')) == 0 and \
-                        int(r.hget(call.from_user.id, 'defense')) == 0:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
                     if int(r.hget(call.from_user.id, 'money')) >= 20:
                         r.hincrby(call.from_user.id, 'money', -20)
                         r.hset(call.from_user.id, 'weapon', 15)
@@ -2698,7 +2697,7 @@ async def handle_query(call):
                                                         text='Недостатньо коштів на рахунку')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                    text='У вас вже є зброя або захисне спорядження')
+                                                    text='У вас вже є зброя')
 
             elif cl == 6 or cl == 16 or cl == 26:
                 if int(r.hget(call.from_user.id, 'defense')) == 0:
@@ -2716,8 +2715,7 @@ async def handle_query(call):
                                                     text='У вас вже є захисне спорядження')
 
             elif cl == 7 or cl == 17 or cl == 27:
-                if int(r.hget(call.from_user.id, 'weapon')) == 0 and \
-                        int(r.hget(call.from_user.id, 'defense')) == 0:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
                     if int(r.hget(call.from_user.id, 'money')) >= 5:
                         r.hincrby(call.from_user.id, 'money', -5)
                         r.hset(call.from_user.id, 'weapon', 17)
@@ -2729,7 +2727,7 @@ async def handle_query(call):
                                                         text='Недостатньо коштів на рахунку')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                    text='У вас вже є зброя або захисне спорядження')
+                                                    text='У вас вже є зброя')
 
             elif cl == 8 or cl == 18 or cl == 28:
                 if int(r.hget(call.from_user.id, 'weapon')) == 0:
