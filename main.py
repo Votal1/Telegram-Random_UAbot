@@ -691,11 +691,11 @@ async def merchant(message):
                                       'силу, інтелект і бойовий дух на 20%.\n\U0001F52E Колода з кіоску [Атака, міцні'
                                       'сть=3, ціна=5] - міняє твої характеристики з ворогом на бій.\n\U0001F5FF Сокир'
                                       'а Перуна [Атака, міцність=1, ціна=7] - при перемозі забирає весь бойовий дух в'
-                                      'орога, при поразці ворог забирає твій.\n\U0001fa96 АК-47 [Атака&Захист, міцніс'
+                                      'орога, при поразці ворог забирає твій.\n\U0001fa96 АК-47 [Атака, міцніс'
                                       'ть=30, ціна=20] - після перемоги активує ефект горілки.\n\U0001F46E Поліцейськ'
                                       'ий щит [Захист, міцність=10, ціна=10] - зменшує силу ворога на 20%.\n'
-                                      '\U0001F921 Прапор новоросії [Атака&Захист, міцність=8, ціна=11] - піднімає '
-                                      'бойовий дух до максимуму на бій.\n\U0001F4DF Експлойт [Атака, міцність=2, '
+                                      '\U0001F921 Прапор новоросії [Атака, міцність=8, ціна=5] - додаткова перемога '
+                                      'за перемогу в дуелі.\n\U0001F4DF Експлойт [Атака, міцність=2, '
                                       'ціна=9] - шанс активувати здібність хакера - 99%.\n'
                                       '\u26D1 Медична пилка [Атака, міцність=5, ціна=10] - якщо у ворога нема '
                                       'поранень - завдає 1, якщо є - лікує 10 і забирає 10 здоров`я.',
@@ -1017,9 +1017,7 @@ async def inventory(message):
         else:
             m1 = '\nМіцність: ' + inv[3].decode()
 
-        if int(inv[1]) == 15 or int(inv[1]) == 17:
-            m2 = '\nМіцність: ' + inv[3].decode()
-        elif int(inv[1]) == 0:
+        if int(inv[1]) == 0:
             m2 = '[Порожньо]'
         else:
             m2 = '\nМіцність: ' + inv[4].decode()
@@ -2680,7 +2678,6 @@ async def handle_query(call):
                     if int(r.hget(call.from_user.id, 'money')) >= 20:
                         r.hincrby(call.from_user.id, 'money', -20)
                         r.hset(call.from_user.id, 'weapon', 15)
-                        r.hset(call.from_user.id, 'defense', 15)
                         r.hset(call.from_user.id, 's_weapon', 30)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили АК-47')
@@ -2709,10 +2706,9 @@ async def handle_query(call):
             elif cl == 7 or cl == 17 or cl == 27:
                 if int(r.hget(call.from_user.id, 'weapon')) == 0 and \
                         int(r.hget(call.from_user.id, 'defense')) == 0:
-                    if int(r.hget(call.from_user.id, 'money')) >= 11:
-                        r.hincrby(call.from_user.id, 'money', -11)
+                    if int(r.hget(call.from_user.id, 'money')) >= 5:
+                        r.hincrby(call.from_user.id, 'money', -5)
                         r.hset(call.from_user.id, 'weapon', 17)
-                        r.hset(call.from_user.id, 'defense', 17)
                         r.hset(call.from_user.id, 's_weapon', 8)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили прапор новоросії')
@@ -2893,14 +2889,8 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Зброю мусора неможливо викинути')
             else:
-                if int(r.hget(call.from_user.id, 'weapon')) == 15 or int(r.hget(call.from_user.id, 'weapon')) == 17:
-                    r.hset(call.from_user.id, 'weapon', 0)
-                    r.hset(call.from_user.id, 's_weapon', 0)
-                    r.hset(call.from_user.id, 'defense', 0)
-                    r.hset(call.from_user.id, 's_defense', 0)
-                else:
-                    r.hset(call.from_user.id, 'weapon', 0)
-                    r.hset(call.from_user.id, 's_weapon', 0)
+                r.hset(call.from_user.id, 'weapon', 0)
+                r.hset(call.from_user.id, 's_weapon', 0)
                 cl = int(r.hget(call.from_user.id, 'class'))
                 if cl == 6 or cl == 16 or cl == 26:
                     r.hset(call.from_user.id, 'weapon', 16)
@@ -2912,14 +2902,8 @@ async def handle_query(call):
 
     elif call.data.startswith('drop_d') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'defense')) != 0:
-            if int(r.hget(call.from_user.id, 'defense')) == 15 or int(r.hget(call.from_user.id, 'defense')) == 17:
-                r.hset(call.from_user.id, 'weapon', 0)
-                r.hset(call.from_user.id, 's_weapon', 0)
-                r.hset(call.from_user.id, 'defense', 0)
-                r.hset(call.from_user.id, 's_defense', 0)
-            else:
-                r.hset(call.from_user.id, 'defense', 0)
-                r.hset(call.from_user.id, 's_defense', 0)
+            r.hset(call.from_user.id, 'defense', 0)
+            r.hset(call.from_user.id, 's_defense', 0)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Русак викинув захисне спорядження')
         else:
@@ -2983,11 +2967,9 @@ async def handle_query(call):
                 elif cl == 5 or cl == 15 or cl == 25:
                     if int(r.hget(uid, 'weapon')) == 15:
                         r.hincrby(uid, 's_weapon', 30)
-                    elif int(r.hget(uid, 'weapon')) != 2 and int(r.hget(uid, 'defense')) != 2 \
-                            and int(r.hget(uid, 'defense')) != 10:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 15)
                         r.hset(uid, 's_weapon', 30)
-                        r.hset(uid, 'defense', 15)
                 elif cl == 6 or cl == 16 or cl == 26:
                     if int(r.hget(uid, 'defense')) == 16:
                         r.hincrby(uid, 's_defense', 10)
@@ -2997,11 +2979,9 @@ async def handle_query(call):
                 elif cl == 7 or cl == 17 or cl == 27:
                     if int(r.hget(uid, 'weapon')) == 17:
                         r.hincrby(uid, 's_weapon', 8)
-                    elif int(r.hget(uid, 'weapon')) != 2 and int(r.hget(uid, 'defense')) != 2 and \
-                            int(r.hget(uid, 'defense')) != 10:
+                    elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 17)
                         r.hset(uid, 's_weapon', 8)
-                        r.hset(uid, 'defense', 17)
                 elif cl == 8 or cl == 18 or cl == 28:
                     if int(r.hget(uid, 'weapon')) == 18:
                         r.hincrby(uid, 's_weapon', 2)
