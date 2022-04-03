@@ -786,13 +786,13 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'packs', 10)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply('\u26CF Соледарський промокод активовано!\n\U0001F4E6 +10 \u2622 +50')
-                elif msg.startswith('GET_') and uid not in r.smembers('second_code'):
+                elif msg.startswith('http') and uid not in r.smembers('second_code'):
                     r.sadd('second_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
-                    r.hincrby(message.from_user.id, 'money', 50)
-                    r.hincrby(message.from_user.id, 'vodka', 25)
+                    r.hincrby(message.from_user.id, 'money', 100)
+                    r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply('\u26CF Хакерський промокод активовано!\n\U0001F4E6 +10 '
-                                        '\U0001F4B5 +50 \u2622 +25')
+                                        '\U0001F4B5 +100 \u2622 +50')
                 elif msg.startswith('mine') and uid not in r.smembers('third_code'):
                     r.sadd('third_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 30)
