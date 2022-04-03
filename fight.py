@@ -315,7 +315,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1 = int(s1 * 1.3)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
             damage_defense(uid1, 9)
-        elif support1 == 6 and t == 1:
+        if support1 == 6 and t == 1:
             if i2 > i1:
                 if c2 != 3 and c2 != 13 and c2 != 23:
                     s1 = int(s1 * 0.5)
@@ -324,7 +324,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     support += '\n\n\U0001F6E1 ' + names[name1] + ' прийшов на бій під мухоморами. Він був' \
                                                                   ' обезсилений, але запам`ятав тактику ворога.'
                     damage_support(uid1)
-        elif support2 == 6 and t == 1:
+        if support2 == 6 and t == 1:
             if i1 > i2:
                 if c1 != 3 and c1 != 13 and c1 != 23:
                     s2 = int(s2 * 0.5)
@@ -333,6 +333,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     support += '\n\n\U0001F6E1 ' + names[name2] + ' прийшов на бій під мухоморами. Він був' \
                                                                   ' обезсилений, але запам`ятав тактику ворога.'
                     damage_support(uid2)
+        if defense1 == 9:
+            s1 = int(s1 * 1.3)
+            defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
+            damage_defense(uid1, 9)
         elif defense1 == 16:
             s2 = int(s2 * 0.8)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'
