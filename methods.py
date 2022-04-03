@@ -6,7 +6,7 @@ from datetime import datetime
 
 def get_rusak():
     name = randint(0, len(names) - 1)
-    strength = randint(10, 50)
+    strength = randint(100, 150)
     mind = int(choice(['1', '1', '1', '1', '2']))
     return name, strength, mind
 
