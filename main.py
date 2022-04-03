@@ -616,7 +616,8 @@ async def classes_2(message):
           'Силовик \U0001F46E\U0001F46E - ігнорує інтелект. Додає +15% сили за кожне марно' \
           ' втрачене очко інтелекту. Здібність не діє проти інших мусорів.\n\n' \
           'Кремлебот \U0001F921\U0001F921 - +60 гривень і онуляє рахунок мухоморів. При жертві' \
-          ' отримує по 2 гривні за кожного, хто втратив бойовий дух (максимум 200 гривень).\n\n' \
+          ' отримує по 2 гривні за кожного, хто втратив бойовий дух (максимум 200 гривень). Можливість купляти ' \
+          'горілку за перемоги, якщо нема грошей.\n\n' \
           'Кіберзлочинець \U0001F4DF\U0001F4DF - отримує доступ до баз даних - якщо напився на ' \
           'роботі, то може працювати ще раз; можливість купляти мухомори без обмежень.\n\n' \
           'Нарколог \u26D1\u26D1 - якщо у ворога від 50 здоров`я - з шансом 20% додає на 1 ' \
@@ -2418,8 +2419,19 @@ async def handle_query(call):
                                             text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
                                                  vodka(call.from_user.id))
         else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо коштів на рахунку')
+            cl = int(r.hget(call.from_user.id, 'class'))
+            if cl == 17 or cl == 27:
+                if int(r.hget(call.from_user.id, 'wins')) >= 2:
+                    r.hincrby(call.from_user.id, 'wins', -2)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили горілку "Козаки" за перемоги'
+                                                         '\n\U0001F54A + ' + vodka(call.from_user.id))
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку')
 
     elif call.data.startswith('weapon'):
         if int(r.hget(call.from_user.id, 'weapon')) == 0:

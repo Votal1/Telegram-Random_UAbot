@@ -508,19 +508,25 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         hp(-int(nar[1]), uid1)
                         m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
 
+        mal1, mal2 = False, False
+        if c1 == 7 or c1 == 17 or c1 == 27:
+            mal1 = True
+        if c2 == 7 or c2 == 17 or c2 == 27:
+            mal2 = True
+
         chance1 = s1 * (1 + 0.1 * i1) * (1 + 0.01 * (bd1 * 0.01))
         chance2 = s2 * (1 + 0.1 * i2) * (1 + 0.01 * (bd2 * 0.01))
 
         chance11 = chance1 / ((chance1 + chance2) / 100)
         chance22 = chance2 / ((chance1 + chance2) / 100)
 
-        if c2 != 7 and chance11 > 95:
+        if not mal2 and chance11 > 95:
             win = choices(['1', '2'], weights=[95, 5])
-        elif c1 != 7 and chance22 > 95:
+        elif not mal1 and chance22 > 95:
             win = choices(['1', '2'], weights=[5, 95])
-        elif c2 == 7 and chance11 > 80:
+        elif mal2 and chance11 > 80:
             win = choices(['1', '2'], weights=[80, 20])
-        elif c1 == 7 and chance22 > 80:
+        elif mal1 and chance22 > 80:
             win = choices(['1', '2'], weights=[20, 80])
         else:
             win = choices(['1', '2'], weights=[chance1, chance2])
