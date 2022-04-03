@@ -756,7 +756,8 @@ async def war(cid, location, big_battle):
     fighters = {}
     for member in everyone:
         try:
-            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'buff')
+            stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'buff',
+                            'support')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -768,23 +769,23 @@ async def war(cid, location, big_battle):
                 s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
             if w > 0:
-                w = 1.5
+                w = 1/3
             else:
-                w = 1
+                w = 0
             d = int(stats[4])
             if d > 0:
-                d = 1.5
+                d = 1/3
             else:
-                d = 1
-            chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
+                d = 0
+            support = int(stats[8])
+            if support > 0:
+                support = 1/3
+            else:
+                support = 0
+            chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
             fighters.update({member: chance})
         except:
             continue
-    if location == 'Битва в Соледарі':
-        for key in fighters:
-            if int(r.hget(key, 'class')) == 0:
-                c = fighters.get(key)
-                fighters.update({key: c * 2})
 
     if location == 'Штурм Горлівки':
         for key in fighters:
@@ -792,18 +793,23 @@ async def war(cid, location, big_battle):
 
     if location == 'Штурм ДАП':
         for key in fighters:
-            armor = r.hmget(key, 'weapon', 'defense')
+            armor = r.hmget(key, 'weapon', 'defense', 'support')
             w = int(armor[0])
             if w > 0:
-                w = 1.5
+                w = 1/3
             else:
-                w = 1
+                w = 0
             d = int(armor[1])
             if d > 0:
-                d = 1.5
+                d = 1/3
             else:
-                d = 1
-            chance = w * d
+                d = 0
+            support = int(armor[2])
+            if support > 0:
+                support = 1/3
+            else:
+                support = 0
+            chance = 1 + w + d + support
             fighters.update({key: chance})
     win = choices(list(fighters.keys()), weights=list(fighters.values()))
     win = int(str(win)[3:-2])
@@ -924,17 +930,17 @@ async def war_power(sett, cid):
 
             w = int(stats[3])
             if w > 0:
-                w = 0.33333
+                w = 1/3
             else:
                 w = 0
             d = int(stats[4])
             if d > 0:
-                d = 0.33333
+                d = 1/3
             else:
                 d = 0
             support = int(stats[10])
             if support > 0:
-                support = 0.33333
+                support = 1/3
             else:
                 support = 0
             if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
