@@ -17,13 +17,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             uid1 = uid2
             uid2 = uid
 
-        weapon, defense = '', ''
-        stats1 = r.hmget(uid1, 'name', 'class', 'weapon', 'defense')
-        stats2 = r.hmget(uid2, 'name', 'class', 'weapon', 'defense')
+        weapon, defense, support = '', '', ''
+        stats1 = r.hmget(uid1, 'name', 'class', 'weapon', 'defense', 'support')
+        stats2 = r.hmget(uid2, 'name', 'class', 'weapon', 'defense', 'support')
         name1, name2 = int(stats1[0]), int(stats2[0])
         c1, c2 = int(stats1[1]), int(stats2[1])
         weapon1, weapon2 = int(stats1[2]), int(stats2[2])
         defense1, defense2 = int(stats1[3]), int(stats2[3])
+        support1, support2 = int(stats1[4]), int(stats2[4])
 
         grn, hach, worker, meat, cop, fsb, m1, m2, inj1, inj2 = '', '', '', '', '', '', '', '', '', ''
         m_bonus, hach1, hach2 = [0], 0, 0
@@ -152,10 +153,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             damage_defense(uid1, 1)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
 
-        if int(r.hget(uid1, 'support')) == 1:
+        if support1 == 1:
             hp(10, uid1)
             damage_support(uid1)
-        if int(r.hget(uid2, 'support')) == 1:
+        if support2 == 1:
             hp(10, uid2)
             damage_support(uid2)
 
@@ -314,15 +315,24 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1 = int(s1 * 1.3)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
             damage_defense(uid1, 9)
-        elif defense1 == 10 and t == 1:
+        elif support1 == 6 and t == 1:
             if i2 > i1:
                 if c2 != 3 and c2 != 13 and c2 != 23:
                     s1 = int(s1 * 0.5)
                     intellect(1, uid1)
                     r.hincrby(uid1, 'mushrooms', 1)
-                    defense = '\n\n\U0001F6E1 ' + names[name1] + ' прийшов на бій під мухоморами. Він був' \
-                                                                 ' обезсилений, але запам`ятав тактику ворога.'
-                    damage_defense(uid1, 10)
+                    support += '\n\n\U0001F6E1 ' + names[name1] + ' прийшов на бій під мухоморами. Він був' \
+                                                                  ' обезсилений, але запам`ятав тактику ворога.'
+                    damage_support(uid1)
+        elif support2 == 6 and t == 1:
+            if i1 > i2:
+                if c1 != 3 and c1 != 13 and c1 != 23:
+                    s2 = int(s2 * 0.5)
+                    intellect(1, uid2)
+                    r.hincrby(uid2, 'mushrooms', 1)
+                    support += '\n\n\U0001F6E1 ' + names[name2] + ' прийшов на бій під мухоморами. Він був' \
+                                                                  ' обезсилений, але запам`ятав тактику ворога.'
+                    damage_support(uid2)
         elif defense1 == 16:
             s2 = int(s2 * 0.8)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'

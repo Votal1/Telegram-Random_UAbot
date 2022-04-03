@@ -2565,8 +2565,8 @@ async def handle_query(call):
                     if int(r.hget(call.from_user.id, 'intellect')) < 20:
                         if int(r.hget(call.from_user.id, 'money')) >= 60:
                             r.hincrby(call.from_user.id, 'money', -60)
-                            r.hset(call.from_user.id, 'defense', 10)
-                            r.hset(call.from_user.id, 's_defense', 1)
+                            r.hset(call.from_user.id, 'support', 6)
+                            r.hset(call.from_user.id, 's_support', 1)
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                             text='Ви успішно купили мухомор королівський')
                         else:
@@ -2973,7 +2973,7 @@ async def handle_query(call):
                 elif cl == 6 or cl == 16 or cl == 26:
                     if int(r.hget(uid, 'defense')) == 16:
                         r.hincrby(uid, 's_defense', 10)
-                    elif int(r.hget(uid, 'defense')) != 2 and int(r.hget(uid, 'defense')) != 10:
+                    elif int(r.hget(uid, 'defense')) != 2:
                         r.hset(uid, 'defense', 16)
                         r.hset(uid, 's_defense', 10)
                 elif cl == 7 or cl == 17 or cl == 27:
@@ -3021,7 +3021,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1:
                     r.hset(uid, 'defense', 9)
                     r.hset(uid, 's_defense', 7)
-                elif int(r.hget(uid, 'defense')) != 10:
+                else:
                     r.hincrby(uid, 's_defense', 7)
             elif ran == [6]:
                 await bot.edit_message_text('\U0001f535 Знайдено: \U0001F4B5 50 гривень.',
@@ -3042,11 +3042,11 @@ async def handle_query(call):
                 if int(r.hget(uid, 'intellect')) < 20:
                     await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
                                                 call.message.chat.id, call.message.message_id)
-                    if int(r.hget(uid, 'defense')) != 2 and int(r.hget(uid, 'defense')) != 10:
-                        r.hset(uid, 'defense', 10)
-                        r.hset(uid, 's_defense', 1)
-                    elif int(r.hget(uid, 'defense')) == 10:
-                        r.hincrby(uid, 's_defense', 1)
+                    if int(r.hget(uid, 'support')) != 2 and int(r.hget(uid, 'support')) != 6:
+                        r.hset(uid, 'support', 6)
+                        r.hset(uid, 's_support', 1)
+                    elif int(r.hget(uid, 'support')) == 6:
+                        r.hincrby(uid, 's_support', 1)
                 else:
                     await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                                 call.message.chat.id, call.message.message_id)
@@ -3057,7 +3057,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'support')) == 2:
                     r.hincrby(uid, 'sch', 30)
                     r.hincrby(uid, 's_support', 20)
-                else:
+                elif int(r.hget(uid, 'support')) != 6:
                     r.hset(uid, 'sch', 30)
                     r.hset(uid, 'support', 2)
                     r.hset(uid, 's_support', 20)
