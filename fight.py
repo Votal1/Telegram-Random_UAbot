@@ -900,7 +900,7 @@ async def war_power(sett, cid):
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'clan', 'buff')
+                            'clan', 'buff', 'support')
             if checkClan(member):
                 if int(stats[8]) == cid:
                     clan5 += 1
@@ -924,19 +924,24 @@ async def war_power(sett, cid):
 
             w = int(stats[3])
             if w > 0:
-                w = 1.5
+                w = 0.33333
             else:
-                w = 1
+                w = 0
             d = int(stats[4])
             if d > 0:
-                d = 1.5
+                d = 0.33333
             else:
-                d = 1
+                d = 0
+            support = int(stats[10])
+            if support > 0:
+                support = 0.33333
+            else:
+                support = 0
             if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
                 m = 1
             if int(stats[7]) == 24:
                 pag = 1
-            chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * w * d
+            chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
         except:
             continue
     if m == 1:
