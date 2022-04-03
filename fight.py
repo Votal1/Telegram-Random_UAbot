@@ -311,10 +311,6 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid2, 'support', 0)
                     r.hincrby(uid2, 'injure', 150)
 
-        if defense1 == 9:
-            s1 = int(s1 * 1.3)
-            defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
-            damage_defense(uid1, 9)
         if support1 == 6 and t == 1:
             if i2 > i1:
                 if c2 != 3 and c2 != 13 and c2 != 23:
