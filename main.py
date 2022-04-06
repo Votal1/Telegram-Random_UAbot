@@ -1844,21 +1844,27 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'w_ts', int(datetime.now().timestamp()))
                 r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2' + str(call.message.chat.id))
+                n = ''
+                try:
+                    if int(r.hget(222, call.message.chat.id)) > 100:
+                        n = '2'
+                except:
+                    pass
                 if fighters == 1:
                     await bot.edit_message_text(
                         text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
                         chat_id=call.message.chat.id, message_id=call.message.message_id,
                         reply_markup=battle_button_3())
-                elif fighters >= 5 and r.scard('battles') == 0:
+                elif fighters >= 5 and r.scard('battles' + n) == 0:
                     await call.message.reply('\u2694 Пошук ворогів...')
                     await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name,
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id)
-                    r.sadd('battles', call.message.chat.id)
-                elif fighters >= 5 and r.scard('battles') >= 1:
-                    if str(call.message.chat.id).encode() in r.smembers('battles'):
+                    r.sadd('battles' + n, call.message.chat.id)
+                elif fighters >= 5 and r.scard('battles' + n) >= 1:
+                    if str(call.message.chat.id).encode() in r.smembers('battles' + n):
                         pass
                     else:
-                        enemy = r.spop('battles')
+                        enemy = r.spop('battles' + n)
                         await bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
                                                     chat_id=call.message.chat.id, message_id=call.message.message_id)
                         a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
