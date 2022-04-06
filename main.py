@@ -1644,6 +1644,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'packs', 0)
             if r.hexists(call.from_user.id, 'money') == 0:
                 r.hset(call.from_user.id, 'money', 20)
+            if r.hexists(call.from_user.id, 'strap') == 0:
+                r.hset(call.from_user.id, 'strap', 0)
             if r.hexists(call.from_user.id, 'opened') == 0:
                 r.hset(call.from_user.id, 'opened', 0)
             if r.hexists(call.from_user.id, 'childs') == 0:
