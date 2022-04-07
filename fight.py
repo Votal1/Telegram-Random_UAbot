@@ -570,7 +570,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                    icons[c1] + ' | ' + inj2 + names[name2] + ' ' + icons[c2] +
                    '\n\U0001F4AA ' + str(s1) + ' | ' + str(s2) +
                    '\n\U0001F9E0 ' + str(i1) + ' | ' + str(i2) +
-                   '\n\U0001F54A ' + str(bd1) + ' | ' + str(bd2)) + weapon + defense
+                   '\n\U0001F54A ' + str(bd1) + ' | ' + str(bd2)) + weapon + defense + support
 
         if win == ['1']:
             if s11 / s22 > 2:
