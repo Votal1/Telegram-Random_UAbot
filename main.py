@@ -2058,7 +2058,22 @@ async def handle_query(call):
                     msg += '\U0001f7e5 '
                 name = r.hget(mem, 'firstname').decode()
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
-            await bot.send_message(call.message.chat.id, msg, parse_mode='HTML')
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton(text='Отримати список з user id', callback_data='get_id_members'))
+            await bot.send_message(call.message.chat.id, msg, parse_mode='HTML', reply_markup=markup)
+
+    elif call.data.startswith('get_id_members'):
+        if call.from_user.id == int(r.hget('c' + r.hget(call.from_user.id, 'clan').decode(), 'leader')) or \
+                call.from_user.id in sudoers:
+            msg = ''
+            for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
+                if int(r.hget(mem, 'clan_time')) == datetime.now().day:
+                    msg += '\U0001f7e9 '
+                else:
+                    msg += '\U0001f7e5 '
+                name = r.hget(mem, 'firstname').decode()
+                msg += f'<a href="tg://user?id={int(mem)}">{name}</a> {mem.decode()}\n'
+            await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
 
     elif call.data.startswith('build_sawmill') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
