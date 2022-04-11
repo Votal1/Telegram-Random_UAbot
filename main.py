@@ -1624,14 +1624,14 @@ async def handle_query(call):
                 await bot.edit_message_text(text='\U0001F98D У тебе вже є русак!',
                                             chat_id=call.message.chat.id, message_id=call.message.message_id)
             else:
-                print(1 / 0)
+                raise Exception
         except:
             cid = call.from_user.id
             r.hset(cid, 'name', get_rusak()[0], {'strength': get_rusak()[1], 'intellect': get_rusak()[2], 'spirit': 0,
                                                  'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
                                                  'support': 0, 's_support': 0, 'mushrooms': 0, 'hp': 100, 'injure': 0,
-                                                 'sch': 0, 'buff': 0, 'photo': choice(default),
-                                                 'firstname': call.from_user.first_name})
+                                                 'sch': 0, 'buff': 0, 'block': 0, 'block_time': 0,
+                                                 'photo': choice(default), 'firstname': call.from_user.first_name})
             r.sadd('everyone', call.from_user.id)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
@@ -2265,12 +2265,9 @@ async def handle_query(call):
         clm = int(r.hget(call.from_user.id, 'class'))
         r.srem('class-' + str(clm), call.from_user.id)
         r.hdel(call.from_user.id, 'name')
-        r.hset(call.from_user.id, 'photo', 0)
-        r.hset(call.from_user.id, 'mushrooms', 0)
-        r.hset(call.from_user.id, 'spirit', 0)
-        r.hset(call.from_user.id, 'strength', 0)
-        r.hset(call.from_user.id, 'class', 0)
-        r.hset(call.from_user.id, 'intellect', 0)
+        r.hset(call.from_user.id, 'photo', 0, {'strength': 0, 'intellect': 0, 'spirit': 0,
+                                               'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
+                                               'support': 0, 's_support': 0, 'mushrooms': 0})
         r.hincrby(call.from_user.id, 'deaths', 1)
         msg = '\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, а вторий насрав в штани.'
         if checkClan(call.from_user.id, base=4, building='morgue'):
