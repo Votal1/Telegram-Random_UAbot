@@ -11,7 +11,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance, check_block
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
-    invent, unpack, create_clan, clan_set, invite, buy_tools
+    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
 
@@ -145,8 +145,8 @@ async def mute(message):
                         a = message.text.split(' ')
                         if a[1].endswith('m'):
                             await bot.restrict_chat_member(message.chat.id, uid,
-                                                           until_date=datetime.now() +
-                                                           timedelta(minutes=int(a[1][:-1])),
+                                                           until_date=datetime.now() + timedelta(
+                                                               minutes=int(a[1][:-1])),
                                                            can_send_messages=False)
                             msg += ' посидить ' + a[1][:-1] + ' хвилин без права голосу.'
                             await message.answer(msg)
@@ -1605,6 +1605,57 @@ async def work(message):
         pass
 
 
+@dp.message_handler(commands=['raid'])
+async def raid(message):
+    try:
+        c = 'c' + str(message.chat.id)
+        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
+            if r.hexists(c, 'start') == 0:
+                if r.hexists(c, 'raid_ts') == 0:
+                    r.hset(c, 'raid_ts', 0)
+                if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts')) > 5:
+                    r.hset(c, 'raid_ts', int(datetime.now().timestamp()))
+                    try:
+                        try:
+                            await bot.delete_message(message.chat.id, message.message_id)
+                        except:
+                            pass
+                        a = await bot.send_message(message.chat.id, '\U0001F4B0 Починається рейд...\n\n',
+                                                   reply_markup=battle_button_4())
+                        r.hset(c, 'start', a.message_id)
+                        r.hset(c, 'starter', message.from_user.id)
+                        try:
+                            await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
+                            r.hset(c, 'pin', a.message_id)
+                        except:
+                            pass
+                    except:
+                        pass
+            else:
+                try:
+                    await bot.send_message(message.chat.id, '\U0001F4B0 Підготовка до рейду тут\n\nКількість бійців: ' +
+                                           str(r.scard('fighters_3' + str(message.chat.id))),
+                                           reply_to_message_id=int(r.hget(c, 'start')))
+                    try:
+                        await bot.delete_message(message.chat.id, message.message_id)
+                    except:
+                        pass
+                except:
+                    try:
+                        await bot.delete_message(message.chat.id, int(r.hget(c, 'start')))
+                    except:
+                        pass
+                    r.hdel(c, 'start')
+                    for mem in r.smembers('fighters_3' + str(message.chat.id)):
+                        r.srem('fighters_3' + str(message.chat.id), mem)
+                    try:
+                        await bot.delete_message(message.chat.id, message.message_id)
+                    except:
+                        pass
+    except:
+        pass
+
+
 @dp.message_handler(commands=['commands'])
 async def commands(message):
     markup = InlineKeyboardMarkup()
@@ -1914,6 +1965,36 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ти не в цьому клані, тому зайти зможеш через 5 хвилин після'
                                                      ' початку набору.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак')
+
+    elif call.data.startswith('raid_join') and r.hexists('c' + str(call.message.chat.id), 'start') == 1:
+        if str(call.from_user.id).encode() not in r.smembers('fighters_3' + str(call.message.chat.id)) and \
+                r.hexists(call.from_user.id, 'name') == 1 and check_block(call.from_user.id) and \
+                call.message.message_id == int(r.hget('c' + str(call.message.chat.id), 'start')):
+            r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
+            r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
+            fighters = r.scard('fighters_3' + str(call.message.chat.id))
+            if fighters == 1:
+                await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
+                                            chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                            reply_markup=battle_button_4())
+            elif fighters >= 5:
+                enemy = r.srandmember('groupings')
+                await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
+                                            chat_id=call.message.chat.id, message_id=call.message.message_id)
+                msg = 'Проведено рейд на клан ' + r.hget('c' + enemy.decode(), 'title').decode() + '!\n*тестовий режим*'
+                await bot.send_message(call.message.chat.id, msg)
+                try:
+                    await bot.unpin_chat_message(chat_id=call.message.chat.id,
+                                                 message_id=int(r.hget('c' + str(call.message.chat.id), 'pin')))
+                except:
+                    pass
+            else:
+                await bot.edit_message_text(
+                    text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
+                    message_id=call.message.message_id, reply_markup=battle_button_4())
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ти або вже в битві, або в тебе відсутній/заблокований русак')

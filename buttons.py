@@ -63,6 +63,14 @@ def battle_button_3():
     return markup
 
 
+def battle_button_4():
+    markup = InlineKeyboardMarkup()
+    items = {'Відправити русака на рейд': 'raid_join'}
+    for key, value in items.items():
+        markup.add(InlineKeyboardButton(text=key, callback_data=value))
+    return markup
+
+
 def invent():
     markup = InlineKeyboardMarkup()
     items = {'Викинути зброю': 'drop_w', 'Викинути захист': 'drop_d', 'Викинути допомогу': 'drop_s'}
