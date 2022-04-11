@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from os import environ
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.utils.executor import start_webhook
+from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
@@ -1972,7 +1973,8 @@ async def handle_query(call):
     elif call.data.startswith('raid_join') and r.hexists('c' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters_3' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and check_block(call.from_user.id) and \
-                call.message.message_id == int(r.hget('c' + str(call.message.chat.id), 'start')):
+                call.message.message_id == int(r.hget('c' + str(call.message.chat.id), 'start')) and\
+                str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             fighters = r.scard('fighters_3' + str(call.message.chat.id))
@@ -1984,6 +1986,9 @@ async def handle_query(call):
                 enemy = r.srandmember('groupings')
                 await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
                                             chat_id=call.message.chat.id, message_id=call.message.message_id)
+                for mem in r.smembers('fighters_3' + str(call.message.chat.id)):
+                    r.hset(mem, 'block', int(datetime.now().timestamp()), {'block_time': 60})
+                await sleep(60)
                 msg = 'Проведено рейд на клан ' + r.hget('c' + enemy.decode(), 'title').decode() + '!\n*тестовий режим*'
                 await bot.send_message(call.message.chat.id, msg)
                 try:
@@ -2000,7 +2005,8 @@ async def handle_query(call):
                     message_id=call.message.message_id, reply_markup=battle_button_4())
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак')
+                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак.\n\n'
+                                                 'В рейді можуть брати участь тільки учасники клану')
 
     elif call.data.startswith('create_'):
         if r.hexists('c' + str(call.message.chat.id), 'base') == 0:
