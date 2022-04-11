@@ -1991,6 +1991,9 @@ async def handle_query(call):
                                                  message_id=int(r.hget('c' + str(call.message.chat.id), 'pin')))
                 except:
                     pass
+                r.hdel('c' + str(call.message.chat.id), 'start')
+                for member in r.smembers('fighters_3' + str(call.message.chat.id)):
+                    r.srem('fighters_3' + str(call.message.chat.id), member)
             else:
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
