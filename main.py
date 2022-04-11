@@ -1129,7 +1129,7 @@ async def skills(message):
 @dp.message_handler(commands=['swap'])
 async def swap(message):
     try:
-        if int(r.hget(message.from_user.id, 's3')) >= 4 and check_block(message.from_user):
+        if int(r.hget(message.from_user.id, 's3')) >= 4 and check_block(message.from_user.id):
             if r.hexists(message.from_user.id, 'name') == 1:
                 a = r.hmget(message.from_user.id, 'name', 'strength', 'intellect', 'spirit',
                             'weapon', 's_weapon', 'defense', 's_defense', 'mushrooms', 'class', 'photo', 'injure', 'hp',
