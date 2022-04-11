@@ -6,9 +6,9 @@ from parameters import injure, schizophrenia, trance, check_block
 
 def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
-        return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
+        return '\U0001F3DA В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
     elif not check_block(uid):
-        return 'В тебе заблокований русак.\n\n@Random_UAbot <- отримати русака'
+        return '\U0001F512 В тебе заблокований русак.\n\n@Random_UAbot <- отримати русака'
     elif int(r.hget(uid, 'hp')) > 0:
         stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')
         r.hset(uid, 'firstname', fn)
