@@ -1161,7 +1161,7 @@ async def swap(message):
                 await message.reply('Бойового русака змінено.')
             else:
                 await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
-        elif int(r.hget(message.from_user.id, 's3')) >= 4 and not check_block(message.from_user):
+        elif int(r.hget(message.from_user.id, 's3')) >= 4 and not check_block(message.from_user.id):
             await message.reply('\U0001F512 В тебе заблокований русак.')
     except:
         pass
