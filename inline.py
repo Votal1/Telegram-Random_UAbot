@@ -1,11 +1,13 @@
 from random import randint, choice, uniform, randrange, sample
 from config import r
 from variables import names, icons
-from parameters import injure, schizophrenia, trance
+from parameters import injure, schizophrenia, trance, check_block
 
 
 def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
+        return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
+    elif not check_block(uid):
         return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
     elif int(r.hget(uid, 'hp')) > 0:
         stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')

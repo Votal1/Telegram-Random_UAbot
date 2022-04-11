@@ -1686,14 +1686,14 @@ async def handle_query(call):
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
-        if r.hexists(uid1, 'name') == 1 and int(uid2) != int(uid1):
-            if int(r.hget(uid2, 'hp')) > 0:
-                if int(r.hget(uid1, 'hp')) > 0:
-                    if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
-                        pass
-                    else:
-                        r.hset(uid1, 'timestamp', timestamp)
-                        try:
+        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5 and not check_block(uid1) and not check_block(uid2):
+            pass
+        else:
+            r.hset(uid1, 'timestamp', timestamp)
+            try:
+                if r.hexists(uid1, 'name') == 1 and int(uid2) != int(uid1):
+                    if int(r.hget(uid2, 'hp')) > 0:
+                        if int(r.hget(uid1, 'hp')) > 0:
                             q = cdata[1].split()
                             diff = int(q[1])
                             if int(r.hget(uid1, 'strength')) - diff <= int(r.hget(uid2, 'strength')) <= \
@@ -1705,75 +1705,74 @@ async def handle_query(call):
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Твій русак не підходить по силі для цього бою.')
-                        except:
-                            try:
-                                uid2 = call.from_user.id
-                                un2 = call.from_user.first_name
-                                if cdata[1] == 'tr':
-                                    if r.hexists(uid1, 't_ts') == 0:
-                                        r.hset(uid1, 't_ts', 0)
-                                    if timestamp - float(r.hget(uid1, 't_ts')) < 15:
-                                        pass
-                                    else:
-                                        r.hset(uid1, 't_ts', timestamp)
-                                        try:
-                                            q = cdata[2].split()
-                                            if q[1][1:].lower() == call.from_user.username.lower():
-                                                await fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
-                                            else:
-                                                await bot.answer_callback_query(callback_query_id=call.id,
-                                                                                show_alert=True,
-                                                                                text='Цей бій не для тебе.')
-                                        except:
-                                            await fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
-                                elif cdata[1] == 'pr':
-                                    try:
-                                        q = cdata[2].split()
-                                        if q[1][1:].lower() == call.from_user.username.lower():
-                                            fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
-                                            await bot.edit_message_text(text=fi,
-                                                                        inline_message_id=call.inline_message_id)
-                                        else:
-                                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                            text='Цей бій не для тебе.')
-                                    except:
-                                        raise Exception
-                                else:
-                                    raise Exception
-                            except:
-                                uid2 = call.from_user.id
-                                un2 = call.from_user.first_name
-                                fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
-                                await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id)
-                else:
-                    if int(r.hget(call.from_user.id, 'class')) == 29:
-                        await bot.edit_message_text(
-                            text='\u26D1 ' + call.from_user.first_name + ' відправив свого русака надати медичну допомо'
-                                                                         'гу пораненому.\n\U0001fac0 +20 \U0001F4B5 +5',
-                            inline_message_id=call.inline_message_id)
-                        hp(20, uid1)
-                        r.hincrby(call.from_user.id, 'money', 5)
-                    elif int(r.hget(call.from_user.id, 'class')) == 23:
-                        await bot.edit_message_text(
-                            text='\U0001F52E ' + ' Некромант проводить дивні ритуали над напівживим русаком...'
-                                                 '\n\U0001fac0 +10 \U0001F44A +5',
-                            inline_message_id=call.inline_message_id)
-                        hp(10, uid1)
-                        r.hincrby(call.from_user.id, 'buff', 5)
-                        increase_trance(5, call.from_user.id)
+                        else:
+                            if int(r.hget(call.from_user.id, 'class')) == 29:
+                                await bot.edit_message_text(
+                                    text='\u26D1 ' + call.from_user.first_name + ' відправив свого русака надати '
+                                                                                 'медичну допомогу пораненому.'
+                                                                                 '\n\U0001fac0 +20 \U0001F4B5 +5',
+                                    inline_message_id=call.inline_message_id)
+                                hp(20, uid1)
+                                r.hincrby(call.from_user.id, 'money', 5)
+                            elif int(r.hget(call.from_user.id, 'class')) == 23:
+                                await bot.edit_message_text(
+                                    text='\U0001F52E ' + ' Некромант проводить дивні ритуали над напівживим русаком...'
+                                                         '\n\U0001fac0 +10 \U0001F44A +5',
+                                    inline_message_id=call.inline_message_id)
+                                hp(10, uid1)
+                                r.hincrby(call.from_user.id, 'buff', 5)
+                                increase_trance(5, call.from_user.id)
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='\U0001fac0 Зараз цей русак не може битись.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='\U0001fac0 Зараз цей русак не може битись.')
-            else:
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
-                                                     'битись поки не поїсть, або не полікується.')
-        elif r.hexists(uid1, 'name') == 0:
-            pass
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти хочеш атакувати свого русака, але розумієш, що він зараз має'
-                                                 ' битись з іншими русаками.')
+                                                        text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
+                                                             'битись поки не поїсть, або не полікується.')
+                elif r.hexists(uid1, 'name') == 0:
+                    pass
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ти хочеш атакувати свого русака, але розумієш, що він зараз '
+                                                         'має битись з іншими русаками.')
+            except:
+                try:
+                    uid2 = call.from_user.id
+                    un2 = call.from_user.first_name
+                    if cdata[1] == 'tr':
+                        if r.hexists(uid1, 't_ts') == 0:
+                            r.hset(uid1, 't_ts', 0)
+                        if timestamp - float(r.hget(uid1, 't_ts')) < 15:
+                            pass
+                        else:
+                            r.hset(uid1, 't_ts', timestamp)
+                            try:
+                                q = cdata[2].split()
+                                if q[1][1:].lower() == call.from_user.username.lower():
+                                    await fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
+                                else:
+                                    await bot.answer_callback_query(callback_query_id=call.id,
+                                                                    show_alert=True, text='Цей бій не для тебе.')
+                            except:
+                                await fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
+                    elif cdata[1] == 'pr':
+                        try:
+                            q = cdata[2].split()
+                            if q[1][1:].lower() == call.from_user.username.lower():
+                                fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
+                                await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id)
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='Цей бій не для тебе.')
+                        except:
+                            raise Exception
+                    else:
+                        raise Exception
+                except:
+                    uid2 = call.from_user.id
+                    un2 = call.from_user.first_name
+                    fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
+                    await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id)
 
     elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
@@ -1834,7 +1833,8 @@ async def handle_query(call):
     elif call.data.startswith('war_join') and r.hexists('war_battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters_2' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
-                call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
+                call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')) and \
+                check_block(call.from_user.id):
             allow = True
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
@@ -1911,8 +1911,7 @@ async def handle_query(call):
                                                      ' початку набору.')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти або вже в битві, або в тебе'
-                                                 ' нема русака')
+                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак')
 
     elif call.data.startswith('create_'):
         if r.hexists('c' + str(call.message.chat.id), 'base') == 0:
@@ -2233,7 +2232,7 @@ async def handle_query(call):
                                                 text='Недостатньо ресурсів.')
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
-            int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
+            int(r.hget(call.from_user.id, 'time2')) != datetime.now().day and check_block(call.from_user.id):
         r.hset(call.from_user.id, 'time2', datetime.now().day)
         try:
             cl = int(r.hget(call.from_user.id, 'class'))
