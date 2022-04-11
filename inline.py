@@ -8,7 +8,7 @@ def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
         return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
     elif not check_block(uid):
-        return 'В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
+        return 'В тебе заблокований русак.\n\n@Random_UAbot <- отримати русака'
     elif int(r.hget(uid, 'hp')) > 0:
         stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')
         r.hset(uid, 'firstname', fn)

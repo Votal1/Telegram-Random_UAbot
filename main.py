@@ -1686,7 +1686,7 @@ async def handle_query(call):
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
-        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5 and not check_block(uid1) and not check_block(uid2):
+        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5 or not check_block(uid1) or not check_block(uid2):
             pass
         else:
             r.hset(uid1, 'timestamp', timestamp)
