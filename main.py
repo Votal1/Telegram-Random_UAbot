@@ -9,7 +9,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
+from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance, check_block
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war
@@ -243,6 +243,9 @@ async def my_rusak(message):
             inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
         if int(stats[4]) > 0:
             ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
+        if not check_block(mid):
+            sec = int(r.hget(mid, 'block_time')) - int(datetime.now().timestamp()) + int(r.hget(mid, 'block'))
+            inj += '\n\U0001F512 Блокування: ' + str(sec) + ' секунд'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
                      '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
