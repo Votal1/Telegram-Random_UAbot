@@ -1987,9 +1987,9 @@ async def handle_query(call):
                 await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
                                             chat_id=call.message.chat.id, message_id=call.message.message_id)
                 for mem in r.smembers('fighters_3' + str(call.message.chat.id)):
-                    r.hset(mem, 'block', int(datetime.now().timestamp()), {'block_time': 60})
+                    r.hset(mem, 'block', int(datetime.now().timestamp()), {'block_time': 10})
                 await call.message.reply('\u2694 Русаки вирушили в рейд...')
-                await sleep(60)
+                await sleep(10)
                 msg = 'Проведено рейд на клан ' + r.hget('c' + enemy.decode(), 'title').decode() + '!\n*тестовий режим*'
                 await bot.send_message(call.message.chat.id, msg)
                 try:
