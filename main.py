@@ -245,7 +245,7 @@ async def my_rusak(message):
             ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
         if not check_block(mid):
             sec = int(r.hget(mid, 'block_time')) - int(datetime.now().timestamp()) + int(r.hget(mid, 'block'))
-            inj += '\n\U0001F512 Блокування: ' + str(sec) + ' секунд'
+            inj += '\n\U0001F512 Блокування: ' + str(sec) + 'с.'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
                      '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
@@ -1778,7 +1778,8 @@ async def handle_query(call):
     elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and \
-                call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
+                call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')) and \
+                check_block(call.from_user.id):
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
             fighters = r.scard('fighters' + str(call.message.chat.id))
@@ -1812,8 +1813,7 @@ async def handle_query(call):
                     message_id=call.message.message_id, reply_markup=battle_button())
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти або вже в битві, або в тебе'
-                                                 ' нема русака')
+                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак')
 
     elif call.data.startswith('start_battle') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if call.from_user.id == int(r.hget('battle' + str(call.message.chat.id), 'starter')):
