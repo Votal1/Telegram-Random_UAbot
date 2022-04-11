@@ -15,7 +15,7 @@ from buttons import goods, merchant_goods, donate_goods, skill_set, battle_butto
 from fight import fight, war, great_war
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
 
-import requests
+from requests import get
 from bs4 import BeautifulSoup
 
 import logging
@@ -29,9 +29,10 @@ logging.basicConfig(level=logging.INFO)
 async def gruz200(message):
     try:
         url = 'https://minusrus.com/'
-        page = requests.get(url)
+        page = get(url)
         soup = BeautifulSoup(page.text, 'html.parser')
-        title = '\U0001F437\U0001F436 ' + soup.find('div', 'title').text
+        title = '\U0001F437\U0001F436 ' + soup.find('div', 'title').text + ' на ' \
+                + soup.find('span', 'date__label').text
         os = soup.find('div', 'amount-details').find_all('span')
         t = soup.find_all('span', 'card__amount-total')
         msg = title + '\n\n\u2620\uFE0F Вбито: ' + os[1].text + '\n\U0001fa78 Поранено: ' + os[3].text + \
