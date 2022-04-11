@@ -1316,6 +1316,7 @@ async def upgrade(message):
                         r.hincrby(c, 'brick', -400)
                         r.hincrby(c, 'r_spirit', -50)
                         r.hset(c, 'base', 4)
+                        r.sadd('groupings', message.chat.id)
                         await message.answer('\U0001F3D7 Покращено Гільдію до Угруповання.')
     except:
         pass
