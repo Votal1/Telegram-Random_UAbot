@@ -12,7 +12,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
-from fight import fight, war, great_war, start_raid
+from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
 
 from requests import get
@@ -1376,6 +1376,11 @@ async def build(message):
                                    '\U0001F9F1 100, \U0001F4B5 2000, \U0001F47E 50) - можливість для лідера у \n' \
                                    '/clan_shop витрачати \U0001F47E.'
                     if int(r.hget(c, 'base')) >= 4:
+                        if int(r.hget(c, 'post')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати блокпост',
+                                                            callback_data='build_post'))
+                            msg += '\nБлокпост (\U0001F333 2000, \U0001faa8 500, \U0001F9F6 400, ' \
+                                   '\U0001F9F1 300, \U0001F4B5 1000) - можливість захищатись від рейдів.'
                         if int(r.hget(c, 'camp')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати концтабір',
                                                             callback_data='build_camp'))
@@ -1596,6 +1601,30 @@ async def work(message):
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
+    except:
+        pass
+
+
+@dp.message_handler(commands=['guard'])
+async def guard(message):
+    try:
+        mid = message.from_user.id
+        c = 'c' + str(message.chat.id)
+        g = 'guard' + str(message.chat.id)
+        if int(r.hget(c, 'day')) != datetime.now().day:
+            r.hset(c, 'day', datetime.now().day)
+            r.hset(c, 'power', 0)
+            for m in r.smembers(g):
+                r.srem(g, m)
+        if checkClan(mid, base=4, building='post') and r.hexists(mid, 'name') and r.scard(g) < 5:
+            if int(r.hget(mid, 'clan_time')) != datetime.now().day:
+                r.hset(mid, 'clan_time', datetime.now().day)
+                st = guard_power(mid)
+                r.hincrby(c, 'power', st)
+                name = names[int(r.hget(mid, 'name'))]
+                await message.reply(name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st) +
+                                    '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
+                                    '\n\U0001F4B0 Кількість сторожів: ' + str(r.scard(g)) + '/5')
     except:
         pass
 
@@ -2272,6 +2301,23 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -50)
                 r.hset(c, 'monument', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано монумент.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_post') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'post')) == 0:
+            if int(r.hget(c, 'wood')) >= 2000 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 400 \
+                    and int(r.hget(c, 'brick')) >= 300 and int(r.hget(c, 'money')) >= 1000:
+                r.hincrby(c, 'wood', -2000)
+                r.hincrby(c, 'stone', -500)
+                r.hincrby(c, 'cloth', -400)
+                r.hincrby(c, 'brick', -300)
+                r.hincrby(c, 'money', -1000)
+                r.hset(c, 'post', 1)
+                await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано блокпост.\n\nМожна '
+                                                             'туди відправити русака замість роботи командою /guard')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')

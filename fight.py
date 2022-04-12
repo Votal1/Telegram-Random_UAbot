@@ -1025,6 +1025,37 @@ async def great_war(cid1, cid2, a, b):
     await bot.send_message(cid2, msg)
 
 
+async def guard_power(mid):
+    stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
+                    'buff', 'support')
+    s = int(stats[0])
+    i = int(stats[1])
+    bd = int(stats[2])
+    if int(stats[5]) > 0:
+        s, bd = injure(int(mid), s, bd, True)
+    if int(stats[6]) > 0:
+        i, bd = schizophrenia(int(mid), i, bd, True)
+    if int(stats[8]) > 0:
+        s, bd = trance(int(mid), s, bd, True)
+
+    w = int(stats[3])
+    if w > 0:
+        w = 1 / 3
+    else:
+        w = 0
+    d = int(stats[4])
+    if d > 0:
+        d = 1 / 3
+    else:
+        d = 0
+    support = int(stats[9])
+    if support > 0:
+        support = 1 / 3
+    else:
+        support = 0
+    return int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support))
+
+
 async def start_raid(cid):
     enemy = r.srandmember('groupings')
     while int(enemy) == cid:
@@ -1037,6 +1068,11 @@ async def start_raid(cid):
 
     chance1 = 0
     chance2 = int(r.hget(c2, 'power'))
+    if int(r.hget(c2, 'day')) != datetime.now().day:
+        r.hset(c2, 'day', datetime.now().day)
+        r.hset(c2, 'power', 0)
+        for m in r.smembers('guard' + enemy.decode()):
+            r.srem('guard' + enemy.decode(), m)
     for member in r.smembers('fighters_3' + str(cid)):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -1115,6 +1151,8 @@ async def start_raid(cid):
                 ran = 10
                 reward += '\U0001F47E +' + str(ran)
                 # r.hincrby(c, 'r_spirit', ran)
+    elif win == ['b']:
+        reward += 'Русаків затримала охорона...\n'
     await sleep(10)
     msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!\n*тестовий режим, ресурси не додано*' + reward
     await bot.send_message(cid, msg)
