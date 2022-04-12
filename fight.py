@@ -1067,12 +1067,12 @@ async def start_raid(cid):
     await sleep(1)
 
     chance1 = 0
-    chance2 = int(r.hget(c2, 'power'))
     if int(r.hget(c2, 'day')) != datetime.now().day:
         r.hset(c2, 'day', datetime.now().day)
         r.hset(c2, 'power', 0)
         for m in r.smembers('guard' + enemy.decode()):
             r.srem('guard' + enemy.decode(), m)
+    chance2 = int(r.hget(c2, 'power'))
     for member in r.smembers('fighters_3' + str(cid)):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
