@@ -1078,7 +1078,7 @@ async def start_raid(cid):
         except:
             continue
     await bot.send_message(cid, r.hget(c, 'title').decode() + ' | ' + r.hget(c2, 'title').decode() +
-                           '\n\n' + str(int(chance1)) + ' | ' + str(int(chance2)))
+                           '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(int(chance2)))
     win = choices(['a', 'b'], weights=[chance1, chance2])
     reward = '\n\n'
 
