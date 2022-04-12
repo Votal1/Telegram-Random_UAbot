@@ -1621,6 +1621,7 @@ async def guard(message):
                 r.hset(mid, 'clan_time', datetime.now().day)
                 st = await guard_power(mid)
                 r.hincrby(c, 'power', st)
+                r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]
                 await message.reply(name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st) +
                                     '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
