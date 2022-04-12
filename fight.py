@@ -1033,7 +1033,7 @@ async def start_raid(cid):
     c2 = 'c' + enemy.decode()
 
     res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
-    reward = '\n'
+    reward = '\n\n'
     mode = choices([1, 2, 3], [70, 20, 10])
     if mode == [1]:
         reward += 'Русаки потрапили на склад і винесли ресурси!\n'
