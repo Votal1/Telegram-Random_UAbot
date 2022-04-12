@@ -1625,11 +1625,11 @@ async def guard(message):
                 name = names[int(r.hget(mid, 'name'))]
                 await message.reply(name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st) +
                                     '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
-                                    '\n\U0001F4B0 Кількість сторожів: ' + str(r.scard(g)) + '/5')
+                                    '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
-    except Exception as e:
-        print(e)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['raid'])
