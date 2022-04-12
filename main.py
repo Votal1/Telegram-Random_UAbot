@@ -1627,8 +1627,8 @@ async def guard(message):
                                     '\n\U0001F4B0 Кількість сторожів: ' + str(r.scard(g)) + '/5')
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 @dp.message_handler(commands=['raid'])
