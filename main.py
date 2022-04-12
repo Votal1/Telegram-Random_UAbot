@@ -1631,7 +1631,7 @@ async def raid(message):
                             pass
                     else:
                         t = str(int((300 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60))
-                        await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + ' хвилин.')
+                        await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + 'хв.')
             else:
                 try:
                     await bot.send_message(message.chat.id, '\U0001F4B0 Підготовка до рейду тут\n\nКількість бійців: ' +
