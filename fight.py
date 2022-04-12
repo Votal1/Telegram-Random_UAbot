@@ -1023,3 +1023,19 @@ async def great_war(cid1, cid2, a, b):
 
     await bot.send_message(cid1, msg)
     await bot.send_message(cid2, msg)
+
+
+async def start_raid(cid):
+    enemy = r.srandmember('groupings')
+    c = 'c' + str(cid)
+    await sleep(10)
+    msg = 'Проведено рейд на клан ' + r.hget('c' + enemy.decode(), 'title').decode() + '!\n*тестовий режим*'
+    await bot.send_message(cid, msg)
+    try:
+        await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget('c' + str(cid), 'pin')))
+    except:
+        pass
+    r.hset(c, 'raid_ts2', int(datetime.now().timestamp()))
+    r.hdel('c' + str(cid), 'start')
+    for member in r.smembers('fighters_3' + str(cid)):
+        r.srem('fighters_3' + str(cid), member)

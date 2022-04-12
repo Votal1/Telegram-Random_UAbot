@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from os import environ
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.utils.executor import start_webhook
-from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
@@ -13,7 +12,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
-from fight import fight, war, great_war
+from fight import fight, war, great_war, start_raid
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
 
 from requests import get
@@ -1609,24 +1608,30 @@ async def raid(message):
             if r.hexists(c, 'start') == 0:
                 if r.hexists(c, 'raid_ts') == 0:
                     r.hset(c, 'raid_ts', 0)
+                if r.hexists(c, 'raid_ts2') == 0:
+                    r.hset(c, 'raid_ts2', 0)
                 if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts')) > 5:
                     r.hset(c, 'raid_ts', int(datetime.now().timestamp()))
-                    try:
+                    if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts2')) > 300:
                         try:
-                            await bot.delete_message(message.chat.id, message.message_id)
+                            try:
+                                await bot.delete_message(message.chat.id, message.message_id)
+                            except:
+                                pass
+                            a = await bot.send_message(message.chat.id, '\U0001F4B0 Починається рейд...\n\n',
+                                                       reply_markup=battle_button_4())
+                            r.hset(c, 'start', a.message_id)
+                            r.hset(c, 'starter', message.from_user.id)
+                            try:
+                                await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
+                                r.hset(c, 'pin', a.message_id)
+                            except:
+                                pass
                         except:
                             pass
-                        a = await bot.send_message(message.chat.id, '\U0001F4B0 Починається рейд...\n\n',
-                                                   reply_markup=battle_button_4())
-                        r.hset(c, 'start', a.message_id)
-                        r.hset(c, 'starter', message.from_user.id)
-                        try:
-                            await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
-                            r.hset(c, 'pin', a.message_id)
-                        except:
-                            pass
-                    except:
-                        pass
+                    else:
+                        t = str(int(300 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2')) / 60))
+                        await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + ' хвилин.')
             else:
                 try:
                     await bot.send_message(message.chat.id, '\U0001F4B0 Підготовка до рейду тут\n\nКількість бійців: ' +
@@ -1976,21 +1981,10 @@ async def handle_query(call):
                                             chat_id=call.message.chat.id, message_id=call.message.message_id,
                                             reply_markup=battle_button_4())
             elif fighters >= 5:
-                enemy = r.srandmember('groupings')
                 await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
                                             chat_id=call.message.chat.id, message_id=call.message.message_id)
                 await call.message.reply('\u2694 Русаки вирушили в рейд...')
-                await sleep(10)
-                msg = 'Проведено рейд на клан ' + r.hget('c' + enemy.decode(), 'title').decode() + '!\n*тестовий режим*'
-                await bot.send_message(call.message.chat.id, msg)
-                try:
-                    await bot.unpin_chat_message(chat_id=call.message.chat.id,
-                                                 message_id=int(r.hget('c' + str(call.message.chat.id), 'pin')))
-                except:
-                    pass
-                r.hdel('c' + str(call.message.chat.id), 'start')
-                for member in r.smembers('fighters_3' + str(call.message.chat.id)):
-                    r.srem('fighters_3' + str(call.message.chat.id), member)
+                await start_raid(call.message.chat.id)
             else:
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
