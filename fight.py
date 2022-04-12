@@ -1154,8 +1154,11 @@ async def start_raid(cid):
     elif win == ['b']:
         reward += 'Русаків затримала охорона...\n'
     await sleep(10)
-    msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!\n*тестовий режим, ресурси не додано*' + reward
+    msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!\n\n*тестовий режим, ресурси не додано*' + reward
+    msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + \
+           '!\n\n*тестовий режим, ресурси не вкрадено*' + reward
     await bot.send_message(cid, msg)
+    await bot.send_message(int(enemy), msg2)
 
     try:
         await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
