@@ -91,9 +91,3 @@ def damage_support(uid):
     if int(r.hget(uid, 's_support')) <= 0:
         r.hset(uid, 'support', 0)
 
-
-def check_block(uid):
-    if datetime.now().timestamp() - int(r.hget(uid, 'block')) < int(r.hget(uid, 'block_time')):
-        return False
-    else:
-        return True

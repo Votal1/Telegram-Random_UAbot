@@ -10,7 +10,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance, check_block
+from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war
@@ -244,9 +244,6 @@ async def my_rusak(message):
             inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
         if int(stats[4]) > 0:
             ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
-        if not check_block(mid):
-            sec = int(r.hget(mid, 'block_time')) - int(datetime.now().timestamp()) + int(r.hget(mid, 'block'))
-            inj += '\n\U0001F512 Блокування: ' + str(sec) + 'с.'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
                      '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
@@ -1130,7 +1127,7 @@ async def skills(message):
 @dp.message_handler(commands=['swap'])
 async def swap(message):
     try:
-        if int(r.hget(message.from_user.id, 's3')) >= 4 and check_block(message.from_user.id):
+        if int(r.hget(message.from_user.id, 's3')) >= 4:
             if r.hexists(message.from_user.id, 'name') == 1:
                 a = r.hmget(message.from_user.id, 'name', 'strength', 'intellect', 'spirit',
                             'weapon', 's_weapon', 'defense', 's_defense', 'mushrooms', 'class', 'photo', 'injure', 'hp',
@@ -1162,8 +1159,6 @@ async def swap(message):
                 await message.reply('Бойового русака змінено.')
             else:
                 await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
-        elif int(r.hget(message.from_user.id, 's3')) >= 4 and not check_block(message.from_user.id):
-            await message.reply('\U0001F512 В тебе заблокований русак, свап неможливий.')
     except:
         pass
 
@@ -1690,7 +1685,7 @@ async def handle_query(call):
             r.hset(cid, 'name', get_rusak()[0], {'strength': get_rusak()[1], 'intellect': get_rusak()[2], 'spirit': 0,
                                                  'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
                                                  'support': 0, 's_support': 0, 'mushrooms': 0, 'hp': 100, 'injure': 0,
-                                                 'sch': 0, 'buff': 0, 'block': 0, 'block_time': 0,
+                                                 'sch': 0, 'buff': 0,
                                                  'photo': choice(default), 'firstname': call.from_user.first_name})
             r.sadd('everyone', call.from_user.id)
             try:
@@ -1743,7 +1738,7 @@ async def handle_query(call):
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
-        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5 or not check_block(uid1) or not check_block(uid2):
+        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
             pass
         else:
             r.hset(uid1, 'timestamp', timestamp)
@@ -1834,8 +1829,7 @@ async def handle_query(call):
     elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and \
-                call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')) and \
-                check_block(call.from_user.id):
+                call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
             fighters = r.scard('fighters' + str(call.message.chat.id))
@@ -1869,7 +1863,7 @@ async def handle_query(call):
                     message_id=call.message.message_id, reply_markup=battle_button())
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак')
+                                            text='Ти або вже в битві, або в тебе відсутній русак')
 
     elif call.data.startswith('start_battle') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if call.from_user.id == int(r.hget('battle' + str(call.message.chat.id), 'starter')):
@@ -1890,8 +1884,7 @@ async def handle_query(call):
     elif call.data.startswith('war_join') and r.hexists('war_battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters_2' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
-                call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')) and \
-                check_block(call.from_user.id):
+                call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
             allow = True
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
@@ -1968,11 +1961,11 @@ async def handle_query(call):
                                                      ' початку набору.')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак')
+                                            text='Ти або вже в битві, або в тебе відсутній русак')
 
     elif call.data.startswith('raid_join') and r.hexists('c' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters_3' + str(call.message.chat.id)) and \
-                r.hexists(call.from_user.id, 'name') == 1 and check_block(call.from_user.id) and \
+                r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.message_id == int(r.hget('c' + str(call.message.chat.id), 'start')) and\
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
@@ -1986,8 +1979,6 @@ async def handle_query(call):
                 enemy = r.srandmember('groupings')
                 await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
                                             chat_id=call.message.chat.id, message_id=call.message.message_id)
-                for mem in r.smembers('fighters_3' + str(call.message.chat.id)):
-                    r.hset(mem, 'block', int(datetime.now().timestamp()), {'block_time': 10})
                 await call.message.reply('\u2694 Русаки вирушили в рейд...')
                 await sleep(10)
                 msg = 'Проведено рейд на клан ' + r.hget('c' + enemy.decode(), 'title').decode() + '!\n*тестовий режим*'
@@ -2006,7 +1997,7 @@ async def handle_query(call):
                     message_id=call.message.message_id, reply_markup=battle_button_4())
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ти або вже в битві, або в тебе відсутній/заблокований русак.\n\n'
+                                            text='Ти або вже в битві, або в тебе відсутній русак.\n\n'
                                                  'В рейді можуть брати участь тільки учасники клану')
 
     elif call.data.startswith('create_'):
@@ -2328,7 +2319,7 @@ async def handle_query(call):
                                                 text='Недостатньо ресурсів.')
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
-            int(r.hget(call.from_user.id, 'time2')) != datetime.now().day and check_block(call.from_user.id):
+            int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
         r.hset(call.from_user.id, 'time2', datetime.now().day)
         try:
             cl = int(r.hget(call.from_user.id, 'class'))
