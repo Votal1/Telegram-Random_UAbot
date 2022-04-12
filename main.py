@@ -1619,7 +1619,7 @@ async def guard(message):
         if checkClan(mid, base=4, building='post') and r.hexists(mid, 'name') == 1 and r.scard(g) < 5:
             if int(r.hget(mid, 'clan_time')) != datetime.now().day:
                 r.hset(mid, 'clan_time', datetime.now().day)
-                st = guard_power(mid)
+                st = await guard_power(mid)
                 r.hincrby(c, 'power', st)
                 name = names[int(r.hget(mid, 'name'))]
                 await message.reply(name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st) +
