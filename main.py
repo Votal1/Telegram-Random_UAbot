@@ -1616,7 +1616,7 @@ async def guard(message):
             r.hset(c, 'power', 0)
             for m in r.smembers(g):
                 r.srem(g, m)
-        if checkClan(mid, base=4, building='post') and r.hexists(mid, 'name') and r.scard(g) < 5:
+        if checkClan(mid, base=4, building='post') and r.hexists(mid, 'name') == 1 and r.scard(g) < 5:
             if int(r.hget(mid, 'clan_time')) != datetime.now().day:
                 r.hset(mid, 'clan_time', datetime.now().day)
                 st = guard_power(mid)
@@ -1625,6 +1625,8 @@ async def guard(message):
                 await message.reply(name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st) +
                                     '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F4B0 Кількість сторожів: ' + str(r.scard(g)) + '/5')
+            else:
+                await message.reply('Твій русак сьогодні вже своє відпрацював.')
     except:
         pass
 
