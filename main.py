@@ -39,7 +39,7 @@ async def gruz200(message):
                       '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 ББМ: ' + t[1].text + \
                       '\n\U0001F69C Танки: ' + t[2].text + '\n\U0001F525 Артилерія: ' + t[3].text + \
                       '\n\u2708\uFE0F Літаки: ' + t[4].text + '\n\U0001F681 Гелікоптери: ' + t[5].text + \
-                      '\n\U0001F6A2 Кораблі та катери: ' + t[6].text
+                      '\n\U0001F6A2 Кораблі та катери: ' + t[6].text + '\n\U0001F921 Жириновський, Медведчук'
         await message.reply(msg)
     except:
         pass
