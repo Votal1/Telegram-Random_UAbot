@@ -1630,7 +1630,7 @@ async def raid(message):
                         except:
                             pass
                     else:
-                        t = str(int(300 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2')) / 60))
+                        t = str(int((300 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60))
                         await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + ' хвилин.')
             else:
                 try:
