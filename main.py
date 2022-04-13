@@ -1210,6 +1210,8 @@ async def clan(message):
                         resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode()
                         if base >= 3:
                             resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
+                            if int(r.hget(c, 'technics')) > 0:
+                                resources += '\n\U0001F9F1 Радіотехніка: ' + r.hget(c, 'technics').decode()
                         resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
 
                     if int(r.hget(c, 'silicate')) == 1:
@@ -1220,10 +1222,14 @@ async def clan(message):
                         building += ', їдальня'
                     if int(r.hget(c, 'monument')) == 1:
                         building += ', монумент'
+                    if int(r.hget(c, 'post')) == 1:
+                        building += ', блокпост'
                     if int(r.hget(c, 'camp')) == 1:
                         building += ', концтабір'
                     if int(r.hget(c, 'morgue')) == 1:
                         building += ', морг'
+                    if int(r.hget(c, 'new_post')) == 1:
+                        building += ', відділення НП'
                     await message.answer('<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
                                          '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
                                          '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
@@ -1393,6 +1399,13 @@ async def build(message):
                             msg += '\nМорг (\U0001F333 1000, \U0001faa8 2000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 5000, \U0001F47E 100) - +0.2% сили в міжчатовій битві ' \
                                    'за кожного вбитого русака (максимум 20%). \U0001F47E +1 за кожне жертвоприношення.'
+                        if int(r.hget(c, 'new_post')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати відділення НП',
+                                                            callback_data='build_new_post'))
+                            msg += '\nВідділення НП (\U0001F333 800, \U0001faa8 500, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 200, \U0001F4B5 2000, \U0001F47E 30) - можливість отримувати ' \
+                                   '\U0001F4FA радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
+                                   'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
                     if len(markup.inline_keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     await message.reply(msg, reply_markup=markup)
@@ -2372,6 +2385,25 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
 
+    elif call.data.startswith('build_new_post') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'new_post')) == 0:
+            if int(r.hget(c, 'wood')) >= 800 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 500 \
+                    and int(r.hget(c, 'brick')) >= 200 and int(r.hget(c, 'money')) >= 2000 \
+                    and int(r.hget(c, 'r_spirit')) >= 30:
+                r.hincrby(c, 'wood', -800)
+                r.hincrby(c, 'stone', -500)
+                r.hincrby(c, 'cloth', -500)
+                r.hincrby(c, 'brick', -200)
+                r.hincrby(c, 'money', -2000)
+                r.hincrby(c, 'r_spirit', -30)
+                r.hset(c, 'new_post', 1)
+                await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано '
+                                                             'відділення Нової пошти.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
         r.hset(call.from_user.id, 'time2', datetime.now().day)
@@ -3109,8 +3141,13 @@ async def handle_query(call):
             ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                           weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
             if ran == [1]:
-                await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
-                                            call.message.chat.id, call.message.message_id)
+                if checkClan(uid, base=4, building='new_post') and choice([0, 1]) == 1:
+                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.',
+                                                call.message.chat.id, call.message.message_id)
+                    r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
+                else:
+                    await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
+                                                call.message.chat.id, call.message.message_id)
             elif ran == [2]:
                 await bot.edit_message_text('\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку '
                                             '(класове спорядження)! ' + icons[cl], call.message.chat.id,
