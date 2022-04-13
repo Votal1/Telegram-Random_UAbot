@@ -1166,7 +1166,7 @@ async def start_raid(cid):
     await sleep(10)
     msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!\n\n*тестовий режим, ресурси не додано*' + reward
     msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + \
-           '!\n\n*тестовий режим, ресурси не вкрадено*' + reward
+           '!\n\n*тестовий режим, ресурси не вкрадено*' + reward.replace('+', '-')
     await bot.send_message(cid, msg)
     await bot.send_message(int(enemy), msg2)
 
