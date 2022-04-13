@@ -1211,7 +1211,7 @@ async def clan(message):
                         if base >= 3:
                             resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
                             if int(r.hget(c, 'technics')) > 0:
-                                resources += '\n\U0001F9F1 Радіотехніка: ' + r.hget(c, 'technics').decode()
+                                resources += '\n\U0001F4FA Радіотехніка: ' + r.hget(c, 'technics').decode()
                         resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
 
                     if int(r.hget(c, 'silicate')) == 1:
@@ -3142,7 +3142,7 @@ async def handle_query(call):
                           weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
             if ran == [1]:
                 if checkClan(uid, base=4, building='new_post') and choice([0, 1]) == 1:
-                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F9F1 +1',
+                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FA +1',
                                                 call.message.chat.id, call.message.message_id)
                     r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
                 else:
