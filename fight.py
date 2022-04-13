@@ -1134,6 +1134,7 @@ async def start_raid(cid):
     if win == ['a']:
         res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
         mode = choices([1, 2, 3], [70, 20, 10])
+        base = int(r.hget(c2, 'base'))
         if mode == [1]:
             reward += 'Русаки потрапили на склад і винесли ресурси!\n'
             if int(res[0]) >= 15:
@@ -1141,17 +1142,17 @@ async def start_raid(cid):
                 reward += '\U0001F333 +' + str(ran)
                 r.hincrby(c, 'wood', ran)
                 r.hincrby(c2, 'wood', -ran)
-            if int(res[1]) >= 50:
+            if int(res[1]) >= 50 and base >= 2:
                 ran = randint(10, 50)
                 reward += ' \U0001faa8 +' + str(ran)
                 r.hincrby(c, 'stone', ran)
                 r.hincrby(c2, 'stone', -ran)
-            if int(res[2]) >= 25:
+            if int(res[2]) >= 25 and base >= 3:
                 ran = randint(10, 25)
                 reward += ' \U0001F9F6 +' + str(ran)
                 r.hincrby(c, 'cloth', ran)
                 r.hincrby(c2, 'cloth', -ran)
-            if int(res[3]) >= 15:
+            if int(res[3]) >= 15 and base >= 4:
                 ran = randint(5, 15)
                 reward += ' \U0001F9F1 +' + str(ran)
                 r.hincrby(c, 'brick', ran)
