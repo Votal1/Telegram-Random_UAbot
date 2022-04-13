@@ -2535,9 +2535,9 @@ async def handle_query(call):
                                     disable_web_page_preview=True)
 
     elif call.data.startswith('full_list_5'):
-        await bot.edit_message_text(text='Адміністраторські команди\nБоту потрібне право банити, та адмін з правом '
+        await bot.edit_message_text(text='Адміністраторські команди\nБоту потрібне право банити та адмін з правом '
                                          'редагування групи має увімкнути їх командою /toggle_admin; використовувати '
-                                         'команди можуть адміни з правом банити)\n\n'
+                                         'команди можуть адміни з правом банити\n\n'
                                          '/ban [number][m/h/d] /unban\n'
                                          '/mute [number][m/h/d/f] /unmute\n'
                                          '/moxir [number][m/h/d] - забрати стікери і медіа\n\n'
