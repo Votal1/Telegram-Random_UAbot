@@ -1425,10 +1425,11 @@ async def build(message):
 async def clan_settings(message):
     try:
         c = 'c' + r.hget(message.from_user.id, 'clan').decode()
-        try:
-            await bot.delete_message(message.chat.id, message.message_id)
-        except:
-            pass
+        if message.chat.type != 'private':
+            try:
+                await bot.delete_message(message.chat.id, message.message_id)
+            except:
+                pass
         if message.from_user.id == int(r.hget(c, 'leader')) or message.from_user.id in sudoers:
             if int(r.hget(c, 'allow')) == 0:
                 allow = '\n\nВ клан може приєднатись кожен бажаючий.'
