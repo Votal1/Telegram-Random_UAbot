@@ -1135,30 +1135,36 @@ async def start_raid(cid):
                 ran = randint(25, 75)
                 reward += '\U0001F333 +' + str(ran)
                 r.hincrby(c, 'wood', ran)
+                r.hincrby(c2, 'wood', -ran)
             if int(res[1]) >= 50:
                 ran = randint(10, 50)
                 reward += ' \U0001faa8 +' + str(ran)
                 r.hincrby(c, 'stone', ran)
+                r.hincrby(c2, 'stone', -ran)
             if int(res[2]) >= 25:
                 ran = randint(10, 25)
                 reward += ' \U0001F9F6 +' + str(ran)
                 r.hincrby(c, 'cloth', ran)
+                r.hincrby(c2, 'cloth', -ran)
             if int(res[3]) >= 15:
                 ran = randint(5, 15)
                 reward += ' \U0001F9F1 +' + str(ran)
                 r.hincrby(c, 'brick', ran)
+                r.hincrby(c2, 'brick', -ran)
         elif mode == [2]:
             reward += 'Русаки пограбували місцеву крамницю!\n'
             if int(res[4]) >= 50:
                 ran = randint(50, 200)
                 reward += '\U0001F4B5 +' + str(ran)
                 r.hincrby(c, 'money', ran)
+                r.hincrby(c2, 'money', -ran)
         elif mode == [3]:
             reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
             if int(res[5]) >= 10:
                 ran = 10
                 reward += '\U0001F47E +' + str(ran)
                 r.hincrby(c, 'r_spirit', ran)
+                r.hincrby(c2, 'r_spirit', -ran)
     elif win == ['b']:
         reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
         for member in r.smembers('fighters_3' + str(cid)):
