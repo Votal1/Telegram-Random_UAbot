@@ -1031,6 +1031,14 @@ async def guard_power(mid):
     s = int(stats[0])
     i = int(stats[1])
     bd = int(stats[2])
+    if checkClan(mid, base=4, building='morgue'):
+        d = int(r.hget(mid, 'deaths'))
+        if d > 100:
+            d = 100
+        if d >= 25:
+            if r.hexists(mid, 'ac16') == 0:
+                r.hset(mid, 'ac16', 1)
+        s = int(s * (1 + 0.002 * d))
     if int(stats[5]) > 0:
         s, bd = injure(int(mid), s, bd, True)
     if int(stats[6]) > 0:
