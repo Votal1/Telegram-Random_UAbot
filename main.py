@@ -2472,7 +2472,7 @@ async def handle_query(call):
                                          '@Random_UAbot - вибрати одну з функцій рандому\n'
                                          '/donate - сподобався бот?',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    disable_web_page_preview=True)
+                                    reply_markup=cmm(), disable_web_page_preview=True)
 
     elif call.data.startswith('full_list_2'):
         await bot.edit_message_text(text='Команди для гри в русаків\n\n'
@@ -2502,7 +2502,7 @@ async def handle_query(call):
                                          '/mine - заробити гривні\n'
                                          '/merchant - продає топову снарягу',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    disable_web_page_preview=True)
+                                    reply_markup=cmm(), disable_web_page_preview=True)
 
     elif call.data.startswith('full_list_3'):
         await bot.edit_message_text(text='Топ\n\n'
@@ -2514,7 +2514,7 @@ async def handle_query(call):
                                          'Опції для ltop та gtop:\n'
                                          '-s, -d, -c, -w, -t',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    disable_web_page_preview=True)
+                                    reply_markup=cmm(), disable_web_page_preview=True)
 
     elif call.data.startswith('full_list_4'):
         await bot.edit_message_text(text='Команди для керування кланом\n\n'
@@ -2532,7 +2532,7 @@ async def handle_query(call):
                                          '/raid - грабувати інші клани\n'
                                          '/guard - охоронятись від рейдів (доступно на 3 рівні)',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    disable_web_page_preview=True)
+                                    reply_markup=cmm(), disable_web_page_preview=True)
 
     elif call.data.startswith('full_list_5'):
         await bot.edit_message_text(text='Адміністраторські команди\nБоту потрібне право банити та адмін з правом '
@@ -2543,7 +2543,7 @@ async def handle_query(call):
                                          '/moxir [number][m/h/d] - забрати стікери і медіа\n\n'
                                          'm - хвилини, h - години\nd - дні, f - назавжди',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    disable_web_page_preview=True)
+                                    reply_markup=cmm(), disable_web_page_preview=True)
 
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
