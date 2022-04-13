@@ -1594,11 +1594,18 @@ async def work(message):
                                 ran *= 2
                             resources += ' \U0001F9F1 +' + str(ran)
                             r.hincrby(c, 'brick', ran)
-                        if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 8:
-                            resources += ' \U0001F4B5 +5'
-                            r.hincrby(c, 'money', -8)
+                        if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
+                            resources += ' \n\U0001F4B5 +5'
                             r.hincrby(message.from_user.id, 'money', 5)
-                            r.hincrby('soledar', 'money', 3)
+                            if int(r.hget(c, 'new_post')) == 0:
+                                r.hincrby(c, 'money', -8)
+                                r.hincrby('soledar', 'money', 3)
+                            else:
+                                r.hincrby(c, 'money', -10)
+                                r.hincrby('soledar', 'money', 5)
+                                resources += ' \U0001F4E6 +1'
+                                r.hincrby(message.from_user.id, 'packs', 1)
+                            
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
@@ -2052,7 +2059,7 @@ async def handle_query(call):
                                {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
                                 'shop': 0, 'complex': 0, 'monument': 0, 'camp': 0, 'morgue': 0, 'post': 0, 'day': 0,
-                                'power': 0, 'salary': 0, 'war_allow': 0,
+                                'power': 0, 'new_post': 0, 'salary': 0, 'war_allow': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
