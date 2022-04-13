@@ -1121,8 +1121,13 @@ async def start_raid(cid):
             chance1 += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
         except:
             continue
-    await bot.send_message(cid, r.hget(c, 'title').decode() + ' | ' + r.hget(c2, 'title').decode() +
-                           '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(int(chance2)))
+    msg0 = r.hget(c, 'title').decode() + ' | ' + r.hget(c2, 'title').decode() + \
+                                         '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(int(chance2))
+    try:
+        await bot.send_message(cid, msg0)
+        await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0)
+    except:
+        pass
     win = choices(['a', 'b'], weights=[chance1, chance2])
     reward = '\n\n'
 
