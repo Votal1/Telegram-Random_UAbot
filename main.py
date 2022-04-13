@@ -2545,52 +2545,6 @@ async def handle_query(call):
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
                                     disable_web_page_preview=True)
 
-    elif call.data.startswith('full_list'):
-        await bot.edit_message_text(text='Загальні:\n'
-                                         '/links - реклама, головний чат, творець\n'
-                                         '/help - як користуватись\n'
-                                         '@Random_UAbot - вибрати одну з функцій рандому\n'
-                                         '/donate - сподобався бот?\n\n'
-                                         'Топ:\n'
-                                         '/ltop - топ цього чату\n'
-                                         '/gtop - глобальний топ\n'
-                                         '/itop - яке я місце в топі?\n'
-                                         '/ctop - топ чатів\n'
-                                         '/passport - твої характеристики\n\n'
-                                         'Русаки:\n'
-                                         '/donbass - взяти русака\n'
-                                         '/rusak - характеристики твого русака\n'
-                                         '@Random_UAbot - почати битву\n'
-                                         '@Random_UAbot & - додаткові режими\n'
-                                         '/feed - погодувати русака\n'
-                                         '/shop - магазин\n'
-                                         '/pack - Донбаський пакунок\n'
-                                         '/woman - провідати жінку\n'
-                                         '/sacrifice - вбити свого русака\n'
-                                         '/fascist - вибрати фашиста дня\n'
-                                         '/class - вибрати русаку клас\n'
-                                         '/achieve - досягнення\n'
-                                         '/skills - вміння\n'
-                                         '/i - інвентар\n'
-                                         '/swap - змінити бойового русака (якщо є підвал)\n'
-                                         '/battle - почати масову битву\n'
-                                         '/war - почати міжчатову битву\n'
-                                         '/crash - зупинити міжчатову битву\n\n'
-
-                                         'Команди, доступні тільки в <a href="https://t.me/+AB9BCgXnQrAxMzFi">'
-                                         '@soledar1</a>:\n'
-                                         '/mine - відправити русака заробляти гроші\n'
-                                         '/merchant - мандрівний торговець, який продає топову снарягу\n\n'
-
-                                         'Адміністраторські команди (боту потрібне право банити, та адмін з правом '
-                                         'редагування групи має увімкнути їх командою /toggle_admin; використовувати '
-                                         'команди можуть адміни з правом банити):\n'
-                                         '/ban [number][m/h/d] /unban\n'
-                                         '/mute [number][m/h/d/f] /unmute\n'
-                                         '/moxir [number][m/h/d] - забрати стікери і медіа',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    disable_web_page_preview=True)
-
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
         if s1 < 10:
