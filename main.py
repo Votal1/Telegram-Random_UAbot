@@ -1627,7 +1627,7 @@ async def guard(message):
                                     '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
             else:
-                await message.reply('\n\U0001F4AA Загальна сила охорони: ' + r.hget(c, 'power').decode() +
+                await message.reply('\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
     except:
         pass
