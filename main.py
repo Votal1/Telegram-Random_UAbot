@@ -11,7 +11,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
+    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
 
@@ -1717,20 +1717,18 @@ async def raid(message):
 
 @dp.message_handler(commands=['commands'])
 async def commands(message):
-    markup = InlineKeyboardMarkup()
     await message.reply('/links - реклама, головний чат, творець\n'
                         '/feed - погодувати русака\n'
-                        '/mine - відправити русака заробляти гроші (доступно тільки в '
+                        '/mine - заробити гривні (доступно тільки в '
                         '<a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a>)\n'
                         '/woman - провідати жінку\n'
-                        '/fascist - вибрати фашиста дня\n'
+                        '/clan - інформація про клан\n'
                         '/achieve - досягнення\n'
                         '/skills - вміння\n'
                         '/i - інвентар\n'
                         '/battle - чатова битва (5-10 русаків)\n'
                         '/war - міжчатова битва 5х5\n'
-                        '...', reply_markup=markup.add(InlineKeyboardButton(text='Розгорнути',
-                                                                            callback_data='full_list')),
+                        '...', reply_markup=cmm(),
                         parse_mode='HTML', disable_web_page_preview=True)
 
 
@@ -2465,6 +2463,87 @@ async def handle_query(call):
                 msg += '\n\U0001F4B5 +' + str(money)
             msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
             await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+
+    elif call.data.startswith('full_list_1'):
+        await bot.edit_message_text(text='Інформаційні команди\n\n'
+                                         '/links - реклама, головний чат, творець\n'
+                                         '/help - як користуватись\n'
+                                         '/gruz200 - інфа по втратах окупантів\n'
+                                         '@Random_UAbot - вибрати одну з функцій рандому\n'
+                                         '/donate - сподобався бот?',
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
+                                    disable_web_page_preview=True)
+
+    elif call.data.startswith('full_list_2'):
+        await bot.edit_message_text(text='Команди для гри в русаків\n\n'
+                                         '/donbass - взяти русака\n'
+                                         '/rusak - характеристики\n'
+                                         '@Random_UAbot - почати битву\n'
+                                         '@Random_UAbot & - три додаткові режими\n'
+                                         '/feed - погодувати русака\n'
+                                         '/shop - магазин\n'
+                                         '/donate_shop - безтолкові штуки\n'
+                                         '/pack - Донбаський пакунок\n'
+                                         '/woman - провідати жінку\n'
+                                         '/sacrifice - вбити свого русака\n'
+                                         '/class - вибрати русаку клас\n'
+                                         '/achieve - досягнення\n'
+                                         '/skills - вміння\n'
+                                         '/i - інвентар\n'
+                                         '/swap - змінити бойового русака (якщо є підвал)\n'
+                                         '/battle - почати масову битву\n'
+                                         '/war - почати міжчатову битву\n'
+                                         '/quit - вийти з міжчатової битви\n'
+                                         '/crash - зупинити міжчатову битву\n'
+                                         '/promo_code [код]- активувати бонус\n\n'
+
+                                         'Команди, доступні тільки в <a href="https://t.me/+AB9BCgXnQrAxMzFi">'
+                                         '@soledar1</a>:\n'
+                                         '/mine - заробити гривні\n'
+                                         '/merchant - продає топову снарягу',
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
+                                    disable_web_page_preview=True)
+
+    elif call.data.startswith('full_list_3'):
+        await bot.edit_message_text(text='Топ\n\n'
+                                         '/ltop - топ цього чату\n'
+                                         '/gtop - глобальний топ\n'
+                                         '/itop - яке я місце в топі?\n'
+                                         '/ctop - топ чатів\n'
+                                         '/passport - твої характеристики\n\n'
+                                         'Опції для ltop та gtop:\n'
+                                         '-s, -d, -c, -w, -t',
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
+                                    disable_web_page_preview=True)
+
+    elif call.data.startswith('full_list_4'):
+        await bot.edit_message_text(text='Команди для керування кланом\n\n'
+                                         '/clan - створити / інформація про клан\n'
+                                         '/join - приєднатись\n'
+                                         '/leave - покинути клан\n'
+                                         '/kick [user id] - вигнати з клану\n'
+                                         '/work - добувати ресурси\n'
+                                         '/invest [>0] - перекинути гроші\n'
+                                         '/fascist - вибрати фашиста дня\n'
+                                         '/clan_settings - налаштування, зарплата за роботу, список учасників\n'
+                                         '/upgrade - покращити рівень клану\n'
+                                         '/build - розвинути інфраструктуру\n'
+                                         '/clan_shop - магазин (доступний на 3 рівні)\n'
+                                         '/raid - грабувати інші клани\n'
+                                         '/guard - охоронятись від рейдів (доступно на 3 рівні)',
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
+                                    disable_web_page_preview=True)
+
+    elif call.data.startswith('full_list_5'):
+        await bot.edit_message_text(text='Адміністраторські команди\nБоту потрібне право банити, та адмін з правом '
+                                         'редагування групи має увімкнути їх командою /toggle_admin; використовувати '
+                                         'команди можуть адміни з правом банити)\n\n'
+                                         '/ban [number][m/h/d] /unban\n'
+                                         '/mute [number][m/h/d/f] /unmute\n'
+                                         '/moxir [number][m/h/d] - забрати стікери і медіа\n\n'
+                                         'm - хвилини, h - години\nd - дні, f - назавжди',
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
+                                    disable_web_page_preview=True)
 
     elif call.data.startswith('full_list'):
         await bot.edit_message_text(text='Загальні:\n'

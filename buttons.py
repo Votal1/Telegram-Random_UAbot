@@ -119,3 +119,12 @@ def clan_set():
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup
+
+
+def cmm():
+    markup = InlineKeyboardMarkup()
+    items = {'Інформація': 'full_list_1', 'Гра в русаків': 'full_list_2', 'Гра в русаків: Топ': 'full_list_3',
+             'Гра в русаків: Клани': 'full_list_4', 'Адміністраторські команди': 'full_list_5'}
+    for key, value in items.items():
+        markup.add(InlineKeyboardButton(text=key, callback_data=value))
+    return markup
