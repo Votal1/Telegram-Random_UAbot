@@ -1661,7 +1661,9 @@ async def raid(message):
     try:
         c = 'c' + str(message.chat.id)
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id or message.from_user.id in sudoers:
-            if r.hexists(c, 'start') == 0:
+            if 0 <= datetime.now().hour < 8:
+                await message.reply('Комендантська година, рейди недоступні.')
+            elif r.hexists(c, 'start') == 0:
                 if r.hexists(c, 'raid_ts') == 0:
                     r.hset(c, 'raid_ts', 0)
                 if r.hexists(c, 'raid_ts2') == 0:
