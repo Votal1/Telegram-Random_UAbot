@@ -245,8 +245,7 @@ async def my_rusak(message):
             ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
         photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                      '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[
-                         5].decode() \
+                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[5].decode() \
                      + cl + ms + inj
         await message.reply_photo(stats[8].decode(), caption=photo_text)
     except:
@@ -2629,7 +2628,7 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'support')) == 0:
             if int(r.hget(call.from_user.id, 'money')) >= 4:
                 r.hincrby(call.from_user.id, 'money', -4)
-                r.hincrby(call.from_user.id, 'hp', 5)
+                hp(5, call.from_user.id)
                 r.hset(call.from_user.id, 'support', 1)
                 r.hset(call.from_user.id, 's_support', 5)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
