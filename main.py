@@ -1646,7 +1646,7 @@ async def raid(message):
                     r.hset(c, 'raid_ts2', 0)
                 if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts')) > 5:
                     r.hset(c, 'raid_ts', int(datetime.now().timestamp()))
-                    if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts2')) > 300:
+                    if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts2')) > 3600:
                         try:
                             try:
                                 await bot.delete_message(message.chat.id, message.message_id)
@@ -1664,7 +1664,7 @@ async def raid(message):
                         except:
                             pass
                     else:
-                        t = str(int((300 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60))
+                        t = str(int((3600 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60))
                         await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + 'хв.')
             else:
                 try:
