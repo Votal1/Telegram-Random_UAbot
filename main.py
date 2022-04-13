@@ -1615,9 +1615,9 @@ async def guard(message):
             r.hset(c, 'power', 0)
             for m in r.smembers(g):
                 r.srem(g, m)
-        if checkClan(mid, base=4, building='post') and r.hexists(mid, 'name') == 1 and r.scard(g) < 5 and \
+        if checkClan(mid, base=4, building='post') and r.hexists(mid, 'name') == 1 and \
                 int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
-            if int(r.hget(mid, 'clan_time')) != datetime.now().day:
+            if int(r.hget(mid, 'clan_time')) != datetime.now().day and r.scard(g) < 5:
                 r.hset(mid, 'clan_time', datetime.now().day)
                 st = await guard_power(mid)
                 r.hincrby(c, 'power', st)
