@@ -3142,7 +3142,7 @@ async def handle_query(call):
                           weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
             if ran == [1]:
                 if checkClan(uid, base=4, building='new_post') and choice([0, 1]) == 1:
-                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.',
+                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F9F1 +1',
                                                 call.message.chat.id, call.message.message_id)
                     r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
                 else:
