@@ -1154,16 +1154,15 @@ async def start_raid(cid):
                 reward += '\U0001F4B5 +' + str(ran)
                 # r.hincrby(c, 'money', ran)
         elif mode == [3]:
-            reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n' \
-                      '\U0001fac0 -100'
-            for member in r.smembers('fighters_3' + str(cid)):
-                hp(-100, member)
+            reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
             if int(res[5]) >= 10:
                 ran = 10
                 reward += '\U0001F47E +' + str(ran)
                 # r.hincrby(c, 'r_spirit', ran)
     elif win == ['b']:
-        reward += 'Русаків затримала охорона...\n'
+        reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+        for member in r.smembers('fighters_3' + str(cid)):
+            hp(-100, member)
     await sleep(10)
     msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!\n\n*тестовий режим, ресурси не додано*' + reward
     msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + \
