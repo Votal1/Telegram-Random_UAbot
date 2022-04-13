@@ -2031,22 +2031,26 @@ async def handle_query(call):
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.message_id == int(r.hget('c' + str(call.message.chat.id), 'start')) and\
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
-            r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
-            r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-            fighters = r.scard('fighters_3' + str(call.message.chat.id))
-            if fighters == 1:
-                await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
-                                            chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                            reply_markup=battle_button_4())
-            elif fighters >= 5:
-                await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
-                                            chat_id=call.message.chat.id, message_id=call.message.message_id)
-                await call.message.reply('\u2694 Русаки вирушили в рейд...')
-                await start_raid(call.message.chat.id)
+            if 0 <= datetime.now().hour < 8:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Комендантська година, рейди недоступні.')
             else:
-                await bot.edit_message_text(
-                    text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                    message_id=call.message.message_id, reply_markup=battle_button_4())
+                r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
+                r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
+                fighters = r.scard('fighters_3' + str(call.message.chat.id))
+                if fighters == 1:
+                    await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
+                                                chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                                reply_markup=battle_button_4())
+                elif fighters >= 5:
+                    await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
+                                                chat_id=call.message.chat.id, message_id=call.message.message_id)
+                    await call.message.reply('\u2694 Русаки вирушили в рейд...')
+                    await start_raid(call.message.chat.id)
+                else:
+                    await bot.edit_message_text(
+                        text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
+                        message_id=call.message.message_id, reply_markup=battle_button_4())
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ти або вже в битві, або в тебе відсутній русак.\n\n'
