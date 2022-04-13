@@ -1207,10 +1207,11 @@ async def clan(message):
                         building += ', цех'
                     if int(r.hget(c, 'storage')) == 1:
                         building += ', склад'
-                        resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode() + \
-                                     '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
+                        resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode()
                         if base >= 3:
                             resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
+                        resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
+
                     if int(r.hget(c, 'silicate')) == 1:
                         building += ', силікатний завод'
                     if int(r.hget(c, 'complex')) == 1:
@@ -1378,8 +1379,8 @@ async def build(message):
                         if int(r.hget(c, 'post')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати блокпост',
                                                             callback_data='build_post'))
-                            msg += '\nБлокпост (\U0001F333 2000, \U0001faa8 500, \U0001F9F6 400, ' \
-                                   '\U0001F9F1 300, \U0001F4B5 1000) - можливість захищатись від рейдів.'
+                            msg += '\nБлокпост (\U0001F333 200, \U0001faa8 200, \U0001F9F6 200, ' \
+                                   '\U0001F9F1 200, \U0001F4B5 200) - можливість захищатись від рейдів.'
                         if int(r.hget(c, 'camp')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати концтабір',
                                                             callback_data='build_camp'))
@@ -1628,7 +1629,8 @@ async def guard(message):
                                     '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
             else:
-                await message.reply('\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
+                await message.reply('Твій русак сьогодні вже своє відпрацював.'
+                                    '\n\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
     except:
         pass
@@ -2313,13 +2315,13 @@ async def handle_query(call):
     elif call.data.startswith('build_post') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
         if int(r.hget(c, 'post')) == 0:
-            if int(r.hget(c, 'wood')) >= 2000 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 400 \
-                    and int(r.hget(c, 'brick')) >= 300 and int(r.hget(c, 'money')) >= 1000:
-                r.hincrby(c, 'wood', -2000)
-                r.hincrby(c, 'stone', -500)
-                r.hincrby(c, 'cloth', -400)
-                r.hincrby(c, 'brick', -300)
-                r.hincrby(c, 'money', -1000)
+            if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 200 and int(r.hget(c, 'cloth')) >= 200 \
+                    and int(r.hget(c, 'brick')) >= 200 and int(r.hget(c, 'money')) >= 200:
+                r.hincrby(c, 'wood', -200)
+                r.hincrby(c, 'stone', -200)
+                r.hincrby(c, 'cloth', -200)
+                r.hincrby(c, 'brick', -200)
+                r.hincrby(c, 'money', -200)
                 r.hset(c, 'post', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано блокпост.\n\nМожна '
                                                              'туди відправити русака замість роботи командою /guard')
