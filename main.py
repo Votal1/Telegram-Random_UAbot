@@ -1645,7 +1645,7 @@ async def guard(message):
                 r.hincrby(c, 'power', st)
                 r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]
-                msg =  name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st)
+                msg = name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st)
                 if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
                     msg += ' \U0001F4B5 +5'
                     r.hincrby(message.from_user.id, 'money', 5)
