@@ -1645,8 +1645,19 @@ async def guard(message):
                 r.hincrby(c, 'power', st)
                 r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]
-                await message.reply(name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st) +
-                                    '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
+                msg =  name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st)
+                if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
+                    msg += ' \U0001F4B5 +5'
+                    r.hincrby(message.from_user.id, 'money', 5)
+                    if int(r.hget(c, 'new_post')) == 0:
+                        r.hincrby(c, 'money', -8)
+                        r.hincrby('soledar', 'money', 3)
+                    else:
+                        r.hincrby(c, 'money', -10)
+                        r.hincrby('soledar', 'money', 5)
+                        msg += ' \U0001F4E6 +1'
+                        r.hincrby(message.from_user.id, 'packs', 1)
+                await message.reply(msg + '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.'
