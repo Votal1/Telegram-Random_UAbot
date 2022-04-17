@@ -292,8 +292,21 @@ async def feed(message):
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 word = 'зросла'
                 if int(stats[0]) > 3000:
-                    decrease = int(choice(['1', '1', '1', '1', '0']))
-                    if decrease == 0:
+                    if int(stats[0]) > 4000:
+                        if int(r.hget(message.from_user.id, 'support')) == 7:
+                            decrease = choices([1, 0], [75, 25])
+                            damage_support(message.from_user.id)
+                            increase_trance(5, message.from_user.id)
+                        else:
+                            decrease = choices([1, 0], [50, 50])
+                    else:
+                        if int(r.hget(message.from_user.id, 'support')) == 7:
+                            decrease = choices([1, 0], [95, 5])
+                            damage_support(message.from_user.id)
+                            increase_trance(5, message.from_user.id)
+                        else:
+                            decrease = choices([1, 0], [80, 20])
+                    if decrease == [0]:
                         word = 'зменшилась'
                         r.hincrby(message.from_user.id, 'strength', -2 * ran)
                 msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + ' смачно поїв.\n\nСила '

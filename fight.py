@@ -1065,22 +1065,12 @@ async def guard_power(mid):
 
 
 async def start_raid(cid):
-    enemy = r.srandmember('groupings')
-    while int(enemy) == cid:
-        enemy = r.srandmember('groupings')
     c = 'c' + str(cid)
-    c2 = 'c' + enemy.decode()
     await sleep(3)
     await bot.send_message(cid, 'Ціль знайдено')
     await sleep(1)
 
     chance1 = 0
-    if int(r.hget(c2, 'day')) != datetime.now().day:
-        r.hset(c2, 'day', datetime.now().day)
-        r.hset(c2, 'power', 0)
-        for m in r.smembers('guard' + enemy.decode()):
-            r.srem('guard' + enemy.decode(), m)
-    chance2 = int(r.hget(c2, 'power'))
     for member in r.smembers('fighters_3' + str(cid)):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -1121,65 +1111,162 @@ async def start_raid(cid):
             chance1 += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
         except:
             continue
-    msg0 = r.hget(c, 'title').decode() + ' | ' + r.hget(c2, 'title').decode() + \
-                                         '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(int(chance2))
-    try:
-        await bot.send_message(cid, msg0)
-        await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0)
-    except:
-        pass
-    win = choices(['a', 'b'], weights=[chance1, chance2])
-    reward = '\n\n'
+    mode = choices([1, 2], [100, 0])
+    if mode == [1]:
+        enemy = r.srandmember('groupings')
+        while int(enemy) == cid:
+            enemy = r.srandmember('groupings')
+        c2 = 'c' + enemy.decode()
+        if int(r.hget(c2, 'day')) != datetime.now().day:
+            r.hset(c2, 'day', datetime.now().day)
+            r.hset(c2, 'power', 0)
+            for m in r.smembers('guard' + enemy.decode()):
+                r.srem('guard' + enemy.decode(), m)
+        chance2 = int(r.hget(c2, 'power'))
 
-    if win == ['a']:
-        res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
-        mode = choices([1, 2, 3], [70, 20, 10])
-        base = int(r.hget(c2, 'base'))
-        if mode == [1]:
-            reward += 'Русаки потрапили на склад і винесли ресурси!\n'
-            if int(res[0]) >= 15:
-                ran = randint(25, 75)
-                reward += '\U0001F333 +' + str(ran)
-                r.hincrby(c, 'wood', ran)
-                r.hincrby(c2, 'wood', -ran)
-            if int(res[1]) >= 50 and base >= 2:
-                ran = randint(10, 50)
-                reward += ' \U0001faa8 +' + str(ran)
-                r.hincrby(c, 'stone', ran)
-                r.hincrby(c2, 'stone', -ran)
-            if int(res[2]) >= 25 and base >= 3:
-                ran = randint(10, 25)
-                reward += ' \U0001F9F6 +' + str(ran)
-                r.hincrby(c, 'cloth', ran)
-                r.hincrby(c2, 'cloth', -ran)
-            if int(res[3]) >= 15 and base >= 4:
-                ran = randint(5, 15)
-                reward += ' \U0001F9F1 +' + str(ran)
-                r.hincrby(c, 'brick', ran)
-                r.hincrby(c2, 'brick', -ran)
-        elif mode == [2]:
-            reward += 'Русаки пограбували місцеву крамницю!\n'
-            if int(res[4]) >= 50:
-                ran = randint(50, 200)
-                reward += '\U0001F4B5 +' + str(ran)
-                r.hincrby(c, 'money', ran)
-                r.hincrby(c2, 'money', -ran)
-        elif mode == [3]:
-            reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
-            if int(res[5]) >= 10:
-                ran = 10
-                reward += '\U0001F47E +' + str(ran)
-                r.hincrby(c, 'r_spirit', ran)
-                r.hincrby(c2, 'r_spirit', -ran)
-    elif win == ['b']:
-        reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
-        for member in r.smembers('fighters_3' + str(cid)):
-            hp(-100, member)
-    await sleep(10)
-    msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
-    msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!' + reward.replace('+', '-')
-    await bot.send_message(cid, msg)
-    await bot.send_message(int(enemy), msg2)
+        msg0 = r.hget(c, 'title').decode() + ' | ' + r.hget(c2, 'title').decode() + \
+                                             '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(int(chance2))
+        try:
+            await bot.send_message(cid, msg0)
+            await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0)
+        except:
+            pass
+        win = choices(['a', 'b'], weights=[chance1, chance2])
+        reward = '\n\n'
+
+        if win == ['a']:
+            res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
+            mode = choices([1, 2, 3], [70, 20, 10])
+            base = int(r.hget(c2, 'base'))
+            if mode == [1]:
+                reward += 'Русаки потрапили на склад і винесли ресурси!\n'
+                if int(res[0]) >= 15:
+                    ran = randint(25, 75)
+                    reward += '\U0001F333 +' + str(ran)
+                    r.hincrby(c, 'wood', ran)
+                    r.hincrby(c2, 'wood', -ran)
+                if int(res[1]) >= 50 and base >= 2:
+                    ran = randint(10, 50)
+                    reward += ' \U0001faa8 +' + str(ran)
+                    r.hincrby(c, 'stone', ran)
+                    r.hincrby(c2, 'stone', -ran)
+                if int(res[2]) >= 25 and base >= 3:
+                    ran = randint(10, 25)
+                    reward += ' \U0001F9F6 +' + str(ran)
+                    r.hincrby(c, 'cloth', ran)
+                    r.hincrby(c2, 'cloth', -ran)
+                if int(res[3]) >= 15 and base >= 4:
+                    ran = randint(5, 15)
+                    reward += ' \U0001F9F1 +' + str(ran)
+                    r.hincrby(c, 'brick', ran)
+                    r.hincrby(c2, 'brick', -ran)
+            elif mode == [2]:
+                reward += 'Русаки пограбували місцеву крамницю!\n'
+                if int(res[4]) >= 50:
+                    ran = randint(50, 200)
+                    reward += '\U0001F4B5 +' + str(ran)
+                    r.hincrby(c, 'money', ran)
+                    r.hincrby(c2, 'money', -ran)
+            elif mode == [3]:
+                reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
+                if int(res[5]) >= 10:
+                    ran = 10
+                    reward += '\U0001F47E +' + str(ran)
+                    r.hincrby(c, 'r_spirit', ran)
+                    r.hincrby(c2, 'r_spirit', -ran)
+        elif win == ['b']:
+            reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            for member in r.smembers('fighters_3' + str(cid)):
+                hp(-100, member)
+        await sleep(10)
+        msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
+        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!' + reward.replace('+', '-')
+        await bot.send_message(cid, msg)
+        await bot.send_message(int(enemy), msg2)
+
+    elif mode == [2]:
+        locations = ['Відділення монобанку', 'АТБ', 'Сільпо', 'Епіцентр']
+        chances = ['0', '0.15', '0.3', '0.5']
+        location = choice(locations)
+        chance2 = int(int(chance1) * float(chances[locations.index(location)]))
+        msg0 = r.hget(c, 'title').decode() + ' | ' + location + \
+                                             '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(chance2)
+        try:
+            await bot.send_message(cid, msg0)
+        except:
+            pass
+        win = choices(['a', 'b'], weights=[chance1, chance2])
+        reward = '\n\n'
+
+        if win == ['a']:
+            if locations.index(location) == 0:
+                reward += 'Русаки шукали відділення монобанку...\nНа цей раз нічого не вдалось знайти.'
+            elif locations.index(location) == 1:
+                reward += 'Русаки пограбували АТБ\n'
+                mode = choices([1, 2, 3], [70, 20, 10])
+                if mode == [1]:
+                    ran = randint(100, 200)
+                    reward += '\U0001F4B5 +' + str(ran)
+                    r.hincrby(c, 'money', ran)
+                if mode == [2]:
+                    reward += '\U0001F9EA Цукор [Допомога, міцність=1]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'support')) == 7:
+                            r.hincrby(mem, 's_support', 1)
+                        elif int(r.hget(mem, 'support')) == 0:
+                            r.hset(mem, 'support', 7)
+                            r.hset(mem, 's_support', 1)
+                if mode == [3]:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    reward += emoji + ' +1'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hset(mem, 'time', 0)
+            elif locations.index(location) == 2:
+                reward += 'Русаки пограбували Сільпо\n'
+                mode = choices([1, 2, 3], [70, 10, 20])
+                if mode == [1]:
+                    ran = randint(150, 300)
+                    reward += '\U0001F4B5 +' + str(ran)
+                    r.hincrby(c, 'money', ran)
+                if mode == [2]:
+                    reward += '\U0001F9EA Цукор [Допомога, міцність=1]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'support')) == 7:
+                            r.hincrby(mem, 's_support', 1)
+                        elif int(r.hget(mem, 'support')) == 0:
+                            r.hset(mem, 'support', 7)
+                            r.hset(mem, 's_support', 1)
+                if mode == [3]:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    reward += emoji + ' +1'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hset(mem, 'time', 0)
+            elif locations.index(location) == 3:
+                reward += 'Русаки пограбували Епіцентр\n'
+                base = int(r.hget(c, 'base'))
+                if base >= 1:
+                    ran = randint(25, 75)
+                    reward += '\U0001F333 +' + str(ran)
+                    r.hincrby(c, 'wood', ran)
+                if base >= 2:
+                    ran = randint(10, 50)
+                    reward += ' \U0001faa8 +' + str(ran)
+                    r.hincrby(c, 'stone', ran)
+                if base >= 3:
+                    ran = randint(10, 25)
+                    reward += ' \U0001F9F6 +' + str(ran)
+                    r.hincrby(c, 'cloth', ran)
+                if base >= 4:
+                    ran = randint(5, 15)
+                    reward += ' \U0001F9F1 +' + str(ran)
+                    r.hincrby(c, 'brick', ran)
+        elif win == ['b']:
+            reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            for member in r.smembers('fighters_3' + str(cid)):
+                hp(-100, member)
+        await sleep(10)
+        msg = 'Проведено рейд на ' + location + '!' + reward
+        await bot.send_message(cid, msg)
 
     try:
         await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
