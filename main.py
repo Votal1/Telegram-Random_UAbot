@@ -628,9 +628,8 @@ async def classes_2(message):
           '(максимум 50%).\n\n' \
           'Силовик \U0001F46E\U0001F46E - ігнорує інтелект, якщо він не менший. Якщо є щит, а інтелект і' \
           ' сила у ворога більші - ігнорує силу. Здібність не діє проти інших мусорів.\n\n' \
-          'Кремлебот \U0001F921\U0001F921 - +60 гривень і онуляє рахунок мухоморів. При жертві' \
-          ' отримує по 2 гривні за кожного, хто втратив бойовий дух (максимум 200 гривень). Можливість купляти ' \
-          'горілку за перемоги, якщо нема грошей.\n\n' \
+          'Кремлебот \U0001F921\U0001F921 - одноразова премія - 200 гривень. Онуляє рахунок мухоморів. ' \
+          'Можливість купляти горілку за перемоги, якщо нема грошей.\n\n' \
           'Кіберзлочинець \U0001F4DF\U0001F4DF - отримує доступ до баз даних - якщо напився на ' \
           'роботі, то може працювати ще раз; можливість купляти мухомори без обмежень.\n\n' \
           'Нарколог \u26D1\u26D1 - якщо у ворога від 50 здоров`я - з шансом 20% додає на 1 ' \
@@ -666,8 +665,9 @@ async def classes_3(message):
           'Товариш майор \U0001F46E\U0001F46E\U0001F46E - 20% шанс вилучити в ворога зброю при ' \
           'захисті і захист при атаці і отримати щит або підняти його міцність на 10 (не діє проти' \
           ' інших мусорів).\n\n' \
-          'Агент ФСБ \U0001F921\U0001F921\U0001F921 - одноразова премія - 100 гривень. В бою проти ' \
-          'русака без класу є 5% шанс перетворити його в малороса. За це агент отримує 20 гривень.' \
+          'Агент ФСБ \U0001F921\U0001F921\U0001F921 - одноразова премія - 300 гривень. В бою проти ' \
+          'русака без класу є 5% шанс перетворити його в малороса. За це агент отримує 20 гривень. ' \
+          'Можливість на території ворожого клану вкрасти гроші командою clan.' \
           '\n\n' \
           'Black Hat \U0001F4DF\U0001F4DF\U0001F4DF - здібність хакера тепер додає по гривні за ' \
           'кожні 50 гривень на рахунку ворога (1-5 гривень).\n\n' \
@@ -1248,20 +1248,20 @@ async def clan(message):
                                          '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
                                          wins + '\n\n' + building + resources, parse_mode='HTML')
             elif r.hexists(message.from_user.id, 'class') and int(r.hget(message.from_user.id, 'class')) == 27 and \
-                    int(r.hget(c, 'money')) >= 10:
+                    int(r.hget(c, 'money')) >= 20:
                 if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
                     r.hset(message.from_user.id, 'fsb', datetime.now().day)
                     ran = choice([2, 1, 1, 1, 0])
                     if ran == 2:
                         await bot.send_message(message.from_user.id, 'Агент втервся в довіру до керівництва і випросив '
-                                                                     'трохи грошей.\n\U0001F4B5 +10')
-                        r.hincrby(message.from_user.id, 'money', 10)
-                        r.hincrby(c, 'money', -10)
+                                                                     'трохи грошей.\n\U0001F4B5 +20')
+                        r.hincrby(message.from_user.id, 'money', 20)
+                        r.hincrby(c, 'money', -20)
                     elif ran == 1:
                         await bot.send_message(message.from_user.id, 'Агент непомітно забрав собі кілька гривень.'
-                                                                     '\n\U0001F4B5 +5')
-                        r.hincrby(message.from_user.id, 'money', 5)
-                        r.hincrby(c, 'money', -5)
+                                                                     '\n\U0001F4B5 +10')
+                        r.hincrby(message.from_user.id, 'money', 10)
+                        r.hincrby(c, 'money', -10)
                     else:
                         await message.reply('Агент ФСБ хотів вкрасти гроші з кланової скрабниці, але його помітили...'
                                             '\n\U0001fac0 -100')
@@ -2478,17 +2478,9 @@ async def handle_query(call):
         if checkClan(call.from_user.id, base=4, building='morgue'):
             r.hincrby('c' + r.hget(call.from_user.id, 'clan').decode(), 'r_spirit', 1)
             msg += '\n\U0001F47E +1'
-        if call.message.chat.type == 'private':
-            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
-        else:
-            if clm == 17 or clm == 27:
-                money = 2 * (len(r.smembers(call.message.chat.id)) - 1)
-                if money > 200:
-                    money = 200
-                r.hincrby(call.from_user.id, 'money', money)
-                msg += '\n\U0001F4B5 +' + str(money)
+        if call.message.chat.type != 'private':
             msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
-            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+        await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
 
     elif call.data.startswith('full_list_1'):
         await bot.edit_message_text(text='Інформаційні команди\n\n'
@@ -3574,7 +3566,7 @@ async def echo(message):
                     if cl == 7:
                         await message.reply('Ти покращив малороса до Кремлебота.')
                         r.hset(message.from_user.id, 'class', 17)
-                        r.hincrby(message.from_user.id, 'money', 60)
+                        r.hincrby(message.from_user.id, 'money', 200)
                         r.hset(message.from_user.id, 'mushrooms', 0)
                         r.srem('class-7', message.from_user.id)
                         r.sadd('class-17', message.from_user.id)
@@ -3628,7 +3620,7 @@ async def echo(message):
                         await message.reply('Ти покращив кремлебота до Агента ФСБ.')
                         r.hset(message.from_user.id, 'class', 27)
                         r.hset(message.from_user.id, 'fsb', 0)
-                        r.hincrby(message.from_user.id, 'money', 100)
+                        r.hincrby(message.from_user.id, 'money', 300)
                         r.srem('class-17', message.from_user.id)
                         r.sadd('class-27', message.from_user.id)
                     if cl == 18:

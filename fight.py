@@ -1185,8 +1185,8 @@ async def start_raid(cid):
         await bot.send_message(int(enemy), msg2)
 
     elif mode == [2]:
-        locations = ['Відділення монобанку', 'АТБ', 'Сільпо', 'Епіцентр']
-        chances = ['0', '0.15', '0.3', '0.5']
+        locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр']
+        chances = ['0', '0.1', '0.2', '0.3', '0.5']
         location = choice(locations)
         chance2 = int(int(chance1) * float(chances[locations.index(location)]))
         msg0 = r.hget(c, 'title').decode() + ' | ' + location + \
@@ -1201,7 +1201,15 @@ async def start_raid(cid):
         if win == ['a']:
             if locations.index(location) == 0:
                 reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
-            elif locations.index(location) == 1:
+            elif locations.index(location) == 2:
+                reward += 'Русаки пограбували магазин алкоголю\n'
+                ran = randint(5, 20)
+                reward += '\u2622 +' + str(ran) + ' \U0001fac0 +100 \U0001F54A +10000'
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(mem, 'vodka', ran)
+                    hp(100, mem)
+                    spirit(10000, mem, 0)
+            elif locations.index(location) == 2:
                 reward += 'Русаки пограбували АТБ\n'
                 mode = choices([1, 2, 3], [70, 20, 10])
                 if mode == [1]:
@@ -1221,7 +1229,7 @@ async def start_raid(cid):
                     reward += emoji + ' +1'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hset(mem, 'time', 0)
-            elif locations.index(location) == 2:
+            elif locations.index(location) == 3:
                 reward += 'Русаки пограбували Сільпо\n'
                 mode = choices([1, 2, 3], [70, 10, 20])
                 if mode == [1]:
@@ -1241,7 +1249,7 @@ async def start_raid(cid):
                     reward += emoji + ' +1'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hset(mem, 'time', 0)
-            elif locations.index(location) == 3:
+            elif locations.index(location) == 4:
                 reward += 'Русаки пограбували Епіцентр\n'
                 base = int(r.hget(c, 'base'))
                 if base >= 1:
