@@ -354,10 +354,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     if c1 == 16 or c1 == 26:
                         if i2 >= i1:
                             i1, i2 = 0, 0
-                        else:
-                            diff = i1 - i2
-                            s1 = int(s1 * (1 + 0.15 * diff))
-                            i1, i2 = 0, 0
+                            if defense1 == 16 and s2 >= s1:
+                                s1, s2 = 0, 0
             else:
                 if weapon2 == 16 and defense2 == 16:
                     bd1 = 0
@@ -366,10 +364,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if c2 == 16 or c2 == 26:
                     if i1 >= i2:
                         i1, i2 = 0, 0
-                    else:
-                        diff = i2 - i1
-                        s2 = int(s2 * (1 + 0.15 * diff))
-                        i1, i2 = 0, 0
+                        if defense2 == 16 and s1 >= s2:
+                            s1, s2 = 0, 0
 
         if hach1 == 1:
             s1 = int(s1 * 1.15)
@@ -1031,6 +1027,7 @@ async def guard_power(mid):
     s = int(stats[0])
     i = int(stats[1])
     bd = int(stats[2])
+    cl = int(stats[7])
     if checkClan(mid, base=4, building='morgue'):
         d = int(r.hget(mid, 'deaths'))
         if d > 100:
@@ -1045,6 +1042,9 @@ async def guard_power(mid):
         i, bd = schizophrenia(int(mid), i, bd, True)
     if int(stats[8]) > 0:
         s, bd = trance(int(mid), s, bd, True)
+
+    if cl == 6 or cl == 16 or cl == 26:
+        s = int(s * 1.3)
 
     w = int(stats[3])
     if w > 0:
