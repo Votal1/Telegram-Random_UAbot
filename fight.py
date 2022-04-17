@@ -1200,7 +1200,7 @@ async def start_raid(cid):
 
         if win == ['a']:
             if locations.index(location) == 0:
-                reward += 'Русаки шукали відділення монобанку...\nНа цей раз нічого не вдалось знайти.'
+                reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
             elif locations.index(location) == 1:
                 reward += 'Русаки пограбували АТБ\n'
                 mode = choices([1, 2, 3], [70, 20, 10])
