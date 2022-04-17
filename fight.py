@@ -355,7 +355,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         if i2 >= i1:
                             i1, i2 = 0, 0
                             if defense1 == 16 and s2 >= s1:
-                                s1, s2 = 0, 0
+                                s1, s2 = 1, 1
             else:
                 if weapon2 == 16 and defense2 == 16:
                     bd1 = 0
@@ -365,7 +365,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     if i1 >= i2:
                         i1, i2 = 0, 0
                         if defense2 == 16 and s1 >= s2:
-                            s1, s2 = 0, 0
+                            s1, s2 = 1, 1
 
         if hach1 == 1:
             s1 = int(s1 * 1.15)
