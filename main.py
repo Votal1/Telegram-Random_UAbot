@@ -1992,7 +1992,8 @@ async def handle_query(call):
                         pass
                     else:
                         enemy = r.spop('battles' + n)
-                        await bot.edit_message_text(text=call.message.text + '\n\nБій почався...',
+                        await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
+                                                                             '\n\nБій почався...',
                                                     chat_id=call.message.chat.id, message_id=call.message.message_id)
                         a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
                         b = list(r.smembers('fighters_2' + enemy.decode()))
@@ -2052,7 +2053,8 @@ async def handle_query(call):
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 reply_markup=battle_button_4())
                 elif fighters >= 5:
-                    await bot.edit_message_text(text=call.message.text + '\n\nРейд почався...',
+                    await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
+                                                                         '\n\nРейд почався...',
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id)
                     await call.message.reply('\u2694 Русаки вирушили в рейд...')
                     await start_raid(call.message.chat.id)
