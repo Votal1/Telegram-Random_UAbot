@@ -1111,7 +1111,7 @@ async def start_raid(cid):
             chance1 += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
         except:
             continue
-    mode = choices([1, 2], [100, 0])
+    mode = choices([1, 2], [50, 50])
     if mode == [1]:
         enemy = r.srandmember('groupings')
         while int(enemy) == cid:
