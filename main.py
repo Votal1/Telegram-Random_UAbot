@@ -2874,7 +2874,7 @@ async def handle_query(call):
                 if int(r.hget(call.from_user.id, 'money')) >= 30:
                     r.hincrby(call.from_user.id, 'money', -30)
                     r.hincrby(call.from_user.id, 'sch', 30)
-                    r.hset(call.from_user.id, 'head', 2)
+                    r.hset(call.from_user.id, 'head', 1)
                     r.hset(call.from_user.id, 's_head', 10)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили шапочку з фольги')
@@ -3362,12 +3362,12 @@ async def handle_query(call):
                 await bot.edit_message_text('\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити '
                                             'непоганий шолом для русака.\n\U0001F464 +30',
                                             call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'head')) == 2:
+                if int(r.hget(uid, 'head')) == 1:
                     r.hincrby(uid, 'sch', 30)
                     r.hincrby(uid, 's_head', 20)
                 else:
                     r.hset(uid, 'sch', 30)
-                    r.hset(uid, 'head', 2)
+                    r.hset(uid, 'head', 1)
                     r.hset(uid, 's_head', 20)
             elif ran == [11]:
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
