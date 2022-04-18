@@ -1,6 +1,5 @@
 from random import randint
 from config import r
-from datetime import datetime
 
 
 def spirit(value, uid, c):
@@ -34,14 +33,20 @@ def intellect(value, uid):
 
 
 def injure(uid, s, bd, fi):
+    cl = int(r.hget(uid, 'class'))
     if fi:
         r.hincrby(uid, 'injure', -1)
+        if cl == 10 or cl == 20 or cl == 30:
+            r.hincrby(uid, 'injure', -2)
     return int(s * (1 / 3)), int(bd * (1 / 2))
 
 
 def schizophrenia(uid, i, bd, fi):
+    cl = int(r.hget(uid, 'class'))
     if fi:
         r.hincrby(uid, 'sch', -1)
+        if cl == 10 or cl == 20 or cl == 30:
+            r.hincrby(uid, 'sch', -2)
     return int(i * (1 / 3)), int(bd * (1 / 2))
 
 
@@ -90,4 +95,3 @@ def damage_support(uid):
     r.hincrby(uid, 's_support', -1)
     if int(r.hget(uid, 's_support')) <= 0:
         r.hset(uid, 'support', 0)
-

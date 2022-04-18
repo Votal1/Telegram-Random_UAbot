@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, premium, chm, default
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
@@ -599,7 +599,9 @@ async def classes(message):
           ' і заробити гривню.\n\n' \
           'Медик \u26D1 -  якщо у ворога менше ніж 50 здоров`я, то медик лікує йому 5. В іншому' \
           ' випадку з шансом 20% завдає поранення на 2 бої. Наявність медика вдвічі збільшує ' \
-          'загальну силу загону в міжчатових битвах.\n\n\n' \
+          'загальну силу загону в міжчатових битвах.\n\n' \
+          'Гопнік \U0001F6AC - лікується від поранення та шизофренії втричі швидше. Додаткові дві гривні за кожну ' \
+          'перемогу, якщо на рахунку менше 50 гривень.\n+50% сили в рейдах\n\n\n' \
           'Щоб подивитись другий рівень класів натисни /class_2\n' \
           'Якщо твій русак вже набрав 5 інтелекту, можеш вибрати один з цих класів (один раз на ' \
           'одного русака), написавши сюди "Обираю клас " і назву класу.'
@@ -712,7 +714,9 @@ async def merchant(message):
                                       'за перемогу в дуелі.\n\U0001F4DF Експлойт [Атака, міцність=2, '
                                       'ціна=9] - шанс активувати здібність хакера - 99%.\n'
                                       '\u26D1 Медична пилка [Атака, міцність=5, ціна=10] - якщо у ворога нема '
-                                      'поранень - завдає 1, якщо є - лікує 10 і забирає 10 здоров`я.',
+                                      'поранень - завдає 1, якщо є - лікує 10 і забирає 10 здоров`я.\n'
+                                      '\U0001F6AC Скляна пляшка [Атака, міцність=10, ціна=5] - зменшує інтелект '
+                                      'ворогу на 10.',
                                       reply_markup=merchant_goods())
             r.hset('soledar', 'merchant_day', datetime.now().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
@@ -1934,7 +1938,7 @@ async def handle_query(call):
                               'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
                               'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
                               'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні',
-                              'Висадка в Чорнобаївці'])
+                              'Висадка в Чорнобаївці', 'Битва в темному провулку'])
                 big_battle = True
                 try:
                     await bot.unpin_chat_message(chat_id=call.message.chat.id,
@@ -3012,6 +3016,20 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас вже є зброя')
+            elif cl == 10 or cl == 20 or cl == 30:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                    if int(r.hget(call.from_user.id, 'money')) >= 5:
+                        r.hincrby(call.from_user.id, 'money', -5)
+                        r.hset(call.from_user.id, 'weapon', 20)
+                        r.hset(call.from_user.id, 's_weapon', 10)
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Ви успішно купили скляну пляшку')
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Недостатньо коштів на рахунку')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є зброя')
 
         else:
             await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
@@ -3056,6 +3074,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'photo', premium[7])
             elif cl == 9 or cl == 19 or cl == 29:
                 r.hset(call.from_user.id, 'photo', premium[8])
+            elif cl == 10 or cl == 20 or cl == 30:
+                r.hset(call.from_user.id, 'photo', premium[9])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
@@ -3086,6 +3106,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'photo', chm[7])
             elif cl == 9 or cl == 19 or cl == 29:
                 r.hset(call.from_user.id, 'photo', chm[8])
+            elif cl == 10 or cl == 20 or cl == 30:
+                r.hset(call.from_user.id, 'photo', chm[9])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
@@ -3263,6 +3285,12 @@ async def handle_query(call):
                     elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 19)
                         r.hset(uid, 's_weapon', 5)
+                elif cl == 10 or cl == 20 or cl == 30:
+                    if int(r.hget(uid, 'weapon')) == 20:
+                        r.hincrby(uid, 's_weapon', 10)
+                    elif int(r.hget(uid, 'weapon')) != 2:
+                        r.hset(uid, 'weapon', 20)
+                        r.hset(uid, 's_weapon', 10)
                 else:
                     await bot.edit_message_text('\u26AA В цьому пакунку лежать дивні речі, якими '
                                                 'русак не вміє користуватись...', call.message.chat.id,
@@ -3529,6 +3557,12 @@ async def echo(message):
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Медик.')
                             r.hset(message.from_user.id, 'class', 9)
                             r.sadd('class-9', message.from_user.id)
+                        elif 'Гопнік' in message.text or 'гопнік' in message.text:
+                            ran = choice(p10)
+                            r.hset(message.from_user.id, 'photo', ran)
+                            await message.reply_photo(photo=ran, caption='Ти вибрав клас Гопнік.')
+                            r.hset(message.from_user.id, 'class', 10)
+                            r.sadd('class-10', message.from_user.id)
             if int(r.hget(message.from_user.id, 'intellect')) >= 12:
                 if message.text == 'Покращити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))

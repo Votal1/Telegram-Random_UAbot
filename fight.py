@@ -273,6 +273,12 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 hp(-10, uid1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' припинив ворогу кровотечу.\n\U0001fa78 -10 \U0001fac0 -10'
             damage_weapon(uid2, c2)
+        elif weapon2 == 20:
+            i1 = i1 - 10
+            if i1 < 0:
+                i1 = 0
+            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога пляшкою по голові!'
+            damage_weapon(uid2, c2)
 
         if weapon2 == 2 and defense1 != 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
@@ -577,6 +583,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            if c1 == 10 or c1 == 20 or c1 == 30:
+                if int(r.hget(uid1, 'money')) < 50:
+                    m_bonus[0] += 2
             if m_bonus[0] > 0:
                 if checkClan(uid1, base=4):
                     if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
@@ -659,6 +668,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            if c2 == 10 or c2 == 20 or c2 == 30:
+                if int(r.hget(uid2, 'money')) < 50:
+                    m_bonus[0] += 2
             if m_bonus[0] > 0:
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
@@ -885,6 +897,13 @@ async def war(cid, location, big_battle):
         else:
             class_reward = '\U0001F5FA: \U0001F464 +10'
             r.hincrby(win, 'sch', 10)
+    elif location == 'Битва в темному провулку':
+        if wc == 10 or wc == 20 or wc == 30:
+            class_reward = '\U0001F3C5 +1 \U0001F44A +1 \u2622 +1 \U0001F4B5 +8'
+            r.hincrby(win, 'trophy', 1)
+            increase_trance(1, win)
+            r.hincrby(win, 'money', 8)
+            r.hincrby(win, 'vodka', 1)
 
     await sleep(10)
     r.hdel('battle' + str(cid), 'start')
@@ -1078,6 +1097,7 @@ async def start_raid(cid):
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            cl = int(stats[7])
             if checkClan(member, base=4, building='morgue'):
                 d = int(r.hget(member, 'deaths'))
                 if d > 100:
@@ -1092,6 +1112,9 @@ async def start_raid(cid):
                 i, bd = schizophrenia(int(member), i, bd, True)
             if int(stats[8]) > 0:
                 s, bd = trance(int(member), s, bd, True)
+
+            if cl == 10 or cl == 20 or cl == 30:
+                s = int(s * 1.5)
 
             w = int(stats[3])
             if w > 0:
