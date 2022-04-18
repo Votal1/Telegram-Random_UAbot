@@ -512,13 +512,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if c1 in (20, 30):
             if c2 not in (6, 16, 26):
-                if int(r.hget(c1, 'wins')) > int(r.hget(c2, 'wins')):
+                if int(r.hget(uid1, 'wins')) > int(r.hget(uid2, 'wins')):
                     bd2 = int(bd2 * 0.6)
                 else:
                     bd2 = int(bd2 * 0.8)
         if c2 in (20, 30):
             if c1 not in (6, 16, 26):
-                if int(r.hget(c2, 'wins')) > int(r.hget(c1, 'wins')):
+                if int(r.hget(uid2, 'wins')) > int(r.hget(uid1, 'wins')):
                     bd1 = int(bd1 * 0.6)
                 else:
                     bd1 = int(bd1 * 0.8)
