@@ -1030,29 +1030,25 @@ async def achievements(message):
 async def inventory(message):
     try:
         inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 's_weapon', 's_defense', 's_support')
-        if int(inv[0]) != 0 or int(inv[1]) != 0 or int(inv[2]) != 0:
-            rep = invent()
-        else:
-            rep = None
-        if int(inv[0]) == 16:
+        w, d, s = int(inv[0]), int(inv[1]), int(inv[2])
+        if w == 16:
             m1 = '\nМіцність: ∞'
-        elif int(inv[0]) == 0:
+        elif w == 0:
             m1 = '[Порожньо]'
         else:
             m1 = '\nМіцність: ' + inv[3].decode()
 
-        if int(inv[1]) == 0:
+        if d == 0:
             m2 = '[Порожньо]'
         else:
             m2 = '\nМіцність: ' + inv[4].decode()
 
-        if int(inv[2]) == 0:
+        if s == 0:
             m3 = '[Порожньо]'
         else:
             m3 = '\nМіцність: ' + inv[5].decode()
-        await message.reply('\U0001F5E1 Зброя: ' + weapons[int(inv[0])] + m1 +
-                            '\n\U0001F6E1 Захист: ' + defenses[int(inv[1])] + m2 + '\n\U0001F9EA Допомога: ' +
-                            supports[int(inv[2])] + m3, reply_markup=rep)
+        await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
+                            f'Допомога: {supports[s]}{m3}', reply_markup=invent(w, d, s))
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -1494,7 +1490,8 @@ async def join(message):
         r.hset(message.from_user.id, 'clan_ts', 0)
     try:
         if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5:
-            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > 604800:
+            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > 604800 or \
+                    message.from_user.id in sudoers:
                 if int(r.hget(c, 'complex')) >= 1:
                     num = 50
                 if int(r.hget(c, 'allow')) == 0 and r.scard('cl' + str(message.chat.id)) < num:
