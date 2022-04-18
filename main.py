@@ -639,7 +639,7 @@ async def classes_2(message):
           'Нарколог \u26D1\u26D1 - якщо у ворога від 50 здоров`я - з шансом 20% додає на 1 ' \
           'поранення більше за кожен мухомор і зменшує здоров`я на рівень алкоголізму ворога.\n\n' \
           'Зек \U0001F6AC\U0001F6AC - подвоює бонус сили від утепленої будки. Зменшує бойовий дух ворога на 20%, ' \
-          'а якщо в нього менше перемог - на 40%. Ця здібність не діє проти мусорів\n\n\n' \
+          'а якщо в нього менше перемог - на 40%. Ця здібність не діє проти мусорів.\n\n\n' \
           'Щоб подивитись третій рівень класів натисни /class_3\n' \
           'Якщо твій русак вже набрав 12 інтелекту і вибрав клас, можеш ' \
           'покращити клас, написавши сюди "Покращити русака".'
@@ -3618,6 +3618,11 @@ async def echo(message):
                         r.hset(message.from_user.id, 'class', 19)
                         r.srem('class-9', message.from_user.id)
                         r.sadd('class-19', message.from_user.id)
+                    if cl == 10:
+                        await message.reply('Ти покращив гопніка до Зека.')
+                        r.hset(message.from_user.id, 'class', 20)
+                        r.srem('class-10', message.from_user.id)
+                        r.sadd('class-20', message.from_user.id)
             if int(r.hget(message.from_user.id, 'intellect')) >= 20:
                 if message.text == 'Вдосконалити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))
