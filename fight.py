@@ -1201,7 +1201,7 @@ async def start_raid(cid):
         if win == ['a']:
             if locations.index(location) == 0:
                 reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
-            elif locations.index(location) == 2:
+            elif locations.index(location) == 1:
                 reward += 'Русаки пограбували магазин алкоголю\n'
                 ran = randint(5, 20)
                 reward += '\u2622 +' + str(ran) + ' \U0001fac0 +100 \U0001F54A +10000'
