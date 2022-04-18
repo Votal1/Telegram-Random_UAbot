@@ -1103,6 +1103,7 @@ async def start_raid(cid):
     await sleep(1)
 
     chance1 = 0
+    mar = 0
     for member in r.smembers('fighters_3' + str(cid)):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -1126,8 +1127,10 @@ async def start_raid(cid):
             if int(stats[8]) > 0:
                 s, bd = trance(int(member), s, bd, True)
 
-            if cl == 10 or cl == 20 or cl == 30:
+            if cl in (10, 20, 30):
                 s = int(s * 1.5)
+                if cl == 30:
+                    mar += 1
 
             w = int(stats[3])
             if w > 0:
@@ -1174,6 +1177,8 @@ async def start_raid(cid):
             res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
             mode = choices([1, 2, 3], [70, 20, 10])
             base = int(r.hget(c2, 'base'))
+            if mode == [2] and int(res[4]) < 50:
+                mode = [1]
             if mode == [1]:
                 reward += 'Русаки потрапили на склад і винесли ресурси!\n'
                 if int(res[0]) >= 15:
@@ -1212,6 +1217,11 @@ async def start_raid(cid):
                     r.hincrby(c2, 'r_spirit', -ran)
         elif win == ['b']:
             reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            if mar >= 1 and chance2 > 0:
+                lose = int(chance2 * (1 - 0.05 * mar))
+                reward += f'\nОхорона втратила \U0001F4AA {chance2 - lose}'
+                r.hset(c2, 'power', lose)
+
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
         await sleep(10)
@@ -1240,6 +1250,8 @@ async def start_raid(cid):
             elif locations.index(location) == 1:
                 reward += 'Русаки пограбували магазин алкоголю\n'
                 ran = randint(5, 20)
+                if mar >= 1:
+                    ran *= 2
                 reward += '\u2622 +' + str(ran) + ' \U0001fac0 +100 \U0001F54A +10000'
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hincrby(mem, 'vodka', ran)
@@ -1250,16 +1262,21 @@ async def start_raid(cid):
                 mode = choices([1, 2, 3], [70, 20, 10])
                 if mode == [1]:
                     ran = randint(100, 200)
+                    if mar >= 1:
+                        ran *= 2
                     reward += '\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
                 if mode == [2]:
-                    reward += '\U0001F9EA Цукор [Допомога, міцність=1]'
+                    s = 1
+                    if mar >= 1:
+                        s = 2
+                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:
-                            r.hincrby(mem, 's_support', 1)
+                            r.hincrby(mem, 's_support', s)
                         elif int(r.hget(mem, 'support')) == 0:
                             r.hset(mem, 'support', 7)
-                            r.hset(mem, 's_support', 1)
+                            r.hset(mem, 's_support', s)
                 if mode == [3]:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -1270,16 +1287,21 @@ async def start_raid(cid):
                 mode = choices([1, 2, 3], [70, 10, 20])
                 if mode == [1]:
                     ran = randint(150, 300)
+                    if mar >= 1:
+                        ran *= 2
                     reward += '\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
                 if mode == [2]:
-                    reward += '\U0001F9EA Цукор [Допомога, міцність=1]'
+                    s = 1
+                    if mar >= 1:
+                        s = 2
+                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:
-                            r.hincrby(mem, 's_support', 1)
+                            r.hincrby(mem, 's_support', s)
                         elif int(r.hget(mem, 'support')) == 0:
                             r.hset(mem, 'support', 7)
-                            r.hset(mem, 's_support', 1)
+                            r.hset(mem, 's_support', s)
                 if mode == [3]:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -1290,18 +1312,26 @@ async def start_raid(cid):
                 base = int(r.hget(c, 'base'))
                 if base >= 1:
                     ran = randint(25, 75)
+                    if mar >= 1:
+                        ran *= 2
                     reward += '\U0001F333 +' + str(ran)
                     r.hincrby(c, 'wood', ran)
                 if base >= 2:
                     ran = randint(10, 50)
+                    if mar >= 1:
+                        ran *= 2
                     reward += ' \U0001faa8 +' + str(ran)
                     r.hincrby(c, 'stone', ran)
                 if base >= 3:
                     ran = randint(10, 25)
+                    if mar >= 1:
+                        ran *= 2
                     reward += ' \U0001F9F6 +' + str(ran)
                     r.hincrby(c, 'cloth', ran)
                 if base >= 4:
                     ran = randint(5, 15)
+                    if mar >= 1:
+                        ran *= 2
                     reward += ' \U0001F9F1 +' + str(ran)
                     r.hincrby(c, 'brick', ran)
         elif win == ['b']:
