@@ -1140,7 +1140,7 @@ async def skills(message):
     except:
         pass
 
-
+'''
 @dp.message_handler(commands=['swap'])
 async def swap(message):
     try:
@@ -1148,22 +1148,22 @@ async def swap(message):
             if r.hexists(message.from_user.id, 'name') == 1:
                 a = r.hmget(message.from_user.id, 'name', 'strength', 'intellect', 'spirit',
                             'weapon', 's_weapon', 'defense', 's_defense', 'mushrooms', 'class', 'photo', 'injure', 'hp',
-                            'support', 's_support', 'sch', 'buff')
+                            'support', 's_support', 'sch', 'buff', 'head', 's_head')
                 b = r.hmget(message.from_user.id, 'name2', 'strength2', 'intellect2', 'spirit2', 'weapon2', 's_weapon2',
                             'defense2', 's_defense2', 'mushrooms2', 'class2', 'photo2', 'injure2', 'hp2',
-                            'support2', 's_support2', 'sch2', 'buff2')
+                            'support2', 's_support2', 'sch2', 'buff2', 'head2', 's_head2')
                 r.hset(message.from_user.id, 'name2', a[0], {'strength2': a[1], 'intellect2': a[2], 'spirit2': a[3],
                                                              'weapon2': a[4], 's_weapon2': a[5], 'defense2': a[6],
                                                              's_defense2': a[7], 'mushrooms2': a[8], 'class2': a[9],
                                                              'photo2': a[10], 'injure2': a[11], 'hp2': a[12],
                                                              'support2': a[13], 's_support2': a[14], 'sch2': a[15],
-                                                             'buff2': a[16]})
+                                                             'buff2': a[16], 'head2': a[17], 's_head2': a[18]})
                 r.hset(message.from_user.id, 'name', b[0], {'strength': b[1], 'intellect': b[2], 'spirit': b[3],
                                                             'weapon': b[4], 's_weapon': b[5], 'defense': b[6],
                                                             's_defense': b[7], 'mushrooms': b[8], 'class': b[9],
                                                             'photo': b[10], 'injure': b[11], 'hp': b[12],
                                                             'support': b[13], 's_support': b[14], 'sch': b[15],
-                                                            'buff': b[16]})
+                                                            'buff': b[16], 'head': b[17], 's_head': b[18]})
                 if r.hexists(message.from_user.id, 'time22') == 1:
                     a1 = r.hget(message.from_user.id, 'time')
                     b1 = r.hget(message.from_user.id, 'time22')
@@ -1178,7 +1178,7 @@ async def swap(message):
                 await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
     except:
         pass
-
+'''
 
 @dp.message_handler(commands=['clan'])
 async def clan(message):
