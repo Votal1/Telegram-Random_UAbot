@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextM
 from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
-from variables import names, icons, class_name, weapons, defenses, supports, sudoers, \
+from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
@@ -1029,26 +1029,34 @@ async def achievements(message):
 @dp.message_handler(commands=['i'])
 async def inventory(message):
     try:
-        inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 's_weapon', 's_defense', 's_support')
-        w, d, s = int(inv[0]), int(inv[1]), int(inv[2])
+        inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 'head',
+                      's_weapon', 's_defense', 's_support', 's_head')
+        w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
         if w == 16:
             m1 = '\nМіцність: ∞'
         elif w == 0:
             m1 = '[Порожньо]'
         else:
-            m1 = '\nМіцність: ' + inv[3].decode()
+            m1 = '\nМіцність: ' + inv[4].decode()
 
         if d == 0:
             m2 = '[Порожньо]'
         else:
-            m2 = '\nМіцність: ' + inv[4].decode()
+            m2 = '\nМіцність: ' + inv[5].decode()
 
         if s == 0:
             m3 = '[Порожньо]'
         else:
-            m3 = '\nМіцність: ' + inv[5].decode()
+            m3 = '\nМіцність: ' + inv[6].decode()
+
+        if h == 0:
+            m4 = '[Порожньо]'
+        else:
+            m4 = '\nМіцність: ' + inv[6].decode()
+
         await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
-                            f'Допомога: {supports[s]}{m3}', reply_markup=invent(w, d, s))
+                            f'Допомога: {supports[s]}{m3}\n\U0001F3A9Шапка: {heads[h]}{m4}',
+                            reply_markup=invent(w, d, s))
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -2862,12 +2870,12 @@ async def handle_query(call):
     elif call.data.startswith('foil'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            if int(r.hget(call.from_user.id, 'support')) == 0:
+            if int(r.hget(call.from_user.id, 'head')) == 0:
                 if int(r.hget(call.from_user.id, 'money')) >= 30:
                     r.hincrby(call.from_user.id, 'money', -30)
                     r.hincrby(call.from_user.id, 'sch', 30)
-                    r.hset(call.from_user.id, 'support', 2)
-                    r.hset(call.from_user.id, 's_support', 10)
+                    r.hset(call.from_user.id, 'head', 2)
+                    r.hset(call.from_user.id, 's_head', 10)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили шапочку з фольги')
                 else:
@@ -2875,7 +2883,7 @@ async def handle_query(call):
                                                     text='Недостатньо коштів на рахунку')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='У вас вже є допоміжне спорядження')
+                                                text='У вас вже є шапка')
         else:
             await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
                                         call.message.message_id)
@@ -3354,13 +3362,13 @@ async def handle_query(call):
                 await bot.edit_message_text('\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити '
                                             'непоганий шолом для русака.\n\U0001F464 +30',
                                             call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'support')) == 2:
+                if int(r.hget(uid, 'head')) == 2:
                     r.hincrby(uid, 'sch', 30)
-                    r.hincrby(uid, 's_support', 20)
-                elif int(r.hget(uid, 'support')) != 6:
+                    r.hincrby(uid, 's_head', 20)
+                else:
                     r.hset(uid, 'sch', 30)
-                    r.hset(uid, 'support', 2)
-                    r.hset(uid, 's_support', 20)
+                    r.hset(uid, 'head', 2)
+                    r.hset(uid, 's_head', 20)
             elif ran == [11]:
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 await bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої'
