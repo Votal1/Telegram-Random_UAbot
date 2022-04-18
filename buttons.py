@@ -73,11 +73,21 @@ def battle_button_4():
 
 def invent(w, d, s):
     markup = InlineKeyboardMarkup()
-    if w > 0:
+    if w > 0 and d > 0 and s > 0:
+        markup.add(InlineKeyboardButton(text='Викинути зброю', callback_data='drop_w'),
+                   InlineKeyboardButton(text='Викинути захист', callback_data='drop_d'))
+        markup.add(InlineKeyboardButton(text='Викинути допомогу', callback_data='drop_s'))
+    elif w > 0 and s > 0:
+        markup.add(InlineKeyboardButton(text='Викинути зброю', callback_data='drop_w'),
+                   InlineKeyboardButton(text='Викинути допомогу', callback_data='drop_s'))
+    elif d > 0 and s > 0:
+        markup.add(InlineKeyboardButton(text='Викинути захист', callback_data='drop_d'),
+                   InlineKeyboardButton(text='Викинути допомогу', callback_data='drop_s'))
+    elif w > 0:
         markup.add(InlineKeyboardButton(text='Викинути зброю', callback_data='drop_w'))
-    if d > 0:
+    elif d > 0:
         markup.add(InlineKeyboardButton(text='Викинути захист', callback_data='drop_d'))
-    if s > 0:
+    elif s > 0:
         markup.add(InlineKeyboardButton(text='Викинути допомогу', callback_data='drop_s'))
     return markup
 
