@@ -1058,7 +1058,7 @@ async def inventory(message):
                             f'Допомога: {supports[s]}{m3}\n\U0001F3A9Шапка: {heads[h]}{m4}',
                             reply_markup=invent(w, d, s))
     except Exception as e:
-        print(e)
+        sentry_sdk.capture_exception(e)
         # await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
 
