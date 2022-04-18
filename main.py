@@ -1057,8 +1057,9 @@ async def inventory(message):
         await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
                             f'Допомога: {supports[s]}{m3}\n\U0001F3A9Шапка: {heads[h]}{m4}',
                             reply_markup=invent(w, d, s))
-    except:
-        await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+    except Exception as e:
+        print(e)
+        # await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
 
 @dp.message_handler(commands=['pack'])
