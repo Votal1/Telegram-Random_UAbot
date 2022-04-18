@@ -95,3 +95,9 @@ def damage_support(uid):
     r.hincrby(uid, 's_support', -1)
     if int(r.hget(uid, 's_support')) <= 0:
         r.hset(uid, 'support', 0)
+
+
+def damage_head(uid):
+    r.hincrby(uid, 's_head', -1)
+    if int(r.hget(uid, 's_head')) <= 0:
+        r.hset(uid, 'head', 0)

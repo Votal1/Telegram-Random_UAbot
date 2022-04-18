@@ -9,7 +9,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, sud
     p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
-from parameters import spirit, vodka, intellect, hp, damage_support, increase_trance
+from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
 from fight import fight, war, great_war, start_raid, guard_power
@@ -1140,7 +1140,7 @@ async def skills(message):
     except:
         pass
 
-'''
+
 @dp.message_handler(commands=['swap'])
 async def swap(message):
     try:
@@ -1178,7 +1178,7 @@ async def swap(message):
                 await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
     except:
         pass
-'''
+
 
 @dp.message_handler(commands=['clan'])
 async def clan(message):
@@ -2466,9 +2466,9 @@ async def handle_query(call):
                             intellect(-mush, mem)
                         else:
                             r.hset(mem, 'spirit', i)
-                    if int(r.hget(mem, 'support')) == 2:
+                    if int(r.hget(mem, 'head')) == 1:
                         r.hset(mem, 'spirit', i1)
-                        damage_support(mem)
+                        damage_head(mem)
                 except:
                     pass
         except:
