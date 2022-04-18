@@ -277,14 +277,16 @@ async def feed(message):
             if success == 1:
                 try:
                     if int(r.hget(message.from_user.id, 'cabin')) == 1 and int(stats[0]) <= 2000:
-                        r.hincrby(message.from_user.id, 'strength', fr[1] + 15)
                         ran = fr[1] + 15
+                        if cl == 20 or cl == 30:
+                            ran += 15
+                        r.hincrby(message.from_user.id, 'strength', ran)
                     else:
-                        r.hincrby(message.from_user.id, 'strength', fr[1])
                         ran = fr[1]
+                        r.hincrby(message.from_user.id, 'strength', ran)
                 except:
-                    r.hincrby(message.from_user.id, 'strength', fr[1])
                     ran = fr[1]
+                    r.hincrby(message.from_user.id, 'strength', ran)
                 bd = fr[3]
                 if int(r.hget(message.from_user.id, 'support')) == 5:
                     bd = 2
@@ -635,7 +637,9 @@ async def classes_2(message):
           'Кіберзлочинець \U0001F4DF\U0001F4DF - отримує доступ до баз даних - якщо напився на ' \
           'роботі, то може працювати ще раз; можливість купляти мухомори без обмежень.\n\n' \
           'Нарколог \u26D1\u26D1 - якщо у ворога від 50 здоров`я - з шансом 20% додає на 1 ' \
-          'поранення більше за кожен мухомор і зменшує здоров`я на рівень алкоголізму ворога.\n\n\n' \
+          'поранення більше за кожен мухомор і зменшує здоров`я на рівень алкоголізму ворога.\n\n' \
+          'Зек \U0001F6AC\U0001F6AC - подвоює бонус сили від утепленої будки. Зменшує бойовий дух ворога на 20%, ' \
+          'а якщо в нього менше перемог - на 40%. Ця здібність не діє проти мусорів\n\n\n' \
           'Щоб подивитись третій рівень класів натисни /class_3\n' \
           'Якщо твій русак вже набрав 12 інтелекту і вибрав клас, можеш ' \
           'покращити клас, написавши сюди "Покращити русака".'

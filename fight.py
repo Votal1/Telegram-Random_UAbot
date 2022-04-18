@@ -510,6 +510,19 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         hp(-int(nar[1]), uid1)
                         m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
 
+        if c1 in (20, 30):
+            if c2 not in (6, 16, 26):
+                if int(r.hget(c1, 'wins')) > int(r.hget(c2, 'wins')):
+                    bd2 = int(bd2 * 0.6)
+                else:
+                    bd2 = int(bd2 * 0.8)
+        if c2 in (20, 30):
+            if c1 not in (6, 16, 26):
+                if int(r.hget(c2, 'wins')) > int(r.hget(c1, 'wins')):
+                    bd1 = int(bd1 * 0.6)
+                else:
+                    bd1 = int(bd1 * 0.8)
+
         mal1, mal2 = False, False
         if c1 == 7 or c1 == 17 or c1 == 27:
             mal1 = True
