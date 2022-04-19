@@ -719,8 +719,8 @@ async def merchant(message):
                                       '\U0001F921 Прапор новоросії [Атака, міцність=8, ціна=5] - додаткова перемога '
                                       'за перемогу в дуелі.\n\U0001F4DF Експлойт [Атака, міцність=2, '
                                       'ціна=9] - шанс активувати здібність хакера - 99%.\n'
-                                      '\u26D1 Медична пилка [Атака, міцність=5, ціна=10] - якщо у ворога нема '
-                                      'поранень - завдає 1, якщо є - лікує 10 і забирає 10 здоров`я.\n'
+                                      '\u26D1 Медична пилка [Атака, міцність=8, ціна=10] - якщо у ворога нема '
+                                      'поранень - завдає 1, якщо більше 4 - лікує 10 і забирає 10 здоров`я.\n'
                                       '\U0001F6AC Скляна пляшка [Атака, міцність=10, ціна=5] - зменшує інтелект '
                                       'ворогу на 10.',
                                       reply_markup=merchant_goods())
@@ -1055,7 +1055,7 @@ async def inventory(message):
             m4 = '\nМіцність: ' + inv[7].decode()
 
         await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
-                            f'Допомога: {supports[s]}{m3}\n\U0001F3A9Шапка: {heads[h]}{m4}',
+                            f'Допомога: {supports[s]}{m3}\n\U0001F3A9 Шапка: {heads[h]}{m4}',
                             reply_markup=invent(w, d, s))
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
@@ -3018,7 +3018,7 @@ async def handle_query(call):
                     if int(r.hget(call.from_user.id, 'money')) >= 10:
                         r.hincrby(call.from_user.id, 'money', -10)
                         r.hset(call.from_user.id, 'weapon', 19)
-                        r.hset(call.from_user.id, 's_weapon', 5)
+                        r.hset(call.from_user.id, 's_weapon', 8)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили медичну пилку')
                     else:
@@ -3292,10 +3292,10 @@ async def handle_query(call):
                         r.hset(uid, 's_weapon', 2)
                 elif cl == 9 or cl == 19 or cl == 29:
                     if int(r.hget(uid, 'weapon')) == 19:
-                        r.hincrby(uid, 's_weapon', 5)
+                        r.hincrby(uid, 's_weapon', 8)
                     elif int(r.hget(uid, 'weapon')) != 2:
                         r.hset(uid, 'weapon', 19)
-                        r.hset(uid, 's_weapon', 5)
+                        r.hset(uid, 's_weapon', 8)
                 elif cl == 10 or cl == 20 or cl == 30:
                     if int(r.hget(uid, 'weapon')) == 20:
                         r.hincrby(uid, 's_weapon', 10)

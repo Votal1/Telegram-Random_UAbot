@@ -266,7 +266,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if int(r.hget(uid1, 'injure')) == 0:
                 r.hincrby(uid1, 'injure', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
-            else:
+            elif int(r.hget(uid1, 'injure')) > 4:
                 r.hincrby(uid1, 'injure', -10)
                 if int(r.hget(uid1, 'injure')) < 0:
                     r.hset(uid1, 'injure', 0)
@@ -497,7 +497,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         money += 2
                         m2 += '\n\U0001F4B5 +' + str(money)
                         r.hincrby(uid2, 'money', money)
-            else:
+            elif weapon2 != 19:
                 ran = choices([0, 1], weights=[80, 20])
                 if ran == [1]:
                     m2 = '\n\u26D1 ' + names[name2] + ' побачив що ' + names[name1] + ' занадто здоровий і виправив це.'
