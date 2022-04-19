@@ -481,7 +481,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         hp(-int(nar[1]), uid2)
                         m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
-            if hp1 < 50:
+            if hp1 < 50 and weapon2 != 19:
                 hp(5, uid1)
                 m2 = '\n\u26D1 ' + names[name2] + ' підлатав ворога.'
                 if c2 == 29:
