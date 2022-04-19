@@ -160,25 +160,26 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             hp(10, uid2)
             damage_support(uid2)
 
-        stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp')
-        stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp')
+        stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp', 'injure')
+        stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp', 'injure')
         s1, s2 = int(stats11[0]), int(stats22[0])
         s11 = s1
         s22 = s2
         i1, i2 = int(stats11[1]), int(stats22[1])
         bd1, bd2 = int(stats11[2]), int(stats22[2])
         hp1, hp2 = int(stats11[3]), int(stats22[3])
+        in1, in2 = int(stats11[4]), int(stats22[4])
 
         if hp1 >= 90:
             s1 = int(s1 * 1.1)
         if hp2 >= 90:
             s2 = int(s2 * 1.1)
 
-        if int(r.hget(uid1, 'injure')) > 0:
+        if in1 > 0:
             s1, bd1 = injure(uid1, s1, bd1, True)
             s11 = s1
             inj1 = '\U0001fa78 '
-        if int(r.hget(uid2, 'injure')) > 0:
+        if in2 > 0:
             s2, bd2 = injure(uid2, s2, bd2, True)
             s22 = s2
             inj2 = '\U0001fa78 '
@@ -481,34 +482,40 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         hp(-int(nar[1]), uid2)
                         m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
-            if hp1 < 50 and weapon2 != 19:
-                hp(5, uid1)
-                m2 = '\n\u26D1 ' + names[name2] + ' підлатав ворога.'
-                if c2 == 29:
-                    money = 0
-                    if int(r.hget(uid1, 'injure')) > 0:
-                        money += 1
-                        r.hincrby(uid1, 'injure', -1)
-                    if int(r.hget(uid1, 'sch')) > 0:
-                        money += 1
-                        r.hincrby(uid1, 'sch', -1)
-                    ran = choices([0, 1], weights=[75, 25])
+            if hp1 < 50:
+                if weapon2 == 19 and in1 < 4:
+                    pass
+                else:
+                    hp(5, uid1)
+                    m2 = '\n\u26D1 ' + names[name2] + ' підлатав ворога.'
+                    if c2 == 29:
+                        money = 0
+                        if int(r.hget(uid1, 'injure')) > 0:
+                            money += 1
+                            r.hincrby(uid1, 'injure', -1)
+                        if int(r.hget(uid1, 'sch')) > 0:
+                            money += 1
+                            r.hincrby(uid1, 'sch', -1)
+                        ran = choices([0, 1], weights=[75, 25])
+                        if ran == [1]:
+                            money += 2
+                            m2 += '\n\U0001F4B5 +' + str(money)
+                            r.hincrby(uid2, 'money', money)
+            else:
+                if weapon2 == 19 and in1 > 4:
+                    pass
+                else:
+                    ran = choices([0, 1], weights=[80, 20])
                     if ran == [1]:
-                        money += 2
-                        m2 += '\n\U0001F4B5 +' + str(money)
-                        r.hincrby(uid2, 'money', money)
-            elif weapon2 != 19:
-                ran = choices([0, 1], weights=[80, 20])
-                if ran == [1]:
-                    m2 = '\n\u26D1 ' + names[name2] + ' побачив що ' + names[name1] + ' занадто здоровий і виправив це.'
-                    if c2 == 9:
-                        r.hincrby(uid1, 'injure', 2)
-                        m2 += '\n\U0001fa78 +2'
-                    else:
-                        nar = r.hmget(uid1, 'mushrooms', 's1')
-                        r.hincrby(uid1, 'injure', 2 + int(nar[0]))
-                        hp(-int(nar[1]), uid1)
-                        m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
+                        m2 = f'\n\u26D1 {names[name2]} побачив що {names[name1]} занадто здоровий і виправив це.'
+                        if c2 == 9:
+                            r.hincrby(uid1, 'injure', 2)
+                            m2 += '\n\U0001fa78 +2'
+                        else:
+                            nar = r.hmget(uid1, 'mushrooms', 's1')
+                            r.hincrby(uid1, 'injure', 2 + int(nar[0]))
+                            hp(-int(nar[1]), uid1)
+                            m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
 
         if c1 in (20, 30):
             if c2 not in (6, 16, 26):
