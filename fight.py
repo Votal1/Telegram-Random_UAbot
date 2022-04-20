@@ -1234,7 +1234,7 @@ async def start_raid(cid):
                 mode = [1]
             if mode == [1]:
                 reward += 'Русаки потрапили на склад і винесли ресурси!\n'
-                if int(res[0]) >= 15:
+                if int(res[0]) >= 75:
                     ran = randint(25, 75)
                     reward += '\U0001F333 +' + str(ran)
                     r.hincrby(c, 'wood', ran)
