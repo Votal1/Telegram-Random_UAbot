@@ -785,7 +785,7 @@ async def war(cid, location, big_battle):
     for member in everyone:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'buff',
-                            'support')
+                            'support', 'head')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -797,20 +797,29 @@ async def war(cid, location, big_battle):
                 s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
             if w > 0:
-                w = 1/3
+                w = 0.25
             else:
                 w = 0
             d = int(stats[4])
             if d > 0:
-                d = 1/3
+                d = 0.25
             else:
                 d = 0
             support = int(stats[8])
             if support > 0:
-                support = 1/3
+                if support == 2:
+                    support = 0.5
+                    damage_support(member)
+                else:
+                    support = 0.25
             else:
                 support = 0
-            chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
+            head = int(stats[9])
+            if head > 0:
+                head = 0.25
+            else:
+                head = 0
+            chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
             fighters.update({member: chance})
         except:
             continue
@@ -861,6 +870,10 @@ async def war(cid, location, big_battle):
         r.hincrby(win, 'wins', 1)
         r.hincrby(win, 'money', 10)
     class_reward = ''
+
+    if wc in (31, 32, 33) and location != 'Висадка в Чорнобаївці':
+        class_reward = '\U0001F695: \U0001F4E6 +1'
+        r.hincrby(win, 'packs', 1)
 
     if location == 'Битва на овечій фермі':
         if wc == 1 or wc == 11 or wc == 21:
@@ -919,11 +932,15 @@ async def war(cid, location, big_battle):
             r.hincrby(win, 'sch', 10)
     elif location == 'Битва в темному провулку':
         if wc == 10 or wc == 20 or wc == 30:
-            class_reward = '\U0001F3C5 +1 \U0001F44A +1 \u2622 +1 \U0001F4B5 +8'
+            class_reward = '\U0001F6AC: \U0001F3C5 +1 \U0001F44A +1 \u2622 +1 \U0001F4B5 +8'
             r.hincrby(win, 'trophy', 1)
             increase_trance(1, win)
             r.hincrby(win, 'money', 8)
             r.hincrby(win, 'vodka', 1)
+    elif location == 'Битва біля розбитої колони':
+        if wc in (31, 32, 33):
+            class_reward = '\U0001F695: \U0001F4E6 +2'
+            r.hincrby(win, 'packs', 1)
 
     await sleep(10)
     r.hdel('battle' + str(cid), 'start')
@@ -941,7 +958,7 @@ async def war_power(sett, cid):
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'clan', 'buff', 'support')
+                            'clan', 'buff', 'support', 'head')
             if checkClan(member):
                 if int(stats[8]) == cid:
                     clan5 += 1
@@ -965,24 +982,33 @@ async def war_power(sett, cid):
 
             w = int(stats[3])
             if w > 0:
-                w = 1/3
+                w = 0.25
             else:
                 w = 0
             d = int(stats[4])
             if d > 0:
-                d = 1/3
+                d = 0.25
             else:
                 d = 0
             support = int(stats[10])
             if support > 0:
-                support = 1/3
+                if support == 2:
+                    support = 0.5
+                    damage_support(member)
+                else:
+                    support = 0.25
             else:
                 support = 0
+            head = int(stats[11])
+            if head > 0:
+                head = 0.25
+            else:
+                head = 0
             if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
                 m = 1
             if int(stats[7]) == 24:
                 pag = 1
-            chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
+            chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
         except:
             continue
     if m == 1:
@@ -1062,7 +1088,7 @@ async def great_war(cid1, cid2, a, b):
 
 async def guard_power(mid):
     stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                    'buff', 'support')
+                    'buff', 'support', 'head')
     s = int(stats[0])
     i = int(stats[1])
     bd = int(stats[2])
@@ -1087,20 +1113,25 @@ async def guard_power(mid):
 
     w = int(stats[3])
     if w > 0:
-        w = 1 / 3
+        w = 0.25
     else:
         w = 0
     d = int(stats[4])
     if d > 0:
-        d = 1 / 3
+        d = 0.25
     else:
         d = 0
     support = int(stats[9])
     if support > 0:
-        support = 1 / 3
+        support = 0.25
     else:
         support = 0
-    return int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support))
+    head = int(stats[10])
+    if head > 0:
+        head = 0.25
+    else:
+        head = 0
+    return int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head))
 
 
 async def start_raid(cid):
@@ -1116,7 +1147,7 @@ async def start_raid(cid):
     for member in r.smembers('fighters_3' + str(cid)):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'buff', 'support')
+                            'buff', 'support', 'head')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
@@ -1147,20 +1178,29 @@ async def start_raid(cid):
 
             w = int(stats[3])
             if w > 0:
-                w = 1 / 3
+                w = 0.25
             else:
                 w = 0
             d = int(stats[4])
             if d > 0:
-                d = 1 / 3
+                d = 0.25
             else:
                 d = 0
             support = int(stats[9])
             if support > 0:
-                support = 1 / 3
+                if support == 2:
+                    support = 0.5
+                    damage_support(member)
+                else:
+                    support = 0.25
             else:
                 support = 0
-            chance1 += int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support))
+            head = int(stats[10])
+            if head > 0:
+                head = 0.25
+            else:
+                head = 0
+            chance1 += int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head))
         except:
             continue
     mode = choices([1, 2, 3], [raid1, raid2, raid3])
@@ -1176,7 +1216,7 @@ async def start_raid(cid):
             for m in r.smembers('guard' + enemy.decode()):
                 r.srem('guard' + enemy.decode(), m)
         chance2 = int(r.hget(c2, 'power'))
-        msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance2} | {chance2}'
+        msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
             await bot.send_message(cid, msg0)
             await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0)
