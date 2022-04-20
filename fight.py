@@ -1105,12 +1105,14 @@ async def guard_power(mid):
 
 async def start_raid(cid):
     c = 'c' + str(cid)
+    title = r.hget(c, 'title').decode()
     await sleep(3)
     await bot.send_message(cid, 'Ціль знайдено')
     await sleep(1)
 
     chance1 = 0
     mar = 0
+    raid1, raid2, raid3 = 50, 50, 0
     for member in r.smembers('fighters_3' + str(cid)):
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -1138,6 +1140,10 @@ async def start_raid(cid):
                 s = int(s * 1.5)
                 if cl == 30:
                     mar += 1
+            if cl == 33:
+                raid1 -= 10
+                raid2 -= 10
+                raid3 += 20
 
             w = int(stats[3])
             if w > 0:
@@ -1154,24 +1160,23 @@ async def start_raid(cid):
                 support = 1 / 3
             else:
                 support = 0
-            chance1 += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support)
+            chance1 += int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support))
         except:
             continue
-    mode = choices([1, 2], [50, 50])
+    mode = choices([1, 2, 3], [raid1, raid2, raid3])
     if mode == [1]:
         enemy = r.srandmember('groupings')
         while int(enemy) == cid:
             enemy = r.srandmember('groupings')
         c2 = 'c' + enemy.decode()
+        title2 = r.hget(c2, 'title').decode()
         if int(r.hget(c2, 'day')) != datetime.now().day:
             r.hset(c2, 'day', datetime.now().day)
             r.hset(c2, 'power', 0)
             for m in r.smembers('guard' + enemy.decode()):
                 r.srem('guard' + enemy.decode(), m)
         chance2 = int(r.hget(c2, 'power'))
-
-        msg0 = r.hget(c, 'title').decode() + ' | ' + r.hget(c2, 'title').decode() + \
-                                             '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(int(chance2))
+        msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance2} | {chance2}'
         try:
             await bot.send_message(cid, msg0)
             await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0)
@@ -1241,9 +1246,8 @@ async def start_raid(cid):
         locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр']
         chances = ['0', '0.1', '0.2', '0.3', '0.5']
         location = choice(locations)
-        chance2 = int(int(chance1) * float(chances[locations.index(location)]))
-        msg0 = r.hget(c, 'title').decode() + ' | ' + location + \
-                                             '\n\n\U0001F4AA ' + str(int(chance1)) + ' | ' + str(chance2)
+        chance2 = int(chance1 * float(chances[locations.index(location)]))
+        msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
             await bot.send_message(cid, msg0)
         except:
@@ -1347,6 +1351,37 @@ async def start_raid(cid):
                 hp(-100, member)
         await sleep(10)
         msg = 'Проведено рейд на ' + location + '!' + reward
+        await bot.send_message(cid, msg)
+    elif mode == [3]:
+        if int(r.hget('convoy', 'day')) != datetime.now().day:
+            r.hset('convoy', 'power', 1000000)
+            r.hset('convoy', 'day', datetime.now().day)
+        chance2 = int(r.hget('convoy', 'power'))
+        msg0 = f'{title} | Перехоплення гумконвою\n\n\U0001F4AA {chance1} | {chance2}'
+        try:
+            await bot.send_message(cid, msg0)
+        except:
+            pass
+
+        msg = 'Русаки приїхали грабувати гумконвой...\n\n'
+        diff = chance2 - chance1
+        if diff < 0:
+            diff = 0
+        if diff == 0:
+            r.hset('convoy', 'power', 0)
+            msg += 'Від гумконвою більше нічого не залишилось!\n'
+        else:
+            r.hincrby('convoy', 'power', -chance1)
+        reward = int(chance2 / 100000 - (diff / 100000))
+        if reward > 0:
+            packs = reward * 10
+            msg += f'\U0001F4E6 +{packs}'
+            for mem in r.smembers('fighters_3' + str(cid)):
+                r.hincrby(mem, 'packs', packs)
+        elif reward <= 0 and diff != 0:
+            msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'
+
+        await sleep(10)
         await bot.send_message(cid, msg)
 
     try:
