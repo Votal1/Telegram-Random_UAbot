@@ -1256,7 +1256,7 @@ async def start_raid(cid):
                     r.hincrby(c2, 'brick', -ran)
             elif mode == [2]:
                 reward += 'Русаки пограбували місцеву крамницю!\n'
-                if int(res[4]) >= 50:
+                if int(res[4]) >= 200:
                     ran = randint(50, 200)
                     reward += '\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
