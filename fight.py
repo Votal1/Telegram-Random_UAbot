@@ -1412,12 +1412,12 @@ async def start_raid(cid):
         if diff == 0:
             r.hset('convoy', 'power', 0)
             msg += 'Від гумконвою більше нічого не залишилось!\n'
-            packs += 10
+            packs += 20
         else:
             r.hincrby('convoy', 'power', -chance1)
-        reward = int(chance2 / 100000 - (diff / 100000))
-        if reward > 0:
-            packs += reward * 10
+        reward = int(chance2 / 100000 - (diff / 10000))
+        if reward > 0 or packs > 0:
+            packs += reward
             msg += f'\U0001F4E6 +{packs}'
             for mem in r.smembers('fighters_3' + str(cid)):
                 r.hincrby(mem, 'packs', packs)
