@@ -1171,7 +1171,7 @@ async def start_raid(cid):
                 s = int(s * 1.5)
                 if cl == 30:
                     mar += 1
-            if cl == 33:
+            if cl == 33 and int(r.hget('convoy', 'power')) == 0:
                 raid1 -= 10
                 raid2 -= 10
                 raid3 += 20
@@ -1204,6 +1204,7 @@ async def start_raid(cid):
         except:
             continue
     mode = choices([1, 2, 3], [raid1, raid2, raid3])
+
     if mode == [1]:
         enemy = r.srandmember('groupings')
         while int(enemy) == cid:
@@ -1405,16 +1406,18 @@ async def start_raid(cid):
 
         msg = 'Русаки приїхали грабувати гумконвой...\n\n'
         diff = chance2 - chance1
+        packs = 0
         if diff < 0:
             diff = 0
         if diff == 0:
             r.hset('convoy', 'power', 0)
             msg += 'Від гумконвою більше нічого не залишилось!\n'
+            packs += 10
         else:
             r.hincrby('convoy', 'power', -chance1)
         reward = int(chance2 / 100000 - (diff / 100000))
         if reward > 0:
-            packs = reward * 10
+            packs += reward * 10
             msg += f'\U0001F4E6 +{packs}'
             for mem in r.smembers('fighters_3' + str(cid)):
                 r.hincrby(mem, 'packs', packs)
