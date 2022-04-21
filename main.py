@@ -2560,7 +2560,7 @@ async def handle_query(call):
                                          '/ctop - топ чатів\n'
                                          '/passport - твої характеристики\n\n'
                                          'Опції для ltop та gtop:\n'
-                                         '-s, -d, -c, -w, -t',
+                                         '-s, -d, -c, -w, -t, -p',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
                                     reply_markup=cmm(), disable_web_page_preview=True)
 
