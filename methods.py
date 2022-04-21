@@ -93,6 +93,9 @@ async def top(sett, uid, text):
                             rate = c
                         elif text.split(' ')[1] == '-t':
                             rate = t
+                        elif text.split(' ')[1] == '-p':
+                            rate = int(r.hget(member, 'opened'))
+                            line = line[:-1] + ' \U0001F4E6 ' + str(rate)
                         else:
                             raise Exception
                     except:
