@@ -3393,7 +3393,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'intellect')) < 20:
                     await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
                                                 call.message.chat.id, call.message.message_id)
-                    if int(r.hget(uid, 'support')) != 2 and int(r.hget(uid, 'support')) != 6:
+                    if int(r.hget(uid, 'support')) != 6:
                         r.hset(uid, 'support', 6)
                         r.hset(uid, 's_support', 1)
                     elif int(r.hget(uid, 'support')) == 6:
