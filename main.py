@@ -3997,16 +3997,12 @@ async def on_shutdown(dp):
     logging.warning('Bye!')
 
 
-while True:
-    try:
-        if __name__ == '__main__':
-            start_webhook(
-                dispatcher=dp,
-                webhook_path='/' + TOKEN,
-                on_startup=on_startup,
-                on_shutdown=on_shutdown,
-                skip_updates=True,
-                host='0.0.0.0',
-                port=int(environ.get('PORT', 3001)))
-    except:
-        pass
+if __name__ == '__main__':
+    start_webhook(
+        dispatcher=dp,
+        webhook_path='/' + TOKEN,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=True,
+        host='0.0.0.0',
+        port=int(environ.get('PORT', 3001)))
