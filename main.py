@@ -64,7 +64,7 @@ async def get_help(message):
 
 @dp.message_handler(commands=['links'])
 async def handle_links(message):
-    await message.reply('<a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a> - місце, де збираються люди з усіх '
+    await message.reply('<a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a> - місце, де збираються люди з усіх '
                         'куточків України, щоб похизуватись своїми бойовими русаками!\n'
                         '@randomuanews - новини, патчноути, опитування\n\n'
                         '@borykva - осередок цебулізму\n'
@@ -747,7 +747,7 @@ async def merchant(message):
             #    msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
             await message.answer(msg, disable_web_page_preview=True)
     else:
-        msg = 'Мандрівний торговець приходить увечері в <a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a>.'
+        msg = 'Мандрівний торговець приходить увечері в <a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>.'
         # if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
         #        int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
         #    msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
@@ -1774,7 +1774,7 @@ async def commands(message):
     await message.reply('/links - реклама, головний чат, творець\n'
                         '/feed - погодувати русака\n'
                         '/mine - заробити гривні (доступно тільки в '
-                        '<a href="https://t.me/+AB9BCgXnQrAxMzFi">@soledar1</a>)\n'
+                        '<a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>)\n'
                         '/woman - провідати жінку\n'
                         '/clan - інформація про клан\n'
                         '/achieve - досягнення\n'
@@ -2545,7 +2545,7 @@ async def handle_query(call):
                                          '/crash - зупинити міжчатову битву\n'
                                          '/promo_code [код]- активувати бонус\n\n'
 
-                                         'Команди, доступні тільки в <a href="https://t.me/+AB9BCgXnQrAxMzFi">'
+                                         'Команди, доступні тільки в <a href="https://t.me/+cClR7rA-sZAyY2Uy">'
                                          '@soledar1</a>:\n'
                                          '/mine - заробити гривні\n'
                                          '/merchant - продає топову снарягу',
