@@ -1171,7 +1171,7 @@ async def start_raid(cid):
                 s = int(s * 1.5)
                 if cl == 30:
                     mar += 1
-            if cl == 33 and int(r.hget('convoy', 'power')) == 0:
+            if cl == 33 and int(r.hget('convoy', 'power')) > 0:
                 raid1 -= 10
                 raid2 -= 10
                 raid3 += 20
