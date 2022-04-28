@@ -229,27 +229,30 @@ async def donbass(message):
 async def my_rusak(message):
     mid = message.from_user.id
     try:
-        r_photo, cl, inj, ms = '', '', '', ''
-        name = names[int(r.hget(mid, 'name'))]
-        c = int(r.hget(mid, 'class'))
-        if c != 0:
-            cl = '\n' + icons[c] + ' Клас: ' + class_name[c]
-        stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch', 'buff', 'photo')
-        if int(stats[3]) > 0:
-            inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
-        if int(stats[6]) > 0:
-            inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
-        if int(stats[7]) > 0:
-            inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
-        if int(stats[4]) > 0:
-            ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
-        photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
-                     '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
-                     '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + stats[5].decode() \
-                     + cl + ms + inj
-        await message.reply_photo(stats[8].decode(), caption=photo_text)
-    except:
-        await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+        if r.hexists(mid, 'name'):
+            r_photo, cl, inj, ms = '', '', '', ''
+            name = names[int(r.hget(mid, 'name'))]
+            c = int(r.hget(mid, 'class'))
+            if c != 0:
+                cl = '\n' + icons[c] + ' Клас: ' + class_name[c]
+            stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'injure', 'mushrooms', 'hp', 'sch', 'buff', 'photo')
+            if int(stats[3]) > 0:
+                inj = '\n\U0001fa78 Поранення: ' + stats[3].decode()
+            if int(stats[6]) > 0:
+                inj += '\n\U0001F464 Шизофренія: ' + stats[6].decode()
+            if int(stats[7]) > 0:
+                inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
+            if int(stats[4]) > 0:
+                ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
+            photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
+                         '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
+                         '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + \
+                         stats[5].decode() + cl + ms + inj
+            await message.reply_photo(stats[8].decode(), caption=photo_text)
+        else:
+            await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+    except Exception as e:
+        await bot.send_message(456514639, e)
 
 
 @dp.message_handler(commands=['feed'])
