@@ -252,7 +252,7 @@ async def my_rusak(message):
         else:
             await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
     except Exception as e:
-        await bot.send_message(456514639, e)
+        await bot.send_message(456514639, f'{e}\n{mid}')
 
 
 @dp.message_handler(commands=['feed'])
