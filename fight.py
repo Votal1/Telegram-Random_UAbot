@@ -1415,7 +1415,7 @@ async def start_raid(cid):
             packs += 20
         else:
             r.hincrby('convoy', 'power', -chance1)
-        reward = int(chance2 / 100000 - (diff / 10000))
+        reward = int(chance2 / 10000 - (diff / 10000))
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
