@@ -1141,6 +1141,10 @@ async def start_raid(cid):
     await bot.send_message(cid, 'Ціль знайдено')
     await sleep(1)
 
+    if int(r.hget('convoy', 'day')) != datetime.now().day:
+        r.hset('convoy', 'power', 1000000)
+        r.hset('convoy', 'day', datetime.now().day)
+
     chance1 = 0
     mar = 0
     raid1, raid2, raid3 = 50, 50, 0
@@ -1394,9 +1398,6 @@ async def start_raid(cid):
         msg = 'Проведено рейд на ' + location + '!' + reward
         await bot.send_message(cid, msg)
     elif mode == [3]:
-        if int(r.hget('convoy', 'day')) != datetime.now().day:
-            r.hset('convoy', 'power', 1000000)
-            r.hset('convoy', 'day', datetime.now().day)
         chance2 = int(r.hget('convoy', 'power'))
         msg0 = f'{title} | Перехоплення гумконвою\n\n\U0001F4AA {chance1} | {chance2}'
         try:
