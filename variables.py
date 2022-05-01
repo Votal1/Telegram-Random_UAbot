@@ -78,7 +78,8 @@ p9 = ['https://i.ibb.co/SvsNgFd/1.png', 'https://i.ibb.co/BjhBvdx/2.png', 'https
       'https://i.ibb.co/5vyTNzv/7.png', 'https://i.ibb.co/LtMLhrN/8.png', 'https://i.ibb.co/8jk78sT/9.png',
       'https://i.ibb.co/C1NxKbM/10.png']
 
-p10 = ['https://ibb.co/SR9FdXL', 'https://ibb.co/RhFTYTD', 'https://ibb.co/VgCyDf4',
+p10 = ['https://ibb.co/SR9FdXL', 'https://ibb.co/RhFTYTD',
+       # 'https://ibb.co/VgCyDf4',
        'https://ibb.co/CQVZLmy', 'https://ibb.co/yPgB57x', 'https://ibb.co/dkGnCxB',
        'https://ibb.co/BqHR2z7', 'https://ibb.co/87LkG89', 'https://ibb.co/H24qZYp',
        'https://ibb.co/H2J75Kx']
