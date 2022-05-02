@@ -530,7 +530,7 @@ async def woman(message):
                     r.hset(message.from_user.id, 'time5', 0)
                 r.hset(message.from_user.id, 'time4', datetime.now().day)
                 r.hincrby(message.from_user.id, 'time5', 1)
-                if int(r.hget(message.from_user.id, 'time5')) == 9:
+                if int(r.hget(message.from_user.id, 'time5')) >= 9:
                     await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 '
                                         'немовля. В тебе буде смачний сніданок!')
                     r.hincrby(message.from_user.id, 'childs', 1)
