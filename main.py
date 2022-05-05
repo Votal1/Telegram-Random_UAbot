@@ -3267,7 +3267,7 @@ async def handle_query(call):
             else:
                 r.hincrby(uid, 'money', -20)
             r.hincrby(uid, 'opened', 1)
-            r.hincrby('all_opened', 1)
+            r.hincrby('all_opened', 'packs', 1)
 
             ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                           weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
