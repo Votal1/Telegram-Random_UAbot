@@ -652,7 +652,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     hack1 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name2] + ' використав експлойт...'
                     if hack1 == [0]:
-                        hack += '\n' + r.get('hacker_promo_code').decode()
+                        hack += '\n' + r.hget('promo_code', 'hacker_promo_code').decode()
                     damage_weapon(uid2, c2)
                 if hack1 == [1]:
                     spirit(bonus * 2, uid2, 0)
@@ -742,7 +742,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     hack2 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name1] + ' використав експлойт...'
                     if hack2 == [0]:
-                        hack += '\n' + r.get('hacker_promo_code').decode()
+                        hack += '\n' + r.hget('promo_code', 'hacker_promo_code').decode()
                     damage_weapon(uid1, c1)
                 if hack2 == [1]:
                     spirit(bonus * 2, uid1, 0)
