@@ -644,6 +644,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(bonus, uid1, c1)
             spirit(-bonus, uid2, 0)
             r.hincrby(uid1, 'wins', 1)
+            r.hincrby('win_rate', f'win-{c1}', 1)
+            r.hincrby('win_rate', f'lose-{c2}', 1)
 
             hack = ''
             if c2 == 8 or c2 == 18 or c2 == 28:
@@ -734,6 +736,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
             r.hincrby(uid2, 'wins', 1)
+            r.hincrby('win_rate', f'win-{c2}', 1)
+            r.hincrby('win_rate', f'lose-{c1}', 1)
 
             hack = ''
             if c1 == 8 or c1 == 18 or c1 == 28:
