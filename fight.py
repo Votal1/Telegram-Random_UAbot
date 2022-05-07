@@ -604,7 +604,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
             if c1 == 10 or c1 == 20 or c1 == 30:
-                if int(r.hget(uid1, 'money')) < 50:
+                if int(r.hget(uid1, 'money')) < 100:
                     m_bonus[0] += 2
             if m_bonus[0] > 0:
                 if checkClan(uid1, base=4):
@@ -692,7 +692,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
             if c2 == 10 or c2 == 20 or c2 == 30:
-                if int(r.hget(uid2, 'money')) < 50:
+                if int(r.hget(uid2, 'money')) < 100:
                     m_bonus[0] += 2
             if m_bonus[0] > 0:
                 if checkClan(uid2, base=4):
