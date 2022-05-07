@@ -1578,9 +1578,8 @@ async def promote(message):
         cid = str(message.chat.id)
         if message.from_user.id == int(r.hget('c' + cid, 'leader')):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
-                uid = message.reply_to_message.from_user.id
+                uid = str(message.reply_to_message.from_user.id).encode()
                 if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid):
-                    r.hset(uid, 'clan', 0)
                     r.sadd('cl2' + cid, uid)
                     await message.reply('\u2705')
     except:
@@ -1593,9 +1592,8 @@ async def demote(message):
         cid = str(message.chat.id)
         if message.from_user.id == int(r.hget('c' + cid, 'leader')):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
-                uid = message.reply_to_message.from_user.id
+                uid = str(message.reply_to_message.from_user.id).encode()
                 if uid in r.smembers('cl2' + cid):
-                    r.hset(uid, 'clan', 0)
                     r.srem('cl2' + cid, uid)
                     await message.reply('\u2705')
     except:
