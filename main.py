@@ -1198,7 +1198,8 @@ async def swap(message):
 
 @dp.message_handler(commands=['clan'])
 async def clan(message):
-    c = 'c' + str(message.chat.id)
+    cid = str(message.chat.id)
+    c = 'c' + cid
     chats = [-1001211933154]  # -1001733230634
     if message.chat.type == 'supergroup' and message.chat.id not in chats:
         if r.hexists(c, 'base') == 0:
@@ -1206,22 +1207,22 @@ async def clan(message):
                                 ' 250 гривень або \U0001F31F 1 погон російського генерала і стати лідером.',
                                 reply_markup=create_clan())
         else:
-            if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)) \
-                    or message.from_user.id in sudoers:
+            if str(message.from_user.id).encode() in r.smembers('cl' + cid) or message.from_user.id in sudoers:
                 base = int(r.hget(c, 'base'))
+                title = r.hget(c, 'title').decode()
+                leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode()
                 if base == 1:
-                    await message.answer('<i>Банда</i> ' + r.hget(c, 'title').decode() +
-                                         '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
-                                         '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
-                                         '\n\n\U0001f6d6 Барак\nМожливість обирати фашиста дня та зберігати деякі '
-                                         'ресурси.\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() +
-                                         '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() +
-                                         '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode(), parse_mode='HTML')
+                    await message.answer(f"<i>Банда</i> {title}\n\nЛідер: {leader}"
+                                         f"\nКількість учасників: {r.scard('cl' + cid)}\n\n\U0001f6d6 Барак\n"
+                                         f"Можливість обирати фашиста дня та зберігати деякі ресурси.\n\nРесурси:"
+                                         f"\n\U0001F4B5 Гривні: {r.hget(c, 'money').decode()}"
+                                         f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()}"
+                                         f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()}", parse_mode='HTML')
                 elif base >= 2:
                     building, wins = '', ''
                     prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання']
-                    if r.hexists(222, message.chat.id) == 1:
-                        wins = '\nКількість перемог: ' + r.hget(222, message.chat.id).decode()
+                    if r.hexists(222, cid) == 1:
+                        wins = '\nКількість перемог: ' + r.hget(222, cid).decode()
                     if base == 2:
                         building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, ' \
                                    'якщо серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
@@ -1265,10 +1266,8 @@ async def clan(message):
                         building += ', морг'
                     if int(r.hget(c, 'new_post')) == 1:
                         building += ', відділення НП'
-                    await message.answer('<i>' + prefix[base] + '</i> ' + r.hget(c, 'title').decode() +
-                                         '\n\nЛідер: ' + r.hget(int(r.hget(c, 'leader')), 'firstname').decode() +
-                                         '\nКількість учасників: ' + str(len(r.smembers('cl' + str(message.chat.id)))) +
-                                         wins + '\n\n' + building + resources, parse_mode='HTML')
+                    await message.answer(f"<i>{prefix[base]}</i> {title}\n\nЛідер: {leader}\nКількість учасників: "
+                                         f"{r.scard('cl' + cid)}{wins}\n\n{building}{resources}", parse_mode='HTML')
             elif r.hexists(message.from_user.id, 'class') and int(r.hget(message.from_user.id, 'class')) == 27 and \
                     int(r.hget(c, 'money')) >= 20:
                 if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
