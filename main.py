@@ -1212,7 +1212,7 @@ async def clan(message):
                 title = r.hget(c, 'title').decode()
                 leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode()
                 if r.scard('cl2' + cid) == 1:
-                    leader += f"\nЗаступник: {r.srandmember('cl2' + cid)}"
+                    leader += f"\nЗаступник: {r.hget(r.srandmember('cl2' + cid), 'firstname').decode()}"
                 elif r.scard('cl2' + cid) == 2:
                     ran = r.srandmember('cl2' + cid, 2)
                     leader += f"\nЗаступники: {r.hget(ran[0], 'firstname').decode()}, " \
