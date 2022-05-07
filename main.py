@@ -314,8 +314,14 @@ async def feed(message):
                     if decrease == [0]:
                         word = 'зменшилась'
                         r.hincrby(message.from_user.id, 'strength', -2 * ran)
-                msg = emoji + ' Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + ' смачно поїв.\n\nСила '
-                msg += word + ' на ' + str(ran) + '.\n'
+                else:
+                    if int(r.hget(message.from_user.id, 'support')) == 7:
+                        ran += 15
+                        r.hincrby(message.from_user.id, 'strength', 15)
+                        damage_support(message.from_user.id)
+                        increase_trance(5, message.from_user.id)
+                msg = f"{emoji} Твій {names[int(r.hget(message.from_user.id, 'name'))]} смачно поїв.\n\n" \
+                      f"Сила {word} на {ran}.\n"
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, message.from_user.id)
