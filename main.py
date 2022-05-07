@@ -2622,7 +2622,9 @@ async def handle_query(call):
                                          '/build - розвинути інфраструктуру\n'
                                          '/clan_shop - магазин (доступний на 3 рівні)\n'
                                          '/raid - грабувати інші клани\n'
-                                         '/guard - охоронятись від рейдів (доступно на 3 рівні)',
+                                         '/guard - охоронятись від рейдів (доступно на 3 рівні)\n'
+                                         '/promote - призначити заступника\n'
+                                         '/demote - видалити заступника',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
                                     reply_markup=cmm(), disable_web_page_preview=True)
 
