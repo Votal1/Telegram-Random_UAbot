@@ -13,7 +13,7 @@ from parameters import spirit, vodka, intellect, hp, damage_support, damage_head
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, top, itop, ctop
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, top, itop, ctop
 
 from requests import get
 from bs4 import BeautifulSoup
@@ -1211,6 +1211,12 @@ async def clan(message):
                 base = int(r.hget(c, 'base'))
                 title = r.hget(c, 'title').decode()
                 leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode()
+                if r.scard('cl2' + cid) == 1:
+                    leader += f"\nЗаступник: {r.srandmember('cl2' + cid)}"
+                elif r.scard('cl2' + cid) == 2:
+                    ran = r.srandmember('cl2' + cid, 2)
+                    leader += f"\nЗаступники: {r.hget(ran[0], 'firstname').decode()}, " \
+                              f"{r.hget(ran[1], 'firstname').decode()}"
                 if base == 1:
                     await message.answer(f"<i>Банда</i> {title}\n\nЛідер: {leader}"
                                          f"\nКількість учасників: {r.scard('cl' + cid)}\n\n\U0001f6d6 Барак\n"
@@ -1478,7 +1484,7 @@ async def clan_settings(message):
                 await bot.delete_message(message.chat.id, message.message_id)
             except:
                 pass
-        if message.from_user.id == int(r.hget(c, 'leader')) or message.from_user.id in sudoers:
+        if checkLeader(message.from_user.id, message.chat.id) or message.from_user.id in sudoers:
             if int(r.hget(c, 'allow')) == 0:
                 allow = '\n\nВ клан може приєднатись кожен бажаючий.'
             else:
@@ -1555,12 +1561,42 @@ async def invest(message):
 @dp.message_handler(commands=['kick'])
 async def kick(message):
     try:
-        if message.from_user.id == int(r.hget('c' + str(message.chat.id), 'leader')):
+        if checkLeader(message.from_user.id, message.chat.id):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')) or message.chat.type == 'private':
                 uid = int(message.text.split(' ')[1])
                 if str(uid).encode() in r.smembers('cl' + str(message.chat.id)):
                     r.hset(uid, 'clan', 0)
                     r.srem('cl' + str(message.chat.id), uid)
+                    await message.reply('\u2705')
+    except:
+        pass
+
+
+@dp.message_handler(commands=['promote'])
+async def promote(message):
+    try:
+        cid = str(message.chat.id)
+        if message.from_user.id == int(r.hget('c' + cid, 'leader')):
+            if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
+                uid = message.reply_to_message.from_user.id
+                if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid):
+                    r.hset(uid, 'clan', 0)
+                    r.sadd('cl2' + cid, uid)
+                    await message.reply('\u2705')
+    except:
+        pass
+
+
+@dp.message_handler(commands=['demote'])
+async def demote(message):
+    try:
+        cid = str(message.chat.id)
+        if message.from_user.id == int(r.hget('c' + cid, 'leader')):
+            if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
+                uid = message.reply_to_message.from_user.id
+                if uid in r.smembers('cl2' + cid):
+                    r.hset(uid, 'clan', 0)
+                    r.srem('cl2' + cid, uid)
                     await message.reply('\u2705')
     except:
         pass
@@ -2214,7 +2250,7 @@ async def handle_query(call):
 
     elif call.data.startswith('change_title'):
         c = int(r.hget(call.from_user.id, 'clan'))
-        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             t = await bot.get_chat(c)
             r.hset('c' + str(c), 'title', t.title)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -2222,7 +2258,7 @@ async def handle_query(call):
 
     elif call.data.startswith('toggle_allow'):
         c = int(r.hget(call.from_user.id, 'clan'))
-        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             if int(r.hget('c' + str(c), 'allow')) == 0:
                 r.hset('c' + str(c), 'allow', 1)
             else:
@@ -2232,7 +2268,7 @@ async def handle_query(call):
 
     elif call.data.startswith('toggle_war'):
         c = int(r.hget(call.from_user.id, 'clan'))
-        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             if int(r.hget('c' + str(c), 'war_allow')) == 0:
                 r.hset('c' + str(c), 'war_allow', 1)
             else:
@@ -2242,7 +2278,7 @@ async def handle_query(call):
 
     elif call.data.startswith('salary'):
         c = int(r.hget(call.from_user.id, 'clan'))
-        if call.from_user.id == int(r.hget('c' + str(c), 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             if int(r.hget('c' + str(c), 'salary')) == 0:
                 r.hset('c' + str(c), 'salary', 1)
             else:
@@ -2251,7 +2287,8 @@ async def handle_query(call):
                                             text='Режим видачі зарплати за роботу змінено.')
 
     elif call.data.startswith('get_members'):
-        if call.from_user.id == int(r.hget('c' + r.hget(call.from_user.id, 'clan').decode(), 'leader')) or \
+        uid = call.from_user.id
+        if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
                 call.from_user.id in sudoers:
             msg = ''
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
@@ -2266,7 +2303,8 @@ async def handle_query(call):
             await bot.send_message(call.message.chat.id, msg, parse_mode='HTML', reply_markup=markup)
 
     elif call.data.startswith('get_id_members'):
-        if call.from_user.id == int(r.hget('c' + r.hget(call.from_user.id, 'clan').decode(), 'leader')) or \
+        uid = call.from_user.id
+        if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
                 call.from_user.id in sudoers:
             msg = ''
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
@@ -3500,7 +3538,7 @@ async def handle_query(call):
 
     elif call.data.startswith('monument'):
         c = 'c' + str(call.message.chat.id)
-        if call.from_user.id == int(r.hget(c, 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
             if int(r.hget(c, 'r_spirit')) >= 10:
                 r.hincrby(c, 'r_spirit', -10)
                 for mem in r.smembers('cl' + str(call.message.chat.id)):

@@ -51,6 +51,13 @@ def checkClan(uid, base=0, building=''):
         return False
 
 
+def checkLeader(uid, cid):
+    if uid == int(r.hget('c' + str(cid), 'leader')) or str(uid).encode() in r.smembers('cl2' + str(cid)):
+        return True
+    else:
+        return False
+
+
 async def top(sett, uid, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:
