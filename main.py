@@ -1070,7 +1070,7 @@ async def inventory(message):
 
         await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
                             f'Допомога: {supports[s]}{m3}\n\U0001F3A9 Шапка: {heads[h]}{m4}',
-                            reply_markup=invent(w, d, s))
+                            reply_markup=invent(w, d, s, h))
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -3542,6 +3542,16 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='В твого русака нема допоміжного спорядження')
+
+    elif call.data.startswith('drop_h') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        if int(r.hget(call.from_user.id, 'head')) != 0:
+            r.hset(call.from_user.id, 'head', 0)
+            r.hset(call.from_user.id, 's_head', 0)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Русак викинув шапку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='В твого русака нема шапки')
 
     elif call.data.startswith('unpack') and call.from_user.id == call.message.reply_to_message.from_user.id:
         uid = call.from_user.id
