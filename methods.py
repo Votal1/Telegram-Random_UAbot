@@ -157,6 +157,9 @@ async def top(sett, uid, text):
                         elif text.split(' ')[1] == '-p':
                             rate = int(r.hget(member, 'opened'))
                             line = f'{line[:-1]} \U0001F4E6 {rate}\n'
+                        elif text.split(' ')[1] == '-a':
+                            rate = int(r.hget(member, 'vodka'))
+                            line = f'{line[:-1]} \u2622 {rate}\n'
                         else:
                             raise Exception
                     except:
