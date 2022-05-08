@@ -2320,7 +2320,7 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_side'):
         c = 'c' + str(call.message.chat.id)
-        if call.from_user.id == int(r.hget(c, 'leader')):
+        if call.from_user.id == int(r.hget(c, 'leader')) and int(r.hget(c, 'side')) == 0:
             if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
                     and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
                     and int(r.hget(c, 'technics')) >= 100 \
