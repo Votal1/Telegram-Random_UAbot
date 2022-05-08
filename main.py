@@ -1259,7 +1259,7 @@ async def clan(message):
                         if base >= 3:
                             resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
                             if int(r.hget(c, 'technics')) > 0:
-                                resources += '\n\U0001F4FA Радіотехніка: ' + r.hget(c, 'technics').decode()
+                                resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
                         resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
 
                     if int(r.hget(c, 'silicate')) == 1:
@@ -1373,6 +1373,21 @@ async def upgrade(message):
                         r.hset(c, 'base', 4)
                         r.sadd('groupings', message.chat.id)
                         await message.answer('\U0001F3D7 Покращено Гільдію до Угруповання.')
+            elif base == 4 and message.chat.id == -1001733230634:
+                msg = '\U0001F3D7 Покращення Угруповання до нового рівня коштує \U0001F333 6000, \U0001faa8 3000, ' \
+                      '\U0001F9F6 1500, \U0001F9F1 1000, \U0001F4FB 100, \U0001F47E 200 і \U0001F4B5 5000.\n\nВам ' \
+                      'доведеться зробити важливий вибір - обрати один з 4 варіантів розвитку.'
+                markup = InlineKeyboardMarkup()
+                if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
+                        and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
+                        and int(r.hget(c, 'technics')) >= 100\
+                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200:
+                    msg += '\n\nДостатньо ресурсів для покращення. Який шлях розвитку ви обираєте?'
+                    markup.add(InlineKeyboardButton(text='Комуна', callback_data='clan_side_1'),
+                               InlineKeyboardButton(text='Коаліція', callback_data='clan_side_2'))
+                    markup.add(InlineKeyboardButton(text='Асоціація', callback_data='clan_side_3'),
+                               InlineKeyboardButton(text='Організація', callback_data='clan_side_4'))
+                await message.answer(msg, reply_markup=markup)
     except:
         pass
 
@@ -1450,7 +1465,7 @@ async def build(message):
                                                             callback_data='build_new_post'))
                             msg += '\nВідділення НП (\U0001F333 800, \U0001faa8 500, \U0001F9F6 500, ' \
                                    '\U0001F9F1 200, \U0001F4B5 2000, \U0001F47E 30) - можливість отримувати ' \
-                                   '\U0001F4FA радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
+                                   '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
                                    'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
                     if len(markup.inline_keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
@@ -2165,7 +2180,9 @@ async def handle_query(call):
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
                                 'shop': 0, 'complex': 0, 'monument': 0, 'camp': 0, 'morgue': 0, 'post': 0, 'day': 0,
                                 'power': 0, 'new_post': 0, 'salary': 0, 'war_allow': 0,
-                                'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title})
+                                'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title,
+                                'side': 0, 'build1': 0, 'build2': 0, 'build3': 0, 'build4': 0,
+                                'build5': 0, 'build6': 0})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
                         r.hset(call.from_user.id, 'clan', call.message.chat.id,
@@ -3306,7 +3323,7 @@ async def handle_query(call):
                           weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
             if ran == [1]:
                 if checkClan(uid, base=4, building='new_post') and choice([0, 1]) == 1:
-                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FA +1',
+                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1',
                                                 call.message.chat.id, call.message.message_id)
                     r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
                 else:
