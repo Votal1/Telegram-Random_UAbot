@@ -1369,6 +1369,9 @@ async def start_raid(cid):
 
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
+        if choices([1, 0], [5, 95]) == [1]:
+            r.hincrby(c, 'codes', 1)
+            reward += '\n\U0001F916 +1'
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
         msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!' + reward.replace('+', '-')
@@ -1406,7 +1409,7 @@ async def start_raid(cid):
                     spirit(10000, mem, 0)
             elif locations.index(location) == 2:
                 reward += 'Русаки пограбували АТБ\n'
-                mode = choices([1, 2, 3], [70, 20, 10])
+                mode = choices([1, 2, 3], [60, 30, 10])
                 if mode == [1]:
                     ran = randint(100, 200)
                     if mar >= 1:
@@ -1434,7 +1437,7 @@ async def start_raid(cid):
                         r.hset(mem, 'time', 0)
             elif locations.index(location) == 3:
                 reward += 'Русаки пограбували Сільпо\n'
-                mode = choices([1, 2, 3], [70, 10, 20])
+                mode = choices([1, 2, 3], [60, 20, 20])
                 if mode == [1]:
                     ran = randint(150, 300)
                     if mar >= 1:
@@ -1491,6 +1494,9 @@ async def start_raid(cid):
             reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
+        if choices([1, 0], [5, 95]) == [1]:
+            r.hincrby(c, 'codes', 1)
+            reward += '\n\U0001F916 +1'
         await sleep(10)
         msg = 'Проведено рейд на ' + location + '!' + reward
         await bot.send_message(cid, msg)
@@ -1521,6 +1527,10 @@ async def start_raid(cid):
                 r.hincrby(mem, 'packs', packs)
         elif reward <= 0 and diff != 0:
             msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'
+
+        if choices([1, 0], [5, 95]) == [1]:
+            r.hincrby(c, 'codes', 1)
+            msg += '\n\U0001F916 +1'
 
         await sleep(10)
         await bot.send_message(cid, msg)
