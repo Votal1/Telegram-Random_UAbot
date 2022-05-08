@@ -4,7 +4,7 @@ from asyncio import sleep
 
 from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
-    damage_weapon, damage_defense, damage_support, increase_trance
+    damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
 from methods import checkClan
 
@@ -18,13 +18,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             uid2 = uid
 
         weapon, defense, support = '', '', ''
-        stats1 = r.hmget(uid1, 'name', 'class', 'weapon', 'defense', 'support')
-        stats2 = r.hmget(uid2, 'name', 'class', 'weapon', 'defense', 'support')
+        stats1 = r.hmget(uid1, 'name', 'class', 'weapon', 'defense', 'support', 'head')
+        stats2 = r.hmget(uid2, 'name', 'class', 'weapon', 'defense', 'support', 'head')
         name1, name2 = int(stats1[0]), int(stats2[0])
         c1, c2 = int(stats1[1]), int(stats2[1])
         weapon1, weapon2 = int(stats1[2]), int(stats2[2])
         defense1, defense2 = int(stats1[3]), int(stats2[3])
         support1, support2 = int(stats1[4]), int(stats2[4])
+        head1, head2 = int(stats1[5]), int(stats2[5])
 
         grn, hach, worker, meat, cop, fsb, m1, m2, inj1, inj2 = '', '', '', '', '', '', '', '', '', ''
         m_bonus, hach1, hach2 = [0], 0, 0
@@ -197,6 +198,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s2, bd2 = trance(uid2, s2, bd2, True)
             s22 = s2
             inj2 = '\U0001F44A '
+
+        if head1 == 2:
+            s1 = int(s1 * 1.12)
+            damage_head(uid1)
+        if head2 == 2:
+            s2 = int(s2 * 1.12)
+            damage_head(uid2)
 
         if weapon2 == 11:
             s1 = int(s1 / 2)
@@ -603,15 +611,25 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            if c2 in (3, 13, 23) and checkClan(uid2, building='build3', level=3):
+                steal = choices([0, 1], weights=[80, 20])[0]
+            else:
+                steal = 0
             if c1 == 10 or c1 == 20 or c1 == 30:
                 if int(r.hget(uid1, 'money')) < 100:
+                    m_bonus[0] += 2
+                elif int(r.hget(uid1, 'money')) < 200 and checkClan(uid1, building='build3', level=1):
                     m_bonus[0] += 2
             if m_bonus[0] > 0:
                 if checkClan(uid1, base=4):
                     if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
                         m_bonus = [m_bonus[0] * 2]
-                r.hincrby(uid1, 'money', m_bonus[0])
-                grn = '\n\U0001F4B5 +' + str(m_bonus[0])
+                if steal == 0:
+                    r.hincrby(uid1, 'money', m_bonus[0])
+                    grn = '\n\U0001F4B5 +' + str(m_bonus[0])
+                else:
+                    r.hincrby(uid2, 'money', m_bonus[0])
+                    grn = '\n\U0001F4B5 +' + str(m_bonus[0]) + ' (вкрадено фокусником!)'
 
             if hach1 == 1:
                 if c1 != 1:
@@ -619,6 +637,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
                         trick = choices([1, 2, 3], weights=[45, 45, 10])
+                        if checkClan(uid1, building='build2', level=3):
+                            trick = choices([1, 2, 3], weights=[35, 35, 30])
                         if trick == [1]:
                             ran = randint(50, 100)
                             hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника через стегно!\n\U0001F54A -' + \
@@ -640,6 +660,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 damage_weapon(uid2, c2)
                 pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли русак програв' \
                                                        ', його бойовий дух влився у ворога...'
+                if uid1 in (4, 14, 24) and uid2 in (4, 14, 24) and checkClan(uid1, building='build2', level=2):
+                    spirit(10000, uid1, 0)
+                    spirit(10000, uid2, 0)
 
             spirit(bonus, uid1, c1)
             spirit(-bonus, uid2, 0)
@@ -669,6 +692,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
+                    if checkClan(uid2, building='build4', level=4):
+                        r.hincrby('c' + r.hget(uid2, 'clan').decode(), 'money', money)
                     r.hincrby(uid2, 'money', money)
                     hack = hack + '\n\U0001F4DF ' + names[name2] + ' зламав бота, і переписав бонусний бойовий дух ' \
                                                                    'собі.\n\U0001F4B5 +' + str(money)
@@ -691,15 +716,25 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
+            if c1 in (3, 13, 23) and checkClan(uid1, building='build3', level=3):
+                steal = choices([0, 1], weights=[80, 20])[0]
+            else:
+                steal = 0
             if c2 == 10 or c2 == 20 or c2 == 30:
                 if int(r.hget(uid2, 'money')) < 100:
+                    m_bonus[0] += 2
+                elif int(r.hget(uid2, 'money')) < 200 and checkClan(uid2, building='build3', level=1):
                     m_bonus[0] += 2
             if m_bonus[0] > 0:
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
                         m_bonus = [m_bonus[0] * 2]
-                r.hincrby(uid2, 'money', m_bonus[0])
-                grn = '\n\U0001F4B5 +' + str(m_bonus[0])
+                if steal == 0:
+                    r.hincrby(uid2, 'money', m_bonus[0])
+                    grn = '\n\U0001F4B5 +' + str(m_bonus[0])
+                else:
+                    r.hincrby(uid1, 'money', m_bonus[0])
+                    grn = '\n\U0001F4B5 +' + str(m_bonus[0]) + ' (вкрадено фокусником!)'
 
             if hach2 == 1:
                 if c2 != 1:
@@ -707,6 +742,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
                         trick = choices([1, 2, 3], weights=[45, 45, 10])
+                        if checkClan(uid2, building='build2', level=3):
+                            trick = choices([1, 2, 3], weights=[35, 35, 30])
                         if trick == [1]:
                             ran = randint(50, 100)
                             hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника через стегно!\n\U0001F54A -' + \
@@ -728,6 +765,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 damage_weapon(uid2, c2)
                 pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли ворог програв' \
                                                        ', його бойовий дух влився у русака...'
+                if uid1 in (4, 14, 24) and uid2 in (4, 14, 24) and checkClan(uid2, building='build2', level=2):
+                    spirit(10000, uid1, 0)
+                    spirit(10000, uid2, 0)
             elif weapon2 == 17:
                 r.hincrby(uid2, 'wins', 1)
                 fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор новоросії.' \
@@ -762,6 +802,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
+                    if checkClan(uid1, building='build4', level=4):
+                        r.hincrby('c' + r.hget(uid1, 'clan').decode(), 'money', money)
                     r.hincrby(uid1, 'money', money)
                     hack = hack + '\n\U0001F4DF ' + names[name1] + ' зламав бота, і переписав бонусний бойовий дух ' \
                                                                    'собі.\n\U0001F4B5 +' + str(money)
@@ -960,7 +1002,7 @@ async def war(cid, location, big_battle):
 
 
 async def war_power(sett, cid):
-    chance, clan5, m, pag = 0, 0, 0, 0
+    chance = clan5 = m = pag = mal = gen = 0
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -1007,13 +1049,24 @@ async def war_power(sett, cid):
                 support = 0
             head = int(stats[11])
             if head > 0:
-                head = 0.25
+                if head == 2:
+                    head = 0.37
+                    damage_head(member)
+                else:
+                    head = 0.25
             else:
                 head = 0
-            if int(stats[7]) == 9 or int(stats[7]) == 19 or int(stats[7]) == 29:
-                m = 1
+
             if int(stats[7]) == 24:
                 pag = 1
+            elif int(stats[7]) in (5, 15, 15) and checkClan(member, building='build4', level=2):
+                s = int(s * 1.2)
+            elif int(stats[7]) in (7, 17, 27) and checkClan(member, building='build3', level=3):
+                mal += 1
+            elif int(stats[7]) in (9, 19, 29):
+                m = 1
+            elif int(stats[7]) in (34, 35, 36) and checkClan(member, building='build3', level=2):
+                gen = 1
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
         except:
             continue
@@ -1026,14 +1079,19 @@ async def war_power(sett, cid):
                 spirit(250, int(member), 0)
             except:
                 pass
-    return chance, clan5
+    return chance, clan5, mal, gen
 
 
 async def great_war(cid1, cid2, a, b):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, clan1 = await war_power(a, cid1)
-    chance2, clan2 = await war_power(b, cid2)
+    chance1, clan1, mal1, gen1 = await war_power(a, cid1)
+    chance2, clan2, mal2, gen2 = await war_power(b, cid2)
+
+    for i in range(mal1):
+        r.hincrby(choice(b), 'sch', 3)
+    for i in range(mal2):
+        r.hincrby(choice(a), 'sch', 3)
 
     await bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
                            + str(int(chance1)) + ' | ' + str(int(chance2)))
@@ -1044,6 +1102,7 @@ async def great_war(cid1, cid2, a, b):
     win = choices(['a', 'b'], weights=[chance1, chance2])
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward = ''
+    r_spirit = 1
     if win == ['a']:
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         for n in a:
@@ -1053,12 +1112,18 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 3)
                 reward = '3'
             else:
+                if int(r.hget('c' + str(cid1), 'side')) == 2:
+                    r_spirit += 2
+                    if gen1 == 1:
+                        r_spirit += 1
+                if int(r.hget('c' + str(cid1), 'side')) == 4:
+                    r.hincrby('c' + str(cid1), 'money', 6)
                 r.hincrby(n, 'money', 6)
-                reward = '6 \U0001F47E +1'
+                reward = f'6 \U0001F47E +{r_spirit}'
         r.hincrby(222, cid1, 1)
         if clan1 >= 5:
             if int(r.hget('c' + str(cid1), 'base')) > 1:
-                r.hincrby('c' + str(cid1), 'r_spirit', 1)
+                r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
     elif win == ['b']:
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         for n in b:
@@ -1068,12 +1133,16 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 3)
                 reward = '3'
             else:
+                if int(r.hget('c' + str(cid2), 'side')) == 2:
+                    r_spirit += 2
+                    if gen2 == 1:
+                        r_spirit += 1
                 r.hincrby(n, 'money', 6)
-                reward = '6 \U0001F47E +1'
+                reward = f'6 \U0001F47E +{r_spirit}'
         r.hincrby(222, cid2, 1)
         if clan2 >= 5:
             if int(r.hget('c' + str(cid2), 'base')) > 1:
-                r.hincrby('c' + str(cid2), 'r_spirit', 1)
+                r.hincrby('c' + str(cid2), 'r_spirit', r_spirit)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     await sleep(10)
 
@@ -1115,7 +1184,10 @@ async def guard_power(mid):
         s, bd = trance(int(mid), s, bd, True)
 
     if cl == 6 or cl == 16 or cl == 26:
-        s = int(s * 1.3)
+        if int(r.hget('c' + r.hget(mid, 'clan').decode(), 'build4')) == 1:
+            s = s * 2
+        else:
+            s = int(s * 1.3)
 
     w = int(stats[3])
     if w > 0:
@@ -1188,7 +1260,11 @@ async def start_raid(cid):
 
             w = int(stats[3])
             if w > 0:
-                w = 0.25
+                if w == 3:
+                    w = 1 if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0 else 0.5
+                    damage_weapon(member, cl)
+                else:
+                    w = 0.25
             else:
                 w = 0
             d = int(stats[4])
@@ -1238,6 +1314,7 @@ async def start_raid(cid):
 
         if win == ['a']:
             res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
+            ter = int(r.hget(c2, 'build1'))
             mode = choices([1, 2, 3], [70, 20, 10])
             base = int(r.hget(c2, 'base'))
             if mode == [2] and int(res[4]) < 50:
@@ -1245,22 +1322,22 @@ async def start_raid(cid):
             if mode == [1]:
                 reward += 'Русаки потрапили на склад і винесли ресурси!\n'
                 if int(res[0]) >= 75:
-                    ran = randint(25, 75)
+                    ran = randint(16, 50) if ter == 2 else randint(25, 75)
                     reward += '\U0001F333 +' + str(ran)
                     r.hincrby(c, 'wood', ran)
                     r.hincrby(c2, 'wood', -ran)
                 if int(res[1]) >= 50 and base >= 2:
-                    ran = randint(10, 50)
+                    ran = randint(6, 33) if ter == 2 else randint(10, 50)
                     reward += ' \U0001faa8 +' + str(ran)
                     r.hincrby(c, 'stone', ran)
                     r.hincrby(c2, 'stone', -ran)
                 if int(res[2]) >= 25 and base >= 3:
-                    ran = randint(10, 25)
+                    ran = randint(6, 16) if ter == 2 else randint(10, 25)
                     reward += ' \U0001F9F6 +' + str(ran)
                     r.hincrby(c, 'cloth', ran)
                     r.hincrby(c2, 'cloth', -ran)
                 if int(res[3]) >= 15 and base >= 4:
-                    ran = randint(5, 15)
+                    ran = randint(3, 10) if ter == 2 else randint(5, 15)
                     reward += ' \U0001F9F1 +' + str(ran)
                     r.hincrby(c, 'brick', ran)
                     r.hincrby(c2, 'brick', -ran)
@@ -1271,6 +1348,9 @@ async def start_raid(cid):
                     reward += '\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
                     r.hincrby(c2, 'money', -ran)
+                    if int(r.hget(c, 'side')) == 3:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hincrby(mem, 'money', int(ran / 5))
             elif mode == [3]:
                 reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
                 if int(res[5]) >= 10:
@@ -1296,6 +1376,9 @@ async def start_raid(cid):
     elif mode == [2]:
         locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр']
         chances = ['0', '0.1', '0.2', '0.3', '0.5']
+        s = int(r.hget(c, 'side'))
+        if s == 3:
+            chances = ['0', '0.05', '0.1', '0.15', '0.25']
         location = choice(locations)
         chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
@@ -1328,6 +1411,9 @@ async def start_raid(cid):
                         ran *= 2
                     reward += '\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
+                    if s == 3:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hincrby(mem, 'money', int(ran / 5))
                 if mode == [2]:
                     s = 1
                     if mar >= 1:
@@ -1353,6 +1439,9 @@ async def start_raid(cid):
                         ran *= 2
                     reward += '\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
+                    if s == 3:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hincrby(mem, 'money', int(ran / 5))
                 if mode == [2]:
                     s = 1
                     if mar >= 1:

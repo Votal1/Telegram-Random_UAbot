@@ -38,15 +38,19 @@ def mine_salt(s2):
     return success, money, mind
 
 
-def checkClan(uid, base=0, building=''):
+def checkClan(uid, base=0, building='', level=0):
     if len(str(r.hget(uid, 'clan'))) > 5:
         cl = r.hget(uid, 'clan')
         if base > 0:
             if not int(r.hget('c' + cl.decode(), 'base')) >= base:
                 return False
         if len(building) > 0:
-            if int(r.hget('c' + cl.decode(), building)) == 0:
-                return False
+            if level == 0:
+                if int(r.hget('c' + cl.decode(), building)) == 0:
+                    return False
+            else:
+                if int(r.hget('c' + cl.decode(), building)) != level:
+                    return False
         return True
     else:
         return False
@@ -68,7 +72,29 @@ def c_shop(c, page):
               '\U0001F953 Ковбаса докторська - \U0001F54A +1000; \U0001F464 +5 або \U0001F44A +5\n' \
               '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
               '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
-        markup.add(InlineKeyboardButton(text='Совєцкій пайок - 10 грн', callback_data='ration'))
+        price = 4 if int(r.hget(c, 'side')) == 1 else 10
+        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - {price} грн', callback_data='ration'))
+        if int(r.hget(c, 'build1')) == 1:
+            msg += '\n\U0001F6E1 Уламок бронетехніки [Захист, міцність=7] - збільшує силу на бій на 30%, або' \
+                   ' збільшує міцність захисту на 7. Після зношення повертаються 4 гривні.'
+            markup.add(InlineKeyboardButton(text='Уламок бронетехніки - 15 грн', callback_data='clan_fragment'))
+        elif int(r.hget(c, 'build1')) == 2:
+            msg += '\n\U0001F3A9 Тактичний шолом [Шапка, міцність=40] - збільшує силу в дуелях і ' \
+                   'міжчатових битвах на 12%.'
+            markup.add(InlineKeyboardButton(text='Тактичний шолом - 50 грн', callback_data='clan_helmet'))
+        elif int(r.hget(c, 'build1')) == 3:
+            msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
+                   'якщо нема жінки.'
+            markup.add(InlineKeyboardButton(text='Батіг - 60 грн', callback_data='clan_lash'))
+        elif int(r.hget(c, 'build1')) == 3:
+            msg += '\n\U0001F344 Мухомор королівський [Допомога, міцність=1] - якщо у ворога більший інтелект, додає ' \
+                   '+1 інтелекту (не діє проти фокусників). На бій зменшує свою силу на 50%. Максимальна кількість ' \
+                   'покупок на русака - 3.'
+            markup.add(InlineKeyboardButton(text='Мухомор королівський - 80 грн', callback_data='clan_mushroom'))
+        if int(r.hget(c, 'build3')) == 4:
+            msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
+                   'битвах або рейдах на 25% (тільки для таксистів).'
+            markup.add(InlineKeyboardButton(text='Дизель - 20 грн', callback_data='clan_diesel'))
         markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
     if page == 2:

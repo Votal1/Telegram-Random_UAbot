@@ -1374,7 +1374,7 @@ async def upgrade(message):
                         r.sadd('groupings', message.chat.id)
                         await message.answer('\U0001F3D7 Покращено Гільдію до Угруповання.')
             elif base == 4 and message.chat.id == -1001733230634:
-                msg = '\U0001F3D7 Покращення Угруповання до нового рівня коштує \U0001F333 6000, \U0001faa8 3000, ' \
+                msg = '\U0001F3D7 Покращення Угруповання до нового рівня коштує\n\U0001F333 6000, \U0001faa8 3000, ' \
                       '\U0001F9F6 1500, \U0001F9F1 1000, \U0001F4FB 100, \U0001F47E 200 і \U0001F4B5 5000.\n\nВам ' \
                       'доведеться зробити важливий вибір - обрати один з 4 варіантів розвитку.'
                 markup = InlineKeyboardMarkup()
@@ -1467,6 +1467,105 @@ async def build(message):
                                    '\U0001F9F1 200, \U0001F4B5 2000, \U0001F47E 30) - можливість отримувати ' \
                                    '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
                                    'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
+                    if int(r.hget(c, 'base')) == 5:
+                        if int(r.hget(c, 'build1')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати тракторний завод',
+                                                            callback_data='build1'))
+                            msg += '\nТракторний завод (\U0001F333 4000, \U0001faa8 2000, \U0001F9F6 750, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 4000 \U0001F4FB 50, \U0001F47E 50) - можливість ' \
+                                   'купувати уламки бронетехніки та зміцнювати ними захист до 50.'
+                        if int(r.hget(c, 'build2')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати пивний ларьок',
+                                                            callback_data='build2'))
+                            msg += '\nПивний ларьок (\U0001F333 3000, \U0001faa8 500, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 300, \U0001F4B5 1000, \U0001F47E 50) - вдвічі більше ресурсів від ' \
+                                   'роботи для роботяг.'
+                        if int(r.hget(c, 'build3')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати падік',
+                                                            callback_data='build3'))
+                            msg += '\nПадік (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000) - здібність гопніка буде працювати, якщо на ' \
+                                   'рахунку менше 200 гривень.'
+                        if int(r.hget(c, 'build4')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати тюрму',
+                                                            callback_data='build4'))
+                            msg += '\nТюрма (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - бонус сили для мусорів при ' \
+                                   'захисті від рейдів збільшується до 100%.'
+                    if int(r.hget(c, 'base')) == 6:
+                        if int(r.hget(c, 'build1')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати штаб тероборони',
+                                                            callback_data='build1'))
+                            msg += '\nШтаб тероборони (\U0001F333 4000, \U0001faa8 2000, \U0001F9F6 750, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 4000 \U0001F4FB 50, \U0001F47E 50) - можливість ' \
+                                   'купувати шоломи, зберігає 33% ресурсів від ворожих рейдерів.'
+                        if int(r.hget(c, 'build2')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати березову рощу',
+                                                            callback_data='build2'))
+                            msg += '\nБерезова роща (\U0001F333 3000, \U0001faa8 500, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 300, \U0001F4B5 1000, \U0001F47E 50) - якщо язичник застосує сокиру ' \
+                                   'Перуна проти язичника - обидва отримають 10000 бойового духу.'
+                        if int(r.hget(c, 'build3')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати генеральську дачу',
+                                                            callback_data='build3'))
+                            msg += '\nГенеральська дача (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000) - присутність генерала в міжчатовій битві ' \
+                                   'додатково принесе 1 рускій дух за перемогу.'
+                        if int(r.hget(c, 'build4')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати казарму',
+                                                            callback_data='build4'))
+                            msg += '\nКазарма (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - +20% сили гарматному м`ясу в ' \
+                                   'міжчатових битвах.'
+                    if int(r.hget(c, 'base')) == 7:
+                        if int(r.hget(c, 'build1')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати dungeon',
+                                                            callback_data='build1'))
+                            msg += '\nDungeon (\U0001F333 4000, \U0001faa8 2000, \U0001F9F6 750, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 4000 \U0001F4FB 50, \U0001F47E 50) - можливість ' \
+                                   'купувати батіг.'
+                        if int(r.hget(c, 'build2')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати бійцівський клуб',
+                                                            callback_data='build2'))
+                            msg += '\nБійцівський клуб (\U0001F333 3000, \U0001faa8 500, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 300, \U0001F4B5 1000, \U0001F47E 50) - втричі більший шанс кинути ' \
+                                   'прогином хачам.'
+                        if int(r.hget(c, 'build3')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати циганський табір',
+                                                            callback_data='build3'))
+                            msg += '\nЦиганський табір (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000) - 20% шанс фокусникам вкрасти нагороду ворога в ' \
+                                   'дуелях.'
+                        if int(r.hget(c, 'build4')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати радіовежу',
+                                                            callback_data='build4'))
+                            msg += '\nРадіовежа (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - малорос в міжчатовій битві ' \
+                                   'надсилає 3 шизофренії випадковому ворогу.'
+                    if int(r.hget(c, 'base')) == 8:
+                        if int(r.hget(c, 'build1')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати біолабораторію',
+                                                            callback_data='build1'))
+                            msg += '\nБіолабораторія (\U0001F333 4000, \U0001faa8 2000, \U0001F9F6 750, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 4000 \U0001F4FB 50, \U0001F47E 50) - можливість ' \
+                                   'купувати королівські мухомори (тим, в кого русак має до 20 інтелекту).'
+                        if int(r.hget(c, 'build2')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати аптеку',
+                                                            callback_data='build2'))
+                            msg += '\nАптека (\U0001F333 3000, \U0001faa8 500, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 300, \U0001F4B5 1000, \U0001F47E 50) - патологоанатом з аптечкою ' \
+                                   'отримуватиме по 10 гривень за воскрешання русаків.'
+                        if int(r.hget(c, 'build3')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати АЗС',
+                                                            callback_data='build3'))
+                            msg += '\nАЗС (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000) - дизель в клановому магазині для таксистів.'
+                        if int(r.hget(c, 'build4')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати дата-центр',
+                                                            callback_data='build4'))
+                            msg += '\nДата-центр (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
+                                   '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - здібність хакера надсилатиме ' \
+                                   'стільки ж грошей в скарбницю клану.'
                     if len(markup.inline_keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     await message.reply(msg, reply_markup=markup)
@@ -1475,7 +1574,7 @@ async def build(message):
 
 
 @dp.message_handler(commands=['clan_shop'])
-async def build(message):
+async def clan_shop(message):
     try:
         if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
             c = 'c' + str(message.chat.id)
@@ -1661,8 +1760,11 @@ async def work(message):
                         r.hset(message.from_user.id, 'clan_time', datetime.now().day)
                         camp = 0
                         packs = int(r.hget(message.from_user.id, 'packs'))
+                        side = int(r.hget(c, 'side'))
+                        cl = int(r.hget(message.from_user.id, 'class'))
+                        worker = 2 if cl in (2, 12, 22) and int(r.hget(c, 'build2')) == 1 else 1
                         trucker = 1
-                        if int(r.hget(message.from_user.id, 'class')) in (32, 33) and packs > 0:
+                        if cl in (32, 33) and packs > 0:
                             if packs > 40:
                                 packs = 40
                             trucker += packs * 0.03
@@ -1670,44 +1772,55 @@ async def work(message):
                             if r.hexists(message.from_user.id, 'name2') == 1:
                                 camp = 1
                         if int(r.hget(c, 'sawmill')) == 1:
-                            ran = randint(5, 15)
+                            ran = 15 if side == 1 else randint(5, 15)
                             if camp == 1:
                                 ran *= 2
-                            ran = int(ran * trucker)
+                            ran = int(ran * trucker) * worker
                             resources += '\U0001F333 +' + str(ran)
                             r.hincrby(c, 'wood', ran)
                         if int(r.hget(c, 'mine')) == 1:
-                            ran = randint(2, 10)
+                            ran = 10 if side == 1 else randint(2, 10)
                             if camp == 1:
                                 ran *= 2
-                            ran = int(ran * trucker)
+                            ran = int(ran * trucker) * worker
                             resources += ' \U0001faa8 +' + str(ran)
                             r.hincrby(c, 'stone', ran)
                         if int(r.hget(c, 'craft')) == 1:
-                            ran = randint(2, 5)
+                            ran = 5 if side == 1 else randint(2, 5)
                             if camp == 1:
                                 ran *= 2
-                            ran = int(ran * trucker)
+                            ran = int(ran * trucker) * worker
                             resources += ' \U0001F9F6 +' + str(ran)
                             r.hincrby(c, 'cloth', ran)
                         if int(r.hget(c, 'silicate')) == 1:
-                            ran = randint(1, 3)
+                            ran = 3 if side == 1 else randint(1, 3)
                             if camp == 1:
                                 ran *= 2
-                            ran = int(ran * trucker)
+                            ran = int(ran * trucker) * worker
                             resources += ' \U0001F9F1 +' + str(ran)
                             r.hincrby(c, 'brick', ran)
                         if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
-                            resources += ' \n\U0001F4B5 +5'
-                            r.hincrby(message.from_user.id, 'money', 5)
-                            if int(r.hget(c, 'new_post')) == 0:
-                                r.hincrby(c, 'money', -8)
-                                r.hincrby('soledar', 'money', 3)
+                            if side == 4:
+                                if int(r.hget(c, 'new_post')) == 0:
+                                    resources += ' \n\U0001F4B5 +8'
+                                    r.hincrby(message.from_user.id, 'money', 8)
+                                    r.hincrby(c, 'money', -8)
+                                else:
+                                    r.hincrby(message.from_user.id, 'money', 10)
+                                    r.hincrby(c, 'money', -10)
+                                    resources += ' \n\U0001F4B5 +10 \U0001F4E6 +1'
+                                    r.hincrby(message.from_user.id, 'packs', 1)
                             else:
-                                r.hincrby(c, 'money', -10)
-                                r.hincrby('soledar', 'money', 5)
-                                resources += ' \U0001F4E6 +1'
-                                r.hincrby(message.from_user.id, 'packs', 1)
+                                resources += ' \n\U0001F4B5 +5'
+                                r.hincrby(message.from_user.id, 'money', 5)
+                                if int(r.hget(c, 'new_post')) == 0:
+                                    r.hincrby(c, 'money', -8)
+                                    r.hincrby('soledar', 'money', 3)
+                                else:
+                                    r.hincrby(c, 'money', -10)
+                                    r.hincrby('soledar', 'money', 5)
+                                    resources += ' \U0001F4E6 +1'
+                                    r.hincrby(message.from_user.id, 'packs', 1)
                             
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
@@ -1921,10 +2034,14 @@ async def handle_query(call):
                                                                 text='Твій русак не підходить по силі для цього бою.')
                         else:
                             if int(r.hget(call.from_user.id, 'class')) == 29:
+                                if int(r.hget(call.from_user.id, 'support')) == 1 and \
+                                        checkClan(uid1, building='build2', level=4):
+                                    money = 10
+                                else:
+                                    money = 5
                                 await bot.edit_message_text(
-                                    text='\u26D1 ' + call.from_user.first_name + ' відправив свого русака надати '
-                                                                                 'медичну допомогу пораненому.'
-                                                                                 '\n\U0001fac0 +20 \U0001F4B5 +5',
+                                    text=f'\u26D1 {call.from_user.first_name} відправив свого русака надати медичну '
+                                         f'допомогу пораненому.\n\U0001fac0 +20 \U0001F4B5 +{money}',
                                     inline_message_id=call.inline_message_id)
                                 hp(20, uid1)
                                 r.hincrby(call.from_user.id, 'money', 5)
@@ -2199,6 +2316,42 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ти не адміністратор.')
+
+    elif call.data.startswith('clan_side'):
+        c = 'c' + str(call.message.chat.id)
+        if call.from_user.id == int(r.hget(c, 'leader')):
+            if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
+                    and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
+                    and int(r.hget(c, 'technics')) >= 100 \
+                    and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200:
+                r.hincrby(c, 'money', -5000)
+                r.hincrby(c, 'wood', -6000)
+                r.hincrby(c, 'stone', -300)
+                r.hincrby(c, 'cloth', -1500)
+                r.hincrby(c, 'brick', -1000)
+                r.hincrby(c, 'technics', -100)
+                r.hincrby(c, 'r_spirit', -200)
+                if call.data.startswith('clan_side_1'):
+                    r.hset(c, 'base', 5)
+                    r.hset(c, 'side', 1)
+                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Комуни.')
+                elif call.data.startswith('clan_side_2'):
+                    r.hset(c, 'base', 6)
+                    r.hset(c, 'side', 2)
+                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Коаліції.')
+                elif call.data.startswith('clan_side_3'):
+                    r.hset(c, 'base', 7)
+                    r.hset(c, 'side', 3)
+                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Асоціації.')
+                elif call.data.startswith('clan_side_4'):
+                    r.hset(c, 'base', 8)
+                    r.hset(c, 'side', 4)
+                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Організації.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Це має зробити лідер.')
 
     elif call.data.startswith('invite'):
         admins = []
@@ -2511,6 +2664,85 @@ async def handle_query(call):
                 r.hset(c, 'new_post', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано '
                                                              'відділення Нової пошти.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build1') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        s = int(r.hget(c, 'side'))
+        if int(r.hget(c, 'build1')) == 0 and s != 0:
+            if int(r.hget(c, 'wood')) >= 4000 and int(r.hget(c, 'stone')) >= 2000 and int(r.hget(c, 'cloth')) >= 750 \
+                    and int(r.hget(c, 'brick')) >= 500 and int(r.hget(c, 'money')) >= 4000 \
+                    and int(r.hget(c, 'r_spirit')) >= 50 and int(r.hget(c, 'technics')) >= 50:
+                r.hincrby(c, 'wood', -4000)
+                r.hincrby(c, 'stone', -2000)
+                r.hincrby(c, 'cloth', -750)
+                r.hincrby(c, 'brick', -500)
+                r.hincrby(c, 'money', -4000)
+                r.hincrby(c, 'r_spirit', -50)
+                r.hincrby(c, 'technics', -50)
+                r.hset(c, 'build1', s)
+                b = ['', 'тракторний завод', 'штаб тероборони', 'dungeon', 'біолабораторію']
+                await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build2') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        s = int(r.hget(c, 'side'))
+        if int(r.hget(c, 'build2')) == 0 and s != 0:
+            if int(r.hget(c, 'wood')) >= 3000 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 500 \
+                    and int(r.hget(c, 'brick')) >= 300 and int(r.hget(c, 'money')) >= 1000 \
+                    and int(r.hget(c, 'r_spirit')) >= 50:
+                r.hincrby(c, 'wood', -3000)
+                r.hincrby(c, 'stone', -500)
+                r.hincrby(c, 'cloth', -500)
+                r.hincrby(c, 'brick', -300)
+                r.hincrby(c, 'money', -1000)
+                r.hincrby(c, 'r_spirit', -50)
+                r.hset(c, 'build2', s)
+                b = ['', 'пивний ларьок', 'березову рощу', 'бійцівський клуб', 'аптеку']
+                await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build3') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        s = int(r.hget(c, 'side'))
+        if int(r.hget(c, 'build3')) == 0 and s != 0:
+            if int(r.hget(c, 'wood')) >= 1000 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 500 \
+                    and int(r.hget(c, 'brick')) >= 400 and int(r.hget(c, 'money')) >= 2000:
+                r.hincrby(c, 'wood', -1000)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby(c, 'cloth', -500)
+                r.hincrby(c, 'brick', -400)
+                r.hincrby(c, 'money', -2000)
+                r.hset(c, 'build3', s)
+                b = ['', 'падік', 'генеральську дачу', 'циганський табір', 'АЗС']
+                await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build4') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        s = int(r.hget(c, 'side'))
+        if int(r.hget(c, 'build4')) == 0 and s != 0:
+            if int(r.hget(c, 'wood')) >= 2000 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 500 \
+                    and int(r.hget(c, 'brick')) >= 400 and int(r.hget(c, 'money')) >= 2000 \
+                    and int(r.hget(c, 'technics')) >= 200:
+                r.hincrby(c, 'wood', -2000)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby(c, 'cloth', -500)
+                r.hincrby(c, 'brick', -400)
+                r.hincrby(c, 'money', -2000)
+                r.hincrby(c, 'technics', -200)
+                r.hset(c, 'build4', s)
+                b = ['', 'тюрму', 'казарму', 'радіовежу', 'дата-центр']
+                await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
@@ -3396,7 +3628,7 @@ async def handle_query(call):
                 elif cl == 31 or cl == 32 or cl == 33:
                     if int(r.hget(uid, 'support')) == 2:
                         r.hincrby(uid, 's_support', 5)
-                    elif int(r.hget(uid, 'support')) != 6:
+                    elif int(r.hget(uid, 'support')) not in (6, 7):
                         r.hset(uid, 'support', 2)
                         r.hset(uid, 's_weapon', 5)
                 else:
@@ -3521,8 +3753,9 @@ async def handle_query(call):
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
     elif call.data.startswith('ration'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
-            if int(r.hget(call.from_user.id, 'money')) >= 10:
-                r.hincrby(call.from_user.id, 'money', -10)
+            price = 4 if int(r.hget('c' + str(call.message.chat.id), 'side')) == 1 else 10
+            if int(r.hget(call.from_user.id, 'money')) >= price:
+                r.hincrby(call.from_user.id, 'money', -price)
                 ran = randint(1, 3)
                 if ran == 1:
                     spirit(1000, call.from_user.id, 0)
@@ -3558,13 +3791,120 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Клановий магазин тільки для учасників клану.')
 
+    elif call.data.startswith('clan_fragment'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 15:
+                if int(r.hget(call.from_user.id, 'defense')) == 0 or int(r.hget(call.from_user.id, 'defense')) == 1:
+                    r.hset(call.from_user.id, 'defense', 9)
+                    r.hset(call.from_user.id, 's_defense', 7)
+                    r.hincrby(call.from_user.id, 'money', -15)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили уламок бронетехніки')
+                elif int(r.hget(call.from_user.id, 's_defense')) < 50:
+                    r.hincrby(call.from_user.id, 's_defense', 7)
+                    r.hincrby(call.from_user.id, 'money', -15)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили уламок бронетехніки')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ваша броня вже достатньо міцна')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_helmet'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 50:
+                if int(r.hget(call.from_user.id, 'head')) == 0:
+                    r.hset(call.from_user.id, 'head', 2)
+                    r.hset(call.from_user.id, 's_head', 40)
+                    r.hincrby(call.from_user.id, 'money', -50)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили тактичний шолом')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є шапка.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_lash'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 60:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                    r.hset(call.from_user.id, 'weapon', 3)
+                    r.hset(call.from_user.id, 's_weapon', 3)
+                    r.hincrby(call.from_user.id, 'money', -60)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили батіг')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є зброя.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_mushroom'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 80:
+                if int(r.hget(call.from_user.id, 'support')) == 0:
+                    r.hset(call.from_user.id, 'support', 6)
+                    r.hset(call.from_user.id, 's_support', 1)
+                    r.hincrby(call.from_user.id, 'money', -80)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили мухомор королівський')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є допоміжне спорядження.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_diesel'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'class')) in (31, 32, 33):
+                if int(r.hget(call.from_user.id, 'money')) >= 20:
+                    if int(r.hget(call.from_user.id, 'support')) == 0:
+                        r.hset(call.from_user.id, 'support', 2)
+                        r.hset(call.from_user.id, 's_support', 5)
+                        r.hincrby(call.from_user.id, 'money', -20)
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Ви успішно купили дизель')
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='У вас вже є допоміжне спорядження.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Дизель можна купити тільки таксистам.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
     elif call.data.startswith('monument'):
         c = 'c' + str(call.message.chat.id)
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
             if int(r.hget(c, 'r_spirit')) >= 10:
                 r.hincrby(c, 'r_spirit', -10)
+                s = 1 if int(r.hget(c, 'side')) == 2 else 0
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     increase_trance(5, mem)
+                    if s == 1:
+                        spirit(int(int(r.hget(mem, 'spirit')) * 0.5), mem, 0)
                 await bot.send_message(call.message.chat.id, '\U0001F44A Клан готовий йти в бій.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
