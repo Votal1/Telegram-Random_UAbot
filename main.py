@@ -1238,13 +1238,13 @@ async def clan(message):
                         wins = '\nКількість перемог: ' + r.hget(222, cid).decode()
                     if base == 2:
                         building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, ' \
-                                   'якщо серед учасників всі з клану.\n\U0001F3ED Інфраструктура:'
+                                   'якщо серед учасників всі з клану.\n'
                     elif base == 3:
-                        building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.' \
-                                   '\n\U0001F3ED Інфраструктура:'
+                        building = '\U0001F3E1 Апартаменти\n\U0001F4B5 +34% за роботу на шахтах Соледару.\n'
                     elif base == 4:
                         building = '\U0001F3D8 Штаб\n\U0001F4B5 Шанс подвоїти грошову нагороду за перемогу в дуелях, ' \
-                                   'але клан стає ціллю для рейдерів.\n\U0001F3ED Інфраструктура:'
+                                   'але клан стає ціллю для рейдерів.\n'
+                    building += '\U0001F3ED Інфраструктура:'
                     resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() + \
                                 '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
                                 '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode()
@@ -2320,39 +2320,41 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_side'):
         c = 'c' + str(call.message.chat.id)
-        if call.from_user.id == int(r.hget(c, 'leader')) and int(r.hget(c, 'side')) == 0:
-            if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
-                    and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
-                    and int(r.hget(c, 'technics')) >= 100 \
-                    and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200:
-                r.hincrby(c, 'money', -5000)
-                r.hincrby(c, 'wood', -6000)
-                r.hincrby(c, 'stone', -300)
-                r.hincrby(c, 'cloth', -1500)
-                r.hincrby(c, 'brick', -1000)
-                r.hincrby(c, 'technics', -100)
-                r.hincrby(c, 'r_spirit', -200)
-                if call.data.startswith('clan_side_1'):
-                    r.hset(c, 'base', 5)
-                    r.hset(c, 'side', 1)
-                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Комуни.')
-                elif call.data.startswith('clan_side_2'):
-                    r.hset(c, 'base', 6)
-                    r.hset(c, 'side', 2)
-                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Коаліції.')
-                elif call.data.startswith('clan_side_3'):
-                    r.hset(c, 'base', 7)
-                    r.hset(c, 'side', 3)
-                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Асоціації.')
-                elif call.data.startswith('clan_side_4'):
-                    r.hset(c, 'base', 8)
-                    r.hset(c, 'side', 4)
-                    await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Організації.')
+        if int(r.hget(c, 'side')) == 0:
+            if call.from_user.id == int(r.hget(c, 'leader')):
+                if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
+                        and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
+                        and int(r.hget(c, 'technics')) >= 100 \
+                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200:
+                    r.hincrby(c, 'money', -5000)
+                    r.hincrby(c, 'wood', -6000)
+                    r.hincrby(c, 'stone', -3000)
+                    r.hincrby(c, 'cloth', -1500)
+                    r.hincrby(c, 'brick', -1000)
+                    r.hincrby(c, 'technics', -100)
+                    r.hincrby(c, 'r_spirit', -200)
+                    if call.data.startswith('clan_side_1'):
+                        r.hset(c, 'base', 5)
+                        r.hset(c, 'side', 1)
+                        await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Комуни.')
+                    elif call.data.startswith('clan_side_2'):
+                        r.hset(c, 'base', 6)
+                        r.hset(c, 'side', 2)
+                        await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Коаліції.')
+                    elif call.data.startswith('clan_side_3'):
+                        r.hset(c, 'base', 7)
+                        r.hset(c, 'side', 3)
+                        await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Асоціації.')
+                    elif call.data.startswith('clan_side_4'):
+                        r.hset(c, 'base', 8)
+                        r.hset(c, 'side', 4)
+                        await bot.send_message(call.message.chat.id, '\U0001F3D7 Покращено Угруповання до Організації.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо ресурсів.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Недостатньо ресурсів.')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Це має зробити лідер.')
+                                                text='Це має зробити лідер.')
 
     elif call.data.startswith('invite'):
         admins = []
