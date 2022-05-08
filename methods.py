@@ -2,6 +2,7 @@ from random import randint, choice
 from config import r, bot
 from variables import names, icons
 from datetime import datetime
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 def get_rusak():
@@ -56,6 +57,33 @@ def checkLeader(uid, cid):
         return True
     else:
         return False
+
+
+def c_shop(c, page):
+    msg = ''
+    markup = InlineKeyboardMarkup()
+    if page == 1:
+        msg = '\U0001F3EC Список доступних товарів:\n\nСовєцкій пайок - видається випадкова їжа:\n' \
+              '\U0001F366 Пломбір натуральний - \U0001F54A +1000\n' \
+              '\U0001F953 Ковбаса докторська - \U0001F54A +1000; \U0001F464 +5 або \U0001F44A +5\n' \
+              '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
+              '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
+        markup.add(InlineKeyboardButton(text='Совєцкій пайок - 10 грн', callback_data='ration'))
+        markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
+                   InlineKeyboardButton(text='\U0001F69A', callback_data='clan_shop_3'))
+    if page == 2:
+        msg = '\U0001F451 Товари для лідера і заступників:'
+        if int(r.hget(c, 'monument')) == 1:
+            msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
+            markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
+                                            callback_data='monument'))
+        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
+                   InlineKeyboardButton(text='\U0001F69A', callback_data='clan_shop_3'))
+    if page == 3:
+        msg = '\U0001F69A Магазин ресурсів:\n\nНезабаром відкриття...'
+        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
+                   InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'))
+    return msg, markup
 
 
 async def top(sett, uid, text):

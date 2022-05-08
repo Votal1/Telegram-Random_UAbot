@@ -13,7 +13,7 @@ from parameters import spirit, vodka, intellect, hp, damage_support, damage_head
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, top, itop, ctop
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, c_shop, top, itop, ctop
 
 from requests import get
 from bs4 import BeautifulSoup
@@ -1465,17 +1465,7 @@ async def build(message):
         if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
             c = 'c' + str(message.chat.id)
             if int(r.hget(c, 'shop')) == 1:
-                msg = '\U0001F3EC Список доступних товарів:\n\nСовєцкій пайок - видаєцься випадкова їжа:\n' \
-                      '\U0001F366 Пломбір натуральний - \U0001F54A +1000\n' \
-                      '\U0001F953 Ковбаса докторська - \U0001F54A +1000; \U0001F464 +5 або \U0001F44A +5\n' \
-                      '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
-                      '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
-                markup = InlineKeyboardMarkup()
-                markup.add(InlineKeyboardButton(text='Совєцкій пайок - 10 грн', callback_data='ration'))
-                if int(r.hget(c, 'monument')) == 1:
-                    msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
-                    markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
-                                                    callback_data='monument'))
+                msg, markup = c_shop(c, 1)
                 await message.answer(msg, reply_markup=markup)
     except:
         pass
@@ -3503,6 +3493,15 @@ async def handle_query(call):
             except:
                 pass
 
+    elif call.data.startswith('clan_shop_1'):
+        msg, markup = c_shop('c' + str(call.message.chat.id), 1)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith('clan_shop_2'):
+        msg, markup = c_shop('c' + str(call.message.chat.id), 2)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith('clan_shop_3'):
+        msg, markup = c_shop('c' + str(call.message.chat.id), 3)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
     elif call.data.startswith('ration'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 10:
