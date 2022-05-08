@@ -3697,7 +3697,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'head')) == 1:
                     r.hincrby(uid, 'sch', 30)
                     r.hincrby(uid, 's_head', 20)
-                else:
+                elif int(r.hget(uid, 'head')) != 2:
                     r.hset(uid, 'sch', 30)
                     r.hset(uid, 'head', 1)
                     r.hset(uid, 's_head', 20)
@@ -3745,13 +3745,13 @@ async def handle_query(call):
             except:
                 pass
 
-    elif call.data.startswith('clan_shop_1'):
+    elif call.data.startswith('clan_shop_1') and call.from_user.id == call.message.reply_to_message.from_user.id:
         msg, markup = c_shop('c' + str(call.message.chat.id), 1)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
-    elif call.data.startswith('clan_shop_2'):
+    elif call.data.startswith('clan_shop_2') and call.from_user.id == call.message.reply_to_message.from_user.id:
         msg, markup = c_shop('c' + str(call.message.chat.id), 2)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
-    elif call.data.startswith('clan_shop_3'):
+    elif call.data.startswith('clan_shop_3') and call.from_user.id == call.message.reply_to_message.from_user.id:
         msg, markup = c_shop('c' + str(call.message.chat.id), 3)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
     elif call.data.startswith('ration'):
@@ -3860,11 +3860,22 @@ async def handle_query(call):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 80:
                 if int(r.hget(call.from_user.id, 'support')) == 0:
-                    r.hset(call.from_user.id, 'support', 6)
-                    r.hset(call.from_user.id, 's_support', 1)
-                    r.hincrby(call.from_user.id, 'money', -80)
-                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                    text='Ви успішно купили мухомор королівський')
+                    mushroom = int(r.hget(call.from_user.id, 'mushrooms'))
+                    if int(r.hget(call.from_user.id, 'class')) == 18 or int(r.hget(call.from_user.id, 'class')) == 28:
+                        mushroom = 0
+                    if mushroom < 3:
+                        if int(r.hget(call.from_user.id, 'intellect')) < 20:
+                            r.hset(call.from_user.id, 'support', 6)
+                            r.hset(call.from_user.id, 's_support', 1)
+                            r.hincrby(call.from_user.id, 'money', -80)
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='Ви успішно купили мухомор королівський')
+                        else:
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='Ваш русак вже занадто розумний')
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Для вашого русака не передбачено більше трьох мухоморів')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас вже є допоміжне спорядження.')
