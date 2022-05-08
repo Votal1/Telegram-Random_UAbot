@@ -1065,7 +1065,7 @@ async def war_power(sett, cid):
                 mal += 1
             elif int(stats[7]) in (9, 19, 29):
                 m = 1
-            elif int(stats[7]) in (34, 35, 36) and checkClan(member, building='build3', level=2):
+            elif int(stats[7]) in (34, 35, 36):
                 gen = 1
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
         except:
@@ -1109,6 +1109,8 @@ async def great_war(cid1, cid2, a, b):
             r_spirit += 2
             if gen1 == 1:
                 r_spirit += 1
+                if int(r.hget('c' + str(cid1), 'build3')) == 2:
+                    r_spirit += 1
         if int(r.hget('c' + str(cid1), 'side')) == 4:
             r.hincrby('c' + str(cid1), 'money', 6)
         for n in a:
@@ -1130,6 +1132,8 @@ async def great_war(cid1, cid2, a, b):
             r_spirit += 2
             if gen2 == 1:
                 r_spirit += 1
+                if int(r.hget('c' + str(cid2), 'build3')) == 2:
+                    r_spirit += 1
         if int(r.hget('c' + str(cid2), 'side')) == 4:
             r.hincrby('c' + str(cid2), 'money', 6)
         for n in b:
