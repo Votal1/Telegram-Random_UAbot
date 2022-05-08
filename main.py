@@ -1595,7 +1595,8 @@ async def clan_settings(message):
                 await bot.delete_message(message.chat.id, message.message_id)
             except:
                 pass
-        if checkLeader(message.from_user.id, message.chat.id) or message.from_user.id in sudoers:
+        if checkLeader(message.from_user.id, int(r.hget(message.from_user.id, 'clan'))) or \
+                message.from_user.id in sudoers:
             if int(r.hget(c, 'allow')) == 0:
                 allow = '\n\nВ клан може приєднатись кожен бажаючий.'
             else:
