@@ -1232,7 +1232,8 @@ async def clan(message):
                                          f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()}", parse_mode='HTML')
                 elif base >= 2:
                     building, wins = '', ''
-                    prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання']
+                    prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
+                              'Комуна', 'Коаліція', 'Асоціація', 'Організація']
                     if r.hexists(222, cid) == 1:
                         wins = '\nКількість перемог: ' + r.hget(222, cid).decode()
                     if base == 2:
