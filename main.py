@@ -3745,13 +3745,13 @@ async def handle_query(call):
             except:
                 pass
 
-    elif call.data.startswith('clan_shop_1') and call.from_user.id == call.message.reply_to_message.from_user.id:
+    elif call.data.startswith('clan_shop_1'):
         msg, markup = c_shop('c' + str(call.message.chat.id), 1)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
-    elif call.data.startswith('clan_shop_2') and call.from_user.id == call.message.reply_to_message.from_user.id:
+    elif call.data.startswith('clan_shop_2'):
         msg, markup = c_shop('c' + str(call.message.chat.id), 2)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
-    elif call.data.startswith('clan_shop_3') and call.from_user.id == call.message.reply_to_message.from_user.id:
+    elif call.data.startswith('clan_shop_3'):
         msg, markup = c_shop('c' + str(call.message.chat.id), 3)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
     elif call.data.startswith('ration'):
