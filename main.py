@@ -1374,7 +1374,7 @@ async def upgrade(message):
                         r.hset(c, 'base', 4)
                         r.sadd('groupings', message.chat.id)
                         await message.answer('\U0001F3D7 Покращено Гільдію до Угруповання.')
-            elif base == 4 and message.chat.id == -1001733230634:
+            elif base == 4:
                 msg = '\U0001F3D7 Покращення Угруповання до нового рівня коштує\n\U0001F333 6000, \U0001faa8 3000, ' \
                       '\U0001F9F6 1500, \U0001F9F1 1000, \U0001F4FB 100, \U0001F47E 200 і \U0001F4B5 5000.\n\nВам ' \
                       'доведеться зробити важливий вибір - обрати один з 4 варіантів розвитку.'
