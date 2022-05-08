@@ -1105,6 +1105,12 @@ async def great_war(cid1, cid2, a, b):
     r_spirit = 1
     if win == ['a']:
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
+        if int(r.hget('c' + str(cid1), 'side')) == 2:
+            r_spirit += 2
+            if gen1 == 1:
+                r_spirit += 1
+        if int(r.hget('c' + str(cid1), 'side')) == 4:
+            r.hincrby('c' + str(cid1), 'money', 6)
         for n in a:
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
@@ -1112,12 +1118,6 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 3)
                 reward = '3'
             else:
-                if int(r.hget('c' + str(cid1), 'side')) == 2:
-                    r_spirit += 2
-                    if gen1 == 1:
-                        r_spirit += 1
-                if int(r.hget('c' + str(cid1), 'side')) == 4:
-                    r.hincrby('c' + str(cid1), 'money', 6)
                 r.hincrby(n, 'money', 6)
                 reward = f'6 \U0001F47E +{r_spirit}'
         r.hincrby(222, cid1, 1)
@@ -1126,6 +1126,12 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
     elif win == ['b']:
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
+        if int(r.hget('c' + str(cid2), 'side')) == 2:
+            r_spirit += 2
+            if gen2 == 1:
+                r_spirit += 1
+        if int(r.hget('c' + str(cid2), 'side')) == 4:
+            r.hincrby('c' + str(cid2), 'money', 6)
         for n in b:
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
@@ -1133,10 +1139,6 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby(n, 'money', 3)
                 reward = '3'
             else:
-                if int(r.hget('c' + str(cid2), 'side')) == 2:
-                    r_spirit += 2
-                    if gen2 == 1:
-                        r_spirit += 1
                 r.hincrby(n, 'money', 6)
                 reward = f'6 \U0001F47E +{r_spirit}'
         r.hincrby(222, cid2, 1)
