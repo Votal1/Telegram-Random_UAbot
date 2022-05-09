@@ -1889,7 +1889,7 @@ async def guard(message):
                             r.hincrby('soledar', 'money', 5)
                             msg += ' \U0001F4E6 +1'
                             r.hincrby(message.from_user.id, 'packs', 1)
-                if int(r.hget(mid, 'class')) == 36:
+                if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
                     if int(r.hget('convoy', 'day')) != datetime.now().day:
                         r.hset('convoy', 'power', 2000000)
                         r.hset('convoy', 'day', datetime.now().day)
