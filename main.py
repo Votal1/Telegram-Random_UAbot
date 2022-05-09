@@ -1238,8 +1238,8 @@ async def clan(message):
                                          f"\nКількість учасників: {r.scard('cl' + cid)}\n\n\U0001f6d6 Барак\n"
                                          f"Можливість обирати фашиста дня та зберігати деякі ресурси.\n\nРесурси:"
                                          f"\n\U0001F4B5 Гривні: {r.hget(c, 'money').decode()}"
-                                         f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()} /15000"
-                                         f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()} /10000",
+                                         f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()} / 15000"
+                                         f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()} / 10000",
                                          parse_mode='HTML')
                 elif base >= 2:
                     building, wins = '', ''
@@ -1258,8 +1258,8 @@ async def clan(message):
                                    'але клан стає ціллю для рейдерів.\n'
                     building += '\U0001F3ED Інфраструктура:'
                     resources = f"\n\nРесурси:\n\U0001F4B5 Гривні: {r.hget(c, 'money').decode()}" \
-                                f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()} /15000" \
-                                f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()} /10000"
+                                f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()} / 15000" \
+                                f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()} / 10000"
                     if int(r.hget(c, 'sawmill')) == 1:
                         building += ' пилорама'
                     if int(r.hget(c, 'mine')) == 1:
@@ -1268,9 +1268,9 @@ async def clan(message):
                         building += ', цех'
                     if int(r.hget(c, 'storage')) == 1:
                         building += ', склад'
-                        resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} /5000"
+                        resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} / 5000"
                         if base >= 3:
-                            resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()} /3000"
+                            resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()} / 3000"
                             if int(r.hget(c, 'technics')) > 0:
                                 resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
                         if base > 4:
