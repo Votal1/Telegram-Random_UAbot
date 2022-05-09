@@ -808,9 +808,9 @@ async def donate_shop(message):
                              r.hget(message.from_user.id, 'strap').decode() +
                              '\n\nОсь опис товарів, які можна придбати:\n\n\U0001F304 Зміна звичайної фотки русака на '
                              'преміум фото свого класу(Кадиров, Обеме, Горшок, Тесак, Захарченко, Дерек Шовін, '
-                             'Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг) або чмоню свого класу.\n\U0001F943 '
-                             'Настоянка глоду - буст для новачків. Якщо в русака менше 400 сили і 5 інтелекту, то '
-                             'настоянка моментально додасть 400 сили і 4 інтелекту.'
+                             'Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, Шойгу) або чмоню свого класу.\n'
+                             '\U0001F943 Настоянка глоду - буст для новачків. Якщо в русака менше 400 сили і 5 '
+                             'інтелекту, то настоянка моментально додасть 400 сили і 4 інтелекту.'
                              '\n\U0001F4E6 40 Донбаських пакунків\n\U0001F393 Курс перекваліфікації - '
                              'дозволяє русаку наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал '
                              'найвищого рівня (покупка доступна до етапу 2. Купівля будівельних матеріалів).',
@@ -1835,6 +1835,9 @@ async def work(message):
                                     r.hincrby('soledar', 'money', 5)
                                     resources += ' \U0001F4E6 +1'
                                     r.hincrby(message.from_user.id, 'packs', 1)
+                        if cl == 36 and side == 1 and choices([1, 0], [20, 80]) == [1]:
+                            resources += '\n\U0001F916 +1'
+                            r.hincrby(c, 'codes', 1)
                             
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
@@ -1864,16 +1867,34 @@ async def guard(message):
                 name = names[int(r.hget(mid, 'name'))]
                 msg = name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st)
                 if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
-                    msg += ' \U0001F4B5 +5'
-                    r.hincrby(message.from_user.id, 'money', 5)
-                    if int(r.hget(c, 'new_post')) == 0:
-                        r.hincrby(c, 'money', -8)
-                        r.hincrby('soledar', 'money', 3)
+                    if int(r.hget(c, 'side')) == 4:
+                        if int(r.hget(c, 'new_post')) == 0:
+                            msg += ' \U0001F4B5 +8'
+                            r.hincrby(message.from_user.id, 'money', 8)
+                            r.hincrby(c, 'money', -8)
+                        else:
+                            msg += ' \U0001F4B5 +10'
+                            r.hincrby(message.from_user.id, 'money', 10)
+                            r.hincrby(c, 'money', -10)
+                            msg += ' \U0001F4E6 +1'
+                            r.hincrby(message.from_user.id, 'packs', 1)
                     else:
-                        r.hincrby(c, 'money', -10)
-                        r.hincrby('soledar', 'money', 5)
-                        msg += ' \U0001F4E6 +1'
-                        r.hincrby(message.from_user.id, 'packs', 1)
+                        msg += ' \U0001F4B5 +5'
+                        r.hincrby(message.from_user.id, 'money', 5)
+                        if int(r.hget(c, 'new_post')) == 0:
+                            r.hincrby(c, 'money', -8)
+                            r.hincrby('soledar', 'money', 3)
+                        else:
+                            r.hincrby(c, 'money', -10)
+                            r.hincrby('soledar', 'money', 5)
+                            msg += ' \U0001F4E6 +1'
+                            r.hincrby(message.from_user.id, 'packs', 1)
+                if int(r.hget(mid, 'class')) == 36:
+                    if int(r.hget('convoy', 'day')) != datetime.now().day:
+                        r.hset('convoy', 'power', 2000000)
+                        r.hset('convoy', 'day', datetime.now().day)
+                    r.hincrby('convoy', 'power', 500000)
+                    msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
                 await message.reply(msg + '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
             else:
