@@ -1435,12 +1435,15 @@ async def start_raid(cid):
 
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
-        if choices([1, 0], [5, 95]) == [1]:
-            r.hincrby(c, 'codes', 1)
-            reward += '\n\U0001F916 +1'
+
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
         msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!' + reward.replace('+', '-')
+
+        if choices([1, 0], [5, 95]) == [1]:
+            r.hincrby(c, 'codes', 1)
+            msg += '\n\U0001F916 +1'
+
         await bot.send_message(cid, msg)
         await bot.send_message(int(enemy), msg2)
 
