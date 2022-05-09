@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, premium, chm, default
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
@@ -655,7 +655,7 @@ async def classes_2(message):
           'а якщо в нього менше перемог - на 40%. Ця здібність не діє проти мусорів.\n\n' \
           'Далекобійник \U0001F695\U0001F695 - жінки на 50 гривень дешевші. +3% ресурсів за роботу в клані за кожен ' \
           'невідкритий пакунок (максимум 120%).\n\n' \
-          'Воєнний злочинець \U0001F396\U0001F396 - \U0001F3C5 40 трофеїв. Якщо русак такого класу в міжчатовій битві' \
+          'Воєнний злочинець \U0001F396\U0001F396 - \U0001F3C5 50 трофеїв. Якщо русак такого класу в міжчатовій битві' \
           ' один - збільшує свою силу на 25% за кожне гарматне м`ясо та зменшує бойовий дух ворогам на 5%.\n\n\n' \
           'Щоб подивитись третій рівень класів натисни /class_3\n' \
           'Якщо твій русак вже набрав 12 інтелекту і вибрав клас, можеш ' \
@@ -3423,6 +3423,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'photo', premium[9])
             elif cl == 31 or cl == 32 or cl == 33:
                 r.hset(call.from_user.id, 'photo', premium[10])
+            elif cl == 34 or cl == 35 or cl == 36:
+                r.hset(call.from_user.id, 'photo', premium[11])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
@@ -3457,6 +3459,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'photo', chm[9])
             elif cl == 31 or cl == 32 or cl == 33:
                 r.hset(call.from_user.id, 'photo', chm[10])
+            elif cl == 34 or cl == 35 or cl == 36:
+                r.hset(call.from_user.id, 'photo', chm[11])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
@@ -4063,6 +4067,14 @@ async def echo(message):
                             await message.reply_photo(photo=ran, caption='Ти вибрав клас Таксист.')
                             r.hset(message.from_user.id, 'class', 31)
                             r.sadd('class-31', message.from_user.id)
+                        elif 'Офіцер' in message.text or 'офіцер' in message.text:
+                            if int(r.hget(message.from_user.id, 'money')) >= 500:
+                                r.hincrby(message.from_user.id, 'money', -500)
+                                ran = choice(p12)
+                                r.hset(message.from_user.id, 'photo', ran)
+                                await message.reply_photo(photo=ran, caption='Ти вибрав клас Офіцер.')
+                                r.hset(message.from_user.id, 'class', 34)
+                                r.sadd('class-34', message.from_user.id)
             if int(r.hget(message.from_user.id, 'intellect')) >= 12:
                 if message.text == 'Покращити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))
@@ -4124,6 +4136,13 @@ async def echo(message):
                         r.hset(message.from_user.id, 'class', 32)
                         r.srem('class-31', message.from_user.id)
                         r.sadd('class-32', message.from_user.id)
+                    if cl == 34:
+                        if int(r.hget(message.from_user.id, 'trophy')) >= 50:
+                            r.hincrby(message.from_user.id, 'trophy', -50)
+                            await message.reply('Ти покращив офіцера до Воєнного злочинця.')
+                            r.hset(message.from_user.id, 'class', 35)
+                            r.srem('class-34', message.from_user.id)
+                            r.sadd('class-35', message.from_user.id)
             if int(r.hget(message.from_user.id, 'intellect')) >= 20:
                 if message.text == 'Вдосконалити русака':
                     cl = int(r.hget(message.from_user.id, 'class'))
@@ -4187,6 +4206,13 @@ async def echo(message):
                         r.hset(message.from_user.id, 'class', 33)
                         r.srem('class-32', message.from_user.id)
                         r.sadd('class-33', message.from_user.id)
+                    if cl == 35:
+                        if int(r.hget(message.from_user.id, 'strap')) >= 1:
+                            r.hincrby(message.from_user.id, 'strap', -1)
+                            await message.reply('Ти покращив воєнного злочинця до Генерала.')
+                            r.hset(message.from_user.id, 'class', 36)
+                            r.srem('class-35', message.from_user.id)
+                            r.sadd('class-36', message.from_user.id)
 
     except:
         pass

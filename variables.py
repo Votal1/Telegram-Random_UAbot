@@ -12,17 +12,18 @@ icons = ['', '\U0001F919', '\U0001F9F0', '\U0001F52E', '\U0001F5FF', '\U0001fa96
          '\U0001F919\U0001F919\U0001F919', '\U0001F9F0\U0001F9F0\U0001F9F0', '\U0001F52E\U0001F52E\U0001F52E',
          '\U0001F5FF\U0001F5FF\U0001F5FF', '\U0001fa96\U0001fa96\U0001fa96', '\U0001F46E\U0001F46E\U0001F46E',
          '\U0001F921\U0001F921\U0001F921', '\U0001F4DF\U0001F4DF\U0001F4DF', '\u26D1\u26D1\u26D1',
-         '\U0001F6AC\U0001F6AC\U0001F6AC', '\U0001F695', '\U0001F695\U0001F695', '\U0001F695\U0001F695\U0001F695']
+         '\U0001F6AC\U0001F6AC\U0001F6AC', '\U0001F695', '\U0001F695\U0001F695', '\U0001F695\U0001F695\U0001F695',
+         '\U0001F396', '\U0001F396\U0001F396', '\U0001F396\U0001F396\U0001F396']
 
 class_name = ['', 'Хач', 'Роботяга', 'Фокусник', 'Язичник', 'Гарматне м`ясо', 'Мусор', 'Малорос', 'Хакер', 'Медик',
               'Гопнік', 'Борцуха', 'Почесний алкаш', 'Злий геній', 'Скінхед', 'Орк', 'Силовик', 'Кремлебот',
               'Кіберзлочинець', 'Нарколог', 'Зек', 'Гроза Кавказу', 'П`яний майстер', 'Некромант', 'Білий вождь',
               'Герой Новоросії', 'Товариш майор', 'Агент ФСБ', 'Black Hat', 'Патологоанатом', 'Мародер', 'Таксист',
-              'Далекобійник', 'Танкіст']
+              'Далекобійник', 'Танкіст', 'Офіцер', 'Воєнний злочинець', 'Генерал']
 
 weapons = ['', 'Колючий дрин', 'РПГ-7', 'Батіг', 'Бита', '', '', '', '', '', '',
            'Травмат', 'Діамантове кайло', 'Колода з кіоску', 'Сокира Перуна',
-           'АК-47', 'Гумова палиця', 'Прапор новоросії', 'Експлойт', 'Медична пилка', 'Скляна пляшка']
+           'АК-47', 'Гумова палиця', 'Прапор новоросії', 'Експлойт', 'Медична пилка', 'Скляна пляшка', 'Палаш']
 
 defenses = ['', 'Колючий щит', 'Бронежилет вагнерівця', '', '', '', '', '', '', 'Уламок бронетехніки',
             '', '', '', '', '', 'АК-47', 'Поліцейський щит', 'Прапор новоросії']
@@ -88,14 +89,18 @@ p11 = ['https://ibb.co/5WPhmSn', 'https://ibb.co/Zfz7Nft', 'https://ibb.co/XF5Md
        'https://ibb.co/n1Yvrb7', 'https://ibb.co/ZTGP7TS', 'https://ibb.co/QC43pkJ', 'https://ibb.co/tPzYhXx',
        'https://ibb.co/DkxNyz0', 'https://ibb.co/fQbHYMK']
 
+p12 = ['https://ibb.co/hDHcqDC', 'https://ibb.co/42ZWgYW', 'https://ibb.co/swD4ZDn', 'https://ibb.co/HnBZqDB',
+       'https://ibb.co/G2M15Pz', 'https://ibb.co/rxPcDsv', 'https://ibb.co/DWNzTnL', 'https://ibb.co/4P0vkJj',
+       'https://ibb.co/PhzrB52', 'https://ibb.co/YfDzRY6']
+
 premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', 'https://i.ibb.co/zmYDNrn/3.png',
            'https://i.ibb.co/QDHLRPp/4.png', 'https://i.ibb.co/GntBLKG/5.png', 'https://i.ibb.co/b1jN3GC/6.png',
            'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png', 'https://i.ibb.co/Gdf7NP0/9m.png',
-           'https://ibb.co/n8d9fyv', 'https://ibb.co/NK7tzW6']
+           'https://ibb.co/n8d9fyv', 'https://ibb.co/NK7tzW6', 'https://ibb.co/RQtY0fb']
 
 chm = ['https://ibb.co/hHL9Gn6', 'https://ibb.co/2q1FRqp', 'https://ibb.co/Y0L764f', 'https://ibb.co/rdjfSxy',
        'https://ibb.co/sRzV5Zs', 'https://ibb.co/zPx2zKK', 'https://ibb.co/dQcFyKw', 'https://ibb.co/cXvjbkD',
-       'https://ibb.co/QdP1KQZ', 'https://ibb.co/zfBD5ZW', 'https://ibb.co/wWV253v']
+       'https://ibb.co/QdP1KQZ', 'https://ibb.co/zfBD5ZW', 'https://ibb.co/wWV253v', 'https://ibb.co/KL5hS9J']
 
 default = ['https://ibb.co/PjxxLJr', 'https://ibb.co/mBLYqhC', 'https://ibb.co/vZ2R3fX', 'https://ibb.co/2SJjpqv',
            'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https://ibb.co/C7jCTRJ',

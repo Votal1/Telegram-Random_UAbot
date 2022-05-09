@@ -172,9 +172,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         in1, in2 = int(stats11[4]), int(stats22[4])
 
         if hp1 >= 90:
-            s1 = int(s1 * 1.1)
+            if c1 in (34, 35, 36):
+                s1 = int(s1 * 1.3)
+            else:
+                s1 = int(s1 * 1.1)
         if hp2 >= 90:
-            s2 = int(s2 * 1.1)
+            if c2 in (34, 35, 36):
+                s2 = int(s2 * 1.3)
+            else:
+                s2 = int(s2 * 1.1)
 
         if in1 > 0:
             s1, bd1 = injure(uid1, s1, bd1, True)
@@ -1002,7 +1008,16 @@ async def war(cid, location, big_battle):
 
 
 async def war_power(sett, cid):
-    chance = clan5 = m = pag = mal = gen = 0
+    chance = clan5 = m = pag = meat = mal = gen = 0
+    for member in sett:
+        try:
+            cl = int(r.hget(member, 'class'))
+            if cl in (5, 15, 25):
+                meat += 1
+            elif cl in (35, 36):
+                gen += 1
+        except:
+            pass
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
@@ -1066,7 +1081,10 @@ async def war_power(sett, cid):
             elif int(stats[7]) in (9, 19, 29):
                 m = 1
             elif int(stats[7]) in (34, 35, 36):
-                gen = 1
+                if choices([1, 0], [2, 98]) == [1]:
+                    intellect(1, member)
+                if gen == 1 and meat > 0:
+                    s = int(s + s * meat * 0.25)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
         except:
             continue
@@ -1088,10 +1106,19 @@ async def great_war(cid1, cid2, a, b):
     chance1, clan1, mal1, gen1 = await war_power(a, cid1)
     chance2, clan2, mal2, gen2 = await war_power(b, cid2)
 
-    for i in range(mal1):
-        r.hincrby(choice(b), 'sch', 3)
-    for i in range(mal2):
-        r.hincrby(choice(a), 'sch', 3)
+    try:
+        if gen1 == 1:
+            for member in b:
+                spirit(-int(int(r.hget(member, 'spirit')) / 20), member, 0)
+        if gen2 == 1:
+            for member in a:
+                spirit(-int(int(r.hget(member, 'spirit')) / 20), member, 0)
+        for i in range(mal1):
+            r.hincrby(choice(b), 'sch', 3)
+        for i in range(mal2):
+            r.hincrby(choice(a), 'sch', 3)
+    except:
+        pass
 
     await bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
                            + str(int(chance1)) + ' | ' + str(int(chance2)))
@@ -1101,54 +1128,57 @@ async def great_war(cid1, cid2, a, b):
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
-    reward = ''
+    reward = '3'
+    money = 3
     r_spirit = 1
     if win == ['a']:
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         if int(r.hget('c' + str(cid1), 'side')) == 2:
             r_spirit += 2
-            if gen1 == 1:
+            if gen1 > 0:
                 r_spirit += 1
                 if int(r.hget('c' + str(cid1), 'build3')) == 2:
                     r_spirit += 1
         if int(r.hget('c' + str(cid1), 'side')) == 4:
-            r.hincrby('c' + str(cid1), 'money', 6)
+            if gen1 > 0:
+                money += 3
+        if clan1 == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
+            money += 3
+            reward = f'{money} \U0001F47E +{r_spirit}'
         for n in a:
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
-            if clan1 < 5 or int(r.hget('c' + str(cid1), 'base')) <= 1:
-                r.hincrby(n, 'money', 3)
-                reward = '3'
-            else:
-                r.hincrby(n, 'money', 6)
-                reward = f'6 \U0001F47E +{r_spirit}'
+            r.hincrby(n, 'money', money)
         r.hincrby(222, cid1, 1)
         if clan1 >= 5:
             if int(r.hget('c' + str(cid1), 'base')) > 1:
                 r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
+                if int(r.hget('c' + str(cid1), 'side')) == 4:
+                    r.hincrby('c' + str(cid1), 'money', money)
     elif win == ['b']:
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         if int(r.hget('c' + str(cid2), 'side')) == 2:
             r_spirit += 2
-            if gen2 == 1:
+            if gen2 > 0:
                 r_spirit += 1
                 if int(r.hget('c' + str(cid2), 'build3')) == 2:
                     r_spirit += 1
         if int(r.hget('c' + str(cid2), 'side')) == 4:
-            r.hincrby('c' + str(cid2), 'money', 6)
+            if gen2 > 0:
+                money += 3
+        if clan2 == 5 and int(r.hget('c' + str(cid2), 'base')) > 1:
+            money += 3
+            reward = f'{money} \U0001F47E +{r_spirit}'
         for n in b:
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
-            if clan2 < 5 or int(r.hget('c' + str(cid2), 'base')) <= 1:
-                r.hincrby(n, 'money', 3)
-                reward = '3'
-            else:
-                r.hincrby(n, 'money', 6)
-                reward = f'6 \U0001F47E +{r_spirit}'
+            r.hincrby(n, 'money', money)
         r.hincrby(222, cid2, 1)
         if clan2 >= 5:
             if int(r.hget('c' + str(cid2), 'base')) > 1:
                 r.hincrby('c' + str(cid2), 'r_spirit', r_spirit)
+                if int(r.hget('c' + str(cid2), 'side')) == 4:
+                    r.hincrby('c' + str(cid2), 'money', money)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     await sleep(10)
 
