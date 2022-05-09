@@ -1978,7 +1978,7 @@ async def guard(message):
                 r.hset(mid, 'clan_time', datetime.now().day)
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
-                    st = int(st * (1 + 0.01 * int(int(r.hget(c, 'base')) / 1000)))
+                    st = int(st * (1 + 0.01 * int(int(r.hget(c, 'money')) / 1000)))
                 r.hincrby(c, 'power', st)
                 r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]
