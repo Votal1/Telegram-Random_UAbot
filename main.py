@@ -13,7 +13,8 @@ from parameters import spirit, vodka, intellect, hp, damage_support, damage_head
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, c_shop, top, itop, ctop
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, c_shop, top, itop, ctop, \
+    wood, stone, cloth, brick
 
 from requests import get
 from bs4 import BeautifulSoup
@@ -1864,11 +1865,11 @@ async def work(message):
                         if int(r.hget(message.from_user.id, 'support')) == 3:
                             ran = randint(1, 5)
                             resources += '\U0001F333 +' + str(ran)
-                            r.hincrby(c, 'wood', ran)
+                            wood(c, ran)
                         elif int(r.hget(message.from_user.id, 'support')) == 4:
                             ran = randint(1, 5)
                             resources += '\U0001faa8 +' + str(ran)
-                            r.hincrby(c, 'stone', ran)
+                            stone(c, ran)
                         if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 8:
                             resources += ' \U0001F4B5 +5'
                             r.hincrby(c, 'money', -8)
@@ -1900,28 +1901,28 @@ async def work(message):
                                 ran *= 2
                             ran = int(ran * trucker) * worker
                             resources += '\U0001F333 +' + str(ran)
-                            r.hincrby(c, 'wood', ran)
+                            wood(c, ran)
                         if int(r.hget(c, 'mine')) == 1:
                             ran = 10 if side == 1 else randint(2, 10)
                             if camp == 1:
                                 ran *= 2
                             ran = int(ran * trucker) * worker
                             resources += ' \U0001faa8 +' + str(ran)
-                            r.hincrby(c, 'stone', ran)
+                            stone(c, ran)
                         if int(r.hget(c, 'craft')) == 1:
                             ran = 5 if side == 1 else randint(2, 5)
                             if camp == 1:
                                 ran *= 2
                             ran = int(ran * trucker) * worker
                             resources += ' \U0001F9F6 +' + str(ran)
-                            r.hincrby(c, 'cloth', ran)
+                            cloth(c, ran)
                         if int(r.hget(c, 'silicate')) == 1:
                             ran = 3 if side == 1 else randint(1, 3)
                             if camp == 1:
                                 ran *= 2
                             ran = int(ran * trucker) * worker
                             resources += ' \U0001F9F1 +' + str(ran)
-                            r.hincrby(c, 'brick', ran)
+                            brick(c, ran)
                         if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
                             if side == 4:
                                 if int(r.hget(c, 'new_post')) == 0:

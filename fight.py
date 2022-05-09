@@ -6,7 +6,7 @@ from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
-from methods import checkClan
+from methods import checkClan, wood, stone, cloth, brick
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
@@ -1371,22 +1371,22 @@ async def start_raid(cid):
                 if int(res[0]) >= 75:
                     ran = randint(16, 50) if ter == 2 else randint(25, 75)
                     reward += '\U0001F333 +' + str(ran)
-                    r.hincrby(c, 'wood', ran)
+                    wood(c, ran)
                     r.hincrby(c2, 'wood', -ran)
                 if int(res[1]) >= 50 and base >= 2:
                     ran = randint(6, 33) if ter == 2 else randint(10, 50)
                     reward += ' \U0001faa8 +' + str(ran)
-                    r.hincrby(c, 'stone', ran)
+                    stone(c, ran)
                     r.hincrby(c2, 'stone', -ran)
                 if int(res[2]) >= 25 and base >= 3:
                     ran = randint(6, 16) if ter == 2 else randint(10, 25)
                     reward += ' \U0001F9F6 +' + str(ran)
-                    r.hincrby(c, 'cloth', ran)
+                    cloth(c, ran)
                     r.hincrby(c2, 'cloth', -ran)
                 if int(res[3]) >= 15 and base >= 4:
                     ran = randint(3, 10) if ter == 2 else randint(5, 15)
                     reward += ' \U0001F9F1 +' + str(ran)
-                    r.hincrby(c, 'brick', ran)
+                    brick(c, ran)
                     r.hincrby(c2, 'brick', -ran)
             elif mode == [2]:
                 reward += 'Русаки пограбували місцеву крамницю!\n'
@@ -1516,25 +1516,25 @@ async def start_raid(cid):
                     if mar >= 1:
                         ran *= 2
                     reward += '\U0001F333 +' + str(ran)
-                    r.hincrby(c, 'wood', ran)
+                    wood(c, ran)
                 if base >= 2:
                     ran = randint(10, 50)
                     if mar >= 1:
                         ran *= 2
                     reward += ' \U0001faa8 +' + str(ran)
-                    r.hincrby(c, 'stone', ran)
+                    stone(c, ran)
                 if base >= 3:
                     ran = randint(10, 25)
                     if mar >= 1:
                         ran *= 2
                     reward += ' \U0001F9F6 +' + str(ran)
-                    r.hincrby(c, 'cloth', ran)
+                    cloth(c, ran)
                 if base >= 4:
                     ran = randint(5, 15)
                     if mar >= 1:
                         ran *= 2
                     reward += ' \U0001F9F1 +' + str(ran)
-                    r.hincrby(c, 'brick', ran)
+                    brick(c, ran)
         elif win == ['b']:
             reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             for member in r.smembers('fighters_3' + str(cid)):

@@ -56,6 +56,30 @@ def checkClan(uid, base=0, building='', level=0):
         return False
 
 
+def wood(c, n):
+    r.hincrby(c, 'wood', n)
+    if int(r.hget(c, 'wood')) > 15000:
+        r.hset(c, 'wood', 15000)
+
+
+def stone(c, n):
+    r.hincrby(c, 'stone', n)
+    if int(r.hget(c, 'stone')) > 10000:
+        r.hset(c, 'stone', 10000)
+
+
+def cloth(c, n):
+    r.hincrby(c, 'cloth', n)
+    if int(r.hget(c, 'cloth')) > 5000:
+        r.hset(c, 'cloth', 5000)
+
+
+def brick(c, n):
+    r.hincrby(c, 'brick', n)
+    if int(r.hget(c, 'brick')) > 3000:
+        r.hset(c, 'brick', 3000)
+
+
 def checkLeader(uid, cid):
     if uid == int(r.hget('c' + str(cid), 'leader')) or str(uid).encode() in r.smembers('cl2' + str(cid)):
         return True
