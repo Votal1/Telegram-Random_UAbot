@@ -1238,8 +1238,8 @@ async def clan(message):
                                          f"\nКількість учасників: {r.scard('cl' + cid)}\n\n\U0001f6d6 Барак\n"
                                          f"Можливість обирати фашиста дня та зберігати деякі ресурси.\n\nРесурси:"
                                          f"\n\U0001F4B5 Гривні: {r.hget(c, 'money').decode()}"
-                                         f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()}"
-                                         f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()}", parse_mode='HTML')
+                                         f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()}/15000"
+                                         f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()}/10000", parse_mode='HTML')
                 elif base >= 2:
                     building, wins = '', ''
                     prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
@@ -1256,9 +1256,9 @@ async def clan(message):
                         building = '\U0001F3D8 Штаб\n\U0001F4B5 Шанс подвоїти грошову нагороду за перемогу в дуелях, ' \
                                    'але клан стає ціллю для рейдерів.\n'
                     building += '\U0001F3ED Інфраструктура:'
-                    resources = '\n\nРесурси:\n\U0001F4B5 Гривні: ' + r.hget(c, 'money').decode() + \
-                                '\n\U0001F333 Деревина: ' + r.hget(c, 'wood').decode() + \
-                                '\n\U0001faa8 Камінь: ' + r.hget(c, 'stone').decode()
+                    resources = f"\n\nРесурси:\n\U0001F4B5 Гривні: {r.hget(c, 'money').decode()}" \
+                                f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()}/15000" \
+                                f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()}/10000"
                     if int(r.hget(c, 'sawmill')) == 1:
                         building += ' пилорама'
                     if int(r.hget(c, 'mine')) == 1:
@@ -1267,9 +1267,9 @@ async def clan(message):
                         building += ', цех'
                     if int(r.hget(c, 'storage')) == 1:
                         building += ', склад'
-                        resources += '\n\U0001F9F6 Тканина: ' + r.hget(c, 'cloth').decode()
+                        resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()}/5000"
                         if base >= 3:
-                            resources += '\n\U0001F9F1 Цегла: ' + r.hget(c, 'brick').decode()
+                            resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()}/3000"
                             if int(r.hget(c, 'technics')) > 0:
                                 resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
                         if base > 4:
@@ -1623,6 +1623,55 @@ async def build(message):
                             msg += '\nДата-центр (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
                                    '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - здібність хакера надсилатиме ' \
                                    'стільки ж грошей в скарбницю клану.'
+                    if int(r.hget(c, 'base')) == 9:
+                        if int(r.hget(c, 'build5')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати воєнкомат',
+                                                            callback_data='build5'))
+                            msg += '\nВоєнкомат (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - можливість ' \
+                                   'купувати АК-47, або отримати їх безплатно за охорону.'
+                        if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
+                                and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
+                                and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати гулаг',
+                                                            callback_data='build6'))
+                            msg += '\nГулаг (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
+                                   '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
+                                   ' - якщо хтось покидає клан - його русаки втрачають по 20% сили. Шанс отримати ' \
+                                   'додаткове годування після відпрацювання зміни - 1% за кожну тисячу деревини, ' \
+                                   'каменю, тканини і цегли на складі.'
+                    if int(r.hget(c, 'base')) == 10:
+                        if int(r.hget(c, 'build5')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати ферму',
+                                                            callback_data='build5'))
+                            msg += '\nФерма (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - годування русака лікує до ' \
+                                   '30 поранень.'
+                        if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
+                                and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
+                                and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати ядерний бункер',
+                                                            callback_data='build6'))
+                            msg += '\nЯдерний бункер (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
+                                   '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
+                                   ' - Шизофренія не впливатиме негативно на міжчатові битви, а навпаки - ' \
+                                   'додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
+                    if int(r.hget(c, 'base')) == 11:
+                        if int(r.hget(c, 'build5')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати готель',
+                                                            callback_data='build5'))
+                            msg += '\nГотель (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - максимальна кількість ' \
+                                   'учасників збільшується на 10. Можливість вступити в клан без обмежень в часі.'
+                        if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
+                                and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
+                                and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати офіс Червоного Хреста',
+                                                            callback_data='build6'))
+                            msg += '\nОфіс Червоного Хреста (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
+                                   '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
+                                   ' - можливість лікувати весь клан, та проводити перерозподіл багатств - за 500 ' \
+                                   'гривень з скарбниці по 100 гривень 5 найбіднішим учасникам.'
                     if int(r.hget(c, 'base')) == 12:
                         if int(r.hget(c, 'build5')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати торговий центр',
@@ -2868,7 +2917,7 @@ async def handle_query(call):
         c = 'c' + str(call.message.chat.id)
         s = int(r.hget(c, 'side'))
         if int(r.hget(c, 'build6')) == 0 and s != 0:
-            if int(r.hget(c, 'wood')) >= 15000 and int(r.hget(c, 'stone')) >= 10000 and int(r.hget(c, 'cloth')) >= 5000 \
+            if int(r.hget(c, 'wood')) >= 15000 and int(r.hget(c, 'stone')) >= 10000 and int(r.hget(c, 'cloth')) >= 5000\
                     and int(r.hget(c, 'brick')) >= 3000 and int(r.hget(c, 'money')) >= 10000 \
                     and int(r.hget(c, 'technics')) >= 300 and int(r.hget(c, 'r_spirit')) >= 300 \
                     and int(r.hget(c, 'codes')) >= 10:
