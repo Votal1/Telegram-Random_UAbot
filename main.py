@@ -2109,11 +2109,13 @@ async def handle_query(call):
                 raise Exception
         except:
             cid = call.from_user.id
-            r.hset(cid, 'name', get_rusak()[0], {'strength': get_rusak()[1], 'intellect': get_rusak()[2], 'spirit': 0,
-                                                 'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
-                                                 'support': 0, 's_support': 0, 'mushrooms': 0, 'hp': 100, 'injure': 0,
-                                                 'sch': 0, 'buff': 0, 'head': 0, 's_head': 0,
-                                                 'photo': choice(default), 'firstname': call.from_user.first_name})
+            n, s, i = get_rusak()
+            if checkClan(cid, building='build6', level=4):
+                s += 400
+            r.hset(cid, 'name', n, {'strength': s, 'intellect': i, 'spirit': 0, 'class': 0, 'weapon': 0, 's_weapon': 0,
+                                    'defense': 0, 's_defense': 0, 'support': 0, 's_support': 0, 'mushrooms': 0,
+                                    'hp': 100, 'injure': 0, 'sch': 0, 'buff': 0, 'head': 0, 's_head': 0,
+                                    'photo': choice(default), 'firstname': call.from_user.first_name})
             r.sadd('everyone', call.from_user.id)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
@@ -4090,22 +4092,15 @@ async def handle_query(call):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 80:
                 if int(r.hget(call.from_user.id, 'support')) == 0:
-                    mushroom = int(r.hget(call.from_user.id, 'mushrooms'))
-                    if int(r.hget(call.from_user.id, 'class')) == 18 or int(r.hget(call.from_user.id, 'class')) == 28:
-                        mushroom = 0
-                    if mushroom < 3:
-                        if int(r.hget(call.from_user.id, 'intellect')) < 20:
-                            r.hset(call.from_user.id, 'support', 6)
-                            r.hset(call.from_user.id, 's_support', 1)
-                            r.hincrby(call.from_user.id, 'money', -80)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Ви успішно купили мухомор королівський')
-                        else:
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Ваш русак вже занадто розумний')
+                    if int(r.hget(call.from_user.id, 'intellect')) < 20:
+                        r.hset(call.from_user.id, 'support', 6)
+                        r.hset(call.from_user.id, 's_support', 1)
+                        r.hincrby(call.from_user.id, 'money', -90)
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Ви успішно купили мухомор королівський.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Для вашого русака не передбачено більше трьох мухоморів')
+                                                        text='Ваш русак вже занадто розумний.')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас вже є допоміжне спорядження.')
@@ -4125,7 +4120,7 @@ async def handle_query(call):
                         r.hset(call.from_user.id, 's_support', 5)
                         r.hincrby(call.from_user.id, 'money', -20)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Ви успішно купили дизель')
+                                                        text='Ви успішно купили дизель.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='У вас вже є допоміжне спорядження.')
@@ -4135,6 +4130,39 @@ async def handle_query(call):
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Дизель можна купити тільки таксистам.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_sugar'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 55:
+                if int(r.hget(call.from_user.id, 'support')) == 0:
+                    r.hset(call.from_user.id, 'support', 7)
+                    r.hset(call.from_user.id, 's_support', 1)
+                    r.hincrby(call.from_user.id, 'money', -55)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили цукор.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є допоміжне спорядження.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_children'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 100:
+                r.hincrby(call.from_user.id, 'money', -100)
+                r.hincrby(call.from_user.id, 'childs', 1)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви успішно російське немовля.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Клановий магазин тільки для учасників клану.')

@@ -112,13 +112,19 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Батіг - 60 грн', callback_data='clan_lash'))
         elif int(r.hget(c, 'build1')) == 4:
             msg += '\n\U0001F344 Мухомор королівський [Допомога, міцність=1] - якщо у ворога більший інтелект, додає ' \
-                   '+1 інтелекту (не діє проти фокусників). На бій зменшує свою силу на 50%. Максимальна кількість ' \
-                   'покупок на русака - 3.'
-            markup.add(InlineKeyboardButton(text='Мухомор королівський - 80 грн', callback_data='clan_mushroom'))
+                   '+1 інтелекту (не діє проти фокусників). На бій зменшує свою силу на 50%.'
+            markup.add(InlineKeyboardButton(text='Мухомор королівський - 90 грн', callback_data='clan_mushroom'))
         if int(r.hget(c, 'build3')) == 4:
             msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
                    'битвах або рейдах на 25% (тільки для таксистів).'
             markup.add(InlineKeyboardButton(text='Дизель - 20 грн', callback_data='clan_diesel'))
+        if int(r.hget(c, 'build5')) == 4:
+            msg += '\n\U0001F9EA Цукор [Допомога, міцність=1] - збільшує силу при годуванні на 15 (до 3000 сили) або' \
+                   ' зменшує шанс зменшити силу на 15% і додає 5 бойового трансу.'
+            markup.add(InlineKeyboardButton(text='Цукор - 55 грн', callback_data='clan_sugar'))
+        if int(r.hget(c, 'build6')) == 4:
+            msg += '\n\U0001F476 Російське немовля - збільшує рейтинг на 88.'
+            markup.add(InlineKeyboardButton(text='Російське немовля - 100 грн', callback_data='clan_children'))
         markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
     if page == 2:
