@@ -1411,7 +1411,7 @@ async def upgrade(message):
 
                 await message.answer(f'\U0001F3D7 Покращення {side1[side]} до {side2[side]} коштує '
                                      f'\U0001F333 10000, \U0001faa8 5000, \U0001F9F6 3000, \U0001F9F1 2000, '
-                                     f'\U0001F4FB 200, \U0001F47E 200 і \U0001F4B5 5000.')
+                                     f'\U0001F4FB 200, \U0001F47E 200, \U0001F916 5 і \U0001F4B5 5000.')
                 admins = []
                 admins2 = await bot.get_chat_administrators(message.chat.id)
                 for admin in admins2:
@@ -1419,12 +1419,13 @@ async def upgrade(message):
                 if int(r.hget(c, 'wood')) >= 10000 and int(r.hget(c, 'stone')) >= 5000 \
                         and int(r.hget(c, 'cloth')) >= 3000 and int(r.hget(c, 'brick')) >= 2000 \
                         and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200 and \
-                        int(r.hget(c, 'technics')) >= 200 and message.from_user.id not in admins:
+                        int(r.hget(c, 'technics')) >= 200 and int(r.hget(c, 'codes')) >= 5 and\
+                        message.from_user.id not in admins:
                     await message.answer('\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
                 if int(r.hget(c, 'wood')) >= 10000 and int(r.hget(c, 'stone')) >= 5000 \
                         and int(r.hget(c, 'cloth')) >= 3000 and int(r.hget(c, 'brick')) >= 2000 \
                         and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200 and \
-                        int(r.hget(c, 'technics')) >= 200:
+                        int(r.hget(c, 'technics')) >= 200 and int(r.hget(c, 'codes')) >= 5:
                     if message.from_user.id in admins:
                         r.hincrby(c, 'money', -5000)
                         r.hincrby(c, 'wood', -10000)
@@ -1433,6 +1434,7 @@ async def upgrade(message):
                         r.hincrby(c, 'brick', -2000)
                         r.hincrby(c, 'r_spirit', -200)
                         r.hincrby(c, 'technics', -200)
+                        r.hincrby(c, 'codes', -5)
 
                         if side == 1:
                             r.hset(c, 'base', 9)
@@ -1522,7 +1524,7 @@ async def build(message):
                                    '\U0001F9F1 200, \U0001F4B5 2000, \U0001F47E 30) - можливість отримувати ' \
                                    '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
                                    'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
-                    if int(r.hget(c, 'base')) == 5:
+                    if int(r.hget(c, 'base')) in (5, 9):
                         if int(r.hget(c, 'build1')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати тракторний завод',
                                                             callback_data='build1'))
@@ -1547,7 +1549,7 @@ async def build(message):
                             msg += '\nТюрма (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
                                    '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - бонус сили для мусорів при ' \
                                    'захисті від рейдів збільшується до 100%.'
-                    if int(r.hget(c, 'base')) == 6:
+                    if int(r.hget(c, 'base')) in (6, 10):
                         if int(r.hget(c, 'build1')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати штаб тероборони',
                                                             callback_data='build1'))
@@ -1572,7 +1574,7 @@ async def build(message):
                             msg += '\nКазарма (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
                                    '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - +20% сили гарматному м`ясу в ' \
                                    'міжчатових битвах.'
-                    if int(r.hget(c, 'base')) == 7:
+                    if int(r.hget(c, 'base')) in (7, 11):
                         if int(r.hget(c, 'build1')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати dungeon',
                                                             callback_data='build1'))
@@ -1597,7 +1599,7 @@ async def build(message):
                             msg += '\nРадіовежа (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
                                    '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - малорос в міжчатовій битві ' \
                                    'надсилає 3 шизофренії випадковому ворогу.'
-                    if int(r.hget(c, 'base')) == 8:
+                    if int(r.hget(c, 'base')) in (8, 12):
                         if int(r.hget(c, 'build1')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати біолабораторію',
                                                             callback_data='build1'))
@@ -1621,6 +1623,21 @@ async def build(message):
                             msg += '\nДата-центр (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 500, ' \
                                    '\U0001F9F1 400, \U0001F4B5 2000, \U0001F4FB 200) - здібність хакера надсилатиме ' \
                                    'стільки ж грошей в скарбницю клану.'
+                    if int(r.hget(c, 'base')) == 12:
+                        if int(r.hget(c, 'build5')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати торговий центр',
+                                                            callback_data='build5'))
+                            msg += '\nТорговий центр (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
+                                   '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - можливість ' \
+                                   'купувати Цукор (при годуванні збільшує силу, або зменшує шанс її зменшення).'
+                        if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
+                                and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
+                                and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати невільничий ринок',
+                                                            callback_data='build6'))
+                            msg += '\nНевільничий ринок (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
+                                   '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
+                                   ' - можливість купувати російських немовлят. Нові русаки з`являтимуться з 500+ сили.'
                     if len(markup.inline_keyboard) == 0:
                         msg = '\U0001F3D7 Більше нічого будувати...'
                     await message.reply(msg, reply_markup=markup)
@@ -2822,6 +2839,49 @@ async def handle_query(call):
                 r.hincrby(c, 'technics', -200)
                 r.hset(c, 'build4', s)
                 b = ['', 'тюрму', 'казарму', 'радіовежу', 'дата-центр']
+                await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build5') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        s = int(r.hget(c, 'side'))
+        if int(r.hget(c, 'build5')) == 0 and s != 0:
+            if int(r.hget(c, 'wood')) >= 2000 and int(r.hget(c, 'stone')) >= 1000 and int(r.hget(c, 'cloth')) >= 800 \
+                    and int(r.hget(c, 'brick')) >= 500 and int(r.hget(c, 'money')) >= 6000 \
+                    and int(r.hget(c, 'technics')) >= 100:
+                r.hincrby(c, 'wood', -2000)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby(c, 'cloth', -800)
+                r.hincrby(c, 'brick', -500)
+                r.hincrby(c, 'money', -6000)
+                r.hincrby(c, 'technics', -100)
+                r.hset(c, 'build5', s)
+                b = ['', 'воєнкомат', 'ферму', 'готель', 'торговий центр']
+                await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build6') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        s = int(r.hget(c, 'side'))
+        if int(r.hget(c, 'build6')) == 0 and s != 0:
+            if int(r.hget(c, 'wood')) >= 15000 and int(r.hget(c, 'stone')) >= 10000 and int(r.hget(c, 'cloth')) >= 5000 \
+                    and int(r.hget(c, 'brick')) >= 3000 and int(r.hget(c, 'money')) >= 10000 \
+                    and int(r.hget(c, 'technics')) >= 300 and int(r.hget(c, 'r_spirit')) >= 300 \
+                    and int(r.hget(c, 'codes')) >= 10:
+                r.hincrby(c, 'wood', -15000)
+                r.hincrby(c, 'stone', -10000)
+                r.hincrby(c, 'cloth', -5000)
+                r.hincrby(c, 'brick', -3000)
+                r.hincrby(c, 'money', -10000)
+                r.hincrby(c, 'technics', -300)
+                r.hincrby(c, 'r_spirit', -300)
+                r.hincrby(c, 'codes', -10)
+                r.hset(c, 'build6', s)
+                b = ['', 'гулаг', 'ядерний бункер', 'офіс Червоного Хреста', 'невільничий ринок']
                 await bot.send_message(call.message.chat.id, f'На території вашого клану побудовано {b[s]}.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
