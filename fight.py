@@ -1371,6 +1371,20 @@ async def start_raid(cid):
 
         if win == ['a']:
             res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
+            li = [1, 1, 1, 1, 1, 1]
+            if int(r.hget(c, 'base')) == 11:
+                if int(r.hget(c, 'wood')) < res[0]:
+                    li[0] = 2
+                if int(r.hget(c, 'stone')) < res[1]:
+                    li[1] = 2
+                if int(r.hget(c, 'cloth')) < res[2]:
+                    li[2] = 2
+                if int(r.hget(c, 'brick')) < res[3]:
+                    li[3] = 2
+                if int(r.hget(c, 'money')) < res[4]:
+                    li[4] = 2
+                if int(r.hget(c, 'r_spirit')) < res[5]:
+                    li[5] = 2
             ter = int(r.hget(c2, 'build1'))
             mode = choices([1, 2, 3], [70, 20, 10])
             if int(res[4]) < 300 or int(res[5] < 10):
@@ -1378,28 +1392,28 @@ async def start_raid(cid):
             base = int(r.hget(c2, 'base'))
             if mode == [1]:
                 reward += 'Русаки потрапили на склад і винесли ресурси!\n'
-                ran = randint(16, 50) if ter == 2 else randint(25, 75)
+                ran = randint(16, 50) * li[0] if ter == 2 else randint(25, 75) * li[0]
                 reward += '\U0001F333 +' + str(ran)
                 wood(c, ran)
                 r.hincrby(c2, 'wood', -ran)
                 if base >= 2:
-                    ran = randint(6, 33) if ter == 2 else randint(10, 50)
+                    ran = randint(6, 33) * li[1] if ter == 2 else randint(10, 50) * li[1]
                     reward += ' \U0001faa8 +' + str(ran)
                     stone(c, ran)
                     r.hincrby(c2, 'stone', -ran)
                 if base >= 3:
-                    ran = randint(6, 16) if ter == 2 else randint(10, 25)
+                    ran = randint(6, 16) * li[2] if ter == 2 else randint(10, 25) * li[2]
                     reward += ' \U0001F9F6 +' + str(ran)
                     cloth(c, ran)
                     r.hincrby(c2, 'cloth', -ran)
                 if base >= 4:
-                    ran = randint(3, 10) if ter == 2 else randint(5, 15)
+                    ran = randint(3, 10) * li[3] if ter == 2 else randint(5, 15) * li[3]
                     reward += ' \U0001F9F1 +' + str(ran)
                     brick(c, ran)
                     r.hincrby(c2, 'brick', -ran)
             elif mode == [2]:
                 reward += 'Русаки пограбували місцеву крамницю!\n'
-                ran = randint(50, 150)
+                ran = randint(50, 150) * li[4]
                 reward += '\U0001F4B5 +' + str(ran)
                 r.hincrby(c, 'money', ran)
                 r.hincrby(c2, 'money', -ran)
@@ -1408,7 +1422,7 @@ async def start_raid(cid):
                         r.hincrby(mem, 'money', int(ran / 5))
             elif mode == [3]:
                 reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
-                ran = 10
+                ran = 10 * li[5]
                 reward += '\U0001F47E +' + str(ran)
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
