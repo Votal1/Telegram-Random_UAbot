@@ -1241,14 +1241,14 @@ async def clan(message):
                               f"{r.hget(ran[1], 'firstname').decode()}"
                 if base == 1:
                     await message.answer(f"<i>Банда</i> {title}\n\nЛідер: {leader}"
-                                         f"\nКількість учасників: {r.scard('cl' + cid)}\n\n\U0001f6d6 Барак\n"
+                                         f"\nКількість учасників: {r.scard('cl' + cid)} / 25\n\n\U0001f6d6 Барак\n"
                                          f"Можливість обирати фашиста дня та зберігати деякі ресурси.\n\nРесурси:"
                                          f"\n\U0001F4B5 Гривні: {r.hget(c, 'money').decode()}"
                                          f"\n\U0001F333 Деревина: {r.hget(c, 'wood').decode()} / 15000"
                                          f"\n\U0001faa8 Камінь: {r.hget(c, 'stone').decode()} / 10000",
                                          parse_mode='HTML')
                 elif base >= 2:
-                    building, wins = '', ''
+                    building, wins, num = '', '', 25
                     prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
                               'Комуна', 'Коаліція', 'Асоціація', 'Організація',
                               'Союз', 'Орден', 'Ліга', 'Корпорація']
@@ -1288,6 +1288,7 @@ async def clan(message):
                         building += ', силікатний завод'
                     if int(r.hget(c, 'complex')) == 1:
                         building += ', житловий комплекс'
+                        num += 25
                     if int(r.hget(c, 'shop')) == 1:
                         building += ', їдальня'
                     if int(r.hget(c, 'monument')) == 1:
@@ -1301,7 +1302,8 @@ async def clan(message):
                     if int(r.hget(c, 'new_post')) == 1:
                         building += ', відділення НП'
                     await message.answer(f"<i>{prefix[base]}</i> {title}\n\nЛідер: {leader}\nКількість учасників: "
-                                         f"{r.scard('cl' + cid)}{wins}\n\n{building}{resources}", parse_mode='HTML')
+                                         f"{r.scard('cl' + cid)} / {num}{wins}\n\n{building}{resources}",
+                                         parse_mode='HTML')
             elif r.hexists(message.from_user.id, 'class') and int(r.hget(message.from_user.id, 'class')) == 27 and \
                     int(r.hget(c, 'money')) >= 20:
                 if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
@@ -1746,14 +1748,18 @@ async def clan_settings(message):
 async def join(message):
     c = 'c' + str(message.chat.id)
     num = 25
+    ts = 604800
     if r.hexists(message.from_user.id, 'clan_ts') == 0:
         r.hset(message.from_user.id, 'clan_ts', 0)
     try:
         if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5:
-            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > 604800 or \
+            if int(r.hget(c, 'complex')) >= 1:
+                num += 25
+            if int(r.hget(c, 'build5')) == 3:
+                num += 10
+                ts = 0
+            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > ts or \
                     message.from_user.id in sudoers:
-                if int(r.hget(c, 'complex')) >= 1:
-                    num = 50
                 if int(r.hget(c, 'allow')) == 0 and r.scard('cl' + str(message.chat.id)) < num:
                     r.hset(message.from_user.id, 'clan', message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
                                                                            'clan_time': 0})
@@ -2526,22 +2532,31 @@ async def handle_query(call):
 
     elif call.data.startswith('invite'):
         admins = []
+        uid = call.message.reply_to_message.from_user.id
         num = 25
+        ts = 604800
         admins2 = await bot.get_chat_administrators(call.message.chat.id)
         for admin in admins2:
             admins.append(admin.user.id)
         if int(r.hget('c' + str(call.message.chat.id), 'complex')) >= 1:
-            num = 50
+            num += 25
+        if int(r.hget('c' + str(call.message.chat.id), 'build5')) == 3:
+            num += 10
+            ts = 0
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
                 r.scard('cl' + str(call.message.chat.id)) < num:
-            r.hset(call.message.reply_to_message.from_user.id, 'clan', call.message.chat.id,
-                   {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0,
-                    'firstname': call.from_user.first_name})
-            r.sadd('cl' + str(call.message.chat.id), call.message.reply_to_message.from_user.id)
-            await bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
-                                        r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
-                                        call.message.chat.id, call.message.message_id)
+            if int(datetime.now().timestamp()) - int(r.hget(uid, 'clan_ts')) > ts or uid in sudoers:
+                r.hset(uid, 'clan', call.message.chat.id, {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0,
+                                                           'firstname': call.from_user.first_name})
+                r.sadd('cl' + str(call.message.chat.id), uid)
+                await bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
+                                            r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
+                                            call.message.chat.id, call.message.message_id)
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+
     elif call.data.startswith('buy_axe'):
         if int(r.hget(call.from_user.id, 'support')) == 0:
             if int(r.hget(call.from_user.id, 'money')) >= 5:
