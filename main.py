@@ -4271,7 +4271,7 @@ async def handle_query(call):
                 r.hincrby(c, 'money', -300)
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     if int(r.hget(mem, 'clan_time')) == datetime.now().day:
-                        r.hincrby(mem, 'vodka', 10)
+                        r.hincrby(mem, 'vodka', 9)
                         spirit(int(vodka(mem)) * 9, mem, 0)
                 await bot.send_message(call.message.chat.id, '\u2622 Клан святкує відпрацьовану зміну.')
             else:
