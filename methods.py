@@ -122,7 +122,11 @@ def c_shop(c, page):
             msg += '\n\U0001F9EA Цукор [Допомога, міцність=1] - збільшує силу при годуванні на 15 (до 3000 сили) або' \
                    ' зменшує шанс зменшити силу на 15% і додає 5 бойового трансу.'
             markup.add(InlineKeyboardButton(text='Цукор - 55 грн', callback_data='clan_sugar'))
-        if int(r.hget(c, 'build6')) == 4:
+        if int(r.hget(c, 'build6')) == 2:
+            msg += '\n\U0001F464 Шапочка з фольги [Шапка, міцність=10] - захищає від втрати бойового духу при ' \
+                   'жертвоприношеннях, при купівлі русак отримує 30 шизофренії.'
+            markup.add(InlineKeyboardButton(text='Шапочка з фольги - 50 грн', callback_data='clan_foil'))
+        elif int(r.hget(c, 'build6')) == 4:
             msg += '\n\U0001F476 Російське немовля - збільшує рейтинг на 88.'
             markup.add(InlineKeyboardButton(text='Російське немовля - 100 грн', callback_data='clan_children'))
         markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
@@ -133,6 +137,16 @@ def c_shop(c, page):
             msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
             markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
                                             callback_data='monument'))
+        elif int(r.hget(c, 'base')) == 10:
+            msg += '\n\U0001f7e1 РПГ-7 [Атака, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
+                   ' здоров`я і все спорядження).'
+            markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 200, \U0001F4B5 2000',
+                                            callback_data='clan_rpg'))
+        elif int(r.hget(c, 'base')) == 10:
+            msg += '\n\U0001f7e1 Бронежилет вагнерівця [Захист, міцність=50] - зменшує силу ворога на бій на 75%' \
+                   ' та захищає від РПГ-7.'
+            markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 1000',
+                                            callback_data='clan_armor'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
     if page == 3:
