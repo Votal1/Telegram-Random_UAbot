@@ -137,12 +137,12 @@ def c_shop(c, page):
             msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
             markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
                                             callback_data='monument'))
-        elif int(r.hget(c, 'base')) == 10:
+        if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 РПГ-7 [Атака, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
                    ' здоров`я і все спорядження).'
             markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 200, \U0001F4B5 2000',
                                             callback_data='clan_rpg'))
-        elif int(r.hget(c, 'base')) == 10:
+        if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 Бронежилет вагнерівця [Захист, міцність=50] - зменшує силу ворога на бій на 75%' \
                    ' та захищає від РПГ-7.'
             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 1000',
