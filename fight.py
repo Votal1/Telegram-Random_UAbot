@@ -1340,6 +1340,8 @@ async def start_raid(cid):
             chance1 += int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head))
         except:
             continue
+    if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0:
+        raid1, raid2, raid3 = 40, 40, 20
     mode = choices([1, 2, 3], [raid1, raid2, raid3])
 
     enemy = c2 = ''
