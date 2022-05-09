@@ -4164,7 +4164,7 @@ async def handle_query(call):
                 if int(r.hget(call.from_user.id, 'head')) == 0:
                     r.hset(call.from_user.id, 'head', 1)
                     r.hset(call.from_user.id, 's_head', 10)
-                    r.hincrby(call.from_user.id, 'sch', -30)
+                    r.hincrby(call.from_user.id, 'sch', 30)
                     r.hincrby(call.from_user.id, 'money', -50)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили шапочку з фольги')
