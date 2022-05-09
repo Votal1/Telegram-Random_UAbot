@@ -244,7 +244,7 @@ async def my_rusak(message):
             if int(stats[7]) > 0:
                 inj += '\n\U0001F44A Бойовий транс: ' + stats[7].decode()
             if int(stats[4]) > 0:
-                ms = '\n\U0001F344 Мухомори: ' + stats[4].decode() + '/3'
+                ms = '\n\U0001F344 Мухомори: ' + stats[4].decode()
             photo_text = '\U0001F412 Твій русак:\n\n\U0001F3F7 Ім`я: ' + name + \
                          '\n\U0001F4AA Сила: ' + stats[0].decode() + '\n\U0001F9E0 Інтелект: ' + stats[1].decode() + \
                          '\n\U0001F54A Бойовий дух: ' + stats[2].decode() + '\n\U0001fac0 Здоров`я: ' + \
@@ -4124,12 +4124,12 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_mushroom'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
-            if int(r.hget(call.from_user.id, 'money')) >= 80:
+            if int(r.hget(call.from_user.id, 'money')) >= 100:
                 if int(r.hget(call.from_user.id, 'support')) == 0:
                     if int(r.hget(call.from_user.id, 'intellect')) < 20:
                         r.hset(call.from_user.id, 'support', 6)
                         r.hset(call.from_user.id, 's_support', 1)
-                        r.hincrby(call.from_user.id, 'money', -90)
+                        r.hincrby(call.from_user.id, 'money', -100)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили мухомор королівський.')
                     else:

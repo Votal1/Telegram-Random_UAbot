@@ -1394,28 +1394,28 @@ async def start_raid(cid):
             base = int(r.hget(c2, 'base'))
             if mode == [1]:
                 reward += 'Русаки потрапили на склад і винесли ресурси!\n'
-                ran = randint(16, 50) * li[0] if ter == 2 else randint(25, 75) * li[0]
+                ran = randint(16, 50) if ter == 2 else randint(25, 75)
                 reward += '\U0001F333 +' + str(ran)
                 wood(c, ran)
                 r.hincrby(c2, 'wood', -ran)
                 if base >= 2:
-                    ran = randint(6, 33) * li[1] if ter == 2 else randint(10, 50) * li[1]
+                    ran = randint(6, 33)if ter == 2 else randint(10, 50)
                     reward += ' \U0001faa8 +' + str(ran)
                     stone(c, ran)
                     r.hincrby(c2, 'stone', -ran)
                 if base >= 3:
-                    ran = randint(6, 16) * li[2] if ter == 2 else randint(10, 25) * li[2]
+                    ran = randint(6, 16) if ter == 2 else randint(10, 25)
                     reward += ' \U0001F9F6 +' + str(ran)
                     cloth(c, ran)
                     r.hincrby(c2, 'cloth', -ran)
                 if base >= 4:
-                    ran = randint(3, 10) * li[3] if ter == 2 else randint(5, 15) * li[3]
+                    ran = randint(3, 10) if ter == 2 else randint(5, 15)
                     reward += ' \U0001F9F1 +' + str(ran)
                     brick(c, ran)
                     r.hincrby(c2, 'brick', -ran)
             elif mode == [2]:
                 reward += 'Русаки пограбували місцеву крамницю!\n'
-                ran = randint(50, 150) * li[4]
+                ran = randint(50, 150)
                 reward += '\U0001F4B5 +' + str(ran)
                 r.hincrby(c, 'money', ran)
                 r.hincrby(c2, 'money', -ran)
@@ -1424,7 +1424,7 @@ async def start_raid(cid):
                         r.hincrby(mem, 'money', int(ran / 5))
             elif mode == [3]:
                 reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
-                ran = 10 * li[5]
+                ran = 10
                 reward += '\U0001F47E +' + str(ran)
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
