@@ -1289,6 +1289,8 @@ async def clan(message):
                     if int(r.hget(c, 'complex')) == 1:
                         building += ', житловий комплекс'
                         num += 25
+                        if int(r.hget(c, 'build5')) == 3:
+                            num += 10
                     if int(r.hget(c, 'shop')) == 1:
                         building += ', їдальня'
                     if int(r.hget(c, 'monument')) == 1:
