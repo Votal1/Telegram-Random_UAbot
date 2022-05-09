@@ -1243,7 +1243,8 @@ async def clan(message):
                 elif base >= 2:
                     building, wins = '', ''
                     prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
-                              'Комуна', 'Коаліція', 'Асоціація', 'Організація']
+                              'Комуна', 'Коаліція', 'Асоціація', 'Організація',
+                              'Союз', 'Орден', 'Ліга', 'Корпорація']
                     if r.hexists(222, cid) == 1:
                         wins = '\nКількість перемог: ' + r.hget(222, cid).decode()
                     if base == 2:
@@ -1389,19 +1390,59 @@ async def upgrade(message):
                         await message.answer('\U0001F3D7 Покращено Гільдію до Угруповання.')
             elif base == 4:
                 msg = '\U0001F3D7 Покращення Угруповання до нового рівня коштує\n\U0001F333 6000, \U0001faa8 3000, ' \
-                      '\U0001F9F6 1500, \U0001F9F1 1000, \U0001F4FB 100, \U0001F47E 200 і \U0001F4B5 5000.\n\nВам ' \
+                      '\U0001F9F6 1500, \U0001F9F1 1000, \U0001F4FB 100, \U0001F47E 100 і \U0001F4B5 5000.\n\nВам ' \
                       'доведеться зробити важливий вибір - обрати один з 4 варіантів розвитку.'
                 markup = InlineKeyboardMarkup()
                 if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
                         and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
                         and int(r.hget(c, 'technics')) >= 100\
-                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200:
+                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 100:
                     msg += '\n\nДостатньо ресурсів для покращення. Який шлях розвитку ви обираєте?'
                     markup.add(InlineKeyboardButton(text='Комуна', callback_data='clan_side_1'),
                                InlineKeyboardButton(text='Коаліція', callback_data='clan_side_2'))
                     markup.add(InlineKeyboardButton(text='Асоціація', callback_data='clan_side_3'),
                                InlineKeyboardButton(text='Організація', callback_data='clan_side_4'))
                 await message.answer(msg, reply_markup=markup)
+            elif 4 < base < 9:
+                side1 = ['', 'Комуни', 'Коаліції', 'Асоціації', 'Організації']
+                side2 = ['', 'Союзу', 'Ордену', 'Ліги', 'Корпорації']
+                side3 = ['', 'Комуну', 'Коаліцію', 'Асоціацію', 'Організацію']
+                side = int(r.hget(c, 'side'))
+
+                await message.answer(f'\U0001F3D7 Покращення {side1[side]} до {side2[side]} коштує '
+                                     f'\U0001F333 10000, \U0001faa8 5000, \U0001F9F6 3000, \U0001F9F1 2000, '
+                                     f'\U0001F4FB 200, \U0001F47E 200 і \U0001F4B5 5000.')
+                admins = []
+                admins2 = await bot.get_chat_administrators(message.chat.id)
+                for admin in admins2:
+                    admins.append(admin.user.id)
+                if int(r.hget(c, 'wood')) >= 10000 and int(r.hget(c, 'stone')) >= 5000 \
+                        and int(r.hget(c, 'cloth')) >= 3000 and int(r.hget(c, 'brick')) >= 2000 \
+                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200 and \
+                        int(r.hget(c, 'technics')) >= 200 and message.from_user.id not in admins:
+                    await message.answer('\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
+                if int(r.hget(c, 'wood')) >= 10000 and int(r.hget(c, 'stone')) >= 5000 \
+                        and int(r.hget(c, 'cloth')) >= 3000 and int(r.hget(c, 'brick')) >= 2000 \
+                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200 and \
+                        int(r.hget(c, 'technics')) >= 200:
+                    if message.from_user.id in admins:
+                        r.hincrby(c, 'money', -5000)
+                        r.hincrby(c, 'wood', -10000)
+                        r.hincrby(c, 'stone', -500)
+                        r.hincrby(c, 'cloth', -3000)
+                        r.hincrby(c, 'brick', -2000)
+                        r.hincrby(c, 'r_spirit', -200)
+                        r.hincrby(c, 'technics', -200)
+
+                        if side == 1:
+                            r.hset(c, 'base', 9)
+                        elif side == 2:
+                            r.hset(c, 'base', 10)
+                        elif side == 3:
+                            r.hset(c, 'base', 11)
+                        elif side == 4:
+                            r.hset(c, 'base', 12)
+                        await message.answer(f'\U0001F3D7 Покращено {side3[side]} до {side2[side]}.')
     except:
         pass
 
@@ -2361,14 +2402,14 @@ async def handle_query(call):
                 if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
                         and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
                         and int(r.hget(c, 'technics')) >= 100 \
-                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 200:
+                        and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 100:
                     r.hincrby(c, 'money', -5000)
                     r.hincrby(c, 'wood', -6000)
                     r.hincrby(c, 'stone', -3000)
                     r.hincrby(c, 'cloth', -1500)
                     r.hincrby(c, 'brick', -1000)
                     r.hincrby(c, 'technics', -100)
-                    r.hincrby(c, 'r_spirit', -200)
+                    r.hincrby(c, 'r_spirit', -100)
                     if call.data.startswith('clan_side_1'):
                         r.hset(c, 'base', 5)
                         r.hset(c, 'side', 1)

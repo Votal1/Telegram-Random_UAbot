@@ -261,7 +261,8 @@ async def ctop(sett, uid):
                         i = int(r.hget('c' + member.decode(), 'base'))
                         if i > 0:
                             prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
-                                      'Комуна', 'Коаліція', 'Асоціація', 'Організація']
+                                      'Комуна', 'Коаліція', 'Асоціація', 'Організація',
+                                      'Союз', 'Орден', 'Ліга', 'Корпорація']
                             title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + member.decode(), 'title').decode()
                         else:
                             title = r.hget('war_battle' + member.decode(), 'title').decode()
