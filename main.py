@@ -1781,10 +1781,15 @@ async def invest(message):
                     if m <= int(r.hget(message.from_user.id, 'money')):
                         r.hincrby(c, 'money', m)
                         r.hincrby(message.from_user.id, 'money', -m)
-                        await message.reply('\U0001F4B5 Клановий рахунок поповнено на ' + str(m) + ' гривень.')
+                        msg = f'\U0001F4B5 Клановий рахунок поповнено на {m} гривень.'
                         if m >= 500:
                             if r.hexists(message.from_user.id, 'ac15') == 0:
                                 r.hset(message.from_user.id, 'ac15', 1)
+                        if m >= 1000 and int(r.hget(c, 'base')) == 12:
+                            p = int(m / 20)
+                            r.hincrby(message.from_user.id, 'packs', p)
+                            msg += f'\n\U0001F4E6 +{p}'
+                        await message.reply(msg)
                     else:
                         await message.reply('Недостатньо коштів на рахунку.')
 
@@ -1972,6 +1977,8 @@ async def guard(message):
             if int(r.hget(mid, 'clan_time')) != datetime.now().day and r.scard(g) < 5:
                 r.hset(mid, 'clan_time', datetime.now().day)
                 st = await guard_power(mid)
+                if int(r.hget(c, 'base')) == 12:
+                    st = int(st * (1 + 0.01 * int(int(r.hget(c, 'base')) / 1000)))
                 r.hincrby(c, 'power', st)
                 r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]
