@@ -4256,7 +4256,7 @@ async def handle_query(call):
                     if int(r.hget(mem, 'defense')) == 0:
                         r.hset(mem, 'defense', 1)
                         r.hset(mem, 's_defense', 1)
-                await bot.send_message(call.message.chat.id, '\U0001f7e1\U0001F6E1 Клан готовий йти в бій.')
+                await bot.send_message(call.message.chat.id, '\U0001F5E1\U0001F6E1 Клан готовий йти в бій.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
