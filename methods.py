@@ -162,6 +162,9 @@ def c_shop(c, page):
             msg += '\n\u2622 Вилікувати весь клан (\U0001fac0 +100).'
             markup.add(InlineKeyboardButton(text='Лікування - \U0001F4B5 10',
                                             callback_data='clan_heal'))
+            msg += '\n\U0001F4B5 Перерозподіл багатств - 5 найбідніших учасників отримають по 100 гривень.'
+            markup.add(InlineKeyboardButton(text='Перерозподіл - \U0001F47E 10, \U0001F4B5 500 ',
+                                            callback_data='clan_money'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
     if page == 3:

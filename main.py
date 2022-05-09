@@ -4353,6 +4353,30 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Це може зробити тільки лідер чи заступник.')
 
+    elif call.data.startswith('clan_money'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 10:
+                r.hincrby(c, 'money', -500)
+                r.hincrby(c, 'r_spirit', -10)
+                rating = {}
+                for mem in r.smembers('cl' + str(call.message.chat.id)):
+                    rating.update({mem: int(r.hget(mem, 'money'))})
+                s_rating = sorted(rating, key=rating.get, reverse=False)
+                n = 0
+                for i in s_rating:
+                    n += 1
+                    if n == 6:
+                        break
+                    r.hincrby(i, 'money', 100)
+                await bot.send_message(call.message.chat.id, '\U0001F4B5 Деякі учасники отримали соціальні виплати.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
+
 
 @dp.message_handler()
 async def echo(message):
