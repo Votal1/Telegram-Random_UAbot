@@ -745,7 +745,8 @@ async def merchant(message):
                                       'поранень - завдає 1, якщо більше 4 - лікує 10 і забирає 10 здоров`я.\n'
                                       '\U0001F6AC Скляна пляшка [Атака, міцність=10, ціна=5] - зменшує інтелект '
                                       'ворогу на 10.\n\U0001F695 Дизель [Допомога, міцність=5, ціна=15] - збільшує '
-                                      'власну силу в битвах, міжчатових битвах або рейдах на 25%.',
+                                      'власну силу в битвах, міжчатових битвах або рейдах на 25%.\n\U0001F396 Палаш '
+                                      '[Зброя, міцність=15, ціна=10] - +50% сили проти русаків без клану.',
                                       reply_markup=merchant_goods())
             r.hset('soledar', 'merchant_day', datetime.now().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
@@ -2163,7 +2164,8 @@ async def handle_query(call):
                               'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
                               'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
                               'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні',
-                              'Висадка в Чорнобаївці', 'Битва в темному провулку', 'Битва біля розбитої колони'])
+                              'Висадка в Чорнобаївці', 'Битва в темному провулку', 'Битва біля розбитої колони',
+                              'Розгром командного пункту'])
                 big_battle = True
                 try:
                     await bot.unpin_chat_message(chat_id=call.message.chat.id,
@@ -3397,6 +3399,21 @@ async def handle_query(call):
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас вже є допоміжне спорядження')
 
+            elif cl == 34 or cl == 35 or cl == 36:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                    if int(r.hget(call.from_user.id, 'money')) >= 10:
+                        r.hincrby(call.from_user.id, 'money', -10)
+                        r.hset(call.from_user.id, 'weapon', 21)
+                        r.hset(call.from_user.id, 's_weapon', 15)
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Ви успішно купили палаш')
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Недостатньо коштів на рахунку')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є зброя')
+
         else:
             await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
                                         call.message.message_id)
@@ -3682,6 +3699,12 @@ async def handle_query(call):
                     elif int(r.hget(uid, 'support')) not in (6, 7):
                         r.hset(uid, 'support', 2)
                         r.hset(uid, 's_weapon', 5)
+                elif cl == 34 or cl == 35 or cl == 36:
+                    if int(r.hget(uid, 'weapon')) == 21:
+                        r.hincrby(uid, 's_weapon', 15)
+                    elif int(r.hget(uid, 'weapon')) != 2:
+                        r.hset(uid, 'weapon', 21)
+                        r.hset(uid, 's_weapon', 15)
                 else:
                     await bot.edit_message_text('\u26AA В цьому пакунку лежать дивні речі, якими '
                                                 'русак не вміє користуватись...', call.message.chat.id,

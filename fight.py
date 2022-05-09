@@ -294,6 +294,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 i1 = 0
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога пляшкою по голові!'
             damage_weapon(uid2, c2)
+        elif weapon2 == 21 and not checkClan(uid1):
+            s2 = int(s2 * 1.5)
+            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав травмат і прострелив ворогу коліно!'
+            damage_weapon(uid2, c2)
 
         if weapon2 == 2 and defense1 != 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
@@ -995,13 +999,20 @@ async def war(cid, location, big_battle):
         if wc in (31, 32, 33):
             class_reward = '\U0001F695: \U0001F4E6 +2'
             r.hincrby(win, 'packs', 1)
+    elif location == 'Розгром командного пункту':
+        if wc in (34, 35, 36):
+            class_reward = '\U0001F396: \U0001F4B5 +7'
+            r.hincrby(win, 'money', 7)
+            if checkClan(win):
+                class_reward += ' \U0001F4FB +3'
+                r.hincrby('c' + r.hget(win, 'clan').decode(), 'technics', 3)
 
     await sleep(10)
     r.hdel('battle' + str(cid), 'start')
     for member in r.smembers('fighters' + str(cid)):
         r.srem('fighters' + str(cid), member)
     end = ' завершена.'
-    if location == 'Штурм Горлівки' or location == 'Штурм ДАП':
+    if location == 'Штурм Горлівки' or location == 'Штурм ДАП' or 'Розгром командного пункту':
         end = ' завершено.'
     await bot.delete_message(m.chat.id, m.message_id)
     await bot.send_message(cid, location + end + winner + reward + class_reward, parse_mode='HTML')
