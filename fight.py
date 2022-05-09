@@ -248,7 +248,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bd1 = bt
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' поміняв характеристики місцями!'
             damage_weapon(uid2, c2)
-        elif weapon2 == 15:
+        elif weapon2 == 15 and c2 in (5, 15, 25):
             s2 = int(s2 * 1.75)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...'
             damage_weapon(uid2, c2)
@@ -310,7 +310,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             r.hset(uid1, 'support', 0)
             damage_weapon(uid2, c2)
 
-        elif weapon1 == 15:
+        elif weapon1 == 15 and c1 in (5, 15, 25):
             s1 = int(s1 * 1.75)
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
             damage_weapon(uid1, c1)

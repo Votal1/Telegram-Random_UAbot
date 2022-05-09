@@ -1955,6 +1955,12 @@ async def work(message):
                                     r.hincrby('soledar', 'money', 5)
                                     resources += ' \U0001F4E6 +1'
                                     r.hincrby(message.from_user.id, 'packs', 1)
+                        if int(r.hget(c, 'build6')) == 1:
+                            ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
+                                 int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))
+                            if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
+                                r.hset(message.from_user.id, 'time', 0)
+                                resources += ' \U0001F372 +1'
                         if cl == 36 and side == 1 and choices([1, 0], [20, 80]) == [1]:
                             resources += '\n\U0001F916 +1'
                             r.hincrby(c, 'codes', 1)
@@ -1981,6 +1987,9 @@ async def guard(message):
                 int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if int(r.hget(mid, 'clan_time')) != datetime.now().day and r.scard(g) < 5:
                 r.hset(mid, 'clan_time', datetime.now().day)
+                if int(r.hget(c, 'build5')) == 1:
+                    if int(r.hget(mid, 'weapon')) == 0:
+                        r.hset(mid, 'weapon', 15, {'s_weapon': 30})
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
                     st = int(st * (1 + 0.01 * int(int(r.hget(c, 'money')) / 1000)))
@@ -2567,6 +2576,11 @@ async def handle_query(call):
         try:
             if call.from_user.id == call.message.reply_to_message.from_user.id:
                 if checkClan(call.from_user.id):
+                    if checkClan(call.from_user.id, building='build6', level=1):
+                        r.hincrby(call.from_user.id, 'strength', -int(int(r.hget(call.from_user.id, 'strength')) * 0.2))
+                        if r.hexists(call.from_user.id, 'strength2'):
+                            r.hincrby(call.from_user.id, 'strength2',
+                                      -int(int(r.hget(call.from_user.id, 'strength2')) * 0.2))
                     r.srem('cl' + r.hget(call.from_user.id, 'clan').decode(), call.from_user.id)
                     r.hset(call.from_user.id, 'clan', 0)
                     await bot.edit_message_text('\U0001F4E4 Ти покинув клан', call.message.chat.id,
@@ -4139,6 +4153,25 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Клановий магазин тільки для учасників клану.')
 
+    elif call.data.startswith('clan_ak'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 15:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                    r.hset(call.from_user.id, 'weapon', 15)
+                    r.hset(call.from_user.id, 's_weapon', 30)
+                    r.hincrby(call.from_user.id, 'money', -15)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили АК-47.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є зброя.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
     elif call.data.startswith('clan_sugar'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 55:
@@ -4210,6 +4243,44 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Це може зробити тільки лідер чи заступник.')
 
+    elif call.data.startswith('clan_spike'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 100:
+                r.hincrby(c, 'wood', -200)
+                r.hincrby(c, 'stone', -100)
+                for mem in r.smembers('cl' + str(call.message.chat.id)):
+                    if int(r.hget(mem, 'weapon')) == 0:
+                        r.hset(mem, 'weapon', 1)
+                        r.hset(mem, 's_weapon', 1)
+                    if int(r.hget(mem, 'defense')) == 0:
+                        r.hset(mem, 'defense', 1)
+                        r.hset(mem, 's_defense', 1)
+                await bot.send_message(call.message.chat.id, '\U0001f7e1\U0001F6E1 Клан готовий йти в бій.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
+
+    elif call.data.startswith('clan_vodka'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if int(r.hget(c, 'money')) >= 300:
+                r.hincrby(c, 'money', -300)
+                for mem in r.smembers('cl' + str(call.message.chat.id)):
+                    if int(r.hget(mem, 'clan_time')) == datetime.now().day:
+                        r.hincrby(mem, 'vodka', 10)
+                        spirit(int(vodka(mem)) * 9, mem, 0)
+                await bot.send_message(call.message.chat.id, '\u2622 Клан святкує відпрацьовану зміну.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
+
     elif call.data.startswith('clan_rpg'):
         c = 'c' + str(call.message.chat.id)
         if checkClan(call.from_user.id) and call.from_user.id == int(r.hget(c, 'leader')):
@@ -4250,7 +4321,22 @@ async def handle_query(call):
                                                 text='Недостатньо ресурсів.')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Це може зробити тільки лідер.')
+                                            text='Це може зробити тільки лідер чи заступник.')
+
+    elif call.data.startswith('clan_heal'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if int(r.hget(c, 'money')) >= 10:
+                r.hincrby(c, 'money', -10)
+                for mem in r.smembers('cl' + str(call.message.chat.id)):
+                    hp(100, mem)
+                await bot.send_message(call.message.chat.id, '\U0001fac0 Клан вилікувано.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
 
 
 @dp.message_handler()

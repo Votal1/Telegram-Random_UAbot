@@ -107,7 +107,7 @@ def c_shop(c, page):
                    'міжчатових битвах на 12%.'
             markup.add(InlineKeyboardButton(text='Тактичний шолом - 50 грн', callback_data='clan_helmet'))
         elif int(r.hget(c, 'build1')) == 3:
-            msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
+            msg += '\n\U0001F5E1 Батіг [Атака, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
                    'якщо нема жінки.'
             markup.add(InlineKeyboardButton(text='Батіг - 60 грн', callback_data='clan_lash'))
         elif int(r.hget(c, 'build1')) == 4:
@@ -118,7 +118,10 @@ def c_shop(c, page):
             msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
                    'битвах або рейдах на 25% (тільки для таксистів).'
             markup.add(InlineKeyboardButton(text='Дизель - 20 грн', callback_data='clan_diesel'))
-        if int(r.hget(c, 'build5')) == 4:
+        if int(r.hget(c, 'build5')) == 1:
+            msg += '\n\U0001F5E1 АК-47 [Атака, міцність=30] - після перемоги активує ефект горілки.'
+            markup.add(InlineKeyboardButton(text='АК-47 - 15 грн', callback_data='clan_ak'))
+        elif int(r.hget(c, 'build5')) == 4:
             msg += '\n\U0001F9EA Цукор [Допомога, міцність=1] - збільшує силу при годуванні на 15 (до 3000 сили) або' \
                    ' зменшує шанс зменшити силу на 15% і додає 5 бойового трансу.'
             markup.add(InlineKeyboardButton(text='Цукор - 55 грн', callback_data='clan_sugar'))
@@ -137,6 +140,14 @@ def c_shop(c, page):
             msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
             markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
                                             callback_data='monument'))
+        if int(r.hget(c, 'base')) == 9:
+            msg += '\n\U0001f7e1\U0001F6E1 Колючий комплект - закупити всьому клану дрин і щит.'
+            markup.add(InlineKeyboardButton(text='Колючий комплект - \U0001F333 200, \U0001faa8 100',
+                                            callback_data='clan_spike'))
+        if int(r.hget(c, 'base')) == 9:
+            msg += '\n\u2622 Купити тим, хто відпрацював зміну по 10 горірки.'
+            markup.add(InlineKeyboardButton(text='Горілка - \U0001F4B5 300',
+                                            callback_data='clan_vodka'))
         if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 РПГ-7 [Атака, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
                    ' здоров`я і все спорядження).'
@@ -147,6 +158,10 @@ def c_shop(c, page):
                    ' та захищає від РПГ-7.'
             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 1000',
                                             callback_data='clan_armor'))
+        if int(r.hget(c, 'build6')) == 3:
+            msg += '\n\u2622 Вилікувати весь клан (\U0001fac0 +100).'
+            markup.add(InlineKeyboardButton(text='Лікування - \U0001F4B5 10',
+                                            callback_data='clan_heal'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
     if page == 3:
