@@ -159,7 +159,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 1000',
                                             callback_data='clan_armor'))
         if int(r.hget(c, 'build6')) == 3:
-            msg += '\n\u2622 Вилікувати весь клан (\U0001fac0 +100).'
+            msg += '\n\U0001F489 Вилікувати весь клан\n(\U0001fac0 +100).'
             markup.add(InlineKeyboardButton(text='Лікування - \U0001F4B5 10',
                                             callback_data='clan_heal'))
             msg += '\n\U0001F4B5 Перерозподіл багатств - 5 найбідніших учасників отримають по 100 гривень.'
