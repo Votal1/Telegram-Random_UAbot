@@ -302,6 +302,7 @@ async def feed(message):
                     damage_support(message.from_user.id)
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 word = 'зросла'
+                ran += 5 if int(r.hget(message.from_user.id, 'head')) == 3 else 0
                 if int(stats[0]) > 3000:
                     if int(stats[0]) > 4000:
                         if int(r.hget(message.from_user.id, 'support')) == 7:
