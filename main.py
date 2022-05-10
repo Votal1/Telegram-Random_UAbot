@@ -2212,9 +2212,8 @@ async def handle_query(call):
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Твій русак не підходить по силі для цього бою.')
                         else:
-                            if int(r.hget(call.from_user.id, 'class')) == 29:
-                                if int(r.hget(call.from_user.id, 'support')) == 1 and \
-                                        checkClan(uid1, building='build2', level=4):
+                            if int(r.hget(uid2, 'class')) == 29:
+                                if int(r.hget(uid2, 'support')) == 1 and checkClan(uid2, building='build2', level=4):
                                     money = 10
                                 else:
                                     money = 5
