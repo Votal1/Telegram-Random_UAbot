@@ -2382,8 +2382,8 @@ async def handle_query(call):
                         await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
                                                                              '\n\nБій почався...',
                                                     chat_id=call.message.chat.id, message_id=call.message.message_id)
-                        a = list(r.smembers('fighters_2' + str(call.message.chat.id)))
-                        b = list(r.smembers('fighters_2' + enemy.decode()))
+                        a = list(r.smembers('fighters_2' + str(call.message.chat.id)))[0:5]
+                        b = list(r.smembers('fighters_2' + enemy.decode()))[0:5]
                         msg = 'Починається сутичка між двома бандами русаків!\n\n' + \
                               r.hget('war_battle' + str(call.message.chat.id), 'title').decode() + ' | ' + \
                               r.hget('war_battle' + enemy.decode(), 'title').decode() + \
