@@ -3897,7 +3897,7 @@ async def handle_query(call):
                         r.hincrby(uid, 's_support', 5)
                     elif int(r.hget(uid, 'support')) not in (6, 7):
                         r.hset(uid, 'support', 2)
-                        r.hset(uid, 's_weapon', 5)
+                        r.hset(uid, 's_support', 5)
                 elif cl == 34 or cl == 35 or cl == 36:
                     if int(r.hget(uid, 'weapon')) == 21:
                         r.hincrby(uid, 's_weapon', 15)
