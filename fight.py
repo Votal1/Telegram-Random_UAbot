@@ -1504,7 +1504,7 @@ async def start_raid(cid):
                 if mode == [3]:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=1]'
                     for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'head')) == 0:
+                        if int(r.hget(mem, 'head')) != 1:
                             r.hset(mem, 'head', 3)
                             r.hset(mem, 's_head', 1)
                 if mode == [4]:
@@ -1538,7 +1538,7 @@ async def start_raid(cid):
                 if mode == [3]:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=1]'
                     for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'head')) == 0:
+                        if int(r.hget(mem, 'head')) != 1:
                             r.hset(mem, 'head', 3)
                             r.hset(mem, 's_head', 1)
                 if mode == [4]:
