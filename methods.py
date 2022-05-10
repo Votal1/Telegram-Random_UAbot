@@ -23,15 +23,15 @@ def feed_rusak(intel):
     return success, strength, mind, bd
 
 
-def mine_salt(s2):
+def mine_salt(s2, w):
     success = int(choice(['1', '1', '1', '1', '0']))
-    money = 5
-    if s2 == 1:
-        money = randint(3, 8)
-    elif s2 == 2:
-        money = randint(4, 9)
+    money = randint(3, 8)
+    if s2 == 2:
+        money += 1
     elif s2 >= 3:
-        money = randint(5, 10)
+        money += 1
+    if w == 3:
+        money += 7
     mind = int(choice(['1', '0', '0', '0', '0', '0', '0', '0', '0', '0']))
     if s2 >= 4:
         mind = int(choice(['1', '0', '0', '0', '0']))
@@ -158,6 +158,11 @@ def c_shop(c, page):
                    ' та захищає від РПГ-7.'
             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 1000',
                                             callback_data='clan_armor'))
+        if int(r.hget(c, 'build5')) == 4:
+            msg += '\n\U0001F349 Закупити всьому клану Кавун базований [Шапка, міцність=1] - збільшує зарплату за ' \
+                   'роботу на соляній шахті на 7. Кавун буде конфісковано, якщо при годуванні зменшиться сила.'
+            markup.add(InlineKeyboardButton(text='Кавун - \U0001F47E 50, \U0001F4B5 200',
+                                            callback_data='clan_watermelon'))
         if int(r.hget(c, 'build6')) == 3:
             msg += '\n\U0001F489 Вилікувати весь клан\n(\U0001fac0 +100).'
             markup.add(InlineKeyboardButton(text='Лікування - \U0001F4B5 10',

@@ -320,6 +320,8 @@ async def feed(message):
                     if decrease == [0]:
                         word = 'зменшилась'
                         r.hincrby(message.from_user.id, 'strength', -2 * ran)
+                        if int(r.hget(message.from_user.id, 'head')) == 3:
+                            r.hset(message.from_user.id, 'head', 0, {'s_head': 0})
                 else:
                     if int(r.hget(message.from_user.id, 'support')) == 7:
                         ran += 15
@@ -356,7 +358,7 @@ async def mine(message):
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
             if not datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
-                ms = mine_salt(int(r.hget(message.from_user.id, 's2')))
+                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), int(r.hget(message.from_user.id, 'head')))
                 r.hset(message.from_user.id, 'time1', datetime.now().day)
                 if message.text.startswith('/minecraft'):
                     if r.hexists(message.from_user.id, 'ac1') == 0:
@@ -4333,6 +4335,24 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас вже є захисне спорядження.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
+
+    elif call.data.startswith('clan_watermelon'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if int(r.hget(c, 'money')) >= 200 and int(r.hget(c, 'r_spirit')) >= 50:
+                r.hincrby(c, 'money', -200)
+                r.hincrby(c, 'r_spirit', -50)
+                for mem in r.smembers('cl' + str(call.message.chat.id)):
+                    if int(r.hget(mem, 'head')) == 0:
+                        r.hset(mem, 'head', 1)
+                        r.hset(mem, 's_head', 1)
+                await bot.send_message(call.message.chat.id, '\U0001F349 Клан очманів від бази.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
