@@ -4350,7 +4350,7 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -50)
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     if int(r.hget(mem, 'head')) == 0:
-                        r.hset(mem, 'head', 1)
+                        r.hset(mem, 'head', 3)
                         r.hset(mem, 's_head', 1)
                 await bot.send_message(call.message.chat.id, '\U0001F349 Клан очманів від бази.')
             else:
