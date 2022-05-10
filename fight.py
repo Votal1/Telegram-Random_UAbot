@@ -1480,7 +1480,7 @@ async def start_raid(cid):
                     spirit(10000, mem, 0)
             elif locations.index(location) == 2:
                 reward += 'Русаки пограбували АТБ\n'
-                mode = choices([1, 2, 3], [60, 30, 10])
+                mode = choices([1, 2, 3, 4], [40, 30, 20, 10])
                 if mode == [1]:
                     ran = randint(100, 200)
                     if mar >= 1:
@@ -1502,13 +1502,19 @@ async def start_raid(cid):
                             r.hset(mem, 'support', 7)
                             r.hset(mem, 's_support', s)
                 if mode == [3]:
+                    reward += '\U0001F349 Кавун базований [Шапка, міцність=1]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'head')) == 0:
+                            r.hset(mem, 'head', 3)
+                            r.hset(mem, 's_head', 1)
+                if mode == [4]:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hset(mem, 'time', 0)
             elif locations.index(location) == 3:
                 reward += 'Русаки пограбували Сільпо\n'
-                mode = choices([1, 2, 3], [60, 20, 20])
+                mode = choices([1, 2, 3, 4], [40, 20, 20, 20])
                 if mode == [1]:
                     ran = randint(150, 300)
                     if mar >= 1:
@@ -1530,6 +1536,12 @@ async def start_raid(cid):
                             r.hset(mem, 'support', 7)
                             r.hset(mem, 's_support', s)
                 if mode == [3]:
+                    reward += '\U0001F349 Кавун базований [Шапка, міцність=1]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'head')) == 0:
+                            r.hset(mem, 'head', 3)
+                            r.hset(mem, 's_head', 1)
+                if mode == [4]:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
                     for mem in r.smembers('fighters_3' + str(cid)):
