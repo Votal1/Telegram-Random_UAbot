@@ -1019,7 +1019,7 @@ async def war(cid, location, big_battle):
 
 
 async def war_power(sett, cid):
-    chance = clan5 = m = pag = meat = mal = gen1, gen2 = 0
+    chance = clan5 = m = pag = meat = mal = gen1 = gen2 = 0
     for member in sett:
         try:
             cl = int(r.hget(member, 'class'))
