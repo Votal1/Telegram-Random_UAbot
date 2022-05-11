@@ -1019,14 +1019,16 @@ async def war(cid, location, big_battle):
 
 
 async def war_power(sett, cid):
-    chance = clan5 = m = pag = meat = mal = gen = 0
+    chance = clan5 = m = pag = meat = mal = gen1, gen2 = 0
     for member in sett:
         try:
             cl = int(r.hget(member, 'class'))
             if cl in (5, 15, 25):
                 meat += 1
             elif cl in (35, 36):
-                gen += 1
+                gen1 += 1
+                if cl == 36:
+                    gen2 = 1
         except:
             pass
     for member in sett:
@@ -1098,7 +1100,7 @@ async def war_power(sett, cid):
             elif int(stats[7]) in (34, 35, 36):
                 if choices([1, 0], [2, 98]) == [1]:
                     intellect(1, member)
-                if gen == 1 and meat > 0:
+                if gen1 == 1 and meat > 0:
                     s = int(s + s * meat * 0.25)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
         except:
@@ -1112,20 +1114,20 @@ async def war_power(sett, cid):
                 spirit(250, int(member), 0)
             except:
                 pass
-    return chance, clan5, mal, gen
+    return chance, clan5, mal, gen1, gen2
 
 
 async def great_war(cid1, cid2, a, b):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, clan1, mal1, gen1 = await war_power(a, cid1)
-    chance2, clan2, mal2, gen2 = await war_power(b, cid2)
+    chance1, clan1, mal1, gen11, gen12 = await war_power(a, cid1)
+    chance2, clan2, mal2, gen21, gen22 = await war_power(b, cid2)
 
     try:
-        if gen1 == 1:
+        if gen11 == 1:
             for member in b:
                 spirit(-int(int(r.hget(member, 'spirit')) / 20), member, 0)
-        if gen2 == 1:
+        if gen21 == 1:
             for member in a:
                 spirit(-int(int(r.hget(member, 'spirit')) / 20), member, 0)
         for i in range(mal1):
@@ -1150,12 +1152,12 @@ async def great_war(cid1, cid2, a, b):
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         if int(r.hget('c' + str(cid1), 'side')) == 2:
             r_spirit += 2
-            if gen1 > 0:
+            if gen12 > 0:
                 r_spirit += 1
                 if int(r.hget('c' + str(cid1), 'build3')) == 2:
                     r_spirit += 1
         if int(r.hget('c' + str(cid1), 'side')) == 4:
-            if gen1 > 0:
+            if gen12 > 0:
                 money += 3
         if clan1 == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
             money += 3
@@ -1174,12 +1176,12 @@ async def great_war(cid1, cid2, a, b):
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         if int(r.hget('c' + str(cid2), 'side')) == 2:
             r_spirit += 2
-            if gen2 > 0:
+            if gen22 > 0:
                 r_spirit += 1
                 if int(r.hget('c' + str(cid2), 'build3')) == 2:
                     r_spirit += 1
         if int(r.hget('c' + str(cid2), 'side')) == 4:
-            if gen2 > 0:
+            if gen22 > 0:
                 money += 3
         if clan2 == 5 and int(r.hget('c' + str(cid2), 'base')) > 1:
             money += 3
