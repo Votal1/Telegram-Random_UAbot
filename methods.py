@@ -183,25 +183,25 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Продати деревину - \U0001F333 1500 -> \U0001F4B5 500',
                                             callback_data='clan_sell_wood'))
         elif int(w) >= 1500:
-            markup.add(InlineKeyboardButton(text='Купити деревину - \U0001F4B5 1000 -> \U0001F333 1500',
+            markup.add(InlineKeyboardButton(text='Купити деревину - \U0001F4B5 2000 -> \U0001F333 1500',
                                             callback_data='clan_buy_wood'))
         if int(r.hget(c, 'stone')) >= 5000:
             markup.add(InlineKeyboardButton(text='Продати камінь - \U0001faa8 1000 -> \U0001F4B5 500',
                                             callback_data='clan_sell_stone'))
         elif int(s) >= 1000:
-            markup.add(InlineKeyboardButton(text='Купити камінь - \U0001F4B5 1000 -> \U0001faa8 1000',
+            markup.add(InlineKeyboardButton(text='Купити камінь - \U0001F4B5 2000 -> \U0001faa8 1000',
                                             callback_data='clan_buy_stone'))
         if int(r.hget(c, 'cloth')) >= 2500:
             markup.add(InlineKeyboardButton(text='Продати тканину - \U0001F9F6 500 -> \U0001F4B5 500',
                                             callback_data='clan_sell_cloth'))
         elif int(cl) >= 500:
-            markup.add(InlineKeyboardButton(text='Купити тканину - \U0001F4B5 1000 -> \U0001F9F6 500',
+            markup.add(InlineKeyboardButton(text='Купити тканину - \U0001F4B5 2000 -> \U0001F9F6 500',
                                             callback_data='clan_buy_cloth'))
         if int(r.hget(c, 'brick')) >= 1500:
             markup.add(InlineKeyboardButton(text='Продати цеглу - \U0001F9F1 300 -> \U0001F4B5 500',
                                             callback_data='clan_sell_brick'))
         elif int(b) >= 300:
-            markup.add(InlineKeyboardButton(text='Купити цеглу - \U0001F4B5 1000 -> \U0001F9F1 300',
+            markup.add(InlineKeyboardButton(text='Купити цеглу - \U0001F4B5 2000 -> \U0001F9F1 300',
                                             callback_data='clan_buy_brick'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'))

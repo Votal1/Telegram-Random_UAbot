@@ -4443,24 +4443,24 @@ async def handle_query(call):
     elif call.data.startswith('clan_buy_'):
         c = 'c' + str(call.message.chat.id)
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
-            if int(r.hget(c, 'money')) >= 1000:
+            if int(r.hget(c, 'money')) >= 2000:
                 if call.data.startswith('clan_buy_wood') and int(r.hget('resources', 'wood')) >= 1500:
-                    r.hincrby(c, 'money', -1000)
+                    r.hincrby(c, 'money', -2000)
                     r.hincrby(c, 'wood', 1500)
                     r.hincrby('resources', 'wood', -1500)
                     await bot.send_message(call.message.chat.id, '\U0001F333 Придбано 1500 деревини.')
                 elif call.data.startswith('clan_buy_stone') and int(r.hget('resources', 'stone')) >= 1000:
-                    r.hincrby(c, 'money', -1000)
+                    r.hincrby(c, 'money', -2000)
                     r.hincrby(c, 'stone', 1000)
                     r.hincrby('resources', 'stone', -1000)
                     await bot.send_message(call.message.chat.id, '\U0001faa8 Придбано 1000 каміння.')
                 elif call.data.startswith('clan_buy_cloth') and int(r.hget('resources', 'cloth')) >= 500:
-                    r.hincrby(c, 'money', -1000)
+                    r.hincrby(c, 'money', -2000)
                     r.hincrby(c, 'cloth', 500)
                     r.hincrby('resources', 'cloth', -500)
                     await bot.send_message(call.message.chat.id, '\U0001F9F6 Придбано 500 тканини.')
                 elif call.data.startswith('clan_buy_brick') and int(r.hget('resources', 'brick')) >= 300:
-                    r.hincrby(c, 'money', -1000)
+                    r.hincrby(c, 'money', -2000)
                     r.hincrby(c, 'brick', 300)
                     r.hincrby('resources', 'brick', -300)
                     await bot.send_message(call.message.chat.id, '\U0001F9F1 Придбано 300 цегли.')
