@@ -359,7 +359,8 @@ async def mine(message):
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
             if not datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
-                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), int(r.hget(message.from_user.id, 'head')))
+                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), int(r.hget(message.from_user.id, 'head')),
+                               datetime.today().weekday())
                 r.hset(message.from_user.id, 'time1', datetime.now().day)
                 if message.text.startswith('/minecraft'):
                     if r.hexists(message.from_user.id, 'ac1') == 0:
@@ -707,7 +708,7 @@ async def classes_3(message):
           'додатково за лікування цих захворювань. Якщо у ворога 0 здоров`я - лікує йому 20 і ' \
           'отримує 5 гривень.\n\n' \
           'Мародер \U0001F6AC\U0001F6AC\U0001F6AC - на рейдових локаціях грабує вдвічі більше. Якщо рейд проти клану ' \
-          '- при програші зменшує силу ворожої охорони на 5% за кожного мародера в групі.\n\n' \
+          '- при програші зменшує силу ворожої охорони на 10% за кожного мародера в групі.\n\n' \
           'Танкіст \U0001F695\U0001F695\U0001F695 - під час пошуку цілі для рейду +20% шанс активувати ' \
           'Пограбування гумконвоїв (стакається).\n\n' \
           'Генерал \U0001F396\U0001F396\U0001F396 - \U0001F31F 1 погон. Здібність залежить від клану. Комуна - 20% ' \
@@ -3711,7 +3712,7 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'strength')) < 1000 and int(r.hget(call.from_user.id, 'intellect')) < 5:
             if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
                 r.hincrby(call.from_user.id, 'strap', -1)
-                r.hincrby(call.from_user.id, 'strength', 1000)
+                r.hincrby(call.from_user.id, 'strength', 400)
                 r.hincrby(call.from_user.id, 'intellect', 4)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили настоянку глоду')

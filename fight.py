@@ -1433,7 +1433,7 @@ async def start_raid(cid):
         elif win == ['b']:
             reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             if mar >= 1 and chance2 > 0:
-                lose = int(chance2 * (1 - 0.05 * mar))
+                lose = int(chance2 * (1 - 0.1 * mar))
                 reward += f'\nОхорона втратила \U0001F4AA {chance2 - lose}'
                 r.hset(c2, 'power', lose)
 

@@ -23,7 +23,7 @@ def feed_rusak(intel):
     return success, strength, mind, bd
 
 
-def mine_salt(s2, w):
+def mine_salt(s2, w, day):
     success = int(choice(['1', '1', '1', '1', '0']))
     money = randint(3, 8)
     if s2 == 2:
@@ -35,6 +35,8 @@ def mine_salt(s2, w):
     mind = int(choice(['1', '0', '0', '0', '0', '0', '0', '0', '0', '0']))
     if s2 >= 4:
         mind = int(choice(['1', '0', '0', '0', '0']))
+    if day in (5, 6):
+        money *= 2
     return success, money, mind
 
 
