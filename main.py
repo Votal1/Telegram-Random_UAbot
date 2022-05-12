@@ -93,6 +93,24 @@ async def toggle_admin(message):
         pass
 
 
+@dp.message_handler(commands=['toggle_captcha'])
+async def toggle_admin(message):
+    try:
+        st = await bot.get_chat_member(message.chat.id, message.from_user.id)
+        if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
+            if st.status == 'creator' or st.can_change_info is True:
+                if r.hexists('f' + str(message.chat.id), 'captcha') == 0:
+                    r.hset('f' + str(message.chat.id), 'captcha', 0)
+                if int(r.hget('f' + str(message.chat.id), 'captcha')) == 0:
+                    r.hset('f' + str(message.chat.id), 'captcha', 1)
+                    await message.reply('Капча УВІМКНЕНА')
+                else:
+                    r.hset('f' + str(message.chat.id), 'captcha', 0)
+                    await message.reply('Капча ВИМКНЕНА')
+    except:
+        pass
+
+
 @dp.message_handler(commands=['ban', 'unban'])
 async def ban(message):
     try:
@@ -221,18 +239,21 @@ async def moxir(message):
 
 @dp.message_handler(content_types=["new_chat_members"])
 async def handler_new_member(message):
-    if message.chat.id == -1001211933154:
-        user_name = message.new_chat_members[0].first_name
-        markup = InlineKeyboardMarkup()
-        if choice([1, 2]) == 1:
-            markup.add(InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'),
-                       InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'))
-        else:
-            markup.add(InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'),
-                       InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'))
-        await bot.restrict_chat_member(message.chat.id, message.new_chat_members[0].id, can_send_messages=False)
-        await message.reply(f'\u274E {user_name}, цей чат під охороною. Дай відповідь на одне питання.\n\n'
-                            f'Що таке паляниця?', reply_markup=markup)
+    try:
+        if int(r.hget('f' + str(message.chat.id), 'captcha')) == 1:
+            user_name = message.new_chat_members[0].first_name
+            markup = InlineKeyboardMarkup()
+            if choice([1, 2]) == 1:
+                markup.add(InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'),
+                           InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'))
+            else:
+                markup.add(InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'),
+                           InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'))
+            await bot.restrict_chat_member(message.chat.id, message.new_chat_members[0].id, can_send_messages=False)
+            await message.reply(f'\u274E {user_name}, цей чат під охороною. Дай відповідь на одне питання.\n\n'
+                                f'Що таке паляниця?', reply_markup=markup)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['donbass'])
@@ -2480,11 +2501,14 @@ async def handle_query(call):
                                                  'В рейді можуть брати участь тільки учасники клану')
 
     elif call.data.startswith('captcha_true') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        await bot.edit_message_text(text=f'\u2705 Вітаю в чаті, {call.from_user.first_name}.',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id)
-        await bot.restrict_chat_member(call.message.chat.id, call.from_user.id,
-                                       can_send_messages=True, can_send_media_messages=True,
-                                       can_send_other_messages=True, can_add_web_page_previews=True)
+        try:
+            await bot.restrict_chat_member(call.message.chat.id, call.from_user.id,
+                                           can_send_messages=True, can_send_media_messages=True,
+                                           can_send_other_messages=True, can_add_web_page_previews=True)
+            await bot.edit_message_text(text=f'\u2705 Вітаю в чаті, {call.from_user.first_name}.',
+                                        chat_id=call.message.chat.id, message_id=call.message.message_id)
+        except:
+            pass
 
     elif call.data.startswith('captcha_false') and call.from_user.id == call.message.reply_to_message.from_user.id:
         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Неправильна відповідь.')
