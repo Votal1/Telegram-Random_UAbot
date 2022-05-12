@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, chm, default
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, chm, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
@@ -817,13 +817,20 @@ async def donate_shop(message):
             r.hset(message.from_user.id, 'strap', 0)
         await message.answer('\U0001F31F Погони російських генералів: ' +
                              r.hget(message.from_user.id, 'strap').decode() +
-                             '\n\nОсь опис товарів, які можна придбати:\n\n\U0001F304 Зміна звичайної фотки русака на '
-                             'преміум фото свого класу(Кадиров, Обеме, Горшок, Тесак, Захарченко, Дерек Шовін, '
-                             'Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, Шойгу) або чмоню свого класу.\n'
+                             '\n\nОсь опис товарів, які можна придбати:\n\n'
+                             '\U0001F4F8 Заміна фото русака (ціна 1 погон):\n'
+                             '\U0001F304 Класове преміум фото 1 (Кадиров, Обеме, Горшок, Тесак, Захарченко, '
+                             'Дерек Шовін, Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, Шойгу).\n'
+                             '\U0001F307 Класове преміум фото 2 (Хасбулла, Стаханов, Мавроді, Просвірін, '
+                             'Гіркін-Стрєлков, Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Каневський, '
+                             'Герасімов).\n'
+                             '\U0001F309 Чмоня.\n\n'
+                             '\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n'
                              '\U0001F943 Настоянка глоду - буст для новачків. Якщо в русака менше 1000 сили і 5 '
                              'інтелекту, то настоянка моментально додасть 400 сили і 4 інтелекту.'
-                             '\n\U0001F4E6 40 Донбаських пакунків\nРесурси: \U0001F333 2222 \U0001faa8 1111 \U0001F47E '
-                             '33\n\U0001F393 Курс перекваліфікації - дозволяє русаку наново вибрати клас.'
+                             '\n\U0001F4E6 40 Донбаських пакунків\n'
+                             '\U0001F9FE Ресурси для клану: \U0001F333 2222 \U0001faa8 1111 \U0001F47E 33\n'
+                             '\U0001F393 Курс перекваліфікації - дозволяє русаку наново вибрати клас.'
                              '\n\U0001F3E0 Велике будівництво - додатковий підвал '
                              'найвищого рівня (покупка доступна до етапу 2. Купівля будівельних матеріалів).',
                              reply_markup=donate_goods())
@@ -2055,9 +2062,7 @@ async def raid(message):
     try:
         c = 'c' + str(message.chat.id)
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id or message.from_user.id in sudoers:
-            if message.chat.id == -1001670934142:
-                await message.reply('Хватить на сьогодні рейдів.')
-            elif 0 <= datetime.now().hour < 8:
+            if 0 <= datetime.now().hour < 8:
                 await message.reply('Комендантська година, рейди недоступні.')
             elif r.hexists(c, 'start') == 0:
                 if r.hexists(c, 'raid_ts') == 0:
@@ -3727,6 +3732,40 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'photo', chm[10])
             elif cl == 34 or cl == 35 or cl == 36:
                 r.hset(call.from_user.id, 'photo', chm[11])
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно змінили фото русаку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку, або русак без класу')
+
+    elif call.data.startswith('premium3'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1 and int(r.hget(call.from_user.id, 'class')) > 0:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            cl = int(r.hget(call.from_user.id, 'class'))
+            if cl == 1 or cl == 11 or cl == 21:
+                r.hset(call.from_user.id, 'photo', premium2[0])
+            elif cl == 2 or cl == 12 or cl == 22:
+                r.hset(call.from_user.id, 'photo', premium2[1])
+            elif cl == 3 or cl == 13 or cl == 23:
+                r.hset(call.from_user.id, 'photo', premium2[2])
+            elif cl == 4 or cl == 14 or cl == 24:
+                r.hset(call.from_user.id, 'photo', premium2[3])
+            elif cl == 5 or cl == 15 or cl == 25:
+                r.hset(call.from_user.id, 'photo', premium2[4])
+            elif cl == 6 or cl == 16 or cl == 26:
+                r.hset(call.from_user.id, 'photo', premium2[5])
+            elif cl == 7 or cl == 17 or cl == 27:
+                r.hset(call.from_user.id, 'photo', premium2[6])
+            elif cl == 8 or cl == 18 or cl == 28:
+                r.hset(call.from_user.id, 'photo', premium2[7])
+            elif cl == 9 or cl == 19 or cl == 29:
+                r.hset(call.from_user.id, 'photo', premium2[8])
+            elif cl == 10 or cl == 20 or cl == 30:
+                r.hset(call.from_user.id, 'photo', premium2[9])
+            elif cl == 31 or cl == 32 or cl == 33:
+                r.hset(call.from_user.id, 'photo', premium2[10])
+            elif cl == 34 or cl == 35 or cl == 36:
+                r.hset(call.from_user.id, 'photo', premium2[11])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:

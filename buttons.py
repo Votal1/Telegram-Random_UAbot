@@ -13,10 +13,14 @@ def goods():
 
 def donate_goods():
     markup = InlineKeyboardMarkup()
-    items = {'Преміум-фото класу - 1 погон': 'premium1', 'Класовий чмоня - 1 погон': 'premium2',
-             '40 пакунків - 1 погон': '40_packs', 'Настоянка глоду - 1 погон': 'hawthorn',
-             'Ресурси - 2 погони': 'buy_resources', 'Курс перекваліфікації - 2 погони': 'course',
-             'Велике будівництво - 3 погони': 'fast_cellar'}
+    items = {'\U0001F943 Настоянка глоду - \U0001F31F 1 погон': 'hawthorn',
+             '\U0001F4E6 40 пакунків - \U0001F31F 1 погон': '40_packs',
+             '\U0001F9FE Ресурси - \U0001F31F 2 погони': 'buy_resources',
+             '\U0001F393 Курс перекваліфікації - \U0001F31F 2 погони': 'course',
+             '\U0001F3E0 Велике будівництво - \U0001F31F 3 погони': 'fast_cellar'}
+    markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
+               InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
+               InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium2'))
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup
