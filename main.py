@@ -3646,7 +3646,7 @@ async def handle_query(call):
         if checkClan(call.from_user.id):
             if int(r.hget(call.from_user.id, 'strap')) >= 2:
                 r.hincrby(call.from_user.id, 'strap', -2)
-                c = 'c' + r.hget(call.from_user.id, 'clan')
+                c = 'c' + r.hget(call.from_user.id, 'clan').decode()
                 r.hincrby(c, 'r_spirit', 33)
                 wood(c, 2222)
                 stone(c, 1111)
