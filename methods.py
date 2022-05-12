@@ -207,7 +207,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Продати радіотехніку - \U0001F4FB 50 -> \U0001F4B5 500',
                                             callback_data='clan_sell_radio'))
         if int(r.hget(c, 'codes')) >= 1:
-            markup.add(InlineKeyboardButton(text='Продати секретний код - \U0001F916 1 -> \U0001F4B5 500, \U0001F47E '
+            markup.add(InlineKeyboardButton(text='Продати код - \U0001F916 1 -> \U0001F4B5 500, \U0001F47E '
                                                  '50', callback_data='clan_sell_code'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'))
