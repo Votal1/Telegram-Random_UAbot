@@ -822,8 +822,9 @@ async def donate_shop(message):
                              'Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, Шойгу) або чмоню свого класу.\n'
                              '\U0001F943 Настоянка глоду - буст для новачків. Якщо в русака менше 1000 сили і 5 '
                              'інтелекту, то настоянка моментально додасть 400 сили і 4 інтелекту.'
-                             '\n\U0001F4E6 40 Донбаських пакунків\n\U0001F393 Курс перекваліфікації - '
-                             'дозволяє русаку наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал '
+                             '\n\U0001F4E6 40 Донбаських пакунків\n\n\U0001F333 2222 \U0001faa8 1111 \U0001F47E 33'
+                             '\n\U0001F393 Курс перекваліфікації - дозволяє русаку наново вибрати клас.'
+                             '\n\U0001F3E0 Велике будівництво - додатковий підвал '
                              'найвищого рівня (покупка доступна до етапу 2. Купівля будівельних матеріалів).',
                              reply_markup=donate_goods())
     else:
@@ -3640,6 +3641,27 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('buy_resources'):
+        if checkClan(call.from_user.id):
+            if int(r.hget(call.from_user.id, 'strap')) >= 2:
+                r.hincrby(call.from_user.id, 'strap', -2)
+                c = 'c' + r.hget(call.from_user.id, 'clan')
+                r.hincrby(c, 'r_spirit', 33)
+                wood(c, 2222)
+                stone(c, 1111)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви успішно замовили ресурси для свого клану')
+                try:
+                    msg = 'Ваше замовлення прибуло.\n\U0001F333 2222 \U0001faa8 1111 \U0001F47E 33'
+                    await bot.send_message(int(r.hget(call.from_user.id, 'clan')), msg)
+                except:
+                    pass
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо погонів на рахунку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ти не в клані')
 
     elif call.data.startswith('premium1'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and int(r.hget(call.from_user.id, 'class')) > 0:
