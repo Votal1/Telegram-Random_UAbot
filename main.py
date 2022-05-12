@@ -3172,6 +3172,7 @@ async def handle_query(call):
         await bot.edit_message_text(text='Адміністраторські команди\nБоту потрібне право банити та адмін з правом '
                                          'редагування групи має увімкнути їх командою /toggle_admin; використовувати '
                                          'команди можуть адміни з правом банити\n\n'
+                                         '/toggle_captcha - увімкнути капчу (міні-тест при приєднанні до чату)\n'
                                          '/ban [number][m/h/d] /unban\n'
                                          '/mute [number][m/h/d/f] /unmute\n'
                                          '/moxir [number][m/h/d] - забрати стікери і медіа\n\n'
