@@ -4404,6 +4404,82 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Це може зробити тільки лідер чи заступник.')
 
+    elif call.data.startswith('clan_sell_'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if call.data.startswith('clan_sell_wood') and int(r.hget(c, 'wood')) >= 7500:
+                r.hincrby(c, 'money', 500)
+                r.hincrby(c, 'wood', -1500)
+                r.hincrby('resources', 'wood', 1500)
+                await bot.send_message(call.message.chat.id, '\U0001F333 Продано 1500 деревини.')
+            elif call.data.startswith('clan_sell_stone') and int(r.hget(c, 'stone')) >= 5000:
+                r.hincrby(c, 'money', 500)
+                r.hincrby(c, 'stone', -1000)
+                r.hincrby('resources', 'stone', 1000)
+                await bot.send_message(call.message.chat.id, '\U0001faa8 Продано 1000 каміння.')
+            elif call.data.startswith('clan_sell_cloth') and int(r.hget(c, 'cloth')) >= 2500:
+                r.hincrby(c, 'money', 500)
+                r.hincrby(c, 'cloth', -500)
+                r.hincrby('resources', 'cloth', 500)
+                await bot.send_message(call.message.chat.id, '\U0001F9F6 Продано 500 тканини.')
+            elif call.data.startswith('clan_sell_brick') and int(r.hget(c, 'brick')) >= 1500:
+                r.hincrby(c, 'money', 500)
+                r.hincrby(c, 'brick', -300)
+                r.hincrby('resources', 'brick', 300)
+                await bot.send_message(call.message.chat.id, '\U0001F9F1 Продано 300 цегли.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+            try:
+                msg, markup = c_shop(c, 3)
+                await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                            message_id=call.message.message_id, reply_markup=markup)
+            except:
+                pass
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
+
+    elif call.data.startswith('clan_buy_'):
+        c = 'c' + str(call.message.chat.id)
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
+            if int(r.hget(c, 'money')) >= 1000:
+                if call.data.startswith('clan_buy_wood') and int(r.hget('resources', 'wood')) >= 1500:
+                    r.hincrby(c, 'money', 1000)
+                    r.hincrby(c, 'wood', 1500)
+                    r.hincrby('resources', 'wood', -1500)
+                    await bot.send_message(call.message.chat.id, '\U0001F333 Придбано 1500 деревини.')
+                elif call.data.startswith('clan_buy_stone') and int(r.hget('resources', 'stone')) >= 1000:
+                    r.hincrby(c, 'money', 1000)
+                    r.hincrby(c, 'stone', 1000)
+                    r.hincrby('resources', 'stone', -1000)
+                    await bot.send_message(call.message.chat.id, '\U0001faa8 Придбано 1000 каміння.')
+                elif call.data.startswith('clan_buy_cloth') and int(r.hget('resources', 'cloth')) >= 500:
+                    r.hincrby(c, 'money', 1000)
+                    r.hincrby(c, 'cloth', 500)
+                    r.hincrby('resources', 'cloth', -500)
+                    await bot.send_message(call.message.chat.id, '\U0001F9F6 Придбано 500 тканини.')
+                elif call.data.startswith('clan_buy_brick') and int(r.hget('resources', 'brick')) >= 300:
+                    r.hincrby(c, 'money', 1000)
+                    r.hincrby(c, 'brick', 300)
+                    r.hincrby('resources', 'brick', -300)
+                    await bot.send_message(call.message.chat.id, '\U0001F9F1 Придбано 300 цегли.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо ресурсів.')
+                try:
+                    msg, markup = c_shop(c, 3)
+                    await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                                message_id=call.message.message_id, reply_markup=markup)
+                except:
+                    pass
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Це може зробити тільки лідер чи заступник.')
+
 
 @dp.message_handler()
 async def echo(message):

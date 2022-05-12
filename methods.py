@@ -134,6 +134,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Російське немовля - 100 грн', callback_data='clan_children'))
         markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
+
     if page == 2:
         msg = '\U0001F451 Товари для лідера і заступників:'
         if int(r.hget(c, 'monument')) == 1:
@@ -173,8 +174,35 @@ def c_shop(c, page):
                                             callback_data='clan_money'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
+
     if page == 3:
-        msg = '\U0001F69B Магазин ресурсів:\n\nНезабаром відкриття...'
+        w, s, cl, b = r.hmget('resources', 'wood', 'stone', 'cloth', 'brick')
+        msg = f"\U0001F69B Магазин ресурсів\n\nУ наявності:\n\U0001F333 Деревина: {int(w)}\n" \
+              f"\U0001faa8 Камінь: {int(s)}\n\U0001F9F6 Тканина: {int(cl)}\n\U0001F9F1 Цегла: {int(b)}"
+        if int(r.hget(c, 'wood')) >= 7500:
+            markup.add(InlineKeyboardButton(text='Продати деревину - \U0001F333 1500 -> \U0001F4B5 500',
+                                            callback_data='clan_sell_wood'))
+        elif int(w) >= 1500:
+            markup.add(InlineKeyboardButton(text='Купити деревину - \U0001F4B5 1000 -> \U0001F333 1500',
+                                            callback_data='clan_buy_wood'))
+        if int(r.hget(c, 'stone')) >= 5000:
+            markup.add(InlineKeyboardButton(text='Продати камінь - \U0001faa8 1000 -> \U0001F4B5 500',
+                                            callback_data='clan_sell_stone'))
+        elif int(s) >= 1000:
+            markup.add(InlineKeyboardButton(text='Купити камінь - \U0001F4B5 1000 -> \U0001faa8 1000',
+                                            callback_data='clan_buy_stone'))
+        if int(r.hget(c, 'cloth')) >= 2500:
+            markup.add(InlineKeyboardButton(text='Продати тканину - \U0001F9F6 500 -> \U0001F4B5 500',
+                                            callback_data='clan_sell_cloth'))
+        elif int(cl) >= 500:
+            markup.add(InlineKeyboardButton(text='Купити тканину - \U0001F4B5 1000 -> \U0001F9F6 500',
+                                            callback_data='clan_buy_cloth'))
+        if int(r.hget(c, 'brick')) >= 1500:
+            markup.add(InlineKeyboardButton(text='Продати цеглу - \U0001F9F1 300 -> \U0001F4B5 500',
+                                            callback_data='clan_sell_brick'))
+        elif int(b) >= 300:
+            markup.add(InlineKeyboardButton(text='Купити цеглу - \U0001F4B5 1000 -> \U0001F9F1 300',
+                                            callback_data='clan_buy_brick'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'))
     return msg, markup
