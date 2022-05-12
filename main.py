@@ -219,6 +219,22 @@ async def moxir(message):
         pass
 
 
+@dp.message_handler(content_types=["new_chat_members"])
+async def handler_new_member(message):
+    if message.chat.id == -1001211933154:
+        user_name = message.new_chat_members[0].first_name
+        markup = InlineKeyboardMarkup()
+        if choice([1, 2]) == 1:
+            markup.add(InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'),
+                       InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'))
+        else:
+            markup.add(InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'),
+                       InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'))
+        await bot.restrict_chat_member(message.chat.id, message.new_chat_members[0].id, can_send_messages=False)
+        await message.reply(f'\u274E {user_name}, цей чат під охороною. Дай відповідь на одне питання.\n\n'
+                            f'Що таке паляниця?', reply_markup=markup)
+
+
 @dp.message_handler(commands=['donbass'])
 async def donbass(message):
     markup = InlineKeyboardMarkup()
@@ -2462,6 +2478,16 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ти або вже в битві, або в тебе відсутній русак.\n\n'
                                                  'В рейді можуть брати участь тільки учасники клану')
+
+    elif call.data.startswith('captcha_true') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        await bot.edit_message_text(text=f'\u2705 Вітаю в чаті, {call.from_user.first_name}.',
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id)
+        await bot.restrict_chat_member(call.message.chat.id, call.from_user.id,
+                                       can_send_messages=True, can_send_media_messages=True,
+                                       can_send_other_messages=True, can_add_web_page_previews=True)
+
+    elif call.data.startswith('captcha_false') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Неправильна відповідь.')
 
     elif call.data.startswith('create_'):
         if r.hexists('c' + str(call.message.chat.id), 'base') == 0:
