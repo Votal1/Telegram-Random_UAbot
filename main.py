@@ -3961,16 +3961,21 @@ async def handle_query(call):
                     await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                                 call.message.chat.id, call.message.message_id)
             elif ran == [10]:
-                await bot.edit_message_text('\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити '
-                                            'непоганий шолом для русака.\n\U0001F464 +30',
-                                            call.message.chat.id, call.message.message_id)
+                msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити непогану шапку ' \
+                      'для русака.\n'
                 if int(r.hget(uid, 'head')) == 1:
                     r.hincrby(uid, 'sch', 30)
                     r.hincrby(uid, 's_head', 20)
-                elif int(r.hget(uid, 'head')) != 2:
+                    msg += '\U0001F464 +30'
+                elif int(r.hget(uid, 'head')) not in (2, 3):
                     r.hset(uid, 'sch', 30)
                     r.hset(uid, 'head', 1)
                     r.hset(uid, 's_head', 20)
+                    msg += '\U0001F464 +30'
+                else:
+                    msg += 'Але в цьому немає потреби.\n\U0001F464 +10'
+                    r.hincrby(uid, 'sch', 10)
+                await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id)
             elif ran == [11]:
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 await bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої'
