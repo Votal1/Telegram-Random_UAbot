@@ -770,15 +770,15 @@ async def merchant(message):
         else:
             msg = 'Мандрівний торговець приходить раз в день у випадкову годину (від 18 до 22).\n' \
                   'Продає універсальний захист, рідкісні гриби та спорядження для всіх класів.'
-            # if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
-            #        int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            #    msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
+            if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                    int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+                msg = msg + '\n\nТорговець прийшов:\nt.me/c/1211933154/' + r.hget('soledar', 'pin').decode()
             await message.answer(msg, disable_web_page_preview=True)
     else:
         msg = 'Мандрівний торговець приходить увечері в <a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>.'
-        # if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
-        #        int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-        #    msg = msg + '\n\nТорговець прийшов:\nt.me/soledar1/' + r.hget('soledar', 'pin').decode()
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            msg = msg + '\n\nТорговець прийшов:\nt.me/c/1211933154/' + r.hget('soledar', 'pin').decode()
         await message.answer(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
@@ -3029,6 +3029,9 @@ async def handle_query(call):
         if checkClan(call.from_user.id, base=4, building='morgue'):
             r.hincrby('c' + r.hget(call.from_user.id, 'clan').decode(), 'r_spirit', 1)
             msg += '\n\U0001F47E +1'
+        if clm == 36:
+            r.hincrby(call.from_user.id, 'strap', 1)
+            msg += '\n\U0001F31F +1'
         if call.message.chat.type != 'private':
             msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
         await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
