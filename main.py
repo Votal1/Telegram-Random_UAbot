@@ -4427,6 +4427,17 @@ async def handle_query(call):
                 r.hincrby(c, 'brick', -300)
                 r.hincrby('resources', 'brick', 300)
                 await bot.send_message(call.message.chat.id, '\U0001F9F1 Продано 300 цегли.')
+            elif call.data.startswith('clan_sell_radio') and int(r.hget(c, 'technics')) >= 50:
+                r.hincrby(c, 'money', 500)
+                r.hincrby(c, 'technics', -50)
+                r.hincrby('resources', 'technics', 50)
+                await bot.send_message(call.message.chat.id, '\U0001F4FB Продано 50 радіотехніки.')
+            elif call.data.startswith('clan_sell_code') and int(r.hget(c, 'codes')) >= 1:
+                r.hincrby(c, 'money', 500)
+                r.hincrby(c, 'r_spirit', 50)
+                r.hincrby(c, 'codes', -1)
+                r.hincrby('resources', 'codes', 1)
+                await bot.send_message(call.message.chat.id, '\U0001F916 Продано секретний код.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
