@@ -391,7 +391,7 @@ async def feed(message):
 
 @dp.message_handler(commands=['mine', 'minecraft'])
 async def mine(message):
-    if message.chat.id == -1001211933154:
+    if message.chat.type == 'private':
         try:
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
@@ -3289,6 +3289,7 @@ async def handle_query(call):
                                          '/help - як користуватись\n'
                                          '/gruz200 - інфа по втратах окупантів\n'
                                          '@Random_UAbot - вибрати одну з функцій рандому\n'
+                                         '/stat - випадкова статистика\n'
                                          '/donate - сподобався бот?',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
                                     reply_markup=cmm(), disable_web_page_preview=True)
@@ -3320,8 +3321,7 @@ async def handle_query(call):
                                          '@soledar1</a>:\n'
                                          '/mine - заробити гривні\n'
                                          '/merchant - продає топову снарягу\n'
-                                         '/clan - доступні клани\n'
-                                         '/stat - випадкова статистика',
+                                         '/clan - доступні клани',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
                                     reply_markup=cmm(), disable_web_page_preview=True)
 
