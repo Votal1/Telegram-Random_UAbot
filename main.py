@@ -1376,6 +1376,10 @@ async def clan(message):
                                             '\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
     elif message.chat.id == -1001211933154:
+        try:
+            await bot.delete_message(message.chat.id, int(r.hget('soledar', 'clan')))
+        except:
+            pass
         msg = '\U0001F530 Тут можна знайти собі клан'
         for mem in r.smembers('recruitment'):
             c = 'c' + mem.decode()
@@ -1388,7 +1392,8 @@ async def clan(message):
             if int(cl[3]) == 3:
                 num2 += 10
             msg += f'\n\n<i>{prefix[int(cl[0])]}</i> <a href="{link}">{cl[4].decode()}</a>\nУчасники: {num1} / {num2}'
-        await message.reply(msg, disable_web_page_preview=True, parse_mode='HTML')
+        a = await message.reply(msg, disable_web_page_preview=True, parse_mode='HTML')
+        r.hset('soledar', 'clan', a.id)
 
 
 @dp.message_handler(commands=['upgrade'])
