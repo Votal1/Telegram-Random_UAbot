@@ -2500,7 +2500,8 @@ async def handle_query(call):
                                             text='Ти або вже в битві, або в тебе відсутній русак.\n\n'
                                                  'В рейді можуть брати участь тільки учасники клану')
 
-    elif call.data.startswith('captcha_true') and call.from_user.id == call.message.reply_to_message.from_user.id:
+    elif call.data.startswith('captcha_true') and \
+            call.from_user.id == call.message.reply_to_message.new_chat_members[0].id:
         try:
             await bot.restrict_chat_member(call.message.chat.id, call.from_user.id,
                                            can_send_messages=True, can_send_media_messages=True,
@@ -2510,7 +2511,8 @@ async def handle_query(call):
         except:
             pass
 
-    elif call.data.startswith('captcha_false') and call.from_user.id == call.message.reply_to_message.from_user.id:
+    elif call.data.startswith('captcha_false') and \
+            call.from_user.id == call.message.reply_to_message.new_chat_members[0].id:
         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Неправильна відповідь.')
 
     elif call.data.startswith('create_'):
