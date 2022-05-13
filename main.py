@@ -1024,10 +1024,11 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'money', 100)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     r.hincrby('all_vodka', 'vodka', 50)
-                    if checkClan(message.from_user.id) and \
-                            checkLeader(message.from_user.id, int(r.hget(message.from_user.id, 'clan'))):
-                        r.hincrby('c' + r.hget(message.from_user.id, 'clan').decode(), 'codes', 1)
-                        msg += '\n\U0001F916 +1'
+                    if checkClan(message.from_user.id):
+                        c = 'c' + r.hget(message.from_user.id, 'clan').decode()
+                        if message.from_user.id == int(r.hget(c, 'leader')):
+                            r.hincrby('c' + r.hget(message.from_user.id, 'clan').decode(), 'codes', 1)
+                            msg += '\n\U0001F916 +1'
                     await message.reply(msg)
                 elif msg.startswith('mine') and uid not in r.smembers('third_code'):
                     r.sadd('third_code', message.from_user.id)
