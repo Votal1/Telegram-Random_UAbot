@@ -2731,7 +2731,7 @@ async def handle_query(call):
 
     elif call.data.startswith('recruitment'):
         c = int(r.hget(call.from_user.id, 'clan'))
-        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c) and c == -1001733230634:
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             try:
                 if int(r.hget('c' + str(c), 'recruitment')) == 0:
                     await bot.create_chat_invite_link(c, creates_join_request=True)
