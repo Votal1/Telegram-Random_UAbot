@@ -1801,6 +1801,7 @@ async def join(message):
     c = 'c' + str(message.chat.id)
     num = 25
     ts = 604800
+    cid = message.chat.id
     if r.hexists(message.from_user.id, 'clan_ts') == 0:
         r.hset(message.from_user.id, 'clan_ts', 0)
     try:
@@ -1812,16 +1813,17 @@ async def join(message):
                 ts = 0
             if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > ts or \
                     message.from_user.id in sudoers:
-                if int(r.hget(c, 'allow')) == 0 and r.scard('cl' + str(message.chat.id)) < num:
-                    r.hset(message.from_user.id, 'clan', message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
-                                                                           'clan_time': 0})
-                    r.sadd('cl' + str(message.chat.id), message.from_user.id)
-                    r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
-                    await message.reply('\U0001F4E5 Ти вступив в клан ' +
-                                        r.hget('c' + str(message.chat.id), 'title').decode() + '.')
-                elif int(r.hget(c, 'allow')) == 1 and r.scard('cl' + str(message.chat.id)) < num:
-                    await message.reply('\U0001F4E5 Прийняти в клан ' + message.from_user.first_name + '?',
-                                        reply_markup=invite())
+                if r.scard('cl' + str(message.chat.id)) < num:
+                    if int(r.hget(c, 'allow')) == 0 or message.from_user.id in sudoers:
+                        r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp()),
+                                                                   'clan_time': 0})
+                        r.sadd('cl' + str(message.chat.id), message.from_user.id)
+                        r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
+                        await message.reply('\U0001F4E5 Ти вступив в клан ' +
+                                            r.hget('c' + str(message.chat.id), 'title').decode() + '.')
+                    elif int(r.hget(c, 'allow')) == 1:
+                        await message.reply('\U0001F4E5 Прийняти в клан ' + message.from_user.first_name + '?',
+                                            reply_markup=invite())
                 else:
                     await message.reply('\U0001F4E5 Неможливо вступити в клан, оскільки він переповнений.')
             else:
