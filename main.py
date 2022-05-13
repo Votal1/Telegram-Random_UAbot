@@ -2541,7 +2541,7 @@ async def handle_query(call):
                                {'money': 0, 'wood': 0, 'stone': 0, 'cloth': 0, 'brick': 0, 'technics': 0, 'codes': 0,
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
                                 'shop': 0, 'complex': 0, 'monument': 0, 'camp': 0, 'morgue': 0, 'post': 0, 'day': 0,
-                                'power': 0, 'new_post': 0, 'salary': 0, 'war_allow': 0,
+                                'power': 0, 'new_post': 0, 'salary': 0, 'war_allow': 0, 'recruitment': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title,
                                 'side': 0, 'build1': 0, 'build2': 0, 'build3': 0, 'build4': 0,
                                 'build5': 0, 'build6': 0})
