@@ -1138,8 +1138,6 @@ async def great_war(cid1, cid2, a, b):
     money = 3
     r_spirit = 1
     if win == ['a']:
-        if cid1 == -1001211933154:
-            money = randint(3, 10)
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         if int(r.hget('c' + str(cid1), 'side')) == 2:
             r_spirit += 2
@@ -1165,8 +1163,6 @@ async def great_war(cid1, cid2, a, b):
                 if int(r.hget('c' + str(cid1), 'side')) == 4:
                     r.hincrby('c' + str(cid1), 'money', money)
     elif win == ['b']:
-        if cid2 == -1001211933154:
-            money = randint(3, 10)
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         if int(r.hget('c' + str(cid2), 'side')) == 2:
             r_spirit += 2
