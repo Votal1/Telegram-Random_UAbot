@@ -450,7 +450,7 @@ async def mine(message):
 
 @dp.message_handler(commands=['stat'])
 async def stat(message):
-    if message.from_user.id == 456514639:
+    if message.from_user.id == -1001211933154:
         try:
             ran = randint(1, 20)
             msg = ''
@@ -3319,7 +3319,9 @@ async def handle_query(call):
                                          'Команди, доступні тільки в <a href="https://t.me/+cClR7rA-sZAyY2Uy">'
                                          '@soledar1</a>:\n'
                                          '/mine - заробити гривні\n'
-                                         '/merchant - продає топову снарягу',
+                                         '/merchant - продає топову снарягу\n'
+                                         '/clan - доступні клани\n'
+                                         '/stat - випадкова статистика',
                                     chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
                                     reply_markup=cmm(), disable_web_page_preview=True)
 
