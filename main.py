@@ -1382,7 +1382,7 @@ async def clan(message):
             num1 = r.scard('cl' + mem.decode())
             num2 = 25
             cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
-            link = cl[1].decode
+            link = cl[1].decode()
             if int(cl[2]) == 1:
                 num2 += 25
             if int(cl[3]) == 3:
