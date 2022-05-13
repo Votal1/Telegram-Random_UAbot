@@ -432,11 +432,13 @@ async def mine(message):
                             msg = msg + ' \U0001F4B5 + 8'
                             r.hincrby(message.from_user.id, 'money', 8)
                         r.hincrby(message.from_user.id, 'vodka', 5)
+                        r.hincrby('all_vodka', 'vodka', 5)
                         await message.reply(msg)
                     else:
                         await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля шахти'
                                             '.\n\u2622 +1')
                         r.hincrby(message.from_user.id, 'vodka', 1)
+                        r.hincrby('all_vodka', 'vodka', 1)
                         if int(r.hget(message.from_user.id, 'class')) == 18 or \
                                 int(r.hget(message.from_user.id, 'class')) == 28:
                             r.hset(message.from_user.id, 'time1', 0)
@@ -444,6 +446,129 @@ async def mine(message):
                 await message.reply('Твій русак сьогодні відпрацював зміну.')
         except:
             await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+
+
+@dp.message_handler(commands=['mine', 'minecraft'])
+async def mine(message):
+    if message.from_user.id == 456514639:
+        try:
+            ran = randint(1, 8)
+            msg = ''
+            if ran == 1:
+                msg = '\U0001F465 Кількість користувачів: ' + str(r.scard('everyone'))
+            elif ran == 2:
+                msg = '\U0001F530 Кількість кланів: ' + str(r.scard('clans'))
+            elif ran == 3:
+                msg = '\U0001F3C6 Проведено дуелей: ' + r.hget('all_wins', 'wins').decode()
+            elif ran == 4:
+                msg = '\U0001F3C5 Отримано трофеїв: ' + r.hget('all_trophy', 'trophy').decode()
+            elif ran == 5:
+                msg = '\u2620\uFE0F Мирна русня: ' + r.hget('all_deaths', 'deaths').decode()
+            elif ran == 6:
+                msg = '\U0001F476 З`їдено немовлят: ' + r.hget('all_children', 'children').decode()
+            elif ran == 7:
+                msg = '\u2622 Випито горілки: ' + r.hget('all_vodka', 'vodka').decode()
+            elif ran == 8:
+                msg = '\U0001F4E6 Відкрито пакунків: ' + r.hget('all_opened', 'packs').decode()
+            elif ran == 9:
+                ha4 = r.scard('class-1') + r.scard('class-11') + r.scard('class-21')
+                ha41 = int(r.hget('win_rate', 'win-1')) + int(r.hget('win_rate', 'win-11')) + int(
+                    r.hget('win_rate', 'win-21'))
+                ha42 = int(r.hget('win_rate', 'lose-1')) + int(r.hget('win_rate', 'lose-11')) + int(
+                    r.hget('win_rate', 'lose-21'))
+                ha43 = ha41 / (ha41 + ha42) * 100
+                msg = f'\U0001F919 Кількість хачів: {ha4}\n\U0001F3C6 Він рейт: {round(ha43, 2)}'
+            elif ran == 10:
+                rab = r.scard('class-2') + r.scard('class-12') + r.scard('class-22')
+                rab1 = int(r.hget('win_rate', 'win-2')) + int(r.hget('win_rate', 'win-12')) + int(
+                    r.hget('win_rate', 'win-22'))
+                rab2 = int(r.hget('win_rate', 'lose-2')) + int(r.hget('win_rate', 'lose-12')) + int(
+                    r.hget('win_rate', 'lose-22'))
+                rab3 = rab1 / (rab1 + rab2) * 100
+                msg = f'\U0001F9F0 Кількість роботяг: {rab}\n\U0001F3C6 Він рейт: {round(rab3, 2)}'
+            elif ran == 11:
+                mag = r.scard('class-3') + r.scard('class-13') + r.scard('class-23')
+                mag1 = int(r.hget('win_rate', 'win-3')) + int(r.hget('win_rate', 'win-13')) + int(
+                    r.hget('win_rate', 'win-23'))
+                mag2 = int(r.hget('win_rate', 'lose-3')) + int(r.hget('win_rate', 'lose-13')) + int(
+                    r.hget('win_rate', 'lose-23'))
+                mag3 = mag1 / (mag1 + mag2) * 100
+                msg = f'\U0001F52E Кількість фокусників: {mag}\n\U0001F3C6 Він рейт: {round(mag3, 2)}'
+            elif ran == 12:
+                pag = r.scard('class-4') + r.scard('class-14') + r.scard('class-24')
+                pag1 = int(r.hget('win_rate', 'win-4')) + int(r.hget('win_rate', 'win-14')) + int(
+                    r.hget('win_rate', 'win-24'))
+                pag2 = int(r.hget('win_rate', 'lose-4')) + int(r.hget('win_rate', 'lose-14')) + int(
+                    r.hget('win_rate', 'lose-24'))
+                pag3 = pag1 / (pag1 + pag2) * 100
+                msg = f'\U0001F5FF Кількість язичників: {pag}\n\U0001F3C6 Він рейт: {round(pag3, 2)}'
+            elif ran == 13:
+                meat = r.scard('class-5') + r.scard('class-15') + r.scard('class-25')
+                meat1 = int(r.hget('win_rate', 'win-5')) + int(r.hget('win_rate', 'win-15')) + int(
+                    r.hget('win_rate', 'win-25'))
+                meat2 = int(r.hget('win_rate', 'lose-5')) + int(r.hget('win_rate', 'lose-15')) + int(
+                    r.hget('win_rate', 'lose-25'))
+                meat3 = meat1 / (meat1 + meat2) * 100
+                msg = f'\U0001fa96 Кількість гарматного м`яса: {meat}\n\U0001F3C6 Він рейт: {round(meat3, 2)}'
+            elif ran == 14:
+                mys = r.scard('class-6') + r.scard('class-16') + r.scard('class-26')
+                mys1 = int(r.hget('win_rate', 'win-6')) + int(r.hget('win_rate', 'win-16')) + int(
+                    r.hget('win_rate', 'win-26'))
+                mys2 = int(r.hget('win_rate', 'lose-6')) + int(r.hget('win_rate', 'lose-16')) + int(
+                    r.hget('win_rate', 'lose-26'))
+                mys3 = mys1 / (mys1 + mys2) * 100
+                msg = f'\U0001F46E Кількість мусорів: {mys}\n\U0001F3C6 Він рейт: {round(mys3, 2)}'
+            elif ran == 15:
+                mal = r.scard('class-7') + r.scard('class-17') + r.scard('class-27')
+                mal1 = int(r.hget('win_rate', 'win-7')) + int(r.hget('win_rate', 'win-17')) + int(
+                    r.hget('win_rate', 'win-27'))
+                mal2 = int(r.hget('win_rate', 'lose-7')) + int(r.hget('win_rate', 'lose-17')) + int(
+                    r.hget('win_rate', 'lose-27'))
+                mal3 = mal1 / (mal1 + mal2) * 100
+                msg = f'\U0001F921 Кількість малоросів: {mal}\n\U0001F3C6 Він рейт: {round(mal3, 2)}'
+            elif ran == 16:
+                hak = r.scard('class-8') + r.scard('class-18') + r.scard('class-28')
+                hak1 = int(r.hget('win_rate', 'win-8')) + int(r.hget('win_rate', 'win-18')) + int(
+                    r.hget('win_rate', 'win-28'))
+                hak2 = int(r.hget('win_rate', 'lose-8')) + int(r.hget('win_rate', 'lose-18')) + int(
+                    r.hget('win_rate', 'lose-28'))
+                hak3 = hak1 / (hak1 + hak2) * 100
+                msg = f'\U0001F4DF Кількість хакерів: {hak}\n\U0001F3C6 Він рейт: {round(hak3, 2)}'
+            elif ran == 17:
+                med = r.scard('class-9') + r.scard('class-19') + r.scard('class-29')
+                med1 = int(r.hget('win_rate', 'win-9')) + int(r.hget('win_rate', 'win-19')) + int(
+                    r.hget('win_rate', 'win-29'))
+                med2 = int(r.hget('win_rate', 'lose-9')) + int(r.hget('win_rate', 'lose-19')) + int(
+                    r.hget('win_rate', 'lose-29'))
+                med3 = med1 / (med1 + med2) * 100
+                msg = f'\u26D1 Кількість медиків: {med}\n\U0001F3C6 Він рейт: {round(med3, 2)}'
+            elif ran == 18:
+                gop = r.scard('class-10') + r.scard('class-20') + r.scard('class-30')
+                gop1 = int(r.hget('win_rate', 'win-10')) + int(r.hget('win_rate', 'win-20')) + int(
+                    r.hget('win_rate', 'win-30'))
+                gop2 = int(r.hget('win_rate', 'lose-10')) + int(r.hget('win_rate', 'lose-20')) + int(
+                    r.hget('win_rate', 'lose-30'))
+                gop3 = gop1 / (gop1 + gop2) * 100
+                msg = f'\U0001F6AC Кількість гопніків: {gop}\n\U0001F3C6 Він рейт: {round(gop3, 2)}'
+            elif ran == 19:
+                tax = r.scard('class-31') + r.scard('class-32') + r.scard('class-33')
+                tax1 = int(r.hget('win_rate', 'win-31')) + int(r.hget('win_rate', 'win-32')) + int(
+                    r.hget('win_rate', 'win-33'))
+                tax2 = int(r.hget('win_rate', 'lose-31')) + int(r.hget('win_rate', 'lose-32')) + int(
+                    r.hget('win_rate', 'lose-33'))
+                tax3 = tax1 / (tax1 + tax2) * 100
+                msg = f'\U0001F695 Кількість таксистів: {tax}\n\U0001F3C6 Він рейт: {round(tax3, 2)}'
+            elif ran == 20:
+                gen = r.scard('class-34') + r.scard('class-35') + r.scard('class-36')
+                gen1 = int(r.hget('win_rate', 'win-34')) + int(r.hget('win_rate', 'win-35')) + int(
+                    r.hget('win_rate', 'win-36'))
+                gen2 = int(r.hget('win_rate', 'lose-34')) + int(r.hget('win_rate', 'lose-35')) + int(
+                    r.hget('win_rate', 'lose-36'))
+                gen3 = gen1 / (gen1 + gen2) * 100
+                msg = f'\U0001F396 Кількість офіцерів: {gen}\n\U0001F3C6 Він рейт: {round(gen3, 2)}'
+            await message.reply(msg)
+        except:
+            pass
 
 
 @dp.message_handler(commands=['sacrifice'])
@@ -488,6 +613,7 @@ async def fascist(message):
                 ran = int(ran)
                 r.hset('f' + str(message.chat.id), 'username', r.hget(ran, 'username').decode())
                 r.hincrby(ran, 'childs', 1)
+                r.hincrby('all_children', 'children', 1)
                 pin = await message.reply('\U0001F468\U0001F3FB\u200D\u2708\uFE0F @' +
                                           r.hget('f' + str(message.chat.id), 'username').decode() +
                                           ' сьогодні займає посаду Фашист дня! Йому видано одне \U0001F476 '
@@ -587,6 +713,7 @@ async def woman(message):
                     await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 '
                                         'немовля. В тебе буде смачний сніданок!')
                     r.hincrby(message.from_user.id, 'childs', 1)
+                    r.hincrby('all_children', 'children', 1)
                     r.hset(message.from_user.id, 'time5', 0)
                 else:
                     await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
@@ -888,12 +1015,14 @@ async def promo_code(message):
                     r.sadd('first_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
                     r.hincrby(message.from_user.id, 'vodka', 50)
+                    r.hincrby('all_vodka', 'vodka', 50)
                     await message.reply('\u26CF Соледарський промокод активовано!\n\U0001F4E6 +10 \u2622 +50')
                 elif msg.startswith('http') and uid not in r.smembers('second_code'):
                     r.sadd('second_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
                     r.hincrby(message.from_user.id, 'money', 100)
                     r.hincrby(message.from_user.id, 'vodka', 50)
+                    r.hincrby('all_vodka', 'vodka', 50)
                     await message.reply('\u26CF Хакерський промокод активовано!\n\U0001F4E6 +10 '
                                         '\U0001F4B5 +100 \u2622 +50')
                 elif msg.startswith('mine') and uid not in r.smembers('third_code'):
@@ -1094,6 +1223,7 @@ async def achievements(message):
                 new_a = new_a + 1
                 new = 'Отримано нові досягнення!\n\U0001F476 + ' + str(new_a) + '\n'
                 r.hincrby(message.from_user.id, 'childs', 1)
+                r.hincrby('all_children', 'children', 1)
                 r.hset(message.from_user.id, acl[number], 2)
                 reply += full_list[number] + '\n'
             elif ac.decode() == '2':
@@ -2127,7 +2257,7 @@ async def guard(message):
 async def raid(message):
     try:
         c = 'c' + str(message.chat.id)
-        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id or message.from_user.id in sudoers:
+        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if 0 <= datetime.now().hour < 8:
                 await message.reply('Комендантська година, рейди недоступні.')
             elif r.hexists(c, 'start') == 0:
@@ -3141,6 +3271,7 @@ async def handle_query(call):
                                                'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
                                                'support': 0, 's_support': 0, 'mushrooms': 0})
         r.hincrby(call.from_user.id, 'deaths', 1)
+        r.hincrby('all_deaths', 'deaths', 1)
         msg = '\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, а вторий насрав в штани.'
         if checkClan(call.from_user.id, base=4, building='morgue'):
             r.hincrby('c' + r.hget(call.from_user.id, 'clan').decode(), 'r_spirit', 1)
@@ -3468,6 +3599,7 @@ async def handle_query(call):
             r.hset(call.from_user.id, 'time5', 0)
             spirit(5000, call.from_user.id, 0)
             r.hincrby(call.from_user.id, 'deaths', 5)
+            r.hincrby('all_deaths', 'deaths', 5)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно проміняли жінку на тютюн та люльку.\nНеобачний.')
             await bot.send_message(call.message.chat.id, 'Ви успішно проміняли жінку на тютюн та люльку.\nНеобачний.')
@@ -4113,7 +4245,6 @@ async def handle_query(call):
                                             call.message.chat.id, call.message.message_id)
                 r.hincrby(uid, 'money', 50)
             elif ran == [7]:
-                r.hincrby(uid, 'vodka', 20)
                 vo = 0
                 for v in range(20):
                     vo += int(vodka(uid))
@@ -4123,6 +4254,7 @@ async def handle_query(call):
                 await bot.edit_message_text('\U0001f535 В цьому пакунку лежить мертвий русак...\n\u2620\uFE0F +1',
                                             call.message.chat.id, call.message.message_id)
                 r.hincrby(uid, 'deaths', 1)
+                r.hincrby('all_deaths', 'deaths', 1)
             elif ran == [9]:
                 if int(r.hget(uid, 'intellect')) < 20:
                     await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
@@ -4415,6 +4547,7 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= 100:
                 r.hincrby(call.from_user.id, 'money', -100)
                 r.hincrby(call.from_user.id, 'childs', 1)
+                r.hincrby('all_children', 'children', 1)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно російське немовля.')
             else:
@@ -4471,6 +4604,7 @@ async def handle_query(call):
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     if int(r.hget(mem, 'clan_time')) == datetime.now().day:
                         r.hincrby(mem, 'vodka', 9)
+                        r.hincrby('all_vodka', 'vodka', 9)
                         spirit(int(vodka(mem)) * 9, mem, 0)
                 await bot.send_message(call.message.chat.id, '\u2622 Клан святкує відпрацьовану зміну.')
             else:

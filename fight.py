@@ -908,6 +908,7 @@ async def war(cid, location, big_battle):
     else:
         reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
         r.hincrby(win, 'trophy', 1)
+        r.hincrby('all_trophy', 'trophy', 1)
         r.hincrby(win, 'wins', 1)
         r.hincrby(win, 'money', 10)
     class_reward = ''
@@ -926,6 +927,7 @@ async def war(cid, location, big_battle):
             class_reward = '\U0001F9F0: \U0001F4B5 +5 \u2622 +10'
             r.hincrby(win, 'money', 5)
             r.hincrby(win, 'vodka', 10)
+            r.hincrby('all_vodka', 'vodka', 10)
     elif location == 'Битва в темному лісі':
         if wc == 3 or wc == 13 or wc == 23:
             class_reward = '\U0001F52E: \U0001F54A +2000\n\U0001F54A -1000 всім іншим учасникам битви.'
@@ -941,6 +943,7 @@ async def war(cid, location, big_battle):
         if wc == 5 or wc == 15 or wc == 25:
             class_reward = '\U0001fa96: \u2622 +15'
             r.hincrby(win, 'vodka', 15)
+            r.hincrby('all_vodka', 'vodka', 15)
     elif location == 'Битва біля поліцейського відділку':
         if wc == 6 or wc == 16 or wc == 26:
             class_reward = '\U0001F46E: \U0001F4B5 +5'
@@ -957,6 +960,7 @@ async def war(cid, location, big_battle):
             class_reward = '\U0001F921: \U0001F3C5 +1 \U0001F3C6 +5'
             r.hincrby(win, 'wins', 5)
             r.hincrby(win, 'trophy', 1)
+            r.hincrby('all_trophy', 'trophy', 1)
     elif location == 'Битва в серверній кімнаті':
         if wc == 8 or wc == 18 or wc == 28:
             class_reward = '\U0001F4DF: \U0001F4B5 +20'
@@ -975,9 +979,11 @@ async def war(cid, location, big_battle):
         if wc == 10 or wc == 20 or wc == 30:
             class_reward = '\U0001F6AC: \U0001F3C5 +1 \U0001F44A +1 \u2622 +1 \U0001F4B5 +8'
             r.hincrby(win, 'trophy', 1)
+            r.hincrby('all_trophy', 'trophy', 1)
             increase_trance(1, win)
             r.hincrby(win, 'money', 8)
             r.hincrby(win, 'vodka', 1)
+            r.hincrby('all_vodka', 'vodka', 1)
     elif location == 'Битва біля розбитої колони':
         if wc in (31, 32, 33):
             class_reward = '\U0001F695: \U0001F4E6 +2'
@@ -1132,6 +1138,8 @@ async def great_war(cid1, cid2, a, b):
     money = 3
     r_spirit = 1
     if win == ['a']:
+        if cid1 == -1001211933154:
+            money = randint(3, 10)
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         if int(r.hget('c' + str(cid1), 'side')) == 2:
             r_spirit += 2
@@ -1149,6 +1157,7 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
             r.hincrby(n, 'money', money)
+        r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid1, 1)
         if clan1 >= 5:
             if int(r.hget('c' + str(cid1), 'base')) > 1:
@@ -1156,6 +1165,8 @@ async def great_war(cid1, cid2, a, b):
                 if int(r.hget('c' + str(cid1), 'side')) == 4:
                     r.hincrby('c' + str(cid1), 'money', money)
     elif win == ['b']:
+        if cid2 == -1001211933154:
+            money = randint(3, 10)
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         if int(r.hget('c' + str(cid2), 'side')) == 2:
             r_spirit += 2
@@ -1173,6 +1184,7 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
             r.hincrby(n, 'money', money)
+        r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid2, 1)
         if clan2 >= 5:
             if int(r.hget('c' + str(cid2), 'base')) > 1:
@@ -1461,6 +1473,7 @@ async def start_raid(cid):
                 reward += '\u2622 +' + str(ran) + ' \U0001fac0 +100 \U0001F54A +10000'
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hincrby(mem, 'vodka', ran)
+                    r.hincrby('all_vodka', 'vodka', ran)
                     hp(100, mem)
                     spirit(10000, mem, 0)
             elif locations.index(location) == 2:

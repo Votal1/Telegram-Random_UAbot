@@ -18,6 +18,7 @@ def vodka(uid):
     increase = ran * int(r.hget(uid, 's1'))
     spirit(increase, uid, 0)
     r.hincrby(uid, 'vodka', 1)
+    r.hincrby('all_vodka', 'vodka', 1)
     return str(increase)
 
 
