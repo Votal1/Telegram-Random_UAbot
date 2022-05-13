@@ -452,7 +452,7 @@ async def mine(message):
 async def stat(message):
     if message.from_user.id == 456514639:
         try:
-            ran = randint(1, 8)
+            ran = randint(1, 20)
             msg = ''
             if ran == 1:
                 msg = '\U0001F465 Кількість користувачів: ' + str(r.scard('everyone'))
