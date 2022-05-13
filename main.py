@@ -2747,6 +2747,10 @@ async def handle_query(call):
                     r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link})
                     r.sadd('recruitment', c)
                 else:
+                    try:
+                        await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
+                    except:
+                        pass
                     r.hset('c' + str(c), 'recruitment', 0)
                     r.srem('recruitment', c)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
