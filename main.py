@@ -391,7 +391,7 @@ async def feed(message):
 
 @dp.message_handler(commands=['mine', 'minecraft'])
 async def mine(message):
-    if message.chat.type == 'private':
+    if message.chat.id == -1001211933154:
         try:
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
@@ -450,7 +450,7 @@ async def mine(message):
 
 @dp.message_handler(commands=['stat'])
 async def stat(message):
-    if message.chat.id == -1001211933154:
+    if message.chat.type == 'private':
         try:
             ran = randint(1, 20)
             msg = ''
