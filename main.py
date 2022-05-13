@@ -1272,6 +1272,9 @@ async def swap(message):
 async def clan(message):
     cid = str(message.chat.id)
     c = 'c' + cid
+    prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
+              'Комуна', 'Коаліція', 'Асоціація', 'Організація',
+              'Союз', 'Орден', 'Ліга', 'Корпорація']
     chats = [-1001211933154]  # -1001733230634
     if message.chat.type == 'supergroup' and message.chat.id not in chats:
         if r.hexists(c, 'base') == 0:
@@ -1299,9 +1302,6 @@ async def clan(message):
                                          parse_mode='HTML')
                 elif base >= 2:
                     building, wins, num = '', '', 25
-                    prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
-                              'Комуна', 'Коаліція', 'Асоціація', 'Організація',
-                              'Союз', 'Орден', 'Ліга', 'Корпорація']
                     if r.hexists(222, cid) == 1:
                         wins = '\nКількість перемог: ' + r.hget(222, cid).decode()
                     if base == 2:
@@ -1375,6 +1375,20 @@ async def clan(message):
                         await message.reply('Агент ФСБ хотів вкрасти гроші з кланової скрабниці, але його помітили...'
                                             '\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
+    elif message.chat.id == -1001211933154:
+        msg = '\U0001F530 Тут можна знайти собі клан'
+        for mem in r.smembers('recruitment'):
+            c = 'c' + mem.decode()
+            num1 = r.scard('cl' + mem.decode())
+            num2 = 25
+            cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
+            link = cl[1].decode
+            if int(cl[2]) == 1:
+                num2 += 25
+            if int(cl[3]) == 3:
+                num2 += 10
+            msg += f'\n\n<i>{prefix[int(cl[0])]}</i> <a href="{link}">{cl[4].decode()}</a>\nУчасники: {num1} / {num2}'
+        await message.reply(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
 @dp.message_handler(commands=['upgrade'])
@@ -1771,6 +1785,7 @@ async def clan_shop(message):
 async def clan_settings(message):
     try:
         c = 'c' + r.hget(message.from_user.id, 'clan').decode()
+        msg = 'Які налаштування бажаєте змінити?\n\nНазва: ' + r.hget(c, 'title').decode()
         if message.chat.type != 'private':
             try:
                 await bot.delete_message(message.chat.id, message.message_id)
@@ -1779,19 +1794,22 @@ async def clan_settings(message):
         if checkLeader(message.from_user.id, int(r.hget(message.from_user.id, 'clan'))) or \
                 message.from_user.id in sudoers:
             if int(r.hget(c, 'allow')) == 0:
-                allow = '\n\nВ клан може приєднатись кожен бажаючий.'
+                msg += '\n\nВ клан може приєднатись кожен бажаючий.'
             else:
-                allow = '\n\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
+                msg += '\n\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
             if int(r.hget(c, 'war_allow')) == 0:
-                allow2 = '\n\nВ міжчатову битву може зайти кожен бажаючий.'
+                msg += '\n\nВ міжчатову битву може зайти кожен бажаючий.'
             else:
-                allow2 = '\n\nВ міжчатову битву в перші 5 хвилин може зайти тільки учасник клану.'
+                msg += '\n\nВ міжчатову битву в перші 5 хвилин може зайти тільки учасник клану.'
             if int(r.hget(c, 'salary')) == 0:
-                salary = '\n\nЗа роботу не видається зарплата з кланових ресурсів.'
+                msg += '\n\nЗа роботу не видається зарплата з кланових ресурсів.'
             else:
-                salary = '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
-            await bot.send_message(message.from_user.id, 'Які налаштування бажаєте змінити?\n\nНазва: ' +
-                                   r.hget(c, 'title').decode() + allow + allow2 + salary, reply_markup=clan_set())
+                msg += '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
+            if int(r.hget(c, 'recruitment')) == 0:
+                msg += '\n\nВ Соледарі не відкрито набір в клан.'
+            else:
+                msg += '\n\nВ Соледарі відкрито набір в клан.'
+            await bot.send_message(message.from_user.id, msg, reply_markup=clan_set())
     except:
         pass
 
@@ -2710,6 +2728,24 @@ async def handle_query(call):
                 r.hset('c' + str(c), 'salary', 0)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Режим видачі зарплати за роботу змінено.')
+
+    elif call.data.startswith('recruitment'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c) and c == -1001733230634:
+            try:
+                if int(r.hget('c' + str(c), 'recruitment')) == 0:
+                    await bot.create_chat_invite_link(c, creates_join_request=True)
+                    link = await bot.export_chat_invite_link(c)
+                    r.hset('c' + str(c), 'recruitment', 1, {'link': link})
+                    r.sadd('recruitment', c)
+                else:
+                    r.hset('c' + str(c), 'recruitment', 0)
+                    r.srem('recruitment', c)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Режим набору змінено.')
+            except:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Схоже в бота нема прав додавати користувачів.')
 
     elif call.data.startswith('get_members'):
         uid = call.from_user.id
