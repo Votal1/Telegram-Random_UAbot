@@ -1866,7 +1866,8 @@ async def kick(message):
         if checkLeader(message.from_user.id, message.chat.id):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')) or message.chat.type == 'private':
                 uid = int(message.text.split(' ')[1])
-                if str(uid).encode() in r.smembers('cl' + str(message.chat.id)):
+                if str(uid).encode() in r.smembers('cl' + str(message.chat.id)) \
+                        and not checkLeader(uid, message.chat.id):
                     r.hset(uid, 'clan', 0)
                     r.srem('cl' + str(message.chat.id), uid)
                     await message.reply('\u2705')
