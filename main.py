@@ -448,8 +448,8 @@ async def mine(message):
             await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
 
-@dp.message_handler(commands=['mine', 'minecraft'])
-async def mine(message):
+@dp.message_handler(commands=['stat'])
+async def stat(message):
     if message.from_user.id == 456514639:
         try:
             ran = randint(1, 8)
