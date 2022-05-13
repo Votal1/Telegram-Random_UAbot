@@ -1375,7 +1375,7 @@ async def clan(message):
                         await message.reply('Агент ФСБ хотів вкрасти гроші з кланової скрабниці, але його помітили...'
                                             '\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
-    elif message.chat.id == -10012119331541488:
+    elif message.chat.id == -1001211933154:
         try:
             await bot.delete_message(message.chat.id, int(r.hget('soledar', 'clan')))
         except:
@@ -2739,9 +2739,12 @@ async def handle_query(call):
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             try:
                 if int(r.hget('c' + str(c), 'recruitment')) == 0:
-                    await bot.create_chat_invite_link(c, creates_join_request=True)
-                    link = await bot.export_chat_invite_link(c)
-                    r.hset('c' + str(c), 'recruitment', 1, {'link': link})
+                    try:
+                        await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
+                    except:
+                        pass
+                    a = await bot.create_chat_invite_link(c, creates_join_request=True)
+                    r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link})
                     r.sadd('recruitment', c)
                 else:
                     r.hset('c' + str(c), 'recruitment', 0)
