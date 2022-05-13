@@ -450,7 +450,7 @@ async def mine(message):
 
 @dp.message_handler(commands=['stat'])
 async def stat(message):
-    if message.from_user.id == -1001211933154:
+    if message.chat.id == -1001211933154:
         try:
             ran = randint(1, 20)
             msg = ''
