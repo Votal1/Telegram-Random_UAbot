@@ -1375,7 +1375,7 @@ async def clan(message):
                         await message.reply('Агент ФСБ хотів вкрасти гроші з кланової скрабниці, але його помітили...'
                                             '\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
-    elif message.chat.id == -1001211933154:
+    elif message.chat.id == -10012119331541488:
         try:
             await bot.delete_message(message.chat.id, int(r.hget('soledar', 'clan')))
         except:
