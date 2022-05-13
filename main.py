@@ -1392,6 +1392,8 @@ async def clan(message):
             if int(cl[3]) == 3:
                 num2 += 10
             msg += f'\n\n<i>{prefix[int(cl[0])]}</i> <a href="{link}">{cl[4].decode()}</a>\nУчасники: {num1} / {num2}'
+        if r.scard('recruitment') == 0:
+            msg = '\U0001F530 На даний момент ніхто не шукає учасників в клан.'
         a = await bot.send_message(message.chat.id, msg, disable_web_page_preview=True, parse_mode='HTML')
         r.hset('soledar', 'clan', a.message_id)
 
