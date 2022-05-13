@@ -1883,7 +1883,7 @@ async def promote(message):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
                 uid = str(message.reply_to_message.from_user.id).encode()
                 if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid) and \
-                        uid != int(r.hget('c' + cid, 'leader')):
+                        message.reply_to_message.from_user.id != int(r.hget('c' + cid, 'leader')):
                     r.sadd('cl2' + cid, uid)
                     await message.reply('\u2705')
     except:
