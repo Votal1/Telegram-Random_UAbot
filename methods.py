@@ -216,6 +216,70 @@ def c_shop(c, page):
     return msg, markup
 
 
+def com(data):
+    msg = ''
+    markup = InlineKeyboardMarkup()
+    if data == 'full_list_1':
+        markup.add(InlineKeyboardButton(text='Гра в русаків', callback_data='full_list_2'))
+        markup.add(InlineKeyboardButton(text='Топ', callback_data='full_list_3'),
+                   InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
+        markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
+        msg = 'Інформаційні команди\n\n' \
+              '/links - реклама, головний чат, творець\n' \
+              '/help - як користуватись\n' \
+              '/gruz200 - інфа по втратах окупантів\n' \
+              '@Random_UAbot - вибрати одну з функцій рандому\n' \
+              '/stat - випадкова статистика\n' \
+              '/donate - сподобався бот?'
+    elif data == 'full_list_2':
+        markup.add(InlineKeyboardButton(text='Інформація', callback_data='full_list_1'))
+        markup.add(InlineKeyboardButton(text='Топ', callback_data='full_list_3'),
+                   InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
+        markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
+        msg = 'Команди для гри в русаків\n\n/donbass - взяти русака\n/rusak - характеристики\n@Random_UAbot - ' \
+              'почати битву\n@Random_UAbot & - три додаткові режими\n/feed - погодувати русака\n' \
+              '/shop - магазин\n/donate_shop - безтолкові штуки\n/pack - Донбаський пакунок\n/woman - провідати' \
+              ' жінку\n/sacrifice - вбити свого русака\n/class - вибрати русаку клас\n/achieve - досягнення\n' \
+              '/skills - вміння\n/i - інвентар\n/swap - змінити бойового русака (якщо є підвал)\n/battle - почати ' \
+              'масову битву\n/war - почати міжчатову битву\n/quit - вийти з міжчатової битви\n/crash - ' \
+              'зупинити міжчатову битву\n/promo_code [код]- активувати бонус\n\nКоманди, доступні тільки ' \
+              'в <a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>:\n/mine - заробити гривні\n/merchant - ' \
+              'продає топову снарягу\n/clan - доступні клани'
+    elif data == 'full_list_3':
+        markup.add(InlineKeyboardButton(text='Інформація', callback_data='full_list_1'))
+        markup.add(InlineKeyboardButton(text='Гра в русаків', callback_data='full_list_2'))
+        markup.add(InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
+        markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
+        msg = 'Топ\n\n/ltop - топ цього чату\n/gtop - глобальний топ\n/itop - яке я місце в топі?\n' \
+              '/ctop - топ чатів\n/passport - твої характеристики\n\nОпції для ltop та gtop:\n' \
+              '-s, -d, -c, -w, -t, -p, -a'
+    elif data == 'full_list_4':
+        markup.add(InlineKeyboardButton(text='Інформація', callback_data='full_list_1'))
+        markup.add(InlineKeyboardButton(text='Гра в русаків', callback_data='full_list_2'))
+        markup.add(InlineKeyboardButton(text='Топ', callback_data='full_list_3'))
+        markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
+        msg = 'Команди для керування кланом\n\n/clan - створити / інформація про клан\n/join - приєднатись\n' \
+              '/leave - покинути клан\n/kick [user id] - вигнати з клану\n/work - добувати ресурси\n' \
+              '/invest [>0] - перекинути гроші\n/fascist - вибрати фашиста дня\n/clan_settings - налаштування, ' \
+              'зарплата за роботу, список учасників\n/upgrade - покращити рівень клану\n/build - розвинути ' \
+              'інфраструктуру\n/clan_shop - магазин (доступний на 3 рівні)\n/raid - грабувати інші клани\n' \
+              '/guard - охоронятись від рейдів (доступно на 3 рівні)\n/promote - призначити заступника\n' \
+              '/demote - видалити заступника'
+    elif data == 'full_list_5':
+        markup.add(InlineKeyboardButton(text='Інформація', callback_data='full_list_1'))
+        markup.add(InlineKeyboardButton(text='Гра в русаків', callback_data='full_list_2'))
+        markup.add(InlineKeyboardButton(text='Топ', callback_data='full_list_3'),
+                   InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
+        markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_4'))
+        msg = 'Адміністраторські команди\nБоту потрібне право банити та адмін з правом редагування групи має ' \
+              'увімкнути їх командою /toggle_admin; використовувати команди можуть адміни з правом банити\n\n' \
+              '/toggle_captcha - увімкнути капчу (міні-тест при приєднанні до чату)\n/ban [number][m/h/d] /unban\n' \
+              '/mute [number][m/h/d/f] /unmute\n/moxir [number][m/h/d] - забрати стікери і медіа\n\nm - хвилини, ' \
+              'h - години\nd - дні, f - назавжди'
+
+    return msg, markup
+
+
 async def top(sett, uid, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:

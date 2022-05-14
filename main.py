@@ -13,7 +13,7 @@ from parameters import spirit, vodka, intellect, hp, damage_support, damage_head
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, c_shop, top, itop, ctop, \
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
 
 from requests import get
@@ -1191,7 +1191,7 @@ async def achievements(message):
             if int(r.hget(message.from_user.id, 'intellect')) >= 20:
                 r.hset(message.from_user.id, 'ac6', 1)
         if isinstance(acs[6], type(None)):
-            if int(r.hget(message.from_user.id, 'strength')) >= 1000:
+            if int(r.hget(message.from_user.id, 'strength')) >= 2000:
                 r.hset(message.from_user.id, 'ac7', 1)
         if isinstance(acs[7], type(None)):
             if int(r.hget(message.from_user.id, 'spirit')) >= 10000:
@@ -1203,7 +1203,9 @@ async def achievements(message):
             if str(message.from_user.id).encode() in r.smembers('fighters' + str(message.chat.id)):
                 r.hset(message.from_user.id, 'ac10', 1)
         if isinstance(acs[10], type(None)):
-            if int(r.hget(message.from_user.id, 'weapon')) >= 11 or int(r.hget(message.from_user.id, 'defense')) >= 11:
+            if int(r.hget(message.from_user.id, 'weapon')) >= 11 or \
+                    int(r.hget(message.from_user.id, 'defense')) >= 11 or \
+                    int(r.hget(message.from_user.id, 'support')) == 2:
                 r.hset(message.from_user.id, 'ac11', 1)
         if isinstance(acs[11], type(None)):
             if int(r.hget(message.from_user.id, 'deaths')) >= 15 and int(r.hget(message.from_user.id, 'childs')) >= 15:
@@ -1895,7 +1897,9 @@ async def build(message):
                                                             callback_data='build5'))
                             msg += '\nТорговий центр (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - можливість ' \
-                                   'купувати Цукор (при годуванні збільшує силу, або зменшує шанс її зменшення).'
+                                   'купувати Цукор (при годуванні збільшує силу, або зменшує шанс її зменшення) та ' \
+                                   'Кавун базований для всього клану (+5 сили за годування і +5 гривень за роботу ' \
+                                   'на соляній шахті, зникне, якщо сила зменшиться).'
                         if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
                                 and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
                                 and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
@@ -3290,91 +3294,10 @@ async def handle_query(call):
             msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
         await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
 
-    elif call.data.startswith('full_list_1'):
-        await bot.edit_message_text(text='Інформаційні команди\n\n'
-                                         '/links - реклама, головний чат, творець\n'
-                                         '/help - як користуватись\n'
-                                         '/gruz200 - інфа по втратах окупантів\n'
-                                         '@Random_UAbot - вибрати одну з функцій рандому\n'
-                                         '/stat - випадкова статистика\n'
-                                         '/donate - сподобався бот?',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    reply_markup=cmm(), disable_web_page_preview=True)
-
-    elif call.data.startswith('full_list_2'):
-        await bot.edit_message_text(text='Команди для гри в русаків\n\n'
-                                         '/donbass - взяти русака\n'
-                                         '/rusak - характеристики\n'
-                                         '@Random_UAbot - почати битву\n'
-                                         '@Random_UAbot & - три додаткові режими\n'
-                                         '/feed - погодувати русака\n'
-                                         '/shop - магазин\n'
-                                         '/donate_shop - безтолкові штуки\n'
-                                         '/pack - Донбаський пакунок\n'
-                                         '/woman - провідати жінку\n'
-                                         '/sacrifice - вбити свого русака\n'
-                                         '/class - вибрати русаку клас\n'
-                                         '/achieve - досягнення\n'
-                                         '/skills - вміння\n'
-                                         '/i - інвентар\n'
-                                         '/swap - змінити бойового русака (якщо є підвал)\n'
-                                         '/battle - почати масову битву\n'
-                                         '/war - почати міжчатову битву\n'
-                                         '/quit - вийти з міжчатової битви\n'
-                                         '/crash - зупинити міжчатову битву\n'
-                                         '/promo_code [код]- активувати бонус\n\n'
-
-                                         'Команди, доступні тільки в <a href="https://t.me/+cClR7rA-sZAyY2Uy">'
-                                         '@soledar1</a>:\n'
-                                         '/mine - заробити гривні\n'
-                                         '/merchant - продає топову снарягу\n'
-                                         '/clan - доступні клани',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    reply_markup=cmm(), disable_web_page_preview=True)
-
-    elif call.data.startswith('full_list_3'):
-        await bot.edit_message_text(text='Топ\n\n'
-                                         '/ltop - топ цього чату\n'
-                                         '/gtop - глобальний топ\n'
-                                         '/itop - яке я місце в топі?\n'
-                                         '/ctop - топ чатів\n'
-                                         '/passport - твої характеристики\n\n'
-                                         'Опції для ltop та gtop:\n'
-                                         '-s, -d, -c, -w, -t, -p, -a',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    reply_markup=cmm(), disable_web_page_preview=True)
-
-    elif call.data.startswith('full_list_4'):
-        await bot.edit_message_text(text='Команди для керування кланом\n\n'
-                                         '/clan - створити / інформація про клан\n'
-                                         '/join - приєднатись\n'
-                                         '/leave - покинути клан\n'
-                                         '/kick [user id] - вигнати з клану\n'
-                                         '/work - добувати ресурси\n'
-                                         '/invest [>0] - перекинути гроші\n'
-                                         '/fascist - вибрати фашиста дня\n'
-                                         '/clan_settings - налаштування, зарплата за роботу, список учасників\n'
-                                         '/upgrade - покращити рівень клану\n'
-                                         '/build - розвинути інфраструктуру\n'
-                                         '/clan_shop - магазин (доступний на 3 рівні)\n'
-                                         '/raid - грабувати інші клани\n'
-                                         '/guard - охоронятись від рейдів (доступно на 3 рівні)\n'
-                                         '/promote - призначити заступника\n'
-                                         '/demote - видалити заступника',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    reply_markup=cmm(), disable_web_page_preview=True)
-
-    elif call.data.startswith('full_list_5'):
-        await bot.edit_message_text(text='Адміністраторські команди\nБоту потрібне право банити та адмін з правом '
-                                         'редагування групи має увімкнути їх командою /toggle_admin; використовувати '
-                                         'команди можуть адміни з правом банити\n\n'
-                                         '/toggle_captcha - увімкнути капчу (міні-тест при приєднанні до чату)\n'
-                                         '/ban [number][m/h/d] /unban\n'
-                                         '/mute [number][m/h/d/f] /unmute\n'
-                                         '/moxir [number][m/h/d] - забрати стікери і медіа\n\n'
-                                         'm - хвилини, h - години\nd - дні, f - назавжди',
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id, parse_mode='HTML',
-                                    reply_markup=cmm(), disable_web_page_preview=True)
+    elif call.data.startswith('full_list'):
+        msg, markup = com(call.data)
+        await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                    parse_mode='HTML', reply_markup=markup, disable_web_page_preview=True)
 
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
