@@ -11,7 +11,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, cmm
+    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
@@ -2324,6 +2324,12 @@ async def raid(message):
 
 @dp.message_handler(commands=['commands'])
 async def commands(message):
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(text='Інформація', callback_data='full_list_1'))
+    markup.add(InlineKeyboardButton(text='Гра в русаків', callback_data='full_list_2'))
+    markup.add(InlineKeyboardButton(text='Топ', callback_data='full_list_3'),
+               InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
+    markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
     await message.reply('/links - реклама, головний чат, творець\n'
                         '/feed - погодувати русака\n'
                         '/mine - заробити гривні (доступно тільки в '
@@ -2335,7 +2341,7 @@ async def commands(message):
                         '/i - інвентар\n'
                         '/battle - чатова битва (5-10 русаків)\n'
                         '/war - міжчатова битва 5х5\n'
-                        '...', reply_markup=cmm(),
+                        '...', reply_markup=markup,
                         parse_mode='HTML', disable_web_page_preview=True)
 
 
