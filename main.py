@@ -59,8 +59,8 @@ async def send_welcome(message):
 async def get_help(message):
     await message.reply('Зайди в який-небудь чат (наприклад цей), напиши @Random_UAbot, а далі думаю все зрозумієш.\n'
                         'Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n'
-                        'Щоб взяти русака напиши команду \n/donbass\nВсі команди - /commands\nДетальна інформація про'
-                        ' русаків -\nhttps://t.me/randomuanews/4', disable_web_page_preview=True)
+                        'Щоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n/wiki - вся інфа по грі\n'
+                        '@randomuanews - новини', disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['links'])
