@@ -3321,13 +3321,19 @@ async def handle_query(call):
 
     elif call.data.startswith('full_list'):
         msg, markup = com(call.data)
-        await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                    parse_mode='HTML', reply_markup=markup, disable_web_page_preview=True)
+        try:
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                        parse_mode='HTML', reply_markup=markup, disable_web_page_preview=True)
+        except:
+            pass
 
     elif call.data.startswith('wiki'):
         msg, markup = wiki_text(call.data)
-        await bot.edit_message_text(text=msg, reply_markup=markup,
-                                    chat_id=call.message.chat.id, message_id=call.message.message_id)
+        try:
+            await bot.edit_message_text(text=msg, reply_markup=markup,
+                                        chat_id=call.message.chat.id, message_id=call.message.message_id)
+        except:
+            pass
 
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
