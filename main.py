@@ -1359,11 +1359,11 @@ async def skills(message):
             else:
                 msg = msg + '\U0001f7eb'
                 s3 = s3 - 1
-        await bot.send.message(message.from_user.id, msg, reply_markup=skill_set())
+        await bot.send_message(message.from_user.id, msg, reply_markup=skill_set())
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
-    except Exception as e:
-        sentry_sdk.capture_exception(e)
+    except:
+        pass
 
 
 @dp.message_handler(commands=['swap'])
