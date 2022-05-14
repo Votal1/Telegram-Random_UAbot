@@ -1975,8 +1975,9 @@ async def join(message):
                     message.from_user.id in sudoers:
                 if r.scard('cl' + str(message.chat.id)) < num:
                     if int(r.hget(c, 'allow')) == 0 or message.from_user.id in sudoers:
-                        r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp()),
-                                                                   'clan_time': 0})
+                        r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp())})
+                        if r.hexists(message.from_user.id, 'clan_time') == 0:
+                            r.hset(message.from_user.id, 'clan_time', 0)
                         r.sadd('cl' + str(message.chat.id), message.from_user.id)
                         r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
                         await message.reply('\U0001F4E5 Ти вступив в клан ' +
@@ -2776,8 +2777,10 @@ async def handle_query(call):
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
                 r.scard('cl' + str(call.message.chat.id)) < num:
             if int(datetime.now().timestamp()) - int(r.hget(uid, 'clan_ts')) > ts or uid in sudoers:
-                r.hset(uid, 'clan', call.message.chat.id, {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0,
+                r.hset(uid, 'clan', call.message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
                                                            'firstname': call.from_user.first_name})
+                if r.hexists(uid, 'clan_time') == 0:
+                    r.hset(uid, 'clan_time', 0)
                 r.sadd('cl' + str(call.message.chat.id), uid)
                 await bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
                                             r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
