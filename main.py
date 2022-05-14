@@ -1362,8 +1362,8 @@ async def skills(message):
         await bot.send.message(message.from_user.id, msg, reply_markup=skill_set())
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
-    except:
-        pass
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
 
 
 @dp.message_handler(commands=['swap'])
