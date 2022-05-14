@@ -43,7 +43,7 @@ async def gruz200(message):
                       '\n\U0001F6A2 Кораблі та катери: ' + t[6].text + '\n\U0001F921 Жириновський, Медведчук, Шарій'
         await message.reply(msg)
     except:
-        pass
+        await message.reply('minusrus.com', disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['start'])
