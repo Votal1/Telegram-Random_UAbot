@@ -13,7 +13,7 @@ from parameters import spirit, vodka, intellect, hp, damage_support, damage_head
 from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
 
 from requests import get
@@ -2345,6 +2345,22 @@ async def commands(message):
                         parse_mode='HTML', disable_web_page_preview=True)
 
 
+@dp.message_handler(commands=['wiki'])
+async def wiki(message):
+    try:
+        msg = '\U0001F1FA\U0001F1E6 @Random_UAbot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
+               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
+               'русаків, об`єднувати в клани, а також - вбивати.\nТут можна знайти майже всю інформацію щодо гри.'
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton(text='\U0001F5E1 Бої', callback_data='wiki_duel'),
+                   InlineKeyboardButton(text='\U0001F4C8 Розвиток', callback_data='wiki_grow_feed'))
+        markup.add(InlineKeyboardButton(text='\U0001F530 Клан', callback_data='wiki_clan'),
+                   InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
+        await bot.send_message(message.from_user.id, msg, reply_markup=markup)
+    except:
+        pass
+
+
 @dp.callback_query_handler(lambda call: True)
 async def handle_query(call):
     if call.data.startswith('getrusak') and call.from_user.id == call.message.reply_to_message.from_user.id:
@@ -3304,6 +3320,11 @@ async def handle_query(call):
         msg, markup = com(call.data)
         await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id,
                                     parse_mode='HTML', reply_markup=markup, disable_web_page_preview=True)
+
+    elif call.data.startswith('wiki'):
+        msg, markup = wiki_text(call.data)
+        await bot.edit_message_text(text=msg, reply_markup=markup,
+                                    chat_id=call.message.chat.id, message_id=call.message.message_id)
 
     elif call.data.startswith('alcohol'):
         s1 = int(r.hget(call.from_user.id, 's1'))
