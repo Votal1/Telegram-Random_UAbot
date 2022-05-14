@@ -2358,6 +2358,8 @@ async def wiki(message):
         markup.add(InlineKeyboardButton(text='\U0001F530 Клан', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
         await bot.send_message(message.from_user.id, msg, reply_markup=markup)
+        if message.chat.type != 'private':
+            await message.reply('Надіслано в пп.')
     except:
         pass
 
