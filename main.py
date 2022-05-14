@@ -2331,6 +2331,7 @@ async def commands(message):
                InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
     markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
     await message.reply('/links - реклама, головний чат, творець\n'
+                        '/wiki - інформація щодо гри\n'
                         '/feed - погодувати русака\n'
                         '/mine - заробити гривні (доступно тільки в '
                         '<a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>)\n'
