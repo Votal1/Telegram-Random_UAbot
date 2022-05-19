@@ -1650,7 +1650,7 @@ async def upgrade(message):
                     if message.from_user.id in admins:
                         r.hincrby(c, 'money', -5000)
                         r.hincrby(c, 'wood', -10000)
-                        r.hincrby(c, 'stone', -500)
+                        r.hincrby(c, 'stone', -5000)
                         r.hincrby(c, 'cloth', -3000)
                         r.hincrby(c, 'brick', -2000)
                         r.hincrby(c, 'r_spirit', -200)
