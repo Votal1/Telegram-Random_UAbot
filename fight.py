@@ -1380,17 +1380,17 @@ async def start_raid(cid):
             res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick', 'money', 'r_spirit')
             li = [1, 1, 1, 1, 1, 1]
             if int(r.hget(c, 'base')) == 11:
-                if int(r.hget(c, 'wood')) < res[0]:
+                if int(r.hget(c, 'wood')) < int(res[0]):
                     li[0] = 2
-                if int(r.hget(c, 'stone')) < res[1]:
+                if int(r.hget(c, 'stone')) < int(res[1]):
                     li[1] = 2
-                if int(r.hget(c, 'cloth')) < res[2]:
+                if int(r.hget(c, 'cloth')) < int(res[2]):
                     li[2] = 2
-                if int(r.hget(c, 'brick')) < res[3]:
+                if int(r.hget(c, 'brick')) < int(res[3]):
                     li[3] = 2
-                if int(r.hget(c, 'money')) < res[4]:
+                if int(r.hget(c, 'money')) < int(res[4]):
                     li[4] = 2
-                if int(r.hget(c, 'r_spirit')) < res[5]:
+                if int(r.hget(c, 'r_spirit')) < int(res[5]):
                     li[5] = 2
             ter = int(r.hget(c2, 'build1'))
             mode = choices([1, 2, 3], [70, 20, 10])
