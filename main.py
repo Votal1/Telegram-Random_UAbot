@@ -2270,7 +2270,7 @@ async def raid(message):
     try:
         c = 'c' + str(message.chat.id)
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
-            if message.chat.id == -1001354438882:
+            if message.chat.id == -100:
                 await message.reply('Хватить на сьогодні рейдів.')
             elif 0 <= datetime.now().hour < 8:
                 await message.reply('Комендантська година, рейди недоступні.')
