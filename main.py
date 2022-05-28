@@ -2467,7 +2467,7 @@ async def handle_query(call):
                                          f'допомогу пораненому.\n\U0001fac0 +20 \U0001F4B5 +{money}',
                                     inline_message_id=call.inline_message_id)
                                 hp(20, uid1)
-                                r.hincrby(call.from_user.id, 'money', 5)
+                                r.hincrby(call.from_user.id, 'money', money)
                             elif int(r.hget(call.from_user.id, 'class')) == 23:
                                 await bot.edit_message_text(
                                     text='\U0001F52E ' + ' Некромант проводить дивні ритуали над напівживим русаком...'
