@@ -693,6 +693,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
             if weapon1 == 15:
                 meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1)
+                if c1 not in (5, 15, 25):
+                    damage_weapon(uid1, c1)
             hp(-1, uid2)
             info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)' + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
@@ -803,6 +805,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
             if weapon2 == 15:
                 meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2)
+                if c2 not in (5, 15, 25):
+                    damage_weapon(uid2, c2)
             hp(-1, uid1)
             info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode() + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
