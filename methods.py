@@ -106,7 +106,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Уламок бронетехніки - 15 грн', callback_data='clan_fragment'))
         elif int(r.hget(c, 'build1')) == 2:
             msg += '\n\U0001F3A9 Тактичний шолом [Шапка, міцність=40] - збільшує силу в дуелях і ' \
-                   'міжчатових битвах на 12%.'
+                   'міжчатових битвах на 31%.'
             markup.add(InlineKeyboardButton(text='Тактичний шолом - 50 грн', callback_data='clan_helmet'))
         elif int(r.hget(c, 'build1')) == 3:
             msg += '\n\U0001F5E1 Батіг [Атака, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \

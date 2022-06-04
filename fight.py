@@ -1090,7 +1090,7 @@ async def war_power(sett, cid):
             head = int(stats[11])
             if head > 0:
                 if head == 2:
-                    head = 0.37
+                    head = 0.56
                     damage_head(member)
                 else:
                     head = 0.25
