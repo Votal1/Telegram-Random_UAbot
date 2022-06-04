@@ -1759,7 +1759,7 @@ async def build(message):
                                                             callback_data='build1'))
                             msg += '\nШтаб тероборони (\U0001F333 4000, \U0001faa8 2000, \U0001F9F6 750, ' \
                                    '\U0001F9F1 500, \U0001F4B5 4000 \U0001F4FB 50, \U0001F47E 50) - можливість ' \
-                                   'купувати шоломи, зберігає 33% ресурсів від ворожих рейдерів.'
+                                   'купувати шоломи та міни, зберігає 33% ресурсів від ворожих рейдерів.'
                         if int(r.hget(c, 'build2')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати березову рощу',
                                                             callback_data='build2'))
@@ -4506,6 +4506,25 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Клановий магазин тільки для учасників клану.')
 
+    elif call.data.startswith('clan_bombs'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 20:
+                if int(r.hget(call.from_user.id, 'defense')) == 0:
+                    r.hset(call.from_user.id, 'defense', 3)
+                    r.hset(call.from_user.id, 's_defense', 3)
+                    r.hincrby(call.from_user.id, 'money', -20)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили міни')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є захисне спорядження.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
     elif call.data.startswith('clan_lash'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 60:
@@ -4656,6 +4675,25 @@ async def handle_query(call):
                 r.hincrby('all_children', 'children', 1)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно російське немовля.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_uav'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 50:
+                if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                    r.hset(call.from_user.id, 'weapon', 5)
+                    r.hset(call.from_user.id, 's_weapon', 1)
+                    r.hincrby(call.from_user.id, 'money', -50)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили БпЛА.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є зброя.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо коштів на рахунку.')
