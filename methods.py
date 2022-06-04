@@ -148,7 +148,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Колючий комплект - \U0001F333 200, \U0001faa8 100',
                                             callback_data='clan_spike'))
         if int(r.hget(c, 'base')) == 9:
-            msg += '\n\u2622 Купити тим, хто відпрацював зміну по 10 горірки.'
+            msg += '\n\u2622 Купити тим, хто відпрацював зміну по 10 горілки.'
             markup.add(InlineKeyboardButton(text='Горілка - \U0001F4B5 300',
                                             callback_data='clan_vodka'))
         if int(r.hget(c, 'base')) == 10:
@@ -390,7 +390,7 @@ def wiki_text(data):
               'Бронежилет вагнерівця.' \
               '\n\nІнфраструктура:\n' \
               'Ферма - годування русака лікує до 30 поранень.\n' \
-              'Ядерний бункер - шизофренія не впливатиме негативно на міжчатові битви, а навпаки - ' \
+              'Ядерний бункер - шизофренія не впливатиме негативно на міжчатові битви та рейди, а навпаки - ' \
               'додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
     if data.startswith('wiki_aso'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),

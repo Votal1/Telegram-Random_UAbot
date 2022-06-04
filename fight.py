@@ -1305,7 +1305,11 @@ async def start_raid(cid):
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                i, bd = schizophrenia(int(member), i, bd, True)
+                if checkClan(member, building='build6', level=2):
+                    r.hincrby(member, 'sch', -1)
+                    i += 5
+                else:
+                    i, bd = schizophrenia(int(member), i, bd, True)
             if int(stats[8]) > 0:
                 s, bd = trance(int(member), s, bd, True)
 
