@@ -3750,8 +3750,8 @@ async def handle_query(call):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
             if int(r.hget(call.from_user.id, 'head')) == 0:
-                if int(r.hget(call.from_user.id, 'money')) >= 250:
-                    r.hincrby(call.from_user.id, 'money', -250)
+                if int(r.hget(call.from_user.id, 'money')) >= 333:
+                    r.hincrby(call.from_user.id, 'money', -333)
                     r.hset(call.from_user.id, 'head', 3)
                     r.hset(call.from_user.id, 's_head', 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -4593,8 +4593,8 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= 55:
                 if int(r.hget(call.from_user.id, 'support')) == 0:
                     r.hset(call.from_user.id, 'support', 7)
-                    r.hset(call.from_user.id, 's_support', 2)
-                    r.hincrby(call.from_user.id, 'money', -120)
+                    r.hset(call.from_user.id, 's_support', 1)
+                    r.hincrby(call.from_user.id, 'money', -55)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили цукор.')
                 else:
