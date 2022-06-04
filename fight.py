@@ -842,7 +842,13 @@ async def war(cid, location, big_battle):
                 s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
             if w > 0:
-                w = 0.25
+                if w == 5:
+                    mas = int(r.hget(member, 's2'))
+                    w = 0.25 + 0.4 * mas
+                    if choices([1, 0], [100 - 16 * mas, 16 * mas]) == 1:
+                        damage_weapon(member, int(r.hget(member, 'class')))
+                else:
+                    w = 0.25
             else:
                 w = 0
             d = int(stats[4])
