@@ -340,7 +340,10 @@ async def feed(message):
                     damage_support(message.from_user.id)
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 word = 'зросла'
-                ran2 = 5 if int(r.hget(message.from_user.id, 'head')) == 3 else 0
+                h = int(r.hget(message.from_user.id, 'head'))
+                ran2 = 5 if h in (3, 5) else 0
+                if h == 5:
+                    r.hset(message.from_user.id, 'head', 0, {'s_head': 0})
                 ran += ran2
                 r.hincrby(message.from_user.id, 'strength', ran2)
                 if int(stats[0]) > 3000:
@@ -362,7 +365,10 @@ async def feed(message):
                         word = 'зменшилась'
                         r.hincrby(message.from_user.id, 'strength', -2 * ran)
                         if int(r.hget(message.from_user.id, 'head')) == 3:
-                            r.hset(message.from_user.id, 'head', 0, {'s_head': 0})
+                            if checkClan(message.from_user.id, building='build5', level=2):
+                                r.hset(message.from_user.id, 'head', 5, {'s_head': 1})
+                            else:
+                                r.hset(message.from_user.id, 'head', 0, {'s_head': 0})
                 else:
                     if int(r.hget(message.from_user.id, 'support')) == 7:
                         ran += 15
@@ -1850,7 +1856,7 @@ async def build(message):
                                                             callback_data='build5'))
                             msg += '\nФерма (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - годування русака лікує до ' \
-                                   '30 поранень.'
+                                   '30 поранень. Можливість зберегти кавун ще на 1 годування.'
                         if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
                                 and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
                                 and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
