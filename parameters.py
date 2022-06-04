@@ -57,6 +57,7 @@ def trance(uid, s, bd, fi):
         r.hincrby(uid, 'buff', -1)
     if int(r.hget(uid, 'head')) == 4:
         alc = int(r.hget(uid, 's1')) * 0.02
+        damage_head(uid)
     return int(s * (1.2 + alc)), int(bd * (1.8 + alc))
 
 
