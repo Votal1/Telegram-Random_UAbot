@@ -1618,7 +1618,8 @@ async def upgrade(message):
                         and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
                         and int(r.hget(c, 'technics')) >= 100\
                         and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 100:
-                    msg += '\n\nДостатньо ресурсів для покращення. Який шлях розвитку ви обираєте?'
+                    msg += '\n\nДостатньо ресурсів для покращення. Який шлях розвитку ви обираєте?\n\nНа даний' \
+                           ' момент не можна вибрати організацію.'
                     markup.add(InlineKeyboardButton(text='Комуна', callback_data='clan_side_1'),
                                InlineKeyboardButton(text='Коаліція', callback_data='clan_side_2'))
                     markup.add(InlineKeyboardButton(text='Асоціація', callback_data='clan_side_3'),
@@ -2757,7 +2758,10 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_side'):
         c = 'c' + str(call.message.chat.id)
-        if int(r.hget(c, 'side')) == 0:
+        if call.data.startswith('clan_side_4'):
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Організацій забагато, виберіть щось інше.')
+        elif int(r.hget(c, 'side')) == 0:
             if call.from_user.id == int(r.hget(c, 'leader')):
                 if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
                         and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
