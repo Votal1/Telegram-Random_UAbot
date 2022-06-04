@@ -206,10 +206,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             inj2 = '\U0001F44A '
 
         if head1 == 2:
-            s1 = int(s1 * 1.12)
+            s1 = int(s1 * 1.31)
             damage_head(uid1)
         if head2 == 2:
-            s2 = int(s2 * 1.12)
+            s2 = int(s2 * 1.31)
             damage_head(uid2)
 
         if weapon2 == 11:
