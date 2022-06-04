@@ -337,7 +337,16 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     support += '\n\n\U0001F6E1 ' + names[name2] + ' прийшов на бій під мухоморами. Він був' \
                                                                   ' обезсилений, але запам`ятав тактику ворога.'
                     damage_support(uid2)
-        if defense1 == 9:
+        if defense1 == 3 and defense2 != 2 and t == 1:
+            damage_defense(uid1, 3)
+            if choice([1, 2, 3]) == 1:
+                defense = '\n\n\u2620\uFE0F ' + names[name2] + ' наступив на міну!'
+                r.hincrby(uid2, 'injure', 5)
+                if c2 not in (6, 16, 26):
+                    r.hincrby(uid2, 's_weapon', -5)
+                    if int(r.hget(uid2, 's_weapon')) <= 0:
+                        r.hset(uid2, 's_weapon', 0, {'weapon', 0})
+        elif defense1 == 9:
             s1 = int(s1 * 1.3)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
             damage_defense(uid1, 9)
@@ -760,7 +769,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 damage_weapon(uid2, c2)
                 pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли ворог програв' \
                                                        ', його бойовий дух влився у русака...'
-                if uid1 in (4, 14, 24) and uid2 in (4, 14, 24) and checkClan(uid2, building='build2', level=2):
+                if c1 in (4, 14, 24) and c2 in (4, 14, 24) and checkClan(uid2, building='build2', level=2):
                     spirit(10000, uid1, 0)
                     spirit(10000, uid2, 0)
             elif weapon2 == 17:
@@ -845,7 +854,7 @@ async def war(cid, location, big_battle):
                 if w == 5:
                     mas = int(r.hget(member, 's2'))
                     w = 0.25 + 0.4 * mas
-                    if choices([1, 0], [100 - 16 * mas, 16 * mas]) == 1:
+                    if choices([1, 0], [100 - 16 * mas, 16 * mas]) == [1]:
                         damage_weapon(member, int(r.hget(member, 'class')))
                 else:
                     w = 0.25
@@ -1511,9 +1520,9 @@ async def start_raid(cid):
                         for mem in r.smembers('fighters_3' + str(cid)):
                             r.hincrby(mem, 'money', int(ran / 5))
                 if mode == [2]:
-                    s = 1
+                    s = 2
                     if mar >= 1:
-                        s = 2
+                        s = 4
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:
@@ -1545,9 +1554,9 @@ async def start_raid(cid):
                         for mem in r.smembers('fighters_3' + str(cid)):
                             r.hincrby(mem, 'money', int(ran / 5))
                 if mode == [2]:
-                    s = 1
+                    s = 2
                     if mar >= 1:
-                        s = 2
+                        s = 4
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:

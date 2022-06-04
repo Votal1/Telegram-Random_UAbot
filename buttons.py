@@ -26,15 +26,6 @@ def donate_goods():
     return markup
 
 
-def merchant_goods():
-    markup = InlineKeyboardMarkup()
-    items = {'Купити уламок бронетехніки': 'fragment', 'Купити мухомор': 'mushroom',
-             'Купити шапочку з фольги': 'foil', 'Купити спорядження свого класу': 'equipment'}
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
 def skill_set():
     markup = InlineKeyboardMarkup()
     items = {'Прокачати алкоголізм': 'alcohol', 'Прокачати майстерність': 'master',

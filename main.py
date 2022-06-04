@@ -10,11 +10,12 @@ from variables import names, icons, class_name, weapons, defenses, supports, hea
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
-from buttons import goods, merchant_goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
+from buttons import goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
+from merchant import merchant_msg
 
 from requests import get
 from bs4 import BeautifulSoup
@@ -408,6 +409,10 @@ async def mine(message):
                 cl = int(r.hget(message.from_user.id, 'class'))
                 if cl == 2 or cl == 12 or cl == 22:
                     success = choice([0, 0, 1, 1, 1])
+                if int(r.hget(message.from_user.id, 'support')) == 8:
+                    success = 1
+                    increase_trance(5, message.from_user.id)
+                    damage_support(message.from_user.id)
                 if success == 1:
                     money = ms[1]
                     if cl == 2 or cl == 12 or cl == 22:
@@ -903,33 +908,8 @@ async def merchant(message):
             r.hset('soledar', 'merchant_hour', randint(18, 22))
         if int(r.hget('soledar', 'merchant_day')) != datetime.now().day and \
                 int(r.hget('soledar', 'merchant_hour')) == datetime.now().hour:
-            pin = await message.reply('Прийшов мандрівний торговець, приніс різноманітні товари.\n\n'
-                                      '\U0001F6E1 Уламок бронетехніки [Захист, міцність=7, ціна=10] - збільшує силу '
-                                      'на бій на 30%. Після зношення повертаються 4 гривні.\n\U0001F344 '
-                                      'Мухомор королівський [Допомога, міцність=1, ціна=60] - якщо у ворога більший '
-                                      'інтелект, додає +1 інтелекту (не діє проти фокусників). На бій зменшує свою '
-                                      'силу на 50%. Максимальна кількість покупок на русака - 3.\n'
-                                      '\U0001F452 Шапочка з фольги [Шапка, міцність=10, ціна=30] - захищає від вт'
-                                      'рати бойового духу при жертвоприношеннях, при купівлі русак отримує '
-                                      '30 шизофренії.\n\n'
-                                      '\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій '
-                                      'на 50%.\n\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=15] - збільшує '
-                                      'силу, інтелект і бойовий дух на 20%.\n\U0001F52E Колода з кіоску [Атака, міцні'
-                                      'сть=3, ціна=5] - міняє твої характеристики з ворогом на бій.\n\U0001F5FF Сокир'
-                                      'а Перуна [Атака, міцність=1, ціна=7] - при перемозі забирає весь бойовий дух в'
-                                      'орога, при поразці ворог забирає твій.\n\U0001fa96 АК-47 [Атака, міцніс'
-                                      'ть=30, ціна=20] - після перемоги активує ефект горілки.\n\U0001F46E Поліцейськ'
-                                      'ий щит [Захист, міцність=10, ціна=10] - зменшує силу ворога на 20%.\n'
-                                      '\U0001F921 Прапор новоросії [Атака, міцність=8, ціна=5] - додаткова перемога '
-                                      'за перемогу в дуелі.\n\U0001F4DF Експлойт [Атака, міцність=2, '
-                                      'ціна=9] - шанс активувати здібність хакера - 99%.\n'
-                                      '\u26D1 Медична пилка [Атака, міцність=8, ціна=10] - якщо у ворога нема '
-                                      'поранень - завдає 1, якщо більше 4 - лікує 10 і забирає 10 здоров`я.\n'
-                                      '\U0001F6AC Скляна пляшка [Атака, міцність=10, ціна=5] - зменшує інтелект '
-                                      'ворогу на 10.\n\U0001F695 Дизель [Допомога, міцність=5, ціна=15] - збільшує '
-                                      'власну силу в битвах, міжчатових битвах або рейдах на 25%.\n\U0001F396 Палаш '
-                                      '[Зброя, міцність=15, ціна=10] - +50% сили проти русаків без клану.',
-                                      reply_markup=merchant_goods())
+            msg, markup = merchant_msg()
+            pin = await message.reply(msg, reply_markup=markup)
             r.hset('soledar', 'merchant_day', datetime.now().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
             r.hset('soledar', 'merchant_hour', randint(18, 22))
@@ -1271,6 +1251,8 @@ async def inventory(message):
 
         if h == 0:
             m4 = '[Порожньо]'
+        elif h == 3:
+            m4 = '\nМіцність: ∞'
         else:
             m4 = '\nМіцність: ' + inv[7].decode()
 
@@ -3605,6 +3587,48 @@ async def handle_query(call):
                                         call.message.message_id)
             r.hset('soledar', 'merchant_hour_now', 26)
 
+    elif call.data.startswith('uav'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 90:
+                    r.hincrby(call.from_user.id, 'money', -90)
+                    r.hset(call.from_user.id, 'weapon', 5)
+                    r.hset(call.from_user.id, 's_weapon', 1)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили БпЛА')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є зброя')
+        else:
+            await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
+                                        call.message.message_id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
+    elif call.data.startswith('bombs'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'defense')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 30:
+                    r.hincrby(call.from_user.id, 'money', -30)
+                    r.hset(call.from_user.id, 'defense', 3)
+                    r.hset(call.from_user.id, 's_defense', 3)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили міни')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є захисне спорядження')
+        else:
+            await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
+                                        call.message.message_id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
     elif call.data.startswith('mushroom'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
@@ -3637,6 +3661,48 @@ async def handle_query(call):
                                         call.message.message_id)
             r.hset('soledar', 'merchant_hour_now', 26)
 
+    elif call.data.startswith('sugar'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'support')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 180:
+                    r.hincrby(call.from_user.id, 'money', -180)
+                    r.hset(call.from_user.id, 'support', 7)
+                    r.hset(call.from_user.id, 's_support', 2)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили цукор')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є допоміжне спорядження')
+        else:
+            await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
+                                        call.message.message_id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
+    elif call.data.startswith('kvs'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'support')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 35:
+                    r.hincrby(call.from_user.id, 'money', -35)
+                    r.hset(call.from_user.id, 'support', 8)
+                    r.hset(call.from_user.id, 's_support', 5)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили квас')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є допоміжне спорядження')
+        else:
+            await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
+                                        call.message.message_id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
     elif call.data.startswith('foil'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
@@ -3648,6 +3714,48 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 's_head', 10)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили шапочку з фольги')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є шапка')
+        else:
+            await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
+                                        call.message.message_id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
+    elif call.data.startswith('ear'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'head')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 30:
+                    r.hincrby(call.from_user.id, 'money', -30)
+                    r.hset(call.from_user.id, 'head', 4)
+                    r.hset(call.from_user.id, 's_head', 20)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили вушанку')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є шапка')
+        else:
+            await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
+                                        call.message.message_id)
+            r.hset('soledar', 'merchant_hour_now', 26)
+
+    elif call.data.startswith('watermelon'):
+        if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
+                int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
+            if int(r.hget(call.from_user.id, 'head')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 250:
+                    r.hincrby(call.from_user.id, 'money', -250)
+                    r.hset(call.from_user.id, 'head', 3)
+                    r.hset(call.from_user.id, 's_head', 1)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили кавун базований')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо коштів на рахунку')
@@ -4485,8 +4593,8 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= 55:
                 if int(r.hget(call.from_user.id, 'support')) == 0:
                     r.hset(call.from_user.id, 'support', 7)
-                    r.hset(call.from_user.id, 's_support', 1)
-                    r.hincrby(call.from_user.id, 'money', -55)
+                    r.hset(call.from_user.id, 's_support', 2)
+                    r.hincrby(call.from_user.id, 'money', -120)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили цукор.')
                 else:
