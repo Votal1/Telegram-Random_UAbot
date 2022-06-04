@@ -1833,7 +1833,7 @@ async def build(message):
                                                             callback_data='build5'))
                             msg += '\nВоєнкомат (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - можливість ' \
-                                   'купувати АК-47, або отримати їх безплатно за охорону.'
+                                   'купувати АК-47 та вушанки, або отримати їх безплатно за охорону.'
                         if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
                                 and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
                                 and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
@@ -2202,6 +2202,8 @@ async def guard(message):
                 if int(r.hget(c, 'build5')) == 1:
                     if int(r.hget(mid, 'weapon')) == 0:
                         r.hset(mid, 'weapon', 15, {'s_weapon': 30})
+                    if int(r.hget(mid, 'head')) == 0:
+                        r.hset(mid, 'head', 4, {'s_head': 20})
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
                     st = int(st * (1 + 0.01 * int(int(r.hget(c, 'money')) / 1000)))
@@ -3665,8 +3667,8 @@ async def handle_query(call):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
             if int(r.hget(call.from_user.id, 'support')) == 0:
-                if int(r.hget(call.from_user.id, 'money')) >= 180:
-                    r.hincrby(call.from_user.id, 'money', -180)
+                if int(r.hget(call.from_user.id, 'money')) >= 150:
+                    r.hincrby(call.from_user.id, 'money', -150)
                     r.hset(call.from_user.id, 'support', 7)
                     r.hset(call.from_user.id, 's_support', 2)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -4581,6 +4583,25 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас вже є зброя.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Клановий магазин тільки для учасників клану.')
+
+    elif call.data.startswith('clan_ear'):
+        if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            if int(r.hget(call.from_user.id, 'money')) >= 20:
+                if int(r.hget(call.from_user.id, 'head')) == 0:
+                    r.hset(call.from_user.id, 'head', 4)
+                    r.hset(call.from_user.id, 's_head', 20)
+                    r.hincrby(call.from_user.id, 'money', -20)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили вушанку.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас вже є шапка.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо коштів на рахунку.')

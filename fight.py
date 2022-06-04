@@ -853,7 +853,7 @@ async def war(cid, location, big_battle):
             if w > 0:
                 if w == 5:
                     mas = int(r.hget(member, 's2'))
-                    w = 0.25 + 0.4 * mas
+                    w = 0.25 + 0.5 * mas
                     if choices([1, 0], [100 - 16 * mas, 16 * mas]) == [1]:
                         damage_weapon(member, int(r.hget(member, 'class')))
                 else:
