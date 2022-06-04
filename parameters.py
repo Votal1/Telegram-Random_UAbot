@@ -52,9 +52,12 @@ def schizophrenia(uid, i, bd, fi):
 
 
 def trance(uid, s, bd, fi):
+    alc = 0
     if fi:
         r.hincrby(uid, 'buff', -1)
-    return int(s * 1.2), int(bd * 1.8)
+    if int(r.hget(uid, 'head')) == 4:
+        alc = int(r.hget(uid, 's1')) * 0.02
+    return int(s * (1.2 + alc)), int(bd * (1.8 + alc))
 
 
 def increase_trance(value, uid):
