@@ -124,9 +124,9 @@ def c_shop(c, page):
             msg += '\n\U0001F5E1 АК-47 [Атака, міцність=30] - після перемоги активує ефект горілки.'
             markup.add(InlineKeyboardButton(text='АК-47 - 15 грн', callback_data='clan_ak'))
         elif int(r.hget(c, 'build5')) == 4:
-            msg += '\n\U0001F9EA Цукор [Допомога, міцність=1] - збільшує силу при годуванні на 15 (до 3000 сили) або' \
+            msg += '\n\U0001F9EA Цукор [Допомога, міцність=2] - збільшує силу при годуванні на 15 (до 3000 сили) або' \
                    ' зменшує шанс зменшити силу на 15% і додає 5 бойового трансу.'
-            markup.add(InlineKeyboardButton(text='Цукор - 55 грн', callback_data='clan_sugar'))
+            markup.add(InlineKeyboardButton(text='Цукор - 120 грн', callback_data='clan_sugar'))
         if int(r.hget(c, 'build6')) == 2:
             msg += '\n\U0001F464 Шапочка з фольги [Шапка, міцність=10] - захищає від втрати бойового духу при ' \
                    'жертвоприношеннях, при купівлі русак отримує 30 шизофренії.'
