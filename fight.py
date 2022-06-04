@@ -653,7 +653,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 damage_weapon(uid2, c2)
                 pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли русак програв' \
                                                        ', його бойовий дух влився у ворога...'
-                if uid1 in (4, 14, 24) and uid2 in (4, 14, 24) and checkClan(uid1, building='build2', level=2):
+                if c1 in (4, 14, 24) and c2 in (4, 14, 24) and checkClan(uid1, building='build2', level=2):
                     spirit(10000, uid1, 0)
                     spirit(10000, uid2, 0)
 
