@@ -323,7 +323,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
             damage_weapon(uid2, c2)
 
-        if weapon2 == 2 and defense1 != 2 and defense2 != 17 and t == 1:
+        if weapon2 == 2 and defense1 != 2 and defense1 != 17 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
             r.hincrby(uid1, 'injure', 300)
             if c1 != 6 and c1 != 16 and c1 != 26:
