@@ -225,6 +225,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             i2 = int(i2 * 1.2)
             bd2 = int(bd2 * 1.2)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з діамантовим кайлом.'
+            if weapon2 == 23:
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з незеритовим кайлом.'
             if weapon2 == 23 and choice([1, 2, 3]) != 1:
                 pass
             else:
