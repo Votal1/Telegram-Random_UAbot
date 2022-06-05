@@ -4352,7 +4352,8 @@ async def handle_query(call):
             elif ran == [5]:
                 await bot.edit_message_text('\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n\U0001F6E1 +7',
                                             call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1:
+                if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1 or \
+                        int(r.hget(uid, 'defense')) == 3:
                     r.hset(uid, 'defense', 9)
                     r.hset(uid, 's_defense', 7)
                 else:
