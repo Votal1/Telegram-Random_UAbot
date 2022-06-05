@@ -314,14 +314,16 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'sch', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога кастетом по морді!'
             damage_weapon(uid2, c2)
-        elif weapon2 in (21, 32) and not checkClan(uid1):
+        elif weapon2 in (21, 32):
             if not checkClan(uid1):
                 s2 = int(s2 * 1.5)
+                damage_weapon(uid2, c2)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці палаш!'
             if weapon2 == 32 and int(r.hget(uid1, 'strap')) == 0 and c1 != 36:
                 s2 = int(s2 * 1.5)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
-            damage_weapon(uid2, c2)
+                if checkClan(uid1):
+                    damage_weapon(uid2, c2)
 
         if weapon2 == 2 and defense1 != 2 and defense1 != 17 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
