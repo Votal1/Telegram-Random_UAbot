@@ -46,7 +46,7 @@ def merchant_msg():
     if slot3 == 3:
         msg += '\U0001F349 Кавун базований [Шапка, ціна=333] - збільшує силу за годування і гроші за зміну на 5. ' \
                'Зникає тільки тоді, коли сила за годування зменшиться.'
-        markup.add(InlineKeyboardButton(text='\U0001F37A Купити кавун базований', callback_data='watermelon'))
+        markup.add(InlineKeyboardButton(text='\U0001F349 Купити кавун базований', callback_data='watermelon'))
 
     msg += '\n\n\U0001F919 Травмат [Атака, міцність=5, ціна=6] - зменшує силу ворога на бій на 50%.\n' \
            '\U0001F9F0 Діамантове кайло [Атака, міцність=25, ціна=15] - збільшує силу, інтелект і бойовий дух на ' \
@@ -66,4 +66,4 @@ def merchant_msg():
            '\U0001F396 Палаш [Атака, міцність=15, ціна=10] - +50% сили проти русаків без клану.'
     markup.add(InlineKeyboardButton(text='\U0001F5E1 Купити спорядження свого класу', callback_data='equipment'))
 
-    return  msg, markup
+    return msg, markup
