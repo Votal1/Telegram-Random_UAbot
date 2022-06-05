@@ -699,7 +699,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     spirit(10000, uid2, 0)
                 if weapon2 == 25:
                     increase_trance(int(r.hget(uid2, 'buff')), uid1)
-                    increase_trance(-int(r.hget(uid1, 'buff')), uid2)
+                    increase_trance(-int(r.hget(uid2, 'buff')), uid2)
                     pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли русак програв' \
                                                            ', його бойовий дух та транс влились у ворога...'
 
