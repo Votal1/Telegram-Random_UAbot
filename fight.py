@@ -265,7 +265,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             damage_weapon(uid2, c2)
         elif weapon2 in (15, 26) and c2 in (5, 15, 25):
             s2 = int(s2 * 1.75)
-            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...'
+            ak = 'АКМ' if weapon2 == 26 else 'АК-47'
+            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid2, c2)
             ran = choices([1, 2], weights=[99, 1])
             if ran == [2] and defense1 != 2:
@@ -274,7 +275,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hset(uid2, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0, 'weapon': 0})
                 r.hincrby(uid2, 'injure', 150)
                 if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
-                    weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений АК-47...' \
+                    weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений ' + ak + '...' \
                               + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                                 ' важкі поранення, як і ' + names[name1] + '.'
                     if c1 != 6 and c1 != 16 and c1 != 26:
@@ -332,7 +333,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         elif weapon1 in (15, 26) and c1 in (5, 15, 25):
             s1 = int(s1 * 1.75)
-            defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...'
+            ak = 'АКМ' if weapon1 == 26 else 'АК-47'
+            defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid1, c1)
             ran = choices([1, 2], weights=[99, 1])
             if ran == [2] and defense2 != 2:
@@ -341,7 +343,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0, 'weapon': 0})
                 r.hincrby(uid1, 'injure', 150)
                 if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
-                    defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений АК-47...' \
+                    defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...' \
                               + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе і отримав' \
                                 ' важкі поранення, як і ' + names[name2] + '.'
                     if c2 != 6 and c2 != 16 and c2 != 26:
