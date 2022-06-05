@@ -1355,7 +1355,7 @@ async def start_raid(cid):
     mar = 0
     rocket = 0
     raid1, raid2, raid3 = 50, 50, 0
-    for member in r.smembers('fighters_3' + str(cid)):
+    for member in list(r.smembers('fighters_3' + str(cid)))[0:5]:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
                             'buff', 'support', 'head')
@@ -1686,10 +1686,12 @@ async def start_raid(cid):
             r.hset('convoy', 'power', 0)
             msg += 'Від гумконвою більше нічого не залишилось!\n'
             packs += 20
+            '''
             r.hincrby('resources', 'wood', 1500)
             r.hincrby('resources', 'stone', 1000)
             r.hincrby('resources', 'cloth', 500)
             r.hincrby('resources', 'brick', 300)
+            '''
         else:
             r.hincrby('convoy', 'power', -chance1)
         reward = int(chance2 / 20000 - (diff / 20000))
@@ -1707,6 +1709,7 @@ async def start_raid(cid):
 
         await sleep(10)
         await bot.send_message(cid, msg)
+        '''
         if diff == 0:
             for c in r.smembers('groupings'):
                 try:
@@ -1714,6 +1717,7 @@ async def start_raid(cid):
                                                    'в магазин завезено свіжі ресурси.')
                 except:
                     pass
+        '''
 
     try:
         await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
