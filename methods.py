@@ -143,14 +143,15 @@ def c_shop(c, page):
         elif int(r.hget(c, 'build6')) == 4:
             msg += '\n\U0001F476 Російське немовля - збільшує рейтинг на 88.'
             markup.add(InlineKeyboardButton(text='Російське немовля - 100 грн', callback_data='clan_children'))
-        markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
-                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
 
         if int(r.hget(c, 'base')) == 11:
             msg += '\n\u2708\uFE0F БпЛА [Атака, міцність=1] - за кожен рівень майстерності збільшує силу в ' \
                    'масовій битві на 50% та збільшує шанс не втратити зброю на 16%..'
             markup.add(InlineKeyboardButton(text='БпЛА - \U0001F4B5 50.',
                                             callback_data='clan_uav'))
+
+        markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
+                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
 
     if page == 2:
         msg = '\U0001F451 Товари для лідера і заступників:'
