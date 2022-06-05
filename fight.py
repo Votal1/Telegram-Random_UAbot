@@ -398,7 +398,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     if weapon1 == 16 and defense1 in (16, 17):
                         bd2 = 0
-                    elif weapon1 in 16:
+                    elif weapon1 == 16:
                         bd1, bd2 = 0, 0
                     if c1 == 16 or c1 == 26:
                         if i2 >= i1:
