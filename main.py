@@ -978,10 +978,10 @@ async def donate_shop(message):
               f'\U0001F4F8 Заміна фото русака (ціна 1 погон):\n\U0001F304 Класове преміум фото 1 (Кадиров, Обеме, ' \
               f'Горшок, Тесак, Захарченко, Дерек Шовін, Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, ' \
               f'Шойгу).\n\U0001F307 Класове преміум фото 2 (Хасбулла, Стаханов, Мавроді, Просвірін, Гіркін-Стрєлков, ' \
-              f'Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Каневський, Герасімов).\n\U0001F309 Чмоня.\n\n' \
-              f'\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n\U0001F943 Настоянка глоду - буст ' \
-              f'для новачків. Якщо в русака менше 1000 сили і 5 інтелекту, то настоянка моментально додасть 400 ' \
-              f'сили і 4 інтелекту.\n\U0001F4E6 40 Донбаських пакунків\n\U0001F9FE Ресурси для клану: ' \
+              f'Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Каневський, Герасімов).\n\U0001F309 Класовий ' \
+              f'Чмоня.\n\n\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n\U0001F943 Настоянка глоду ' \
+              f'- буст для новачків. Якщо в русака менше 1000 сили і 5 інтелекту, то настоянка моментально додасть' \
+              f' 400 сили і 4 інтелекту.\n\U0001F4E6 40 Донбаських пакунків\n\U0001F9FE Ресурси для клану: ' \
               f'\U0001F333 2222 \U0001faa8 1111 \U0001F47E 33\n\U0001F393 Курс перекваліфікації - дозволяє русаку ' \
               f'наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал найвищого рівня (покупка ' \
               f'доступна до етапу 2. Купівля будівельних матеріалів).'
@@ -4811,12 +4811,12 @@ async def handle_query(call):
     elif call.data.startswith('clan_rpg'):
         c = 'c' + str(call.message.chat.id)
         if checkClan(call.from_user.id) and call.from_user.id == int(r.hget(c, 'leader')):
-            if int(r.hget(c, 'money')) >= 2000 and int(r.hget(c, 'r_spirit')) >= 200:
+            if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 250:
                 if int(r.hget(call.from_user.id, 'weapon')) == 0:
                     r.hset(call.from_user.id, 'weapon', 2)
                     r.hset(call.from_user.id, 's_weapon', 1)
-                    r.hincrby(c, 'money', -2000)
-                    r.hincrby(c, 'r_spirit', -200)
+                    r.hincrby(c, 'money', -500)
+                    r.hincrby(c, 'r_spirit', -250)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили РПГ-7.')
                 else:
@@ -4832,11 +4832,11 @@ async def handle_query(call):
     elif call.data.startswith('clan_armor'):
         c = 'c' + str(call.message.chat.id)
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
-            if int(r.hget(c, 'money')) >= 1000 and int(r.hget(c, 'r_spirit')) >= 50:
+            if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 50:
                 if int(r.hget(call.from_user.id, 'defense')) == 0:
                     r.hset(call.from_user.id, 'defense', 2)
                     r.hset(call.from_user.id, 's_defense', 50)
-                    r.hincrby(c, 'money', -1000)
+                    r.hincrby(c, 'money', -500)
                     r.hincrby(c, 'r_spirit', -50)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили бронежилет вагнерівця.')
