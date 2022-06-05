@@ -318,7 +318,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if not checkClan(uid1):
                 s2 = int(s2 * 1.5)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці палаш!'
-            if weapon2 == 32 and int(r.hget(uid1, 'strap')) == 0:
+            if weapon2 == 32 and int(r.hget(uid1, 'strap')) == 0 and c1 != 36:
                 s2 = int(s2 * 1.5)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
             damage_weapon(uid2, c2)
@@ -824,6 +824,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 damage_weapon(uid2, c2)
                 if weapon2 == 28:
                     increase_trance(2, uid2)
+                    fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор совка.' \
+                                                              '\n\U0001F3C6 +1'
 
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)

@@ -4392,7 +4392,7 @@ async def handle_query(call):
                     r.hincrby(uid, 'sch', 30)
                     r.hincrby(uid, 's_head', 20)
                     msg += '\U0001F464 +30'
-                elif int(r.hget(uid, 'head')) not in (2, 3):
+                elif int(r.hget(uid, 'head')) not in (2, 3, 4):
                     r.hset(uid, 'sch', 30)
                     r.hset(uid, 'head', 1)
                     r.hset(uid, 's_head', 20)
