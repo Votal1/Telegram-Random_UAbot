@@ -318,7 +318,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if not checkClan(uid1):
                 s2 = int(s2 * 1.5)
                 damage_weapon(uid2, c2)
-            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці палаш!'
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці палаш!'
             if weapon2 == 32 and int(r.hget(uid1, 'strap')) == 0 and c1 != 36:
                 s2 = int(s2 * 1.5)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
