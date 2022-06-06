@@ -199,11 +199,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         if int(r.hget(uid1, 'buff')) > 0:
             s1, bd1 = trance(uid1, s1, bd1, True)
             s11 = s1
-            inj1 = '\U0001F44A '
+            inj1 += '\U0001F44A '
         if int(r.hget(uid2, 'buff')) > 0:
             s2, bd2 = trance(uid2, s2, bd2, True)
             s22 = s2
-            inj2 = '\U0001F44A '
+            inj2 += '\U0001F44A '
 
         if head1 == 2:
             s1 = int(s1 * 1.31)
