@@ -3410,7 +3410,7 @@ async def handle_query(call):
                 await bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
                                                              'Змінити бойового русака можна командою /swap.')
                 r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
-                       {'strength2': randint(10, 50),
+                       {'strength2': randint(100, 150),
                         'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': choice(default), 'injure2': 0, 'hp2': 100,
@@ -4140,7 +4140,7 @@ async def handle_query(call):
                 r.hincrby(call.from_user.id, 'strap', -3)
                 r.hset(call.from_user.id, 's3', 5)
                 r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
-                       {'strength2': randint(10, 50),
+                       {'strength2': randint(100, 150),
                         'intellect2': int(choice(['1', '1', '1', '1', '2'])),
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': choice(default), 'injure2': 0, 'hp2': 100,
