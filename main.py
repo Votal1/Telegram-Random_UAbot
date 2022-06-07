@@ -44,7 +44,8 @@ async def gruz200(message):
                       '\n\u2708\uFE0F Літаки: ' + t[4].text + '\n\U0001F681 Гелікоптери: ' + t[5].text + \
                       '\n\U0001F6A2 Кораблі та катери: ' + t[6].text + '\n\U0001F921 Жириновський, Медведчук, Шарій'
         await message.reply(msg)
-    except:
+    except Exception as e:
+        print(e)
         await message.reply('minusrus.com', disable_web_page_preview=True)
 
 
