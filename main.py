@@ -17,7 +17,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
     wood, stone, cloth, brick
 from merchant import merchant_msg
 
-from cfscrape import create_scraper
+from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
 
 import logging

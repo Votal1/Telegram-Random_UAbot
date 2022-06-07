@@ -3,5 +3,5 @@ redis==4.1.4
 sentry-sdk==1.5.7
 bs4==0.0.1
 requests==2.27.1
-cfscrape
+cloudscraper==1.2.60
 beautifulsoup4==4.10.0
