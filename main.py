@@ -17,7 +17,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
     wood, stone, cloth, brick
 from merchant import merchant_msg
 
-from requests import get
+from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
 
 import logging
@@ -30,9 +30,10 @@ logging.basicConfig(level=logging.INFO)
 @dp.message_handler(commands=['gruz200', 'orki', 'z', 'poter_net', 'fertilizer', 'ruskie_idut_nahuy'])
 async def gruz200(message):
     try:
-        url = 'https://minusrus.com/'
-        page = get(url)
-        soup = BeautifulSoup(page.text, 'html.parser')
+        scraper = create_scraper(delay=10, browser='chrome')
+        url = 'https://minusrus.com'
+        page = scraper.get(url).text
+        soup = BeautifulSoup(page, 'html.parser')
         title = '\U0001F437\U0001F436 ' + soup.find('div', 'title').text + ' на ' \
                 + soup.find('span', 'date__label').text
         os = soup.find('div', 'amount-details').find_all('span')
