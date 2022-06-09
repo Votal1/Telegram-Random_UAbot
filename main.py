@@ -52,17 +52,15 @@ async def gruz200(message):
 @dp.message_handler(commands=['start'])
 async def send_welcome(message):
     if message.chat.type == 'private':
-        await message.reply('Почнемо.\n\nЗайди в який-небудь чат (наприклад цей), напиши @Random_UAbot, а далі думаю'
-                            'все зрозумієш.\nДля деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?'
-                            ').\n\nЩоб взяти русака напиши команду \n/donbass\nДетальна інформація про русаків -'
-                            '\nhttps://t.me/randomuanews/4.', disable_web_page_preview=True)
+        await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
+                            '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['help'])
 async def get_help(message):
-    await message.reply('Зайди в який-небудь чат (наприклад цей), напиши @Random_UAbot, а далі думаю все зрозумієш.\n'
-                        'Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n'
-                        'Щоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n/wiki - вся інфа по грі\n'
+    await message.reply('Щоб почати дуель русаків зайди в який-небудь чат, напиши @Random_UAbot, а далі думаю все '
+                        'зрозумієш.\n\nЩоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n'
+                        '/wiki - вся інфа по грі\n'
                         '@randomuanews - новини', disable_web_page_preview=True)
 
 
