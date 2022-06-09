@@ -1028,6 +1028,12 @@ async def promo_code(message):
                     r.hset(message.from_user.id, 'weapon', 12)
                     r.hset(message.from_user.id, 's_weapon', 50)
                     await message.reply('\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 \U0001F5E1 +50')
+                elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
+                    r.sadd('fourth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 10)
+                    r.hincrby(message.from_user.id, 'money', 200)
+                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    await message.reply('\u26CF Промокод активовано!\n\U0001F4E6 +10 \u2622 +100 \U0001F4B5 +200')
     except:
         pass
 
