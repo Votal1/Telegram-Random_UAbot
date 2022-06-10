@@ -995,7 +995,7 @@ async def donate_shop(message):
 @dp.message_handler(commands=['promo_code'])
 async def promo_code(message):
     try:
-        if message.chat.type == 'private1':
+        if message.chat.type != 'private':
             await bot.delete_message(message.chat.id, message.message_id)
         else:
             msg = message.text.split(' ')[1]
