@@ -2906,10 +2906,8 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Режим видачі зарплати за роботу змінено.')
 
-    elif call.data.startswith('recruitment'):
+    elif call.data.startswith('recruit'):
         c = int(r.hget(call.from_user.id, 'clan'))
-        print(checkClan(call.from_user.id), checkLeader(call.from_user.id, c),
-              str(call.chat.id).encode() not in r.smembers('banned'))
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c) \
                 and str(call.chat.id).encode() not in r.smembers('banned'):
             try:

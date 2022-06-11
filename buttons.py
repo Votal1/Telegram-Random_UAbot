@@ -122,7 +122,7 @@ def clan_set():
     markup = InlineKeyboardMarkup()
     items = {'Змінити назву на актуальну назву чату - \U0001F4B5 100': 'change_title',
              'Змінити режим набору': 'toggle_allow', 'Змінити режим входу в битву': 'toggle_war', 'Зарплата': 'salary',
-             'Змінити набір': 'recruitment', 'Отримати список членів клану': 'get_members'}
+             'Змінити набір': 'recruit', 'Отримати список членів клану': 'get_members'}
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup
