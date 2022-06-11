@@ -4135,7 +4135,7 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'intellect')) < 5:
                 r.hset(call.from_user.id, 'intellect', 5)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили курс перекваліфікаації русаку')
+                                            text='Ви успішно купили курс перекваліфікації русаку')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку, або русак без класу')
