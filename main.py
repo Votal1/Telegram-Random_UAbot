@@ -1704,7 +1704,7 @@ async def build(message):
                                    '\U0001F9F1 50, \U0001F4B5 500) - розширення максимальної кількості учасників ' \
                                    'з 25 до 50.'
                         if int(r.hget(c, 'shop')) == 0:
-                            markup.add(InlineKeyboardButton(text='Побудувати магазин',
+                            markup.add(InlineKeyboardButton(text='Побудувати їдальню',
                                                             callback_data='build_shop'))
                             msg += '\nЇдальня (\U0001F333 1000, \U0001faa8 200, \U0001F9F6 400, ' \
                                    '\U0001F9F1 40, \U0001F4B5 300) - доступ до команди /clan_shop. Кілька товарів, ' \
