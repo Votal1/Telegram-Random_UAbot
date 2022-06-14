@@ -40,7 +40,7 @@ heads = ['', 'Шапочка з фольги', 'Тактичний шолом', 
 sudoers = [456514639, 634799543, 379620096]
 
 p1 = ['https://i.ibb.co/qmkDFTP/1.jpg', 'https://i.ibb.co/hDsXjZb/2.jpg', 'https://i.ibb.co/NNmfy50/3.jpg',
-      'https://i.ibb.co/gZ96zHK/4.jpg', 'https://i.ibb.co/8b0BWyR/5.jpg', 'https://i.ibb.co/L6PSNm8/6.jpg',
+      'https://i.ibb.co/gZ96zHK/4.jpg', 'https://i.ibb.co/8b0BWyR/5.jpg', 'https://i.ibb.co/b2RKgXW/6.png',
       'https://i.ibb.co/RgMxCZr/7.jpg', 'https://i.ibb.co/xDyqznw/8.jpg', 'https://i.ibb.co/vkPCzc2/9.jpg',
       'https://i.ibb.co/2jcjP3N/10.jpg']
 
