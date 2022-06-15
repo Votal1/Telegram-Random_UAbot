@@ -951,6 +951,19 @@ async def donate(message):
                                                                       callback_data='donate')), parse_mode='HTML')
 
 
+@dp.message_handler(commands=['test_donate'])
+async def donate(message):
+    markup = InlineKeyboardMarkup()
+    url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
+    markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
+    msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
+          'генерала, який можна потратити в \n/donate_shop.\n\nЦіна одного погона - 30грн.' \
+          '\n\n<code>5375414105409873</code>'
+    await bot.send_message(message.from_user.id, msg, reply_markup=markup)
+    if message.chat.type != 'private':
+        await message.reply('Надіслано в пп.')
+
+
 @dp.message_handler(commands=['donated'])
 async def donated(message):
     if message.chat.type == 'private':
