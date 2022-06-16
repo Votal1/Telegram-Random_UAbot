@@ -941,6 +941,7 @@ async def merchant(message):
         await message.answer(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
+'''
 @dp.message_handler(commands=['donate'])
 async def donate(message):
     markup = InlineKeyboardMarkup()
@@ -949,9 +950,10 @@ async def donate(message):
                          '\n\n<code>5375414105409873</code>',
                          reply_markup=markup.add(InlineKeyboardButton(text='Як отримати погони?',
                                                                       callback_data='donate')), parse_mode='HTML')
+'''
 
 
-@dp.message_handler(commands=['test_donate'])
+@dp.message_handler(commands=['donate'])
 async def donate(message):
     markup = InlineKeyboardMarkup()
     url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
