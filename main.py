@@ -957,7 +957,8 @@ async def donate(message):
     url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
     markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
     msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
-          'генерала, який можна потратити в \n/donate_shop.\n\nЦіна одного погона - 30грн. '
+          'генерала, який можна потратити в \n/donate_shop.\n\nЦіна одного погона - 30грн. ' \
+          'Якщо купляєте погони собі - не міняйте ім`я в формі оплати.'
     await bot.send_message(message.from_user.id, msg, reply_markup=markup)
     if message.chat.type != 'private':
         await message.reply('Надіслано в пп.')
