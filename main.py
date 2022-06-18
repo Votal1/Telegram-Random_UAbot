@@ -1164,7 +1164,7 @@ async def quit_from_battle(message):
         if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'w_ts')) > 1800:
             cid = r.hget(message.from_user.id, 'in_war').decode()
             r.hdel(message.from_user.id, 'in_war')
-            r.srem('fighters_2' + cid, message.chat.id)
+            r.srem('fighters_2' + cid, message.from_user.id)
             await message.reply('\u2705')
         else:
             await bot.send_message(message.from_user.id, 'Покидати міжчатові битви можна тільки раз в пів години.')
