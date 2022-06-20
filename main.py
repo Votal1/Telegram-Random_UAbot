@@ -30,20 +30,20 @@ logging.basicConfig(level=logging.INFO)
 @dp.message_handler(commands=['gruz200', 'orki', 'z', 'poter_net', 'fertilizer', 'ruskie_idut_nahuy'])
 async def gruz200(message):
     try:
-        scraper = create_scraper(delay=10)
-        url = 'https://minusrus.com'
+        scraper = create_scraper(delay=10, browser='chrome')
+        url = 'https://index.minfin.com.ua/ua/russian-invading/casualties/'
         page = scraper.get(url).text
         soup = BeautifulSoup(page, 'html.parser')
-        title = '\U0001F437\U0001F436 ' + soup.find('div', 'title').text + ' на ' \
-                + soup.find('span', 'date__label').text
-        os = soup.find('div', 'amount-details').find_all('span')
-        t = soup.find_all('span', 'card__amount-total')
-        msg = title + '\n\n\u2620\uFE0F Вбито: ' + os[1].text + '\n\U0001fa78 Поранено: ' + os[3].text + \
-                      '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 ББМ: ' + t[1].text + \
-                      '\n\U0001F69C Танки: ' + t[2].text + '\n\U0001F525 Артилерія: ' + t[3].text + \
-                      '\n\u2708\uFE0F Літаки: ' + t[4].text + '\n\U0001F681 Гелікоптери: ' + t[5].text + \
-                      '\n\U0001F6A2 Кораблі та катери: ' + t[6].text + '\n\U0001F921 Жириновський, Медведчук, Шарій'
-        await message.reply(msg)
+        title = '\U0001F437\U0001F436 Втрати росії на ' + soup.find('span', 'black').text
+        d = soup.find('div', 'casualties').find_all('li')
+        msg = f'\n\n\u2620\uFE0F Вбито: {d[12].text.split()[4]} {d[12].text.split()[6][:-1]}' \
+              f'\n\U0001F690 ББМ: {d[1].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F69C Танки: {d[0].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F525 Артилерія: {d[2].text.split(maxsplit=2)[2]}' \
+              f'\n\u2708\uFE0F Літаки: {d[5].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F681 Гелікоптери: {d[6].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
+        await message.reply(title + msg)
     except Exception as e:
         print(e)
         await message.reply('minusrus.com', disable_web_page_preview=True)
