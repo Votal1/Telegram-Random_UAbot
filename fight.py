@@ -1357,6 +1357,7 @@ async def start_raid(cid):
         r.hset('convoy', 'day', datetime.now().day)
 
     chance1 = 0
+    hack = 0
     mar = 0
     rocket = 0
     raid1, raid2, raid3 = 50, 50, 0
@@ -1391,6 +1392,8 @@ async def start_raid(cid):
                 s = int(s * 1.5)
                 if cl == 30:
                     mar += 1
+            if cl in (8, 18, 28):
+                hack += 1
             if cl == 33 and int(r.hget('convoy', 'power')) > 0:
                 raid1 -= 10
                 raid2 -= 10
@@ -1556,7 +1559,18 @@ async def start_raid(cid):
 
         if win == ['a']:
             if locations.index(location) == 0:
-                reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
+                if hack >= 2:
+                    ran = randint(100, 500)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += 'Хакери отримали доступ до рахунків монобанку!\n\U0001F4B5 +' + str(ran)
+                    r.hincrby(c, 'money', ran)
+                    if s == 3:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hincrby(mem, 'money', int(ran / 5))
+                else:
+                    reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
+
             elif locations.index(location) == 1:
                 reward += 'Русаки пограбували магазин алкоголю\n'
                 ran = randint(5, 20)
