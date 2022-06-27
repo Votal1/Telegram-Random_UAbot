@@ -4400,32 +4400,26 @@ async def handle_query(call):
                     r.hincrby('all_deaths', 'deaths', 1)
                 elif ran == [9]:
                     if int(r.hget(uid, 'intellect')) < 20:
-                        await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
-                                                    call.message.chat.id, call.message.message_id)
+                        markup = InlineKeyboardMarkup()
                         if int(r.hget(uid, 'support')) != 6:
-                            r.hset(uid, 'support', 6)
-                            r.hset(uid, 's_support', 1)
+                            markup.add(InlineKeyboardButton(text='Взяти мухохор', callback_data=f'pack_mushroom_{uid}'))
                         elif int(r.hget(uid, 'support')) == 6:
                             r.hincrby(uid, 's_support', 1)
+                        await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
+                                                    call.message.chat.id, call.message.message_id, reply_markup=markup)
                     else:
                         await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
                                                     call.message.chat.id, call.message.message_id)
                 elif ran == [10]:
                     msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити непогану шапку ' \
-                          'для русака.\n'
+                          'для русака.\n\U0001F464 +10'
+                    r.hincrby(uid, 'sch', 10)
+                    markup = InlineKeyboardMarkup()
                     if int(r.hget(uid, 'head')) == 1:
-                        r.hincrby(uid, 'sch', 30)
                         r.hincrby(uid, 's_head', 20)
-                        msg += '\U0001F464 +30'
-                    elif int(r.hget(uid, 'head')) not in (2, 3, 4):
-                        r.hset(uid, 'sch', 30)
-                        r.hset(uid, 'head', 1)
-                        r.hset(uid, 's_head', 20)
-                        msg += '\U0001F464 +30'
                     else:
-                        msg += 'Але в цьому немає потреби.\n\U0001F464 +10'
-                        r.hincrby(uid, 'sch', 10)
-                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id)
+                        markup.add(InlineKeyboardButton(text='Взяти шапочку', callback_data=f'pack_foil_{uid}'))
+                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif ran == [11]:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     await bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато '
@@ -4437,27 +4431,29 @@ async def handle_query(call):
                     if r.hexists(uid, 'ac13') == 0:
                         r.hset(uid, 'ac13', 1)
                 elif ran == [12]:
-                    await bot.edit_message_text(
-                        '\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця [Захист, '
-                        'міцність=50] - зменшує силу ворога на бій на 75% та захищає від РПГ-7.',
-                        call.message.chat.id, call.message.message_id)
+                    markup = InlineKeyboardMarkup()
                     if int(r.hget(uid, 'defense')) == 2:
                         r.hincrby(uid, 's_defense', 50)
                     else:
-                        r.hset(uid, 'defense', 2)
-                        r.hset(uid, 's_defense', 50)
+                        markup.add(InlineKeyboardButton(text='Взяти бронежилет', callback_data=f'pack_armor_{uid}'))
+
+                    await bot.edit_message_text(
+                        '\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця [Захист, '
+                        'міцність=50] - зменшує силу ворога на бій на 75% та захищає від РПГ-7.',
+                        call.message.chat.id, call.message.message_id, reply_markup=markup)
+
                 elif ran == [13]:
+                    markup = InlineKeyboardMarkup()
+                    if int(r.hget(uid, 'weapon')) == 2:
+                        r.hincrby(uid, 's_weapon', 1)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти РПГ-7', callback_data=f'pack_rpg_{uid}'))
                     await bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий '
                                                 'гранатомет РПГ-7 і одну гранату до нього [Атака, міцність=1] - '
                                                 'завдає ворогу важке поранення (віднімає бойовий дух, здоров`я '
                                                 'і все спорядження, на 300 боїв бойовий дух впаде вдвічі а '
                                                 'сила втричі).',
-                                                call.message.chat.id, call.message.message_id)
-                    if int(r.hget(uid, 'weapon')) == 2:
-                        r.hincrby(uid, 's_weapon', 1)
-                    else:
-                        r.hset(uid, 'weapon', 2)
-                        r.hset(uid, 's_weapon', 1)
+                                                call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif ran == [14]:
                     await bot.edit_message_text(
                         '\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.'
@@ -4470,6 +4466,66 @@ async def handle_query(call):
                                                 call.message.message_id)
                 except:
                     pass
+
+    elif call.data.startswith('pack_mushroom_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                if int(r.hget(uid, 'intellect')) >= 20:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У русака занадто багато інтелекту')
+                else:
+                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                call.message.message_id, reply_markup=None)
+                    if int(r.hget(uid, 'support')) == 6:
+                        r.hincrby(uid, 's_support', 1)
+                    else:
+                        r.hset(uid, 'support', 6)
+                        r.hset(uid, 's_support', 1)
+        except:
+            pass
+
+    elif call.data.startswith('pack_foil_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
+                if int(r.hget(uid, 'head')) == 1:
+                    r.hincrby(uid, 's_head', 20)
+                else:
+                    r.hset(uid, 'head', 1)
+                    r.hset(uid, 's_head', 20)
+        except:
+            pass
+
+    elif call.data.startswith('pack_armor_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
+                if int(r.hget(uid, 'defense')) == 2:
+                    r.hincrby(uid, 's_defense', 50)
+                else:
+                    r.hset(uid, 'defense', 2)
+                    r.hset(uid, 's_defense', 50)
+        except:
+            pass
+
+    elif call.data.startswith('pack_rpg_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
+                if int(r.hget(uid, 'weapon')) == 2:
+                    r.hincrby(uid, 's_weapon', 1)
+                else:
+                    r.hset(uid, 'weapon', 2)
+                    r.hset(uid, 's_weapon', 1)
+        except:
+            pass
 
     elif call.data.startswith('clan_shop_1'):
         msg, markup = c_shop('c' + str(call.message.chat.id), 1)
