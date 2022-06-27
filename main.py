@@ -4892,7 +4892,7 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_rpg'):
         c = 'c' + str(call.message.chat.id)
-        if checkClan(call.from_user.id) and call.from_user.id == int(r.hget(c, 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
             if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 250:
                 if int(r.hget(call.from_user.id, 'weapon')) == 0:
                     r.hset(call.from_user.id, 'weapon', 2)

@@ -325,13 +325,20 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if checkClan(uid1):
                     damage_weapon(uid2, c2)
 
-        if weapon2 == 2 and defense1 != 2 and defense1 != 17 and t == 1:
+        if weapon2 == 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
-            r.hincrby(uid1, 'injure', 300)
-            if c1 != 6 and c1 != 16 and c1 != 26:
-                r.hset(uid1, 'weapon', 0)
-            r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0})
             damage_weapon(uid2, c2)
+            if defense1 in (2, 17):
+                damage = int(int(r.hget(uid1, 's_defense')) / 2 - 5)
+                r.hset(uid1, 's_defense', damage)
+                if damage <= 0:
+                    r.hset(uid1, 'defense', 0)
+                    r.hset(uid1, 's_defense', 0)
+            else:
+                r.hincrby(uid1, 'injure', 300)
+                if c1 != 6 and c1 != 16 and c1 != 26:
+                    r.hset(uid1, 'weapon', 0)
+                r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0})
 
         elif weapon1 in (15, 26) and c1 in (5, 15, 25):
             s1 = int(s1 * 1.75)
