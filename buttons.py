@@ -86,9 +86,9 @@ def invent(w, d, s, h):
     return markup
 
 
-def unpack():
+def unpack(uid):
     markup = InlineKeyboardMarkup()
-    items = {'Так': 'unpack'}
+    items = {'Так': f'unpack_{uid}'}
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup
