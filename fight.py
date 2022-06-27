@@ -1598,7 +1598,7 @@ async def start_raid(cid):
                             r.hset(mem, 'support', 8)
                             r.hset(mem, 's_support', s)
                 if mode == 2:
-                    s = 1
+                    s = 2
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
@@ -1644,7 +1644,7 @@ async def start_raid(cid):
                             r.hset(mem, 'support', 8)
                             r.hset(mem, 's_support', s)
                 if mode == 2:
-                    s = 2
+                    s = 4
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
