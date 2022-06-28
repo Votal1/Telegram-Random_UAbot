@@ -956,10 +956,10 @@ async def donate(message):
 @dp.message_handler(commands=['donate'])
 async def donate(message):
     markup = InlineKeyboardMarkup()
-    url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=20'
+    url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
     markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
     msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
-          'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Акційна ціна одного погону - 20грн.\n' \
+          'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону - 30грн.\n' \
           '\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.'
     await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True)
     if message.chat.type != 'private':
