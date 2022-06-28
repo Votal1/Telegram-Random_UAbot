@@ -859,7 +859,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     money = 1
                     if c1 == 28:
                         money2 = int(r.hget(uid2, 'money'))
-                        if money2 > 250:
+                        if money2 > 250 and weapon1 != 29:
                             money2 = 250
                         elif money2 > 500 and weapon1 == 29:
                             money2 = 500
