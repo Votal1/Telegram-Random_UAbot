@@ -956,7 +956,7 @@ async def donate(message):
 @dp.message_handler(commands=['donate'])
 async def donate(message):
     markup = InlineKeyboardMarkup()
-    url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
+    url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=20'
     markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
     msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
           'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Акційна ціна одного погону - 20грн.\n' \
