@@ -1413,7 +1413,8 @@ async def swap(message):
                     r.hset(message.from_user.id, 'time23', a2)
                 await message.reply('Бойового русака змінено.')
             else:
-                await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+                await message.reply('\U0001F3DA Візьми русака, щоб змінити його на другого'
+                                    '.\n\nРусака можна отримати, сходивши на \n/donbass')
     except:
         pass
 
