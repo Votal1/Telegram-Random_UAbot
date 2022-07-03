@@ -9,7 +9,7 @@ def shop_msg(uid):
              '\U0001F4B3 Трофейний паспорт - 10 грн': 'passport', '\U0001F3DA Утеплена будка - 30 грн': 'cabin',
              '\U0001F469\U0001F3FB Жінка - 150 грн': 'woman', '\U0001F6AC Тютюн та люлька - 1 жінка': 'pipe'}
     for key, value in items.items():
-        if value == 'cabin' and r.hexists(uid, 'cabin') and r.hget(uid, 'cabin') == 1:
+        if value == 'cabin' and r.hexists(uid, 'cabin') and int(r.hget(uid, 'cabin')) == 1:
             pass
         else:
             markup.add(InlineKeyboardButton(text=key, callback_data=value))
