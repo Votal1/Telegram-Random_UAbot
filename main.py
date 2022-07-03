@@ -1441,13 +1441,12 @@ async def clan(message):
                     if int(r.hget(c, 'storage')) == 1:
                         building += ', склад'
                         resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} / 5000"
-                        if base >= 3:
+                        if int(r.hget(c, 'technics')) > 0:
+                            resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
+                        if int(r.hget(c, 'technics')) > 0:
                             resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()} / 3000"
-                            if int(r.hget(c, 'technics')) > 0:
-                                resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
-                        if base > 4:
-                            if int(r.hget(c, 'codes')) > 0:
-                                resources += '\n\U0001F916 Секретні коди: ' + r.hget(c, 'codes').decode()
+                        if int(r.hget(c, 'codes')) > 0:
+                            resources += '\n\U0001F916 Секретні коди: ' + r.hget(c, 'codes').decode()
                         resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
 
                     if int(r.hget(c, 'silicate')) == 1:
@@ -1499,6 +1498,21 @@ async def clan(message):
         msg = '\U0001F530 Тут можна знайти собі клан'
         for mem in r.smembers('recruitment'):
             c = 'c' + mem.decode()
+            try:
+                if int(r.hget(c, 'rec_time')) != datetime.now().day:
+                    if int(r.hget(c, 'technics')) >= 10:
+                        r.hset(c, 'rec_time', datetime.now().day)
+                        r.hincrby(c, 'technics', -10)
+                    else:
+                        try:
+                            await bot.revoke_chat_invite_link(int(mem), r.hget(c, 'link').decode())
+                        except:
+                            pass
+                        r.hset(c, 'recruitment', 0)
+                        r.srem('recruitment', mem)
+                        continue
+            except:
+                pass
             num1 = r.scard('cl' + mem.decode())
             num2 = 25
             cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
@@ -1674,6 +1688,13 @@ async def build(message):
                     if int(r.hget(c, 'storage')) == 0:
                         markup.add(InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
                         msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
+                    if int(r.hget(c, 'new_post')) == 0:
+                        markup.add(InlineKeyboardButton(text='Побудувати відділення НП',
+                                                        callback_data='build_new_post'))
+                        msg += '\nВідділення НП (\U0001F333 100, \U0001faa8 50, ' \
+                               '\U0001F4B5 1000, \U0001F47E 1) - можливість отримувати ' \
+                               '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
+                               'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
                     if int(r.hget(c, 'base')) >= 3:
                         if int(r.hget(c, 'silicate')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати силікатний завод',
@@ -1716,13 +1737,6 @@ async def build(message):
                             msg += '\nМорг (\U0001F333 1000, \U0001faa8 2000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 5000, \U0001F47E 100) - +0.2% сили в міжчатовій битві ' \
                                    'за кожного вбитого русака (максимум 20%). \U0001F47E +1 за кожне жертвоприношення.'
-                        if int(r.hget(c, 'new_post')) == 0:
-                            markup.add(InlineKeyboardButton(text='Побудувати відділення НП',
-                                                            callback_data='build_new_post'))
-                            msg += '\nВідділення НП (\U0001F333 800, \U0001faa8 500, \U0001F9F6 500, ' \
-                                   '\U0001F9F1 200, \U0001F4B5 2000, \U0001F47E 30) - можливість отримувати ' \
-                                   '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
-                                   'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
                     if int(r.hget(c, 'base')) in (5, 9):
                         if int(r.hget(c, 'build1')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати тракторний завод',
@@ -1932,7 +1946,7 @@ async def clan_settings(message):
             else:
                 msg += '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
             if int(r.hget(c, 'recruitment')) == 0:
-                msg += '\n\nВ Соледарі не відкрито набір в клан.'
+                msg += '\n\nВ Соледарі не відкрито набір в клан. Щоб відкрити, треба платити по 10 радіотехніки в день.'
             else:
                 msg += '\n\nВ Соледарі відкрито набір в клан.'
             await bot.send_message(message.from_user.id, msg, reply_markup=clan_set())
@@ -2895,13 +2909,18 @@ async def handle_query(call):
                 and str(call.message.chat.id).encode() not in r.smembers('banned'):
             try:
                 if int(r.hget('c' + str(c), 'recruitment')) == 0:
-                    try:
-                        await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
-                    except:
-                        pass
-                    a = await bot.create_chat_invite_link(c, creates_join_request=True)
-                    r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link})
-                    r.sadd('recruitment', c)
+                    if int(r.hget('c' + str(c), 'technics')) >= 10:
+                        try:
+                            await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
+                        except:
+                            pass
+                        a = await bot.create_chat_invite_link(c, creates_join_request=True)
+                        r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link, 'rec_time': datetime.now().day})
+                        r.sadd('recruitment', c)
+                        r.hincrby('c' + str(c), 'technics', -10)
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Недостатньо радіотехніки.')
                 else:
                     try:
                         await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
@@ -3117,15 +3136,12 @@ async def handle_query(call):
     elif call.data.startswith('build_new_post') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
         if int(r.hget(c, 'new_post')) == 0:
-            if int(r.hget(c, 'wood')) >= 800 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 500 \
-                    and int(r.hget(c, 'brick')) >= 200 and int(r.hget(c, 'money')) >= 2000 \
-                    and int(r.hget(c, 'r_spirit')) >= 30:
-                r.hincrby(c, 'wood', -800)
-                r.hincrby(c, 'stone', -500)
-                r.hincrby(c, 'cloth', -500)
-                r.hincrby(c, 'brick', -200)
-                r.hincrby(c, 'money', -2000)
-                r.hincrby(c, 'r_spirit', -30)
+            if int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 50 and int(r.hget(c, 'money')) >= 1000 \
+                    and int(r.hget(c, 'r_spirit')) >= 1:
+                r.hincrby(c, 'wood', -100)
+                r.hincrby(c, 'stone', -50)
+                r.hincrby(c, 'money', -1000)
+                r.hincrby(c, 'r_spirit', -1)
                 r.hset(c, 'new_post', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано '
                                                              'відділення Нової пошти.')
@@ -4212,7 +4228,7 @@ async def handle_query(call):
                 ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                               weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
                 if ran == [1]:
-                    if checkClan(uid, base=4, building='new_post') and choice([0, 1]) == 1:
+                    if checkClan(uid, base=2, building='new_post') and choice([0, 1]) == 1:
                         await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1',
                                                     call.message.chat.id, call.message.message_id)
                         r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
