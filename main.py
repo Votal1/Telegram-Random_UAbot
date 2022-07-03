@@ -668,6 +668,22 @@ async def shop(message):
         pass
 
 
+@dp.message_handler(commands=['account'])
+async def account(message):
+    try:
+        if r.hexists(message.from_user.id, 'money') == 0:
+            await message.reply('У тебе ще не було русаків.\n\nРусака можна отримати, сходивши на /donbass')
+        else:
+            m = r.hget(message.from_user.id, 'money').decode()
+            p = r.hget(message.from_user.id, 'packs').decode()
+            s = r.hget(message.from_user.id, 'strap').decode()
+            salt = r.hget(message.from_user.id, 'salt').decode()
+            msg = f'\U0001F4B5 Гривні: {m}\n\U0001F4E6 Пакунки: {p}\n\U0001F31F Погони: {s}\n\U0001F9C2 Сіль: {salt}'
+            await message.reply(msg)
+    except:
+        pass
+
+
 @dp.message_handler(commands=['passport'])
 async def passport(message):
     if r.hexists(message.from_user.id, 'wins') == 1:
