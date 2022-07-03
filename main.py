@@ -1500,9 +1500,9 @@ async def clan(message):
             c = 'c' + mem.decode()
             try:
                 if int(r.hget(c, 'rec_time')) != datetime.now().day:
-                    if int(r.hget(c, 'technics')) >= 10:
+                    if int(r.hget(c, 'technics')) >= 5:
                         r.hset(c, 'rec_time', datetime.now().day)
-                        r.hincrby(c, 'technics', -10)
+                        r.hincrby(c, 'technics', -5)
                     else:
                         try:
                             await bot.revoke_chat_invite_link(int(mem), r.hget(c, 'link').decode())
@@ -1946,7 +1946,7 @@ async def clan_settings(message):
             else:
                 msg += '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
             if int(r.hget(c, 'recruitment')) == 0:
-                msg += '\n\nВ Соледарі не відкрито набір в клан. Щоб відкрити, треба платити по 10 радіотехніки в день.'
+                msg += '\n\nВ Соледарі не відкрито набір в клан. Щоб відкрити, треба платити по 5 радіотехніки в день.'
             else:
                 msg += '\n\nВ Соледарі відкрито набір в клан.'
             await bot.send_message(message.from_user.id, msg, reply_markup=clan_set())
@@ -2909,7 +2909,7 @@ async def handle_query(call):
                 and str(call.message.chat.id).encode() not in r.smembers('banned'):
             try:
                 if int(r.hget('c' + str(c), 'recruitment')) == 0:
-                    if int(r.hget('c' + str(c), 'technics')) >= 10:
+                    if int(r.hget('c' + str(c), 'technics')) >= 5:
                         try:
                             await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
                         except:
@@ -2917,7 +2917,7 @@ async def handle_query(call):
                         a = await bot.create_chat_invite_link(c, creates_join_request=True)
                         r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link, 'rec_time': datetime.now().day})
                         r.sadd('recruitment', c)
-                        r.hincrby('c' + str(c), 'technics', -10)
+                        r.hincrby('c' + str(c), 'technics', -5)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Недостатньо радіотехніки.')
