@@ -2906,7 +2906,7 @@ async def handle_query(call):
     elif call.data.startswith('recruit'):
         c = int(r.hget(call.from_user.id, 'clan'))
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c) \
-                and str(call.message.chat.id).encode() not in r.smembers('banned'):
+                and str(c).encode() not in r.smembers('banned'):
             try:
                 if int(r.hget('c' + str(c), 'recruitment')) == 0:
                     if int(r.hget('c' + str(c), 'technics')) >= 5:
