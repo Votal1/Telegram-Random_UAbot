@@ -678,7 +678,7 @@ async def account(message):
             p = r.hget(message.from_user.id, 'packs').decode()
             s = r.hget(message.from_user.id, 'strap').decode()
             salt = r.hget(message.from_user.id, 'salt').decode()
-            msg = f'\U0001F4B5 Гривні: {m}\n\U0001F4E6 Пакунки: {p}\n\U0001F31F Погони: {s}\n\U0001F9C2 Сіль: {salt}'
+            msg = f'\U0001F4B5 Гривні: {m}\n\U0001F4E6 Пакунки: {p}\n\U0001F9C2 Сіль: {salt}\n\U0001F31F Погони: {s}'
             await message.reply(msg)
     except:
         pass
@@ -1962,6 +1962,10 @@ async def clan_settings(message):
                 msg += '\n\nВ Соледарі не відкрито набір в клан. Щоб відкрити, треба платити по 3 радіотехніки в день.'
             else:
                 msg += '\n\nВ Соледарі відкрито набір в клан.'
+            if int(r.hget(c, 'notification')) == 0:
+                msg += '\n\nСповіщення про конвой вимкнені. Щоб увімкнути, треба платити по 5 радіотехніки в день.'
+            else:
+                msg += '\n\nСповіщення про конвой увімкнені.'
             await bot.send_message(message.from_user.id, msg, reply_markup=clan_set())
     except:
         pass
@@ -2261,6 +2265,17 @@ async def guard(message):
                         r.hset('convoy', 'power', 2000000)
                         r.hset('convoy', 'day', datetime.now().day)
                     r.hincrby('convoy', 'power', 500000)
+                    for mem in r.smembers('followers'):
+                        c = 'c' + mem.decode()
+                        if int(r.hget(c, 'not_time')) != datetime.now().day:
+                            if int(r.hget(c, 'technics')) >= 5:
+                                r.hset(c, 'not_time', datetime.now().day)
+                                r.hincrby(c, 'technics', -5)
+                            else:
+                                r.hset(c, 'notification', 0)
+                                r.srem('followers', mem)
+                                continue
+                        await bot.send_message(int(mem), '\U0001F69B Додатковий гумконвой вже в дорозі!')
                     msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
                 await message.reply(msg + '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
                                     '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
@@ -2949,6 +2964,23 @@ async def handle_query(call):
             except:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Схоже в бота нема прав додавати користувачів.')
+
+    elif call.data.startswith('notification'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
+            if int(r.hget('c' + str(c), 'notification')) == 0:
+                if int(r.hget('c' + str(c), 'technics')) >= 5:
+                    r.hset('c' + str(c), 'notification', 1)
+                    r.sadd('followers', c)
+                    r.hincrby('c' + str(c), 'technics', -5)
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо радіотехніки.')
+            else:
+                r.hset('c' + str(c), 'notification', 0, {'not_time': datetime.now().day})
+                r.srem('followers', c)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Сповіщення змінено.')
 
     elif call.data.startswith('get_members'):
         uid = call.from_user.id
