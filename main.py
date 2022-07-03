@@ -16,6 +16,7 @@ from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
 from merchant import merchant_msg
+from shop import shop_msg
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -657,26 +658,10 @@ async def fascist(message):
 async def shop(message):
     try:
         if r.hexists(message.from_user.id, 'money') == 0:
-            r.hset(message.from_user.id, 'money', 20)
-        else:
-            pass
-        if r.hexists(message.from_user.id, 'childs') == 0:
             await message.reply('У тебе ще не було русаків.\n\nРусака можна отримати, сходивши на /donbass')
         else:
-            money = r.hget(message.from_user.id, 'money').decode()
-            msg = f'\U0001F4B5 Гривні: {money}\n\nОсь опис товарів, які можна придбати:\n\n\u2622 Горілка "Козаки" - ' \
-                  f'збільшує русаку бойовий дух на 10-70.\n\U0001F5E1 Колючий дрин [Атака]- зменшує перед боєм ' \
-                  f'бойовий дух ворогу, якщо атакувати його (не використовується, якщо бойовий дух ворога менший ' \
-                  f'за 300, обнуляє, якщо від 300 до 1000, зменшує на 1000, якщо від 1000 до 2500 і зменшує на ' \
-                  f'20/30/40%, якщо бойовий дух більше 2500).\n\U0001F6E1 Колючий щит [Захист] - працює так само ' \
-                  f'як дрин, тільки знижує бойовий дух тому, хто атакує.\n\U0001F9EA Аптечка [Допомога, міцність=5]' \
-                  f' - збільшує здоров`я на 5 і на 10 кожного бою.\n\U0001F4B3 Трофейний паспорт - поміняє ім`я ' \
-                  f'русака на інше, випадкове.\n\U0001F3DA Утеплена будка - 15 додаткової сили при кожному ' \
-                  f'годуванні русака (до 2000 сили). \n\U0001F469\U0001F3FB Жінка - раз в 9 днів народжуватиме ' \
-                  f'смачне російське немовля. Жінку треба провідувати кожен день командою \n/woman\n\U0001F6AC Тютюн ' \
-                  f'та люлька - на це можна проміняти жінку і піти в козацький похід (бойовий дух русака збільшиться ' \
-                  f'на 5000, а кількість вбитих русаків збільшиться на 5).'
-            await bot.send_message(message.from_user.id, msg, reply_markup=goods())
+            msg, markup = shop_msg(message.from_user.id)
+            await bot.send_message(message.from_user.id, msg, reply_markup=markup)
             if message.chat.type != 'private':
                 await message.reply('Надіслано в пп.')
     except:
