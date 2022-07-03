@@ -1,16 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def goods():
-    markup = InlineKeyboardMarkup()
-    items = {'Горілка "Козаки" - 2 грн': 'vodka', 'Колючий дрин - 4 грн': 'weapon', 'Колючий щит - 5 грн': 'defense',
-             'Аптечка - 4 грн': 'aid_kit', 'Трофейний паспорт - 10 грн': 'passport', 'Утеплена будка - 30 грн': 'cabin',
-             'Жінка - 150 грн': 'woman', 'Тютюн та люлька - 1 жінка': 'pipe'}
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
 def donate_goods():
     markup = InlineKeyboardMarkup()
     items = {'\U0001F943 Настоянка глоду - \U0001F31F 1 погон': 'hawthorn',

@@ -10,7 +10,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, hea
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
-from buttons import goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
+from buttons import donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
@@ -660,7 +660,7 @@ async def shop(message):
         if r.hexists(message.from_user.id, 'money') == 0:
             await message.reply('У тебе ще не було русаків.\n\nРусака можна отримати, сходивши на /donbass')
         else:
-            msg, markup = shop_msg(message.from_user.id)
+            msg, markup = shop_msg(message.from_user.id, 1)
             await bot.send_message(message.from_user.id, msg, reply_markup=markup)
             if message.chat.type != 'private':
                 await message.reply('Надіслано в пп.')
@@ -3528,8 +3528,9 @@ async def handle_query(call):
             r.hset(call.from_user.id, 'name', ran)
             if r.hexists(call.from_user.id, 'ac3') == 0:
                 r.hset(call.from_user.id, 'ac3', 1)
+            name = names[ran]
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили трофейний паспорт')
+                                            text=f'Ви успішно купили трофейний паспорт\nНове ім`я - {name}')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо коштів на рахунку')
