@@ -1498,21 +1498,18 @@ async def clan(message):
         msg = '\U0001F530 Тут можна знайти собі клан'
         for mem in r.smembers('recruitment'):
             c = 'c' + mem.decode()
-            try:
-                if int(r.hget(c, 'rec_time')) != datetime.now().day:
-                    if int(r.hget(c, 'technics')) >= 5:
-                        r.hset(c, 'rec_time', datetime.now().day)
-                        r.hincrby(c, 'technics', -5)
-                    else:
-                        try:
-                            await bot.revoke_chat_invite_link(int(mem), r.hget(c, 'link').decode())
-                        except:
-                            pass
-                        r.hset(c, 'recruitment', 0)
-                        r.srem('recruitment', mem)
-                        continue
-            except:
-                pass
+            if int(r.hget(c, 'rec_time')) != datetime.now().day:
+                if int(r.hget(c, 'technics')) >= 5:
+                    r.hset(c, 'rec_time', datetime.now().day)
+                    r.hincrby(c, 'technics', -5)
+                else:
+                    try:
+                        await bot.revoke_chat_invite_link(int(mem), r.hget(c, 'link').decode())
+                    except:
+                        pass
+                    r.hset(c, 'recruitment', 0)
+                    r.srem('recruitment', mem)
+                    continue
             num1 = r.scard('cl' + mem.decode())
             num2 = 25
             cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
