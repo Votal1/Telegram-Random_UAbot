@@ -10,7 +10,7 @@ from variables import names, icons, class_name, weapons, defenses, supports, hea
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
-from buttons import donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
+from buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
@@ -926,18 +926,6 @@ async def merchant(message):
         await message.answer(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
-'''
-@dp.message_handler(commands=['donate'])
-async def donate(message):
-    markup = InlineKeyboardMarkup()
-    await message.answer('Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n'
-                         '\U0001F31F погон російського генерала, який можна потратити в \n/donate_shop:'
-                         '\n\n<code>5375414105409873</code>',
-                         reply_markup=markup.add(InlineKeyboardButton(text='Як отримати погони?',
-                                                                      callback_data='donate')), parse_mode='HTML')
-'''
-
-
 @dp.message_handler(commands=['donate'])
 async def donate(message):
     markup = InlineKeyboardMarkup()
@@ -973,19 +961,8 @@ async def donate_shop(message):
     try:
         if r.hexists(message.from_user.id, 'strap') == 0:
             r.hset(message.from_user.id, 'strap', 0)
-        strap = r.hget(message.from_user.id, 'strap').decode()
-        msg = f'\U0001F31F Погони російських генералів: {strap}\n\nОсь опис товарів, які можна придбати:\n\n' \
-              f'\U0001F4F8 Заміна фото русака (ціна 1 погон):\n\U0001F304 Класове преміум фото 1 (Кадиров, Обеме, ' \
-              f'Горшок, Тесак, Захарченко, Дерек Шовін, Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, ' \
-              f'Шойгу).\n\U0001F307 Класове преміум фото 2 (Хасбулла, Стаханов, Мавроді, Просвірін, Гіркін-Стрєлков, ' \
-              f'Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Каневський, Герасімов).\n\U0001F309 Класовий ' \
-              f'Чмоня.\n\n\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n\U0001F943 Настоянка глоду ' \
-              f'- буст для новачків. Якщо в русака менше 1000 сили і 5 інтелекту, то настоянка моментально додасть' \
-              f' 400 сили і 4 інтелекту.\n\U0001F4E6 40 Донбаських пакунків\n\U0001F9FE Ресурси для клану: ' \
-              f'\U0001F333 2222 \U0001faa8 1111 \U0001F47E 33\n\U0001F393 Курс перекваліфікації - дозволяє русаку ' \
-              f'наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал найвищого рівня (покупка ' \
-              f'доступна до етапу 2. Купівля будівельних матеріалів).'
-        await bot.send_message(message.from_user.id, msg, reply_markup=donate_goods())
+        msg, markup = shop_msg(message.from_user.id, 2)
+        await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
     except:
@@ -4513,6 +4490,16 @@ async def handle_query(call):
                     r.hset(uid, 's_weapon', 1)
         except:
             pass
+
+    elif call.data.startswith('switch1'):
+        msg, markup = shop_msg(call.from_user.id, 1)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith('switch2'):
+        msg, markup = shop_msg(call.from_user.id, 2)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith('switch3'):
+        msg, markup = shop_msg(call.from_user.id, 3)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
 
     elif call.data.startswith('clan_shop_1'):
         msg, markup = c_shop('c' + str(call.message.chat.id), 1)

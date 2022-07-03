@@ -15,6 +15,8 @@ def shop_msg(uid, mode):
                 pass
             else:
                 markup.add(InlineKeyboardButton(text=key, callback_data=value))
+        markup.add(InlineKeyboardButton(text='\U0001F31F', callback_data='switch2'),
+                   InlineKeyboardButton(text='\U0001F9C2', callback_data='switch3'))
         money = r.hget(uid, 'money').decode()
         msg = f'\U0001F4B5 Гривні: {money}\n\nОсь опис товарів, які можна придбати:\n\n\u2622 Горілка "Козаки" - ' \
               f'збільшує русаку бойовий дух на 10-70.\n\U0001F5E1 Колючий дрин [Атака]- зменшує перед боєм ' \
@@ -28,5 +30,37 @@ def shop_msg(uid, mode):
               f'смачне російське немовля. Жінку треба провідувати кожен день командою \n/woman\n\U0001F6AC Тютюн ' \
               f'та люлька - на це можна проміняти жінку і піти в козацький похід (бойовий дух русака збільшиться ' \
               f'на 5000, а кількість вбитих русаків збільшиться на 5).'
+
+    elif mode == 2:
+        items = {'\U0001F943 Настоянка глоду - \U0001F31F 1 погон': 'hawthorn',
+                 '\U0001F4E6 40 пакунків - \U0001F31F 1 погон': '40_packs',
+                 '\U0001F9FE Ресурси - \U0001F31F 2 погони': 'buy_resources',
+                 '\U0001F393 Курс перекваліфікації - \U0001F31F 2 погони': 'course',
+                 '\U0001F3E0 Велике будівництво - \U0001F31F 3 погони': 'fast_cellar'}
+        markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
+                   InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
+                   InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium2'))
+        for key, value in items.items():
+            markup.add(InlineKeyboardButton(text=key, callback_data=value))
+        markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),
+                   InlineKeyboardButton(text='\U0001F9C2', callback_data='switch3'))
+        strap = r.hget(uid, 'strap').decode()
+        msg = f'\U0001F31F Погони російських генералів: {strap}\n\nОсь опис товарів, які можна придбати:\n\n' \
+              f'\U0001F4F8 Заміна фото русака (ціна 1 погон):\n\U0001F304 Класове преміум фото 1 (Кадиров, Обеме, ' \
+              f'Горшок, Тесак, Захарченко, Дерек Шовін, Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, ' \
+              f'Шойгу).\n\U0001F307 Класове преміум фото 2 (Хасбулла, Стаханов, Мавроді, Просвірін, Гіркін-Стрєлков, ' \
+              f'Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Каневський, Герасімов).\n\U0001F309 Класовий ' \
+              f'Чмоня.\n\n\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n\U0001F943 Настоянка глоду ' \
+              f'- буст для новачків. Якщо в русака менше 1000 сили і 5 інтелекту, то настоянка моментально додасть' \
+              f' 400 сили і 4 інтелекту.\n\U0001F4E6 40 Донбаських пакунків\n\U0001F9FE Ресурси для клану: ' \
+              f'\U0001F333 2222 \U0001faa8 1111 \U0001F47E 33\n\U0001F393 Курс перекваліфікації - дозволяє русаку ' \
+              f'наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал найвищого рівня (покупка ' \
+              f'доступна до етапу 2. Купівля будівельних матеріалів).'
+
+    elif mode == 3:
+        markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),
+                   InlineKeyboardButton(text='\U0001F31F', callback_data='switch2'))
+        salt = 0
+        msg = f'\U0001F9C2 Сіль: {salt}\n\nНезабаром відкриття...'
 
     return msg, markup

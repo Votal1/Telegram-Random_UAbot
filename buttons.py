@@ -1,21 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def donate_goods():
-    markup = InlineKeyboardMarkup()
-    items = {'\U0001F943 Настоянка глоду - \U0001F31F 1 погон': 'hawthorn',
-             '\U0001F4E6 40 пакунків - \U0001F31F 1 погон': '40_packs',
-             '\U0001F9FE Ресурси - \U0001F31F 2 погони': 'buy_resources',
-             '\U0001F393 Курс перекваліфікації - \U0001F31F 2 погони': 'course',
-             '\U0001F3E0 Велике будівництво - \U0001F31F 3 погони': 'fast_cellar'}
-    markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
-               InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
-               InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium2'))
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
 def skill_set():
     markup = InlineKeyboardMarkup()
     items = {'Прокачати алкоголізм': 'alcohol', 'Прокачати майстерність': 'master',
