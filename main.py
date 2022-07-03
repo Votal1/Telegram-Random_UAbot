@@ -726,8 +726,11 @@ async def woman(message):
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
-        msg = await top(message.chat.id, message.from_user.id, message.text)
-        await message.reply(msg)
+        if message.chat.id != -1001211933154:
+            msg = await top(message.chat.id, message.from_user.id, message.text)
+            await message.reply(msg)
+        else:
+            await message.reply('В Соледарі ця команда недоступна.')
     except:
         pass
 

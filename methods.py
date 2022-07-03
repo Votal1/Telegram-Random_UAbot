@@ -636,7 +636,7 @@ async def itop(uid, cid, chat):
         if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
             r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
             result = ''
-            if chat == 'supergroup':
+            if chat == 'supergroup' and cid != -1001211933154:
                 everyone = r.smembers(cid)
                 rating = {}
                 for member in everyone:
