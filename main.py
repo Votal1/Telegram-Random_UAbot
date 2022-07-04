@@ -2373,6 +2373,13 @@ async def guard(message):
         pass
 
 
+@dp.message_handler(commands=['quest'])
+async def quest(message):
+    uid = message.from_user.id
+    if uid == 456514639:
+        pass
+
+
 @dp.message_handler(commands=['raid'])
 async def raid(message):
     try:
@@ -2496,7 +2503,8 @@ async def handle_query(call):
             r.hset(cid, 'name', n, {'strength': s, 'intellect': i, 'spirit': 0, 'class': 0, 'weapon': 0, 's_weapon': 0,
                                     'defense': 0, 's_defense': 0, 'support': 0, 's_support': 0, 'mushrooms': 0,
                                     'hp': 100, 'injure': 0, 'sch': 0, 'buff': 0, 'head': 0, 's_head': 0,
-                                    'photo': choice(default), 'firstname': call.from_user.first_name})
+                                    'photo': choice(default), 'firstname': call.from_user.first_name,
+                                    'q1': 0, 'q2': 0, 'q3': 0, 'q1t': 0, 'q2t': 0, 'q3t': 0, 'qt': 0})
             r.sadd('everyone', call.from_user.id)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
