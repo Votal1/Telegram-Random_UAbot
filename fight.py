@@ -67,33 +67,25 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid2, 'worker', datetime.now().day)
                     r.hset(uid2, 'time', 0)
         if c1 == 26 and t == 1:
-            if c2 != 6 and c2 != 16 and c2 != 26:
+            if c2 not in (6, 16, 26) and defense1 in (16, 17):
                 if weapon2 != 0:
                     cop1 = choices([1, 0], weights=[20, 80])
                     if cop1 == [1]:
                         r.hset(uid2, 'weapon', 0)
                         r.hset(uid2, 's_weapon', 0)
-                        if defense1 == 0:
-                            r.hset(uid1, 'defense', 16)
-                            r.hset(uid1, 's_defense', 10)
-                        elif defense1 in (16, 17):
-                            r.hincrby(uid1, 's_defense', 10)
+                        r.hincrby(uid1, 's_defense', 10)
                         cop += '\n\U0001F46E ' + names[name1] + \
-                               ' вилучив у ворога зброю! За це він отримав поліцейський щит.\n'
+                               ' вилучив у ворога зброю!\n\U0001F6E1 +10\n'
         if c2 == 26 and t == 1:
-            if c1 != 6 and c1 != 16 and c1 != 26:
+            if c1 not in (6, 16, 26) and defense2 in (16, 17):
                 if weapon1 != 0:
                     cop2 = choices([1, 0], weights=[20, 80])
                     if cop2 == [1]:
                         r.hset(uid1, 'defense', 0)
                         r.hset(uid1, 's_defense', 0)
-                        if defense2 == 0:
-                            r.hset(uid2, 'defense', 16)
-                            r.hset(uid2, 's_defense', 10)
-                        elif defense2 in (16, 17):
-                            r.hincrby(uid2, 's_defense', 10)
+                        r.hincrby(uid2, 's_defense', 10)
                         cop += '\n\U0001F46E ' + names[name2] + \
-                               ' вилучив у ворога захисне спорядження! За це він отримав поліцейський щит.\n'
+                               ' вилучив у ворога захисне спорядження!\n\U0001F6E1 +10\n'
 
         if c1 == 27 and c2 == 0 and t == 1:
             fsb1 = choices([1, 0], weights=[5, 95])
