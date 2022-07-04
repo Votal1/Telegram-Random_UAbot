@@ -16,7 +16,7 @@ from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
 from merchant import merchant_msg
-from shop import shop_msg
+from content.shop import shop_msg
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
