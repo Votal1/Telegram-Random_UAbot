@@ -2008,11 +2008,11 @@ async def join(message):
                 td = timedelta(seconds=ts-diff)
                 days, hours, minutes = td.days, td.seconds // 3600, (td.seconds // 60) % 60
                 if days > 0:
-                    msg = f'{days} днів.'
+                    msg = f'{days}д.'
                 elif hours > 0:
-                    msg = f'{hours} годин.'
+                    msg = f'{hours}г.'
                 elif minutes > 0:
-                    msg = f'{minutes} хвилин.'
+                    msg = f'{minutes}хв.'
                 else:
                     msg = 'менше хвилини.'
                 await message.reply(f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: ' + msg)
@@ -2352,8 +2352,11 @@ async def raid(message):
                         except:
                             pass
                     else:
-                        t = str(int((3600 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60))
-                        await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + 'хв.')
+                        t = int((3600 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60)
+                        msg = f'Рейди можна проводити один раз в годину.\nЗалишилось {t}хв.'
+                        if t == 0:
+                            msg = f'Рейди можна проводити один раз в годину.\nЗалишилось менше хвилини.'
+                        await message.reply(msg)
             else:
                 try:
                     await bot.send_message(message.chat.id, '\U0001F4B0 Підготовка до рейду тут\n\nКількість бійців: ' +
