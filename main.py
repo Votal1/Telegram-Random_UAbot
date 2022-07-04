@@ -1883,8 +1883,8 @@ async def build(message):
                                                             callback_data='build6'))
                             msg += '\nЯдерний бункер (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
                                    '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
-                                   ' - Шизофренія не впливатиме негативно на міжчатові битви та рейди, а навпаки - ' \
-                                   'додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
+                                   ' - Шизофренія не впливатиме негативно на міжчатові битви, рейди та охорону, а ' \
+                                   'навпаки - додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
                     if int(r.hget(c, 'base')) == 11:
                         if int(r.hget(c, 'build5')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати готель',
@@ -2245,7 +2245,10 @@ async def guard(message):
                         r.hset(mid, 'head', 4, {'s_head': 20})
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
-                    st = int(st * (1 + 0.01 * int(int(r.hget(c, 'money')) / 1000)))
+                    money = int(r.hget(c, 'money'))
+                    if money > 200000:
+                        money = 200000
+                    st = int(st * (1 + 0.01 * int(money / 1000)))
                 r.hincrby(c, 'power', st)
                 r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]

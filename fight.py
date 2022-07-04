@@ -1318,7 +1318,10 @@ async def guard_power(mid):
         s = int(s * (1 + 0.002 * d))
     if int(stats[5]) > 0:
         s, bd = injure(int(mid), s, bd, True)
-    if int(stats[6]) > 0:
+    if checkClan(mid, building='build6', level=2):
+        r.hincrby(mid, 'sch', -1)
+        i += 5
+    else:
         i, bd = schizophrenia(int(mid), i, bd, True)
     if int(stats[8]) > 0:
         s, bd = trance(int(mid), s, bd, True)
