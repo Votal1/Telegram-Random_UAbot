@@ -356,7 +356,7 @@ async def feed(message):
                             damage_support(message.from_user.id)
                             increase_trance(5, message.from_user.id)
                         else:
-                            decrease = choices([1, 0], [50, 50])
+                            decrease = choices([1, 0], [60, 40])
                     else:
                         if int(r.hget(message.from_user.id, 'support')) == 7:
                             decrease = choices([1, 0], [95, 5])
