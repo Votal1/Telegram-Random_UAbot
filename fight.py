@@ -1761,16 +1761,19 @@ async def start_raid(cid):
         await bot.send_message(cid, msg)
         if diff == 0:
             for mem in r.smembers('followers'):
-                c = 'c' + mem.decode()
-                if int(r.hget(c, 'not_time')) != datetime.now().day:
-                    if int(r.hget(c, 'technics')) >= 3:
-                        r.hset(c, 'not_time', datetime.now().day)
-                        r.hincrby(c, 'technics', -3)
-                    else:
-                        r.hset(c, 'notification', 0)
-                        r.srem('followers', mem)
-                        continue
-                await bot.send_message(int(mem), '\U0001F69B Гумконвой розграбовано.')
+                try:
+                    c = 'c' + mem.decode()
+                    if int(r.hget(c, 'not_time')) != datetime.now().day:
+                        if int(r.hget(c, 'technics')) >= 3:
+                            r.hset(c, 'not_time', datetime.now().day)
+                            r.hincrby(c, 'technics', -3)
+                        else:
+                            r.hset(c, 'notification', 0)
+                            r.srem('followers', mem)
+                            continue
+                    await bot.send_message(int(mem), '\U0001F69B Гумконвой розграбовано.')
+                except:
+                    pass
     try:
         await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
     except:
