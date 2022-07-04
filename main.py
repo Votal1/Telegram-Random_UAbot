@@ -1988,9 +1988,9 @@ async def join(message):
                 num += 25
             if int(r.hget(c, 'build5')) == 3:
                 num += 10
-                ts = 0
-            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > ts or \
-                    message.from_user.id in sudoers:
+                ts = 10800
+            diff = int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts'))
+            if diff > ts or message.from_user.id in sudoers:
                 if r.scard('cl' + str(message.chat.id)) < num:
                     if int(r.hget(c, 'allow')) == 0 or message.from_user.id in sudoers:
                         r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp())})
@@ -2006,7 +2006,17 @@ async def join(message):
                 else:
                     await message.reply('\U0001F4E5 Неможливо вступити в клан, оскільки він переповнений.')
             else:
-                await message.reply('\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+                td = timedelta(seconds=ts-diff)
+                days, hours, minutes = td.days, td.seconds // 3600, (td.seconds // 60) % 60
+                if days > 0:
+                    msg = f'{days} днів.'
+                elif hours > 0:
+                    msg = f'{hours} годин.'
+                elif minutes > 0:
+                    msg = f'{minutes} хвилин.'
+                else:
+                    msg = 'менше хвилини.'
+                await message.reply(f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: ' + msg)
     except Exception as e:
         print(e)
 
