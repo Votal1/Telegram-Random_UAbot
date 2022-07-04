@@ -10,12 +10,12 @@ from variables import names, icons, class_name, weapons, defenses, supports, hea
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
-from buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
+from content.buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
-from merchant import merchant_msg
+from content.merchant import merchant_msg
 from content.shop import shop_msg
 
 from cloudscraper import create_scraper
