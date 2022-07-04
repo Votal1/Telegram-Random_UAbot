@@ -1052,9 +1052,9 @@ async def promo_code(message):
                 elif msg.startswith('cr') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
-                    if int(r.hget(message.grom_user.id, 'weapon')) == 0:
-                        r.hset(message.grom_user.id, 'weapon', 5)
-                        r.hset(message.grom_user.id, 's_weapon', 1)
+                    if int(r.hget(message.from_user.id, 'weapon')) == 0:
+                        r.hset(message.from_user.id, 'weapon', 5)
+                        r.hset(message.from_user.id, 's_weapon', 1)
                     r.hincrby(message.from_user.id, 'strength', 100)
                     r.hincrby(message.from_user.id, 'vodka', 200)
                     r.hincrby(message.from_user.id, 'money', 300)
