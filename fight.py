@@ -1364,6 +1364,7 @@ async def start_raid(cid):
     hack = 0
     mar = 0
     rocket = 0
+    fish = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in list(r.smembers('fighters_3' + str(cid)))[0:5]:
         try:
@@ -1419,6 +1420,8 @@ async def start_raid(cid):
                 d = 0
             support = int(stats[9])
             if support > 0:
+                if support == 10:
+                    fish += 1
                 if support in (2, 9):
                     support = 0.5
                     damage_support(member)
@@ -1559,8 +1562,12 @@ async def start_raid(cid):
         s = int(r.hget(c, 'side'))
         if s == 3:
             chances = ['0', '0.05', '0.1', '0.15', '0.25']
-        location = choice(locations)
-        chance2 = int(chance1 * float(chances[locations.index(location)]))
+        if fish >= 5:
+            location = 'Ставок швайнокарасів'
+            chance2 = 0
+        else:
+            location = choice(locations)
+            chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
             await bot.send_message(cid, msg0)
@@ -1570,7 +1577,13 @@ async def start_raid(cid):
         reward = '\n\n'
 
         if win == ['a']:
-            if locations.index(location) == 0:
+            if location == 'Ставок швайнокарасів':
+                reward += f"Русаки випустили швайнокарасів в ставок і знайшли камінь, на якому було написано...\n\n" \
+                          f"{r.hget('promo_code', 'fish_promo_code').decode()}"
+                r.sadd('fifth_code_allowed', cid)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hset(mem, 'support', 0, {'s_support': 0})
+            elif locations.index(location) == 0:
                 if hack >= 2:
                     ran = randint(100, 500)
                     if mar >= 1:

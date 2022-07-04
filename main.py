@@ -395,10 +395,13 @@ async def feed(message):
                     if word == 'зросла':
                         if int(r.hget(message.from_user.id, 'support')) == 10 and choices([1, 0], [2, 8]) == [1]:
                             damage_support(message.from_user.id)
-                            r.hset(message.from_user.id, 'injure', 0)
-                            r.hset(message.from_user.id, 'sch', 0)
-                            r.hset(message.from_user.id, 'mushrooms', 0)
-                            msg += '\n\n\U0001F43D\U0001F41F Швайнокарась зняв з русака негативні ефекти.'
+                            if int(r.hget(message.from_user.id, 'injure')) > 0 \
+                                    or int(r.hget(message.from_user.id, 'sch')) > 0 \
+                                    or int(r.hget(message.from_user.id, 'mushrooms')) > 0:
+                                r.hset(message.from_user.id, 'injure', 0)
+                                r.hset(message.from_user.id, 'sch', 0)
+                                r.hset(message.from_user.id, 'mushrooms', 0)
+                                msg += '\n\n\U0001F43D\U0001F41F Швайнокарась зняв з русака негативні ефекти.'
 
                     await message.reply(msg)
             else:
@@ -1046,6 +1049,17 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'money', 200)
                     r.hincrby(message.from_user.id, 'vodka', 100)
                     await message.reply('\u26CF Промокод активовано!\n\U0001F4E6 +10 \u2622 +100 \U0001F4B5 +200')
+                elif msg.startswith('cr') and uid not in r.smembers('fifth_code') \
+                        and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
+                    r.sadd('fifth_code', message.from_user.id)
+                    if int(r.hget(message.grom_user.id, 'weapon')) == 0:
+                        r.hset(message.grom_user.id, 'weapon', 5)
+                        r.hset(message.grom_user.id, 's_weapon', 1)
+                    r.hincrby(message.from_user.id, 'strength', 100)
+                    r.hincrby(message.from_user.id, 'vodka', 200)
+                    r.hincrby(message.from_user.id, 'money', 300)
+                    await message.reply('\u26CF Промокод активовано!\n\u2708\uFE0F +1 \U0001F4AA +100 '
+                                        '\u2622 +200 \U0001F4B5 +300')
     except:
         pass
 
