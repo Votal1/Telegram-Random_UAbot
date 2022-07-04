@@ -2301,12 +2301,19 @@ async def guard(message):
                         except:
                             pass
                     msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
-                await message.reply(msg + '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
-                                    '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
+                msg += f"\n\U0001F4AA Загальна сила: {r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: " \
+                       f"{r.scard(g)}/5"
+                mines = int(r.hget(c, 'mines'))
+                if mines > 0:
+                    msg += f'\n\U0001F6A7 Кількість мін: {mines}'
+                await message.reply(msg)
             else:
-                await message.reply('Твій русак сьогодні вже своє відпрацював.'
-                                    '\n\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
-                                    '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
+                msg = f"Твій русак сьогодні вже своє відпрацював\n\n\U0001F4AA Загальна сила: " \
+                      f"{r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: {r.scard(g)}/5"
+                mines = int(r.hget(c, 'mines'))
+                if mines > 0:
+                    msg += f'\n\U0001F6A7 Кількість мін: {mines}'
+                await message.reply(msg)
     except:
         pass
 
@@ -2783,7 +2790,7 @@ async def handle_query(call):
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
                                 'shop': 0, 'complex': 0, 'monument': 0, 'camp': 0, 'morgue': 0, 'post': 0, 'day': 0,
                                 'power': 0, 'new_post': 0, 'salary': 0, 'war_allow': 0, 'recruitment': 0,
-                                'notification': 0,
+                                'notification': 0, 'mines': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title,
                                 'side': 0, 'build1': 0, 'build2': 0, 'build3': 0, 'build4': 0,
                                 'build5': 0, 'build6': 0})

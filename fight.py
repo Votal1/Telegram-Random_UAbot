@@ -1331,6 +1331,9 @@ async def guard_power(mid):
     d = int(stats[4])
     if d > 0:
         d = 0.25
+        if d == 3:
+            r.hincrby('c' + r.hget(mid, 'clan').decode(), 'mines', 1)
+            damage_defense(mid, 3)
     else:
         d = 0
     support = int(stats[9])
@@ -1522,7 +1525,15 @@ async def start_raid(cid):
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
         elif win == ['b']:
-            reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            if int(r.hget(c2, 'mines')) > 0:
+                ran = randint(1, 5)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    if int(r.hget(mem, 'defense')) != 2:
+                        r.hincrby(mem, 'injure', ran)
+                r.hincrby(c2, 'mines', -1)
+                reward += f'Русаки підірвались на міні...\n\U0001fa78 +{ran} \U0001fac0 -100'
+            else:
+                reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             if mar >= 1 and chance2 > 0:
                 lose = int(chance2 * (1 - 0.1 * mar))
                 reward += f'\nОхорона втратила \U0001F4AA {chance2 - lose}'

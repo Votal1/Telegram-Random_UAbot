@@ -18,7 +18,7 @@ def merchant_msg():
         markup.add(InlineKeyboardButton(text='\u2708\uFE0F Купити БпЛА', callback_data='uav'))
     if slot1 == 3:
         msg += '\U0001F6A7 Міни [Захист, міцність=3, ціна=30] - з шансом 33% завдає ворогу 5 поранень і ' \
-               'зменшує міцність зброї на 5. Бронежилет захищає від мін.'
+               'зменшує міцність зброї на 5. Можливість використаит міни при захисті клану. Бронежилет захищає від мін.'
         markup.add(InlineKeyboardButton(text='\U0001F6A7 Купити міни', callback_data='bombs'))
 
     if slot2 == 1:
