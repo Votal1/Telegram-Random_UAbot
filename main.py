@@ -10,13 +10,15 @@ from variables import names, icons, class_name, weapons, defenses, supports, hea
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
-from content.buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
+
+from content.buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
+    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from content.merchant import merchant_msg
 from content.shop import shop_msg
+from content.packs import open_pack
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -4261,243 +4263,13 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='В твого русака нема шапки')
 
-    elif call.data.startswith('unpack_'):
-        uid = call.from_user.id
-
-        if uid == int(call.data.split('_')[1]):
-            cl = int(r.hget(uid, 'class'))
-            if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
-                if int(r.hget(uid, 'packs')) > 0:
-                    r.hincrby(uid, 'packs', -1)
-                else:
-                    r.hincrby(uid, 'money', -20)
-                r.hincrby(uid, 'opened', 1)
-                r.hincrby('all_opened', 'packs', 1)
-
-                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-                              weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
-                if ran == [1]:
-                    if checkClan(uid, base=2, building='new_post') and choice([0, 1]) == 1:
-                        await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1',
-                                                    call.message.chat.id, call.message.message_id)
-                        r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
-                    else:
-                        await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
-                                                    call.message.chat.id, call.message.message_id)
-                elif ran == [2]:
-                    await bot.edit_message_text('\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку '
-                                                '(класове спорядження)! ' + icons[cl], call.message.chat.id,
-                                                call.message.message_id)
-                    if cl == 1 or cl == 11 or cl == 21:
-                        if int(r.hget(uid, 'weapon')) in (11, 22):
-                            r.hincrby(uid, 's_weapon', 5)
-                            if int(r.hget(uid, 's_weapon')) >= 50:
-                                r.hset(uid, 'weapon', 22)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 11)
-                            r.hset(uid, 's_weapon', 5)
-                    elif cl == 2 or cl == 12 or cl == 22:
-                        if int(r.hget(uid, 'weapon')) in (12, 23):
-                            r.hincrby(uid, 's_weapon', 25)
-                            if int(r.hget(uid, 's_weapon')) >= 250:
-                                r.hset(uid, 'weapon', 23)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 12)
-                            r.hset(uid, 's_weapon', 25)
-                    elif cl == 3 or cl == 13 or cl == 23:
-                        if int(r.hget(uid, 'weapon')) in (13, 24):
-                            r.hincrby(uid, 's_weapon', 3)
-                            if int(r.hget(uid, 's_weapon')) >= 30:
-                                r.hset(uid, 'weapon', 24)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 13)
-                            r.hset(uid, 's_weapon', 3)
-                    elif cl == 4 or cl == 14 or cl == 24:
-                        if int(r.hget(uid, 'weapon')) in (14, 25):
-                            r.hincrby(uid, 's_weapon', 1)
-                            if int(r.hget(uid, 's_weapon')) >= 10:
-                                r.hset(uid, 'weapon', 25)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 14)
-                            r.hset(uid, 's_weapon', 1)
-                    elif cl == 5 or cl == 15 or cl == 25:
-                        if int(r.hget(uid, 'weapon')) in (15, 26):
-                            r.hincrby(uid, 's_weapon', 30)
-                            if int(r.hget(uid, 's_weapon')) >= 300:
-                                r.hset(uid, 'weapon', 26)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 15)
-                            r.hset(uid, 's_weapon', 30)
-                    elif cl == 6 or cl == 16 or cl == 26:
-                        if int(r.hget(uid, 'defense')) in (16, 17):
-                            r.hincrby(uid, 's_defense', 10)
-                            if int(r.hget(uid, 's_defense')) >= 100:
-                                r.hset(uid, 'defense', 17)
-                        elif int(r.hget(uid, 'defense')) != 2:
-                            r.hset(uid, 'defense', 16)
-                            r.hset(uid, 's_defense', 10)
-                    elif cl == 7 or cl == 17 or cl == 27:
-                        if int(r.hget(uid, 'weapon')) in (17, 28):
-                            r.hincrby(uid, 's_weapon', 8)
-                            if int(r.hget(uid, 's_weapon')) >= 80:
-                                r.hset(uid, 'weapon', 28)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 17)
-                            r.hset(uid, 's_weapon', 8)
-                    elif cl == 8 or cl == 18 or cl == 28:
-                        if int(r.hget(uid, 'weapon')) in (18, 29):
-                            r.hincrby(uid, 's_weapon', 2)
-                            if int(r.hget(uid, 's_weapon')) >= 20:
-                                r.hset(uid, 'weapon', 29)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 18)
-                            r.hset(uid, 's_weapon', 2)
-                    elif cl == 9 or cl == 19 or cl == 29:
-                        if int(r.hget(uid, 'weapon')) in (19, 30):
-                            r.hincrby(uid, 's_weapon', 8)
-                            if int(r.hget(uid, 's_weapon')) >= 80:
-                                r.hset(uid, 'weapon', 30)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 19)
-                            r.hset(uid, 's_weapon', 8)
-                    elif cl == 10 or cl == 20 or cl == 30:
-                        if int(r.hget(uid, 'weapon')) in (20, 31):
-                            r.hincrby(uid, 's_weapon', 10)
-                            if int(r.hget(uid, 's_weapon')) >= 100:
-                                r.hset(uid, 'weapon', 31)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 20)
-                            r.hset(uid, 's_weapon', 10)
-                    elif cl == 31 or cl == 32 or cl == 33:
-                        if int(r.hget(uid, 'support')) in (2, 9):
-                            r.hincrby(uid, 's_support', 5)
-                            if int(r.hget(uid, 's_support')) >= 50:
-                                r.hset(uid, 'support', 9)
-                        elif int(r.hget(uid, 'support')) not in (6, 7):
-                            r.hset(uid, 'support', 2)
-                            r.hset(uid, 's_support', 5)
-                    elif cl == 34 or cl == 35 or cl == 36:
-                        if int(r.hget(uid, 'weapon')) in (21, 32):
-                            r.hincrby(uid, 's_weapon', 15)
-                            if int(r.hget(uid, 's_weapon')) >= 150:
-                                r.hset(uid, 'weapon', 32)
-                        elif int(r.hget(uid, 'weapon')) != 2:
-                            r.hset(uid, 'weapon', 21)
-                            r.hset(uid, 's_weapon', 15)
-                    else:
-                        await bot.edit_message_text('\u26AA В цьому пакунку лежать дивні речі, якими '
-                                                    'русак не вміє користуватись...', call.message.chat.id,
-                                                    call.message.message_id)
-                elif ran == [3]:
-                    await bot.edit_message_text('\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).',
-                                                call.message.chat.id, call.message.message_id)
-                    if int(r.hget(uid, 'weapon')) == 0:
-                        r.hset(uid, 'weapon', 1)
-                        r.hset(uid, 's_weapon', 1)
-                    elif int(r.hget(uid, 'weapon')) == 1:
-                        r.hincrby(uid, 's_weapon', 1)
-                    if int(r.hget(uid, 'defense')) == 0:
-                        r.hset(uid, 'defense', 1)
-                        r.hset(uid, 's_defense', 1)
-                    elif int(r.hget(uid, 'defense')) == 1:
-                        r.hincrby(uid, 's_defense', 1)
-                elif ran == [4]:
-                    await bot.edit_message_text('\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрух'
-                                                'т).\n\U0001F4B5 + 4', call.message.chat.id, call.message.message_id)
-                    r.hincrby(uid, 'money', 4)
-                elif ran == [5]:
-                    await bot.edit_message_text('\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n\U0001F6E1 +7',
-                                                call.message.chat.id, call.message.message_id)
-                    if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1 or \
-                            int(r.hget(uid, 'defense')) == 3:
-                        r.hset(uid, 'defense', 9)
-                        r.hset(uid, 's_defense', 7)
-                    else:
-                        r.hincrby(uid, 's_defense', 7)
-                elif ran == [6]:
-                    await bot.edit_message_text('\U0001f535 Знайдено: \U0001F4B5 50 гривень.',
-                                                call.message.chat.id, call.message.message_id)
-                    r.hincrby(uid, 'money', 50)
-                elif ran == [7]:
-                    vo = 0
-                    for v in range(20):
-                        vo += int(vodka(uid))
-                    await bot.edit_message_text('\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 '
-                                                '\U0001F54A +' +
-                                                str(vo), call.message.chat.id, call.message.message_id)
-                elif ran == [8]:
-                    await bot.edit_message_text('\U0001f535 В цьому пакунку лежить мертвий русак...\n\u2620\uFE0F +1',
-                                                call.message.chat.id, call.message.message_id)
-                    r.hincrby(uid, 'deaths', 1)
-                    r.hincrby('all_deaths', 'deaths', 1)
-                elif ran == [9]:
-                    if int(r.hget(uid, 'intellect')) < 20:
-                        markup = InlineKeyboardMarkup()
-                        if int(r.hget(uid, 'support')) != 6:
-                            markup.add(InlineKeyboardButton(text='Взяти мухохор', callback_data=f'pack_mushroom_{uid}'))
-                        elif int(r.hget(uid, 'support')) == 6:
-                            r.hincrby(uid, 's_support', 1)
-                        await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
-                                                    call.message.chat.id, call.message.message_id, reply_markup=markup)
-                    else:
-                        await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
-                                                    call.message.chat.id, call.message.message_id)
-                elif ran == [10]:
-                    msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити непогану шапку ' \
-                          'для русака.\n\U0001F464 +10'
-                    r.hincrby(uid, 'sch', 10)
-                    markup = InlineKeyboardMarkup()
-                    if int(r.hget(uid, 'head')) == 1:
-                        r.hincrby(uid, 's_head', 20)
-                    else:
-                        markup.add(InlineKeyboardButton(text='Взяти шапочку', callback_data=f'pack_foil_{uid}'))
-                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
-                elif ran == [11]:
-                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                    await bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато '
-                                                'гнилої бараболі і закруток з помідорами (можна згодувати русаку).'
-                                                '\n\u2B50 +1 \U0001F4B5 +300 ' + emoji + ' +1',
-                                                call.message.chat.id, call.message.message_id)
-                    r.hincrby(uid, 'money', 300)
-                    r.hset(uid, 'time', 0)
-                    if r.hexists(uid, 'ac13') == 0:
-                        r.hset(uid, 'ac13', 1)
-                elif ran == [12]:
-                    markup = InlineKeyboardMarkup()
-                    if int(r.hget(uid, 'defense')) == 2:
-                        r.hincrby(uid, 's_defense', 50)
-                    else:
-                        markup.add(InlineKeyboardButton(text='Взяти бронежилет', callback_data=f'pack_armor_{uid}'))
-
-                    await bot.edit_message_text(
-                        '\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця [Захист, '
-                        'міцність=50] - зменшує силу ворога на бій на 75% та захищає від РПГ-7.',
-                        call.message.chat.id, call.message.message_id, reply_markup=markup)
-
-                elif ran == [13]:
-                    markup = InlineKeyboardMarkup()
-                    if int(r.hget(uid, 'weapon')) == 2:
-                        r.hincrby(uid, 's_weapon', 1)
-                    else:
-                        markup.add(InlineKeyboardButton(text='Взяти РПГ-7', callback_data=f'pack_rpg_{uid}'))
-                    await bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий '
-                                                'гранатомет РПГ-7 і одну гранату до нього [Атака, міцність=1] - '
-                                                'завдає ворогу важке поранення (віднімає бойовий дух, здоров`я '
-                                                'і все спорядження, на 300 боїв бойовий дух впаде вдвічі а '
-                                                'сила втричі).',
-                                                call.message.chat.id, call.message.message_id, reply_markup=markup)
-                elif ran == [14]:
-                    await bot.edit_message_text(
-                        '\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.'
-                        '\n\U0001F31F +1',
-                        call.message.chat.id, call.message.message_id)
-                    r.hincrby(uid, 'strap', 1)
-            else:
-                try:
-                    await bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id,
-                                                call.message.message_id)
-                except:
-                    pass
+    elif call.data.startswith('pack_unpack_'):
+        msg = open_pack(call.from_user.id, call.data)
+        if msg:
+            try:
+                await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id, reply_markup=msg[1])
+            except:
+                pass
 
     elif call.data.startswith('pack_mushroom_'):
         try:
