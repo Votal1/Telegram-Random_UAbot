@@ -61,12 +61,12 @@ def shop_msg(uid, mode):
               f'доступна до етапу 2. Купівля будівельних матеріалів).'
 
     elif mode == 3:
-        items = {'\U0001F4AA Сила - 5 \U0001F4B5': 'salt_strength',
-                 '\U0001F531 Спорядження - 10 \U0001F4B5': 'salt_upgraded',
-                 '\U0001F349 Кавун - 15 \U0001F4B5': 'salt_watermelon',
-                 '\U0001F4FB\U0001F9F1\U0001F9F6 - 20 \U0001F4B5': 'salt_resources',
-                 '\U0001F309 Чмоня - 30 \U0001F4B5': 'salt_chm',
-                 '\U0001F43D\U0001F41F Швайнокарась - 30 \U0001F4B5': 'salt_fish'}
+        items = {'\U0001F4AA Сила - 5 \U0001F9C2': 'salt_strength',
+                 '\U0001F531 Спорядження - 10 \U0001F9C2': 'salt_upgraded',
+                 '\U0001F349 Кавун - 15 \U0001F9C2': 'salt_watermelon',
+                 '\U0001F4FB\U0001F9F1\U0001F9F6 - 20 \U0001F9C2': 'salt_resources',
+                 '\U0001F309 Чмоня - 30 \U0001F9C2': 'salt_chm',
+                 '\U0001F43D\U0001F41F Швайнокарась - 30 \U0001F9C2': 'salt_fish'}
         for key, value in items.items():
             if value == 'cabin' and r.hexists(uid, 'cabin') and int(r.hget(uid, 'cabin')) == 1:
                 pass
