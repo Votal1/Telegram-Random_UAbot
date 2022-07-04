@@ -4271,6 +4271,66 @@ async def handle_query(call):
         except:
             pass
 
+    elif call.data.startswith('pack_mushroom_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                if int(r.hget(uid, 'intellect')) >= 20:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У русака занадто багато інтелекту')
+                else:
+                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                call.message.message_id, reply_markup=None)
+                    if int(r.hget(uid, 'support')) == 6:
+                        r.hincrby(uid, 's_support', 1)
+                    else:
+                        r.hset(uid, 'support', 6)
+                        r.hset(uid, 's_support', 1)
+        except:
+            pass
+
+    elif call.data.startswith('pack_foil_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
+                if int(r.hget(uid, 'head')) == 1:
+                    r.hincrby(uid, 's_head', 20)
+                else:
+                    r.hset(uid, 'head', 1)
+                    r.hset(uid, 's_head', 20)
+        except:
+            pass
+
+    elif call.data.startswith('pack_armor_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
+                if int(r.hget(uid, 'defense')) == 2:
+                    r.hincrby(uid, 's_defense', 50)
+                else:
+                    r.hset(uid, 'defense', 2)
+                    r.hset(uid, 's_defense', 50)
+        except:
+            pass
+
+    elif call.data.startswith('pack_rpg_'):
+        try:
+            uid = call.from_user.id
+            if uid == int(call.data.split('_')[2]):
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
+                if int(r.hget(uid, 'weapon')) == 2:
+                    r.hincrby(uid, 's_weapon', 1)
+                else:
+                    r.hset(uid, 'weapon', 2)
+                    r.hset(uid, 's_weapon', 1)
+        except:
+            pass
+
     elif call.data.startswith('switch1'):
         msg, markup = shop_msg(call.from_user.id, 1)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)

@@ -265,6 +265,7 @@ def open_pack(uid, cdata, edit):
                 else:
                     r.hset(uid, 'weapon', 21)
                     r.hset(uid, 's_weapon', 15)
+            return edit, None
 
         elif cdata.startswith('pack_mushroom_'):
             if int(r.hget(uid, 'intellect')) < 20:
