@@ -2275,6 +2275,12 @@ async def guard(message):
                             r.hincrby('soledar', 'money', 5)
                             msg += ' \U0001F4E6 +1'
                             r.hincrby(message.from_user.id, 'packs', 1)
+                if int(r.hget(c, 'build6')) == 1:
+                    ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
+                         int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))
+                    if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
+                        r.hset(message.from_user.id, 'time', 0)
+                        msg += '\n\U0001F372 +1'
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
                     if int(r.hget('convoy', 'day')) != datetime.now().day:
                         r.hset('convoy', 'power', 2000000)
