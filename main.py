@@ -1891,7 +1891,7 @@ async def build(message):
                                                             callback_data='build5'))
                             msg += '\nГотель (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - максимальна кількість ' \
-                                   'учасників збільшується на 10. Можливість вступити в клан без обмежень в часі.'
+                                   'учасників збільшується на 10. Можливість вступити в клан майже без обмежень в часі.'
                         if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
                                 and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
                                 and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
@@ -2849,7 +2849,7 @@ async def handle_query(call):
             num += 25
         if int(r.hget('c' + str(call.message.chat.id), 'build5')) == 3:
             num += 10
-            ts = 0
+            ts = 10800
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
                 r.scard('cl' + str(call.message.chat.id)) < num:
