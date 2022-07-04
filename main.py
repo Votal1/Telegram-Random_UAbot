@@ -1456,11 +1456,12 @@ async def clan(message):
                         building += ', цех'
                     if int(r.hget(c, 'storage')) == 1:
                         building += ', склад'
-                        resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} / 5000"
+                        if int(r.hget(c, 'cloth')) > 0:
+                            resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} / 5000"
+                        if int(r.hget(c, 'brick')) > 0:
+                            resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()} / 3000"
                         if int(r.hget(c, 'technics')) > 0:
                             resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
-                        if int(r.hget(c, 'technics')) > 0:
-                            resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()} / 3000"
                         if int(r.hget(c, 'codes')) > 0:
                             resources += '\n\U0001F916 Секретні коди: ' + r.hget(c, 'codes').decode()
                         resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
@@ -2268,9 +2269,9 @@ async def guard(message):
                     for mem in r.smembers('followers'):
                         c = 'c' + mem.decode()
                         if int(r.hget(c, 'not_time')) != datetime.now().day:
-                            if int(r.hget(c, 'technics')) >= 5:
+                            if int(r.hget(c, 'technics')) >= 3:
                                 r.hset(c, 'not_time', datetime.now().day)
-                                r.hincrby(c, 'technics', -5)
+                                r.hincrby(c, 'technics', -3)
                             else:
                                 r.hset(c, 'notification', 0)
                                 r.srem('followers', mem)
@@ -2969,10 +2970,10 @@ async def handle_query(call):
         c = int(r.hget(call.from_user.id, 'clan'))
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             if int(r.hget('c' + str(c), 'notification')) == 0:
-                if int(r.hget('c' + str(c), 'technics')) >= 5:
+                if int(r.hget('c' + str(c), 'technics')) >= 3:
                     r.hset('c' + str(c), 'notification', 1)
                     r.sadd('followers', c)
-                    r.hincrby('c' + str(c), 'technics', -5)
+                    r.hincrby('c' + str(c), 'technics', -3)
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо радіотехніки.')

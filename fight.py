@@ -1763,9 +1763,9 @@ async def start_raid(cid):
             for mem in r.smembers('followers'):
                 c = 'c' + mem.decode()
                 if int(r.hget(c, 'not_time')) != datetime.now().day:
-                    if int(r.hget(c, 'technics')) >= 5:
+                    if int(r.hget(c, 'technics')) >= 3:
                         r.hset(c, 'not_time', datetime.now().day)
-                        r.hincrby(c, 'technics', -5)
+                        r.hincrby(c, 'technics', -3)
                     else:
                         r.hset(c, 'notification', 0)
                         r.srem('followers', mem)
