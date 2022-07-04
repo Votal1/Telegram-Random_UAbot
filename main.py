@@ -17,7 +17,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
 from content.buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from content.merchant import merchant_msg
-from content.shop import shop_msg
+from content.shop import shop_msg, salt_shop
 from content.packs import open_pack
 
 from cloudscraper import create_scraper
@@ -322,7 +322,7 @@ async def feed(message):
             r.hincrby(message.from_user.id, 'eat', 1)
             success = fr[0]
             cl = int(r.hget(message.from_user.id, 'class'))
-            if cl == 2 or cl == 12 or cl == 22:
+            if cl in (2, 12, 22) or int(r.hget(message.from_user.id, 'support')) == 10:
                 success = 1
             if success == 1:
                 try:
@@ -387,11 +387,19 @@ async def feed(message):
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 10000.'
                     spirit(10000, message.from_user.id, 0)
                     await message.reply_photo('https://i.ibb.co/bK2LrSD/feed.jpg', caption=msg)
-                elif bd == 1:
-                    msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
-                    spirit(1000, message.from_user.id, 0)
-                    await message.reply(msg)
                 else:
+                    if bd == 1:
+                        msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
+                        spirit(1000, message.from_user.id, 0)
+
+                    if word == 'зросла':
+                        if int(r.hget(message.from_user.id, 'support')) == 10 and choices([1, 0], [2, 8]) == [1]:
+                            damage_support(message.from_user.id)
+                            r.hset(message.from_user.id, 'injure', 0)
+                            r.hset(message.from_user.id, 'sch', 0)
+                            r.hset(message.from_user.id, 'mushrooms', 0)
+                            msg += '\n\n\U0001F43D\U0001F41F Швайнокарась зняв з русака негативні ефекти.'
+
                     await message.reply(msg)
             else:
                 await message.reply('\U0001F9A0 Твій русак сьогодні захворів. Сили від їжі не прибавилось.')
@@ -418,7 +426,8 @@ async def mine(message):
                 cl = int(r.hget(message.from_user.id, 'class'))
                 if cl == 2 or cl == 12 or cl == 22:
                     success = choice([0, 0, 1, 1, 1])
-                if int(r.hget(message.from_user.id, 'support')) == 8:
+                support = int(r.hget(message.from_user.id, 'support'))
+                if support == 8:
                     success = 1
                     increase_trance(5, message.from_user.id)
                     damage_support(message.from_user.id)
@@ -442,14 +451,22 @@ async def mine(message):
                             r.hincrby(message.from_user.id, 'money', 20)
                     await message.reply(msg)
                 else:
-                    if cl == 2 or cl == 12 or cl == 22:
+                    fish = choices([1, 0], [2, 8])[0]
+                    if cl in (2, 12, 22) and fish != 1:
                         msg = '\U0001F37A Твій роботяга втік з-під нагляду. Його знайшли п`яним біля шахти.\n\u2622 +5'
                         if cl == 12 or cl == 22:
-                            msg = msg + ' \U0001F4B5 + 8'
+                            msg = msg + ' \U0001F4B5 +8'
                             r.hincrby(message.from_user.id, 'money', 8)
                         r.hincrby(message.from_user.id, 'vodka', 5)
                         r.hincrby('all_vodka', 'vodka', 5)
                         await message.reply(msg)
+                    elif support == 10 and fish == 1:
+                        damage_support(message.from_user.id)
+                        await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля '
+                                            'шахти разом з швайнокарасем.\n\u2622 +100 \U0001F4B5 +100')
+                        r.hincrby(message.from_user.id, 'money', 100)
+                        r.hincrby(message.from_user.id, 'vodka', 100)
+                        r.hincrby('all_vodka', 'vodka', 100)
                     else:
                         await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля шахти'
                                             '.\n\u2622 +1')
@@ -2218,6 +2235,30 @@ async def work(message):
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
+    except:
+        pass
+
+
+@dp.message_handler(commands=['relax'])
+async def relax(message):
+    try:
+        name = names[int(r.hget(message.from_user.id, 'name'))]
+        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
+            if int(r.hget(message.from_user.id, 'clan_time')) == datetime.now().day:
+                r.hset(message.from_user.id, 'clan_time', datetime.now().day)
+                msg = '\U0001F319 ' + name + ' відпочиває і готується до завтрашньої роботи.'
+                if int(r.hget(message.from_user.id, 'support')) == 10:
+                    damage_support(message.from_user.id)
+                    if int(r.hget(message.from_user.id, 'head')) == 0:
+                        r.hset(message.from_user.id, 'head', 3)
+                        r.hset(message.from_user.id, 's_head', 1)
+                    spirit(10000, message.from_user.id, 0)
+                    increase_trance(20, message.from_user.id)
+                    hp(100, message.from_user.id)
+                    msg += '\n\n\U0001F349 +1 \U0001F44A +20 \U0001fac0 +100 \U0001F54A +10000'
+                await message.reply(msg)
+            else:
+                await message.reply('Рано відпочивати...')
     except:
         pass
 
@@ -4311,6 +4352,21 @@ async def handle_query(call):
     elif call.data.startswith('switch3'):
         msg, markup = shop_msg(call.from_user.id, 3)
         await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+
+    elif call.data.startswith('salt_'):
+        msg = salt_shop(call.from_user.id, call.data)
+        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=msg)
+        if msg.startswith('Передозування'):
+            ran1, ran2 = randint(50, 100), randint(50, 100)
+            r.hincrby(call.from_user.id, 'injure', ran1)
+            r.hincrby(call.from_user.id, 'sch', ran2)
+            await bot.send_message(call.message.chat.id, f'Передозування!\n\U0001fa78 +{ran1} \U0001F464 +{ran2}')
+        elif msg.startswith('Ви успішно купили ресурси для клану'):
+            try:
+                msg = 'Ваше замовлення прибуло.\n\U0001F4FB 22 \U0001F9F1 55 \U0001F9F6 111'
+                await bot.send_message(int(r.hget(call.from_user.id, 'clan')), msg)
+            except:
+                pass
 
     elif call.data.startswith('clan_shop_1'):
         msg, markup = c_shop('c' + str(call.message.chat.id), 1)
