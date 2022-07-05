@@ -4,6 +4,7 @@ from methods import checkClan
 from variables import icons
 from parameters import vodka
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from content.quests import quest
 
 
 def open_pack(uid, cdata, edit):
@@ -19,6 +20,7 @@ def open_pack(uid, cdata, edit):
                     r.hincrby(uid, 'money', -20)
                 r.hincrby(uid, 'opened', 1)
                 r.hincrby('all_opened', 'packs', 1)
+                quest(uid, 1, -5)
 
                 ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                               weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
@@ -118,6 +120,7 @@ def open_pack(uid, cdata, edit):
                     msg = '\U0001f535 В цьому пакунку лежить мертвий русак...\n\u2620\uFE0F +1'
                     r.hincrby(uid, 'deaths', 1)
                     r.hincrby('all_deaths', 'deaths', 1)
+                    quest(uid, 1, -4)
                 elif ran == [9]:
                     if int(r.hget(uid, 'intellect')) < 20:
                         if int(r.hget(uid, 'support')) != 6:

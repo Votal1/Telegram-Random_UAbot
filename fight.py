@@ -710,6 +710,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(-bonus, uid2, 0)
             r.hincrby(uid1, 'wins', 1)
             quest(uid1, 1, 1)
+            quest(uid1, 1, -1)
             r.hincrby('win_rate', f'win-{c1}', 1)
             r.hincrby('win_rate', f'lose-{c2}', 1)
             r.hincrby('all_wins', 'wins', 1)
@@ -834,6 +835,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(-bonus, uid1, 0)
             r.hincrby(uid2, 'wins', 1)
             quest(uid2, 1, 1)
+            quest(uid2, 1, -1)
             r.hincrby('win_rate', f'win-{c2}', 1)
             r.hincrby('win_rate', f'lose-{c1}', 1)
             r.hincrby('all_wins', 'wins', 1)
@@ -967,6 +969,7 @@ async def war(cid, location, big_battle):
             fighters.update({key: chance})
     win = choices(list(fighters.keys()), weights=list(fighters.values()))
     win = int(str(win)[3:-2])
+    quest(win, 1, -2)
     wc = int(r.hget(win, 'class'))
     user_name = r.hget(win, 'firstname').decode()
     winner = '\n\n\U0001F3C6 ' + ' ' + f'<a href="tg://user?id={win}">{user_name}</a>' + ' перемагає!'
@@ -981,6 +984,7 @@ async def war(cid, location, big_battle):
         reward = '\n\n\U0001F3C6 Переможців немає.\n\U0001fa78 +' + str(n)
         for member in r.smembers('fighters' + str(cid)):
             r.hincrby(member, 'injure', n)
+            quest(member, 1, -6)
     else:
         reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
         r.hincrby(win, 'trophy', 1)

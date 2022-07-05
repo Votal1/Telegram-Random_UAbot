@@ -745,6 +745,7 @@ async def woman(message):
         if r.hexists(message.from_user.id, 'time4') == 0:
             r.hset(message.from_user.id, 'time4', 0)
         if int(r.hget(message.from_user.id, 'woman')) == 1:
+            quest(message.from_user.id, 1, -3)
             if int(r.hget(message.from_user.id, 'time4')) != datetime.now().day:
                 if r.hexists(message.from_user.id, 'time5') == 0:
                     r.hset(message.from_user.id, 'time5', 0)
@@ -3721,6 +3722,7 @@ async def handle_query(call):
 
     elif call.data.startswith('pipe'):
         if r.hexists(call.from_user.id, 'woman') and int(r.hget(call.from_user.id, 'woman')) == 1:
+            quest(call.from_user.id, 1, -4)
             r.hset(call.from_user.id, 'woman', 0)
             r.hset(call.from_user.id, 'time5', 0)
             spirit(5000, call.from_user.id, 0)
