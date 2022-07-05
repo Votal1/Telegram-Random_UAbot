@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, chm, default
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
@@ -4253,36 +4253,34 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку, або русак без класу')
 
-    elif call.data.startswith('premium2'):
+    elif call.data.startswith('premium4'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name'):
             r.hincrby(call.from_user.id, 'strap', -1)
             cl = int(r.hget(call.from_user.id, 'class'))
-            if cl == 0:
-                r.hset(call.from_user.id, 'photo', default[4])
-            elif cl == 1 or cl == 11 or cl == 21:
-                r.hset(call.from_user.id, 'photo', chm[0])
+            if cl == 1 or cl == 11 or cl == 21:
+                r.hset(call.from_user.id, 'photo', premium3[0])
             elif cl == 2 or cl == 12 or cl == 22:
-                r.hset(call.from_user.id, 'photo', chm[1])
+                r.hset(call.from_user.id, 'photo', premium3[1])
             elif cl == 3 or cl == 13 or cl == 23:
-                r.hset(call.from_user.id, 'photo', chm[2])
+                r.hset(call.from_user.id, 'photo', premium3[2])
             elif cl == 4 or cl == 14 or cl == 24:
-                r.hset(call.from_user.id, 'photo', chm[3])
+                r.hset(call.from_user.id, 'photo', premium3[3])
             elif cl == 5 or cl == 15 or cl == 25:
-                r.hset(call.from_user.id, 'photo', chm[4])
+                r.hset(call.from_user.id, 'photo', premium3[4])
             elif cl == 6 or cl == 16 or cl == 26:
-                r.hset(call.from_user.id, 'photo', chm[5])
+                r.hset(call.from_user.id, 'photo', premium3[5])
             elif cl == 7 or cl == 17 or cl == 27:
-                r.hset(call.from_user.id, 'photo', chm[6])
+                r.hset(call.from_user.id, 'photo', premium3[6])
             elif cl == 8 or cl == 18 or cl == 28:
-                r.hset(call.from_user.id, 'photo', chm[7])
+                r.hset(call.from_user.id, 'photo', premium3[7])
             elif cl == 9 or cl == 19 or cl == 29:
-                r.hset(call.from_user.id, 'photo', chm[8])
+                r.hset(call.from_user.id, 'photo', premium3[8])
             elif cl == 10 or cl == 20 or cl == 30:
-                r.hset(call.from_user.id, 'photo', chm[9])
+                r.hset(call.from_user.id, 'photo', premium3[9])
             elif cl == 31 or cl == 32 or cl == 33:
-                r.hset(call.from_user.id, 'photo', chm[10])
+                r.hset(call.from_user.id, 'photo', premium3[10])
             elif cl == 34 or cl == 35 or cl == 36:
-                r.hset(call.from_user.id, 'photo', chm[11])
+                r.hset(call.from_user.id, 'photo', premium3[11])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
