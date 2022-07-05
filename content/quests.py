@@ -142,16 +142,16 @@ def quests(uid):
                            f"\U0001F4CA Прогрес - {q34t[int(q[4])] - int(q[5])}/{q34t[int(q[4])]}"
             elif int(q[4]) < 0:
                 if side == 1:
-                    msg += f"{q31p[-int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"{q31p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q31pt[-int(q[4])] - int(q[5])}/{q31pt[-int(q[4])]}"
                 elif side == 2:
-                    msg += f"{q32p[-int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"{q32p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q32pt[-int(q[4])] - int(q[5])}/{q32pt[-int(q[4])]}"
                 elif side == 3:
-                    msg += f"{q33p[-int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"{q33p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q33pt[-int(q[4])] - int(q[5])}/{q33pt[-int(q[4])]}"
                 elif side == 4:
-                    msg += f"{q34p[-int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"{q34p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q34pt[-int(q[4])] - int(q[5])}/{q34pt[-int(q[4])]}"
 
     return msg
