@@ -2490,6 +2490,7 @@ async def commands(message):
                         '/i - інвентар\n'
                         '/battle - чатова битва (5-10 русаків)\n'
                         '/war - міжчатова битва 5х5\n'
+                        '/quests - щоденні квести\n'
                         '...', reply_markup=markup,
                         parse_mode='HTML', disable_web_page_preview=True)
 
