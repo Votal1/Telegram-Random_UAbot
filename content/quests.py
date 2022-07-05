@@ -81,7 +81,7 @@ def quests(uid):
                 elif side == 3:
                     ran1 = randint(1, len(q33) - 1)
                     r.hset(uid, 'q3', ran1, {'q3t': q33t[ran1]})
-                elif side == 1:
+                elif side == 4:
                     ran1 = randint(1, len(q34) - 1)
                     r.hset(uid, 'q3', ran1, {'q3t': q34t[ran1]})
 
@@ -104,7 +104,7 @@ def quests(uid):
                 elif side == 3:
                     ran1 = randint(1, len(q33p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q33pt[ran1]})
-                elif side == 1:
+                elif side == 4:
                     ran1 = randint(1, len(q34p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q34pt[ran1]})
 
