@@ -38,7 +38,7 @@ def quests(uid):
             msg += f"{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                    f"\U0001F4CA Прогрес - {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}"
         elif int(q[0]) < 0:
-            msg += f"{q2[-int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+            msg += f"{q2[-int(q[0])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                    f"\U0001F4CA Прогрес - {q2t[-int(q[0])] - int(q[1])}/{q2t[-int(q[0])]}"\
 
     return msg
