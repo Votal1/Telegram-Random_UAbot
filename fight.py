@@ -1548,7 +1548,11 @@ async def start_raid(cid):
 
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
-        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!' + reward.replace('+', '-')
+        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!'
+        if win == ['a']:
+            msg2 += reward.replace('+', '-')
+        else:
+            msg2 += reward
 
         if choices([1, 0], [5, 95]) == [1]:
             r.hincrby(c, 'codes', 1)
