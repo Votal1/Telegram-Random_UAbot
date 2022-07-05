@@ -24,7 +24,7 @@ def quests(uid):
         msg += '\u2705 Всі завдання на сьогодні виконані.'
     else:
         if int(q[0]) > 0:
-            msg += f"1. {q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+            msg += f"{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                    f"\U0001F4CA Прогрес - {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}"
         # elif int(q[0]) < 0:
             # msg += f"1. {q1[int(q[0])]}\n\U0001F9C2 1 \U0001F4CA {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}"
