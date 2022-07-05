@@ -14,7 +14,7 @@ def quests(uid):
         r.hset(uid, 'qt', datetime.now().day)
         ran1 = randint(1, len(q1) - 1)
 
-        while int(r.hget(uid, 'time1')) != datetime.now().day and ran1 == 4:
+        while int(r.hget(uid, 'time1')) == datetime.now().day and ran1 == 4:
             ran1 = randint(1, len(q1) - 1)
 
         r.hset(uid, 'q1', ran1, {'q1t': q1t[ran1]})
