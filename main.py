@@ -4183,6 +4183,21 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
+    elif call.data.startswith('jew'):
+        if int(r.hget(call.from_user.id, 'head')) == 0:
+            if int(r.hget(call.from_user.id, 'strap')) >= 1:
+                r.hincrby(call.from_user.id, 'strap', -1)
+                r.hset(call.from_user.id, 'head', 10)
+                r.hset(call.from_user.id, 's_head', 7)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви успішно купили ярмулку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо погонів на рахунку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='У вас вже є шапка')
+
     elif call.data.startswith('buy_resources'):
         if checkClan(call.from_user.id):
             if int(r.hget(call.from_user.id, 'strap')) >= 2:
