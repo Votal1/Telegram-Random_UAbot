@@ -19,6 +19,7 @@ from content.buttons import skill_set, battle_button, battle_button_2, battle_bu
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack
+from content.quests import quests
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -454,8 +455,10 @@ async def mine(message):
                             r.hincrby(message.from_user.id, 'money', 20)
                     await message.reply(msg)
                 else:
-                    fish = choices([1, 0], [2, 8])[0]
-                    if cl in (2, 12, 22) and fish != 1:
+                    fish = 0
+                    if support == 10:
+                        fish = choices([1, 0], [2, 8])[0]
+                    if cl in (2, 12, 22) and fish == 0:
                         msg = '\U0001F37A Твій роботяга втік з-під нагляду. Його знайшли п`яним біля шахти.\n\u2622 +5'
                         if cl == 12 or cl == 22:
                             msg = msg + ' \U0001F4B5 +8'
@@ -463,7 +466,7 @@ async def mine(message):
                         r.hincrby(message.from_user.id, 'vodka', 5)
                         r.hincrby('all_vodka', 'vodka', 5)
                         await message.reply(msg)
-                    elif support == 10 and fish == 1:
+                    elif fish == 1:
                         damage_support(message.from_user.id)
                         await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля '
                                             'шахти разом з швайнокарасем.\n\u2622 +100 \U0001F4B5 +100')
@@ -2375,8 +2378,11 @@ async def guard(message):
 
 @dp.message_handler(commands=['quest'])
 async def quest(message):
-    uid = message.from_user.id
-    if uid == 456514639:
+    try:
+        if message.from_user.id == 456514639:
+            msg = quests(message.from_user.id)
+            await message.reply(msg)
+    except:
         pass
 
 
