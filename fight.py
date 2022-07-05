@@ -7,6 +7,7 @@ from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, 
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
 from methods import checkClan, wood, stone, cloth, brick
+from content.quests import quest1
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
@@ -933,6 +934,8 @@ async def war(cid, location, big_battle):
                 head = 0
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
             fighters.update({member: chance})
+
+            quest1(member, 1)
         except:
             continue
 

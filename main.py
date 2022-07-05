@@ -2377,7 +2377,7 @@ async def guard(message):
 
 
 @dp.message_handler(commands=['quest'])
-async def quest(message):
+async def get_quest(message):
     try:
         if message.from_user.id == 456514639:
             msg = quests(message.from_user.id)
