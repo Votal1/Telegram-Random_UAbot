@@ -456,7 +456,7 @@ async def mine(message):
                         else:
                             msg += '\U0001F4B5 +20'
                             r.hincrby(message.from_user.id, 'money', 20)
-                    if choices([1, 0], [25, 100]) == [1] or head == 6:
+                    if choices([1, 0], [25, 75]) == [1] or head == 6:
                         msg += '\n\U0001F9C2 +1'
                         r.hincrby(message.from_user.id, 'salt', 1)
                     await message.reply(msg)
