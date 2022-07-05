@@ -422,8 +422,8 @@ async def mine(message):
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
             if not datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
-                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), int(r.hget(message.from_user.id, 'head')),
-                               datetime.today().weekday())
+                head = int(r.hget(message.from_user.id, 'head'))
+                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), head, datetime.today().weekday())
                 r.hset(message.from_user.id, 'time1', datetime.now().day)
                 quest(message.from_user.id, 1, 4)
                 if message.text.startswith('/minecraft'):
@@ -456,6 +456,9 @@ async def mine(message):
                         else:
                             msg += '\U0001F4B5 +20'
                             r.hincrby(message.from_user.id, 'money', 20)
+                    if choices([1, 0], [25, 100]) == [1] or head == 6:
+                        msg += '\n\U0001F9C2 +1'
+                        r.hincrby(message.from_user.id, 'salt', 1)
                     await message.reply(msg)
                 else:
                     fish = 0

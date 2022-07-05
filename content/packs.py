@@ -22,8 +22,8 @@ def open_pack(uid, cdata, edit):
                 r.hincrby('all_opened', 'packs', 1)
                 quest(uid, 1, -5)
 
-                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-                              weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
+                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                              weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.225, 0.225, 0.225, 0.225, 0.1])
                 if ran == [1]:
                     if checkClan(uid, base=2, building='new_post') and choice([0, 1]) == 1:
                         msg = '\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1'
@@ -167,6 +167,21 @@ def open_pack(uid, cdata, edit):
                           'гранату до нього [Атака, міцність=1] - завдає ворогу важке поранення (віднімає бойовий ' \
                           'дух, здоров`я і все спорядження, на 300 боїв бойовий дух впаде вдвічі а сила втричі).'
                 elif ran == [14]:
+                    if int(r.hget(uid, 'support')) == 10:
+                        r.hset(uid, 's_support', 3)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти Швайнокарася', callback_data=f'pack_fish_{uid}'))
+                    msg = '\U0001f7e1 Швайнокарась [Допомога, міцність=3, максимальна_міцність=3] - ' \
+                          'може виконувати бажання русаків (відпочивати, нажертись, напитись).'
+                elif ran == [15]:
+                    if int(r.hget(uid, 'head')) == 6:
+                        r.hset(uid, 's_head', 6)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти ярмулку', callback_data=f'pack_jew_{uid}'))
+                    msg = '\U0001f7e1 Ярмулка [Шапка, міцність=, імунітет_до_РПГ] - надає доступ до кошерних квестів' \
+                          ' (вдвічі більша нагорода, але і більша складність їх виконання). 100% шанс отримати ' \
+                          'сіль в соляних шахтах. Міцність зменшується при взятті квестів.'
+                elif ran == [16]:
                     msg = '\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.\n' \
                           '\U0001F31F +1'
                     r.hincrby(uid, 'strap', 1)
@@ -305,6 +320,22 @@ def open_pack(uid, cdata, edit):
             else:
                 r.hset(uid, 'weapon', 2)
                 r.hset(uid, 's_weapon', 1)
+            return edit, None
+
+        elif cdata.startswith('pack_fish_'):
+            if int(r.hget(uid, 'support')) == 10:
+                r.hset(uid, 's_support', 3)
+            else:
+                r.hset(uid, 'support', 10)
+                r.hset(uid, 's_support', 3)
+            return edit, None
+
+        elif cdata.startswith('pack_jew_'):
+            if int(r.hget(uid, 'head')) == 6:
+                r.hincrby(uid, 's_head', 7)
+            else:
+                r.hset(uid, 'head', 6)
+                r.hset(uid, 's_head', 7)
             return edit, None
 
         else:
