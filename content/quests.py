@@ -31,10 +31,10 @@ def quests(uid):
     return msg
 
 
-def quest1(uid, number):
+def quest1(uid, number, quest):
     try:
         q, qt = f'q{number}', f'q{number}t'
-        if int(r.hget(uid, 'qt')) == datetime.now().day and int(r.hget(uid, qt)) > 0:
+        if int(r.hget(uid, 'qt')) == datetime.now().day and int(r.hget(uid, qt)) > 0 and int(r.hget(uid, q)) == quest:
             r.hincrby(uid, qt, -1)
             if int(r.hget(uid, qt)) <= 0:
                 if int(r.hget(uid, q)) > 0:

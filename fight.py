@@ -935,7 +935,7 @@ async def war(cid, location, big_battle):
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
             fighters.update({member: chance})
 
-            quest1(member, 1)
+            quest1(member, 1, 6)
         except:
             continue
 
