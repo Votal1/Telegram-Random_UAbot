@@ -46,7 +46,7 @@ def quests(uid):
 
             if checkClan(uid, building='wall'):
                 ran2 = randint(1, len(q2p) - 1)
-                r.hset(uid, 'q2', -ran2, {'q2pt': q2pt[ran2]})
+                r.hset(uid, 'q2', -ran2, {'q2t': q2pt[ran2]})
 
     q = r.hmget(uid, 'q1', 'q1t', 'q2', 'q2t', 'q3', 'q3t')
     if int(q[0]) == 0 and int(q[2]) == 0 and int(q[4]) == 0:
@@ -60,10 +60,10 @@ def quests(uid):
                    f"\U0001F4CA Прогрес - {q1pt[-int(q[0])] - int(q[1])}/{q1pt[-int(q[0])]}"
 
         if int(q[2]) > 0:
-            msg += f"{q2[int(q[2])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+            msg += f"\n\n{q2[int(q[2])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                    f"\U0001F4CA Прогрес - {q2t[int(q[2])] - int(q[3])}/{q2t[int(q[2])]}"
         elif int(q[2]) < 0:
-            msg += f"{q2p[-int(q[2])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+            msg += f"\n\n{q2p[-int(q[2])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                    f"\U0001F4CA Прогрес - {q2pt[-int(q[2])] - int(q[3])}/{q2pt[-int(q[2])]}"
 
     return msg
