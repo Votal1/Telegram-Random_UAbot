@@ -19,7 +19,7 @@ from content.buttons import skill_set, battle_button, battle_button_2, battle_bu
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack
-from content.quests import quests
+from content.quests import quests, quest
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -34,6 +34,7 @@ logging.basicConfig(level=logging.INFO)
 @dp.message_handler(commands=['gruz200', 'orki', 'z', 'poter_net', 'fertilizer', 'ruskie_idut_nahuy'])
 async def gruz200(message):
     try:
+        quest(message.from_user.id, 1, 5)
         scraper = create_scraper(delay=10, browser='chrome')
         url = 'https://index.minfin.com.ua/ua/russian-invading/casualties/'
         page = scraper.get(url).text
@@ -423,6 +424,7 @@ async def mine(message):
                 ms = mine_salt(int(r.hget(message.from_user.id, 's2')), int(r.hget(message.from_user.id, 'head')),
                                datetime.today().weekday())
                 r.hset(message.from_user.id, 'time1', datetime.now().day)
+                quest(message.from_user.id, 1, 4)
                 if message.text.startswith('/minecraft'):
                     if r.hexists(message.from_user.id, 'ac1') == 0:
                         r.hset(message.from_user.id, 'ac1', 1)
@@ -3596,6 +3598,7 @@ async def handle_query(call):
     elif call.data.startswith('vodka'):
         if int(r.hget(call.from_user.id, 'money')) >= 2:
             r.hincrby(call.from_user.id, 'money', -2)
+            quest(call.from_user.id, 1, 2)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
                                                  vodka(call.from_user.id))

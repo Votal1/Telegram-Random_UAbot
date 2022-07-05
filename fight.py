@@ -7,7 +7,7 @@ from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, 
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
 from methods import checkClan, wood, stone, cloth, brick
-from content.quests import quest1
+from content.quests import quest
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
@@ -709,6 +709,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(bonus, uid1, c1)
             spirit(-bonus, uid2, 0)
             r.hincrby(uid1, 'wins', 1)
+            quest(uid1, 1, 1)
             r.hincrby('win_rate', f'win-{c1}', 1)
             r.hincrby('win_rate', f'lose-{c2}', 1)
             r.hincrby('all_wins', 'wins', 1)
@@ -832,6 +833,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
             r.hincrby(uid2, 'wins', 1)
+            quest(uid2, 1, 1)
             r.hincrby('win_rate', f'win-{c2}', 1)
             r.hincrby('win_rate', f'lose-{c1}', 1)
             r.hincrby('all_wins', 'wins', 1)
@@ -935,7 +937,7 @@ async def war(cid, location, big_battle):
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
             fighters.update({member: chance})
 
-            quest1(member, 1, 6)
+            quest(member, 1, 6)
         except:
             continue
 
@@ -1170,6 +1172,8 @@ async def war_power(sett, cid):
                 if gen1 == 1 and meat > 0:
                     s = int(s + s * meat * 0.25)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
+
+            quest(member, 1, 3)
         except:
             continue
     if m == 1:
