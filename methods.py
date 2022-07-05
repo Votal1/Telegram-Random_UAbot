@@ -529,7 +529,7 @@ def wiki_text(data):
               '\U0001f7e1 РПГ-7 - 0.225%\n' \
               '\U0001f7e1 Бронежилет - 0.225%\n' \
               '\U0001f7e1 Швайнокарась - 0.225%\n' \
-              '\U0001f7e1 Ярмулка - 0.225\n' \
+              '\U0001f7e1 Ярмулка - 0.225%\n' \
               '\U0001f7e1 Погон російського генерала - 0.1%'
     if data.startswith('wiki_achieve'):
         markup.add(InlineKeyboardButton(text='\U0001F4DC', callback_data='wiki_passport'),
