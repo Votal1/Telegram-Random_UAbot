@@ -4456,6 +4456,7 @@ async def handle_query(call):
                 r.hincrby(call.from_user.id, 'money', -price)
                 ran = randint(1, 3)
                 quest(call.from_user.id, 2, -1)
+                quest(call.from_user.id, 3, 3, 4)
                 if ran == 1:
                     spirit(1000, call.from_user.id, 0)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -4581,6 +4582,7 @@ async def handle_query(call):
                         r.hset(call.from_user.id, 'support', 6)
                         r.hset(call.from_user.id, 's_support', 1)
                         r.hincrby(call.from_user.id, 'money', -100)
+                        quest(call.from_user.id, 3, 3, 4)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили мухомор королівський.')
                     else:
@@ -4604,6 +4606,7 @@ async def handle_query(call):
                         r.hset(call.from_user.id, 'support', 2)
                         r.hset(call.from_user.id, 's_support', 5)
                         r.hincrby(call.from_user.id, 'money', -20)
+                        quest(call.from_user.id, 3, 3, 4)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили дизель.')
                     else:
