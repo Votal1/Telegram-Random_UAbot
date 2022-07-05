@@ -1515,6 +1515,8 @@ async def clan(message):
                         building += ', їдальня'
                     if int(r.hget(c, 'monument')) == 1:
                         building += ', монумент'
+                    if int(r.hget(c, 'wall')) == 1:
+                        building += ', стіна оголошень'
                     if int(r.hget(c, 'post')) == 1:
                         building += ', блокпост'
                     if int(r.hget(c, 'camp')) == 1:
@@ -1771,6 +1773,12 @@ async def build(message):
                             msg += '\nМонумент (\U0001F333 100, \U0001faa8 1000, \U0001F9F6 50, ' \
                                    '\U0001F9F1 100, \U0001F4B5 2000, \U0001F47E 50) - можливість для лідера у \n' \
                                    '/clan_shop витрачати \U0001F47E.'
+                        if int(r.hget(c, 'wall')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати стіну оголошень',
+                                                            callback_data='build_wall'))
+                            msg += '\nСтіна оголошень (\U0001F333 500, \U0001faa8 250, \U0001F9F6 150, ' \
+                                   '\U0001F9F1 100, \U0001F4B5 1000, \U0001F47E 30) - додатковий щоденний' \
+                                   ' квест (ще +1 через два апгрейда).'
                     if int(r.hget(c, 'base')) >= 4:
                         if int(r.hget(c, 'post')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати блокпост',
@@ -3229,6 +3237,24 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -50)
                 r.hset(c, 'monument', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано монумент.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
+    elif call.data.startswith('build_wall') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'wall')) == 0:
+            if int(r.hget(c, 'wood')) >= 500 and int(r.hget(c, 'stone')) >= 250 and int(r.hget(c, 'cloth')) >= 150 \
+                    and int(r.hget(c, 'brick')) >= 100 and int(r.hget(c, 'money')) >= 1000 \
+                    and int(r.hget(c, 'r_spirit')) >= 30:
+                r.hincrby(c, 'wood', -500)
+                r.hincrby(c, 'stone', -250)
+                r.hincrby(c, 'cloth', -150)
+                r.hincrby(c, 'brick', -100)
+                r.hincrby(c, 'money', -1000)
+                r.hincrby(c, 'r_spirit', -30)
+                r.hset(c, 'wall', 1)
+                await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано стіну оголошень.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
