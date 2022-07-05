@@ -1309,7 +1309,7 @@ async def guard_power(mid):
         s = int(s * (1 + 0.002 * d))
     if int(stats[5]) > 0:
         s, bd = injure(int(mid), s, bd, True)
-    if int(stats[7]) > 0:
+    if int(stats[6]) > 0:
         if checkClan(mid, building='build6', level=2):
             r.hincrby(mid, 'sch', -1)
             i += 5
