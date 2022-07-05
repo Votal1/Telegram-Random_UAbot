@@ -313,6 +313,7 @@ async def feed(message):
             pass
         if not datetime.now().day == int(r.hget(message.from_user.id, 'time')):
             r.hset(message.from_user.id, 'time', datetime.now().day)
+            quest(message.from_user.id, 3, 2, 2)
             r.hset(message.from_user.id, 'hp', 100)
             if checkClan(message.from_user.id, building='build5', level=2) and\
                     int(r.hget(message.from_user.id, 'injure')) > 0:
@@ -2089,6 +2090,7 @@ async def invest(message):
                             p = int(m / 20)
                             r.hincrby(message.from_user.id, 'packs', p)
                             msg += f'\n\U0001F4E6 +{p}'
+                            quest(message.from_user.id, 3, -2, 4)
                         await message.reply(msg)
                     else:
                         await message.reply('Недостатньо коштів на рахунку.')
@@ -2189,6 +2191,7 @@ async def work(message):
                         await message.reply('Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
                     else:
                         r.hset(message.from_user.id, 'clan_time', datetime.now().day)
+                        quest(message.from_user.id, 3, 1, 1)
                         camp = 0
                         packs = int(r.hget(message.from_user.id, 'packs'))
                         side = int(r.hget(c, 'side'))
@@ -2314,6 +2317,7 @@ async def guard(message):
                         r.hset(mid, 'weapon', 15, {'s_weapon': 30})
                     if int(r.hget(mid, 'head')) == 0:
                         r.hset(mid, 'head', 4, {'s_head': 20})
+                        quest(message.from_user.id, 3, 2, 1)
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
                     money = int(r.hget(c, 'money'))
@@ -3463,7 +3467,7 @@ async def handle_query(call):
                     mem = int(member)
                     try:
                         st = await bot.get_chat_member(call.message.chat.id, mem)
-                        if st.status == 'left' or st.status == 'kicked' or st.status == 'banned':
+                        if st.status in ('left', 'kicked', 'banned'):
                             r.srem(call.message.chat.id, mem)
                             continue
                     except:
@@ -3628,6 +3632,9 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'money')) >= 2:
             r.hincrby(call.from_user.id, 'money', -2)
             quest(call.from_user.id, 1, 2)
+            quest(call.from_user.id, 3, -1, 1)
+            if int(r.hget(call.from_user.id, 'spirit')) == 10000:
+                quest(call.from_user.id, 3, 3, 2)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
                                                  vodka(call.from_user.id))
@@ -3740,6 +3747,7 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= price:
                 r.hincrby(call.from_user.id, 'money', -price)
                 r.hset(call.from_user.id, 'woman', 1)
+                quest(call.from_user.id, 3, 1, 3)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили жінку')
             else:
@@ -3772,6 +3780,7 @@ async def handle_query(call):
                     r.hincrby(call.from_user.id, 'money', -10)
                     r.hset(call.from_user.id, 'defense', 9)
                     r.hset(call.from_user.id, 's_defense', 7)
+                    quest(call.from_user.id, 3, 3, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили уламок бронетехніки')
                 else:
@@ -3931,6 +3940,7 @@ async def handle_query(call):
                     r.hincrby(call.from_user.id, 'money', -30)
                     r.hset(call.from_user.id, 'head', 4)
                     r.hset(call.from_user.id, 's_head', 20)
+                    quest(call.from_user.id, 3, 2, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили вушанку')
                 else:
@@ -4163,6 +4173,7 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
             r.hincrby(call.from_user.id, 'packs', 40)
+            quest(call.from_user.id, 3, -2, 4)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно замовили 40 донбаських пакунків')
         else:
@@ -4482,6 +4493,7 @@ async def handle_query(call):
     elif call.data.startswith('clan_fragment'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 15:
+                quest(call.from_user.id, 3, 3, 1)
                 if int(r.hget(call.from_user.id, 'defense')) == 0 or int(r.hget(call.from_user.id, 'defense')) == 1:
                     r.hset(call.from_user.id, 'defense', 9)
                     r.hset(call.from_user.id, 's_defense', 7)
@@ -4548,6 +4560,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'weapon', 3)
                     r.hset(call.from_user.id, 's_weapon', 3)
                     r.hincrby(call.from_user.id, 'money', -60)
+                    quest(call.from_user.id, 3, 1, 3)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили батіг')
                 else:
@@ -4632,6 +4645,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'head', 4)
                     r.hset(call.from_user.id, 's_head', 20)
                     r.hincrby(call.from_user.id, 'money', -20)
+                    quest(call.from_user.id, 3, 2, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили вушанку.')
                 else:
@@ -4651,6 +4665,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'support', 7)
                     r.hset(call.from_user.id, 's_support', 1)
                     r.hincrby(call.from_user.id, 'money', -55)
+                    quest(call.from_user.id, 3, 3, 4)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили цукор.')
                 else:
@@ -4670,6 +4685,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'support', 8)
                     r.hset(call.from_user.id, 's_support', 5)
                     r.hincrby(call.from_user.id, 'money', -15)
+                    quest(call.from_user.id, 3, 3, 4)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили квас.')
                 else:
@@ -4708,6 +4724,7 @@ async def handle_query(call):
                 r.hincrby(call.from_user.id, 'money', -100)
                 r.hincrby(call.from_user.id, 'childs', 1)
                 r.hincrby('all_children', 'children', 1)
+                quest(call.from_user.id, 3, 3, 4)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили російське немовля.')
             else:
@@ -4846,6 +4863,7 @@ async def handle_query(call):
                     if int(r.hget(mem, 'head')) == 0:
                         r.hset(mem, 'head', 3)
                         r.hset(mem, 's_head', 1)
+                        quest(mem, 3, 3, 4)
                 await bot.send_message(call.message.chat.id, '\U0001F349 Клан очманів від бази.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

@@ -32,9 +32,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         m_bonus, hach1, hach2 = [0], 0, 0
 
         if c1 == 1 or c1 == 11 or c1 == 21:
+            quest(uid2, 3, -1, 2)
             if weapon2 == 0:
                 hach1 = 1
+        if weapon2 == 0:
+            quest(uid1, 3, -1, 3)
+        if weapon1 == 0:
+            quest(uid2, 3, -1, 3)
         if c2 == 1 or c2 == 11 or c2 == 21:
+            quest(uid1, 3, -1, 2)
             if weapon1 == 0:
                 hach2 = 1
         if c1 == 21 and t == 1:
@@ -68,6 +74,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid2, 'worker', datetime.now().day)
                     r.hset(uid2, 'time', 0)
         if c1 == 26 and t == 1:
+            quest(uid2, 3, -1, 1)
             if c2 not in (6, 16, 26) and defense1 in (16, 17):
                 if weapon2 != 0:
                     cop1 = choices([1, 0], weights=[20, 80])
@@ -78,6 +85,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         cop += '\n\U0001F46E ' + names[name1] + \
                                ' вилучив у ворога зброю!\n\U0001F6E1 +10\n'
         if c2 == 26 and t == 1:
+            quest(uid1, 3, -3, 1)
             if c1 not in (6, 16, 26) and defense2 in (16, 17):
                 if weapon1 != 0:
                     cop2 = choices([1, 0], weights=[20, 80])
@@ -123,6 +131,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 weapon = '\n\n\U0001F52E ' + names[name1] + ' ухилився від дрина!\n\U0001F464 +5'
                 r.hincrby(uid2, 'sch', 5)
+                quest(uid2, 3, -2, 3)
 
         if weapon2 == 4 and int(r.hget(uid1, 'spirit')) >= 300:
             if int(r.hget(uid1, 'spirit')) <= 1000:
@@ -254,6 +263,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     sh = 5
                 r.hincrby(uid1, 'sch', sh)
                 r.hincrby(uid2, 'sch', -sh)
+                quest(uid1, 3, -2, 3)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' поміняв характеристики місцями!'
             damage_weapon(uid2, c2)
         elif weapon2 in (15, 26) and c2 in (5, 15, 25):
@@ -295,6 +305,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if int(r.hget(uid1, 'injure')) < 0:
                     r.hset(uid1, 'injure', 0)
                 hp(-10, uid1)
+                if int(r.hget(uid1, 'hp')) == 0:
+                    quest(uid1, 3, -1, 4)
                 weapon = f'\n\n\U0001F5E1 {names[name2]} припинив ворогу кровотечу.\n\U0001fa78 -{inj} \U0001fac0 -10'
             damage_weapon(uid2, c2)
         elif weapon2 in (20, 31):
@@ -331,7 +343,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'injure', 300)
                 if c1 != 6 and c1 != 16 and c1 != 26:
                     r.hset(uid1, 'weapon', 0)
-                r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0})
+                r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0})
+                if head1 != 6:
+                    r.hset(uid1, 'head', 0)
+                quest(uid1, 3, -1, 4)
 
         elif weapon1 in (15, 26) and c1 in (5, 15, 25):
             s1 = int(s1 * 1.75)
@@ -524,6 +539,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         nar = r.hmget(uid2, 'mushrooms', 's1')
                         r.hincrby(uid2, 'injure', 2 + int(nar[0]))
                         hp(-int(nar[1]), uid2)
+                        if int(r.hget(uid2, 'hp')) == 0:
+                            quest(uid2, 3, -1, 4)
                         m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
             if hp1 < 50:
@@ -559,6 +576,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             nar = r.hmget(uid1, 'mushrooms', 's1')
                             r.hincrby(uid1, 'injure', 2 + int(nar[0]))
                             hp(-int(nar[1]), uid1)
+                            if int(r.hget(uid1, 'hp')) == 0:
+                                quest(uid1, 3, -1, 4)
                             m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
 
         if c1 in (20, 30):
@@ -715,6 +734,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             r.hincrby('win_rate', f'lose-{c2}', 1)
             r.hincrby('all_wins', 'wins', 1)
 
+            if c1 == 36:
+                quest(uid2, 3, -2, 2)
+            if c2 in (7, 17, 27):
+                quest(uid1, 3, -3, 3)
+
             hack = ''
             if c2 == 8 or c2 == 18 or c2 == 28:
                 hack1 = choices([0, 1], weights=[82, 18])
@@ -738,6 +762,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
+                        quest(uid1, 3, -3, 4)
                     if checkClan(uid2, building='build4', level=4):
                         r.hincrby('c' + r.hget(uid2, 'clan').decode(), 'money', money)
                     r.hincrby(uid2, 'money', money)
@@ -749,6 +774,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if c1 not in (5, 15, 25):
                     damage_weapon(uid1, c1)
             hp(-1, uid2)
+            if int(r.hget(uid2, 'hp')) == 0:
+                quest(uid2, 3, -1, 4)
             info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)' + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
@@ -840,6 +867,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             r.hincrby('win_rate', f'lose-{c1}', 1)
             r.hincrby('all_wins', 'wins', 1)
 
+            if c2 == 36:
+                quest(uid1, 3, -2, 2)
+            if c1 in (7, 17, 27):
+                quest(uid2, 3, -3, 3)
+
             hack = ''
             if c1 == 8 or c1 == 18 or c1 == 28:
                 hack2 = choices([0, 1], weights=[82, 18])
@@ -863,6 +895,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
+                        if money == 10:
+                            quest(uid2, 3, -3, 4)
                     if checkClan(uid1, building='build4', level=4):
                         r.hincrby('c' + r.hget(uid1, 'clan').decode(), 'money', money)
                     r.hincrby(uid1, 'money', money)
@@ -874,6 +908,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if c2 not in (5, 15, 25):
                     damage_weapon(uid2, c2)
             hp(-1, uid1)
+            if int(r.hget(uid1, 'hp')) == 0:
+                quest(uid1, 3, -1, 4)
             info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode() + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
@@ -1064,6 +1100,7 @@ async def war(cid, location, big_battle):
             r.hincrby(win, 'money', 8)
             r.hincrby(win, 'vodka', 1)
             r.hincrby('all_vodka', 'vodka', 1)
+            quest(win, 3, -2, 1)
     elif location == 'Битва біля розбитої колони':
         if wc in (31, 32, 33):
             class_reward = '\U0001F695: \U0001F4E6 +2'
@@ -1175,6 +1212,8 @@ async def war_power(sett, cid):
                     intellect(1, member)
                 if gen1 == 1 and meat > 0:
                     s = int(s + s * meat * 0.25)
+            if meat > 0:
+                quest(member, 3, -3, 2)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
 
             quest(member, 1, 3)
@@ -1247,6 +1286,7 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
             r.hincrby(n, 'money', money)
+            quest(n, 3, 1, 2)
         r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid1, 1)
         if clan1 >= 5:
@@ -1280,6 +1320,7 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
             r.hincrby(n, 'money', money)
+            quest(n, 3, 1, 2)
         r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid2, 1)
         if clan2 >= 5:
@@ -1460,6 +1501,10 @@ async def start_raid(cid):
     if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0:
         raid1, raid2, raid3 = 40, 40, 20
     mode = choices([1, 2, 3], [raid1, raid2, raid3])
+
+    if chance1 >= 100000:
+        for member in r.smembers('fighters_3' + str(cid)):
+            quest(member, 3, 2, 3)
 
     enemy = c2 = ''
     if mode == [1]:
@@ -1790,6 +1835,9 @@ async def start_raid(cid):
             msg += f'\U0001F4E6 +{packs}'
             for mem in r.smembers('fighters_3' + str(cid)):
                 r.hincrby(mem, 'packs', packs)
+                quest(mem, 3, 3, 3)
+                if packs >= 20:
+                    quest(mem, 3, -2, 4)
         elif reward <= 0 and diff != 0:
             msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'
 

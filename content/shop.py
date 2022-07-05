@@ -3,6 +3,7 @@ from methods import checkClan
 from random import choices
 from variables import default, chm
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from content.quests import quest
 
 
 def shop_msg(uid, mode):
@@ -105,6 +106,7 @@ def salt_shop(uid, cdata):
                 else:
                     up = 3
                 r.hincrby(uid, 'strength', up)
+                quest(uid, 3, 2, 4)
                 if choices([1, 0], [5, 95]) == [1]:
                     return f'Передозування!\n\U0001F4AA +{up}'
                 else:
