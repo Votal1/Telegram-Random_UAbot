@@ -1,4 +1,5 @@
 from config import r
+from methods import checkClan
 from random import randint
 from datetime import datetime
 
@@ -6,16 +7,25 @@ from datetime import datetime
 def quests(uid):
     msg = '\U0001F4F0 Щоденні квести\n\n'
     head = int(r.hget(uid, 'head'))
+
     q1 = ['', '\U0001F3C6 Виграти в 10 дуелях', '\u2622 Купити 5 горілки',
           '\U0001F3DF Взяти участь в 3 міжчатових битвах', '\u26CF Відпрацювати зміну на соляній шахті',
           '\u2620\uFE0F Подивитись втрати окупантів', '\u2694 Взяти участь у 3 масових битвах']
     q1t = [0, 10, 5, 3, 1, 1, 3]
 
-    q2 = ['', '\U0001F3C6 Виграти в 50 дуелях', '\u2694 Виграти у масовій битві',
-          '\U0001F469\U0001F3FB Провідати жінку',
-          '\U0001F6AC Сходити в козацький похід, або знайти мертвого русака в пакунку',
-          '\U0001F4E6 Відкрити 10 пакунків', '\u2694 Взяти участь у битві в Чорнобаївці']
-    q2t = [0, 50, 1, 1, 1, 10, 1]
+    q1p = ['', '\U0001F3C6 Виграти в 50 дуелях', '\u2694 Виграти у масовій битві',
+           '\U0001F469\U0001F3FB Провідати жінку',
+           '\U0001F6AC Сходити в козацький похід, або знайти мертвого русака в пакунку',
+           '\U0001F4E6 Відкрити 10 пакунків', '\u2694 Взяти участь у битві в Чорнобаївці']
+    q1pt = [0, 50, 1, 1, 1, 10, 1]
+
+    q2 = ['', '\U0001F4B0 Сходити в рейд', '\U0001F47E Виграти міжчатову битву з своїм кланом',
+          '\U0001F4B5 Інвестувати в клан від 50 гривень']
+    q2t = [0, 1, 1, 1]
+
+    q2p = ['', '\U0001F35E Купити совєцкій пайок', '\U0001F44A Отримати бойовий транс від монументу',
+           '\U0001F319 Відпочити після роботи']
+    q2pt = [0, 1, 1, 1]
 
     if int(r.hget(uid, 'qt')) != datetime.now().day:
         r.hset(uid, 'qt', datetime.now().day)
@@ -26,9 +36,17 @@ def quests(uid):
                 ran1 = randint(1, len(q1) - 1)
             r.hset(uid, 'q1', ran1, {'q1t': q1t[ran1]})
 
+            if checkClan(uid, building='wall'):
+                ran2 = randint(1, len(q2) - 1)
+                r.hset(uid, 'q2', ran2, {'q2t': q2t[ran2]})
+
         else:
-            ran1 = randint(1, len(q2) - 1)
-            r.hset(uid, 'q1', -ran1, {'q1t': q2t[ran1]})
+            ran1 = randint(1, len(q1p) - 1)
+            r.hset(uid, 'q1', -ran1, {'q1t': q1pt[ran1]})
+
+            if checkClan(uid, building='wall'):
+                ran2 = randint(1, len(q2p) - 1)
+                r.hset(uid, 'q2', -ran2, {'q2pt': q2pt[ran2]})
 
     q = r.hmget(uid, 'q1', 'q1t', 'q2', 'q2t', 'q3', 'q3t')
     if int(q[0]) == 0 and int(q[2]) == 0 and int(q[4]) == 0:
@@ -38,8 +56,15 @@ def quests(uid):
             msg += f"{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                    f"\U0001F4CA Прогрес - {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}"
         elif int(q[0]) < 0:
-            msg += f"{q2[-int(q[0])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
-                   f"\U0001F4CA Прогрес - {q2t[-int(q[0])] - int(q[1])}/{q2t[-int(q[0])]}"\
+            msg += f"{q1p[-int(q[0])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                   f"\U0001F4CA Прогрес - {q1pt[-int(q[0])] - int(q[1])}/{q1pt[-int(q[0])]}"
+
+        if int(q[2]) > 0:
+            msg += f"{q2[int(q[2])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                   f"\U0001F4CA Прогрес - {q2t[int(q[2])] - int(q[3])}/{q2t[int(q[2])]}"
+        elif int(q[2]) < 0:
+            msg += f"{q2p[-int(q[2])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                   f"\U0001F4CA Прогрес - {q2pt[-int(q[2])] - int(q[3])}/{q2pt[-int(q[2])]}"
 
     return msg
 

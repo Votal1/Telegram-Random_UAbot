@@ -2080,6 +2080,8 @@ async def invest(message):
                         r.hincrby(c, 'money', m)
                         r.hincrby(message.from_user.id, 'money', -m)
                         msg = f'\U0001F4B5 Клановий рахунок поповнено на {m} гривень.'
+                        if m >= 50:
+                            quest(message.from_user.id, 2, 3)
                         if m >= 500:
                             if r.hexists(message.from_user.id, 'ac15') == 0:
                                 r.hset(message.from_user.id, 'ac15', 1)
@@ -2284,6 +2286,7 @@ async def relax(message):
                     increase_trance(20, message.from_user.id)
                     hp(100, message.from_user.id)
                     msg += '\n\n\U0001F349 +1 \U0001F44A +20 \U0001fac0 +100 \U0001F54A +10000'
+                quest(message.from_user.id, 2, -3)
                 await message.reply(msg)
             else:
                 await message.reply('Рано відпочивати...')
@@ -4441,6 +4444,7 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= price:
                 r.hincrby(call.from_user.id, 'money', -price)
                 ran = randint(1, 3)
+                quest(call.from_user.id, 2, -1)
                 if ran == 1:
                     spirit(1000, call.from_user.id, 0)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -4740,6 +4744,7 @@ async def handle_query(call):
                 s = 1 if int(r.hget(c, 'side')) == 2 else 0
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     increase_trance(5, mem)
+                    quest(call.from_user.id, 2, -2)
                     if s == 1:
                         spirit(int(int(r.hget(mem, 'spirit')) * 0.5), mem, 0)
                 await bot.send_message(call.message.chat.id, '\U0001F44A Клан готовий йти в бій.')

@@ -1250,6 +1250,8 @@ async def great_war(cid1, cid2, a, b):
         r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid1, 1)
         if clan1 >= 5:
+            for n in a:
+                quest(n, 2, 2)
             if int(r.hget('c' + str(cid1), 'base')) > 1:
                 r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
                 if int(r.hget('c' + str(cid1), 'side')) == 4:
@@ -1281,6 +1283,8 @@ async def great_war(cid1, cid2, a, b):
         r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid2, 1)
         if clan2 >= 5:
+            for n in b:
+                quest(n, 2, 2)
             if int(r.hget('c' + str(cid2), 'base')) > 1:
                 r.hincrby('c' + str(cid2), 'r_spirit', r_spirit)
                 if int(r.hget('c' + str(cid2), 'side')) == 4:
@@ -1449,6 +1453,8 @@ async def start_raid(cid):
             else:
                 head = 0
             chance1 += int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head))
+
+            quest(member, 2, 1)
         except:
             continue
     if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0:
