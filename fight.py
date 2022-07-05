@@ -1820,7 +1820,6 @@ async def start_raid(cid):
         if diff == 0:
             r.hset('convoy', 'power', 0)
             msg += 'Від гумконвою більше нічого не залишилось!\n'
-            packs += 20
             '''
             r.hincrby('resources', 'wood', 1500)
             r.hincrby('resources', 'stone', 1000)
