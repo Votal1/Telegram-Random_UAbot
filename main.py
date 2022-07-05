@@ -4187,7 +4187,7 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'head')) == 0:
             if int(r.hget(call.from_user.id, 'strap')) >= 1:
                 r.hincrby(call.from_user.id, 'strap', -1)
-                r.hset(call.from_user.id, 'head', 10)
+                r.hset(call.from_user.id, 'head', 6)
                 r.hset(call.from_user.id, 's_head', 7)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили ярмулку')
