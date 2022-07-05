@@ -74,7 +74,7 @@ def shop_msg(uid, mode):
                 markup.add(InlineKeyboardButton(text=key, callback_data=value))
         markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),
                    InlineKeyboardButton(text='\U0001F31F', callback_data='switch2'))
-        salt = 0
+        salt = int(r.hget(uid, 'salt'))
         msg = f'\U0001F9C2 Сіль: {salt}\n\nОсь опис товарів, які можна придбати:\n\n' \
               f'\U0001F4AA Збільшити силу на 30/20/10/5/3 (залежно від сили русака).\n' \
               f'\U0001F531 Покращене класове спорядження стандартної міцності.\n' \
