@@ -297,7 +297,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hincrby(uid1, 's_defense', -3)
                     if int(r.hget(uid1, 's_defense')) == 0:
                         r.hset(uid1, 's_defense', 0, {'defense': 0})
-            elif int(r.hget(uid1, 'injure')) > 4:
+            elif int(r.hget(uid1, 'injure')) >= 4:
                 inj = 10
                 if weapon2 == 30:
                     inj = 15

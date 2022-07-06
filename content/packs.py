@@ -28,6 +28,7 @@ def open_pack(uid, cdata, edit):
                     if checkClan(uid, base=2, building='new_post') and choice([0, 1]) == 1:
                         msg = '\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1'
                         r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
+                        quest(uid, 3, 3, 3)
                     else:
                         msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                 elif ran == [2]:
