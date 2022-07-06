@@ -2367,13 +2367,13 @@ async def guard(message):
                     r.hincrby('convoy', 'power', 500000)
                     for mem in r.smembers('followers'):
                         try:
-                            c = 'c' + mem.decode()
-                            if int(r.hget(c, 'not_time')) != datetime.now().day:
-                                if int(r.hget(c, 'technics')) >= 3:
-                                    r.hset(c, 'not_time', datetime.now().day)
-                                    r.hincrby(c, 'technics', -3)
+                            c3 = 'c' + mem.decode()
+                            if int(r.hget(c3, 'not_time')) != datetime.now().day:
+                                if int(r.hget(c3, 'technics')) >= 3:
+                                    r.hset(c3, 'not_time', datetime.now().day)
+                                    r.hincrby(c3, 'technics', -3)
                                 else:
-                                    r.hset(c, 'notification', 0)
+                                    r.hset(c3, 'notification', 0)
                                     r.srem('followers', mem)
                                     continue
                             await bot.send_message(int(mem), '\U0001F69B Додатковий гумконвой вже в дорозі!')
