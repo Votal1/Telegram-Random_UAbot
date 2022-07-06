@@ -130,7 +130,8 @@ def open_pack(uid, cdata, edit):
                             markup.add(InlineKeyboardButton(text='Взяти мухохор', callback_data=f'pack_mushroom_{uid}'))
                         elif int(r.hget(uid, 'support')) == 6:
                             r.hincrby(uid, 's_support', 1)
-                        msg = '\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.'
+                        msg = '\U0001f7e3 Знайдено: \U0001F344 Мухомор королівський [Допомога, міцність=1] ' \
+                              '- якщо в дуелі у ворога більший інтелект, додає +1 інтелекту.'
                     else:
                         msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                 elif ran == [10]:
