@@ -4342,6 +4342,8 @@ async def handle_query(call):
             r.hincrby(call.from_user.id, 'strap', -2)
             if cl == 21:
                 r.hincrby(call.from_user.id, 'strength', -200)
+            if cl in (6, 16, 26):
+                r.hset(call.from_user.id, 'weapon', 0)
             r.srem('class-' + str(cl), call.from_user.id)
             r.hset(call.from_user.id, 'class', 0)
             if int(r.hget(call.from_user.id, 'intellect')) < 5:
