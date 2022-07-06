@@ -176,7 +176,7 @@ def open_pack(uid, cdata, edit):
                           'може виконувати бажання русаків (відпочивати, нажертись, напитись).'
                 elif ran == [15]:
                     if int(r.hget(uid, 'head')) == 6:
-                        r.hset(uid, 's_head', 6)
+                        r.hincrby(uid, 's_head', 7)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти ярмулку', callback_data=f'pack_jew_{uid}'))
                     msg = '\U0001f7e1 Ярмулка [Шапка, міцність=7, імунітет_до_РПГ] - надає доступ до кошерних квестів' \
