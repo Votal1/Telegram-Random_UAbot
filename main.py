@@ -4782,8 +4782,11 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -10)
                 s = 1 if int(r.hget(c, 'side')) == 2 else 0
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
-                    increase_trance(5, mem)
-                    quest(call.from_user.id, 2, -2)
+                    try:
+                        quest(call.from_user.id, 2, -2)
+                        increase_trance(5, mem)
+                    except:
+                        pass
                     if s == 1:
                         spirit(int(int(r.hget(mem, 'spirit')) * 0.5), mem, 0)
                 await bot.send_message(call.message.chat.id, '\U0001F44A Клан готовий йти в бій.')
