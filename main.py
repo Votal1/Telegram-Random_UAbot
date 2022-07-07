@@ -4783,7 +4783,7 @@ async def handle_query(call):
                 s = 1 if int(r.hget(c, 'side')) == 2 else 0
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
                     try:
-                        quest(call.from_user.id, 2, -2)
+                        quest(mem, 2, -2)
                         increase_trance(5, mem)
                     except:
                         pass
