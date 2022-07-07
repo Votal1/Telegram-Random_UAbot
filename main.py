@@ -397,10 +397,10 @@ async def feed(message):
 
                     if word == 'зросла':
                         if int(r.hget(message.from_user.id, 'support')) == 10 and choices([1, 0], [2, 8]) == [1]:
-                            damage_support(message.from_user.id)
                             if int(r.hget(message.from_user.id, 'injure')) > 0 \
                                     or int(r.hget(message.from_user.id, 'sch')) > 0 \
                                     or int(r.hget(message.from_user.id, 'mushrooms')) > 0:
+                                damage_support(message.from_user.id)
                                 r.hset(message.from_user.id, 'injure', 0)
                                 r.hset(message.from_user.id, 'sch', 0)
                                 r.hset(message.from_user.id, 'mushrooms', 0)
