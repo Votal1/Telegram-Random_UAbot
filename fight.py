@@ -1101,7 +1101,7 @@ async def war(cid, location, big_battle):
             r.hincrby(win, 'vodka', 1)
             r.hincrby('all_vodka', 'vodka', 1)
             for member in r.smembers('fighters' + str(cid)):
-                quest(win, 3, -2, 1)
+                quest(member, 3, -2, 1)
     elif location == 'Битва біля розбитої колони':
         if wc in (31, 32, 33):
             class_reward = '\U0001F695: \U0001F4E6 +2'
