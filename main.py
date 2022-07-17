@@ -41,7 +41,7 @@ async def gruz200(message):
         soup = BeautifulSoup(page, 'html.parser')
         title = '\U0001F437\U0001F436 Втрати росії на ' + soup.find('span', 'black').text
         d = soup.find('div', 'casualties').find_all('li')
-        msg = f'\n\n\u2620\uFE0F Вбито: {d[12].text.split()[4]} {d[12].text.split()[6][:-1]}' \
+        msg = f'\n\n\u2620\uFE0F Вбито: {d[12].text.split()[4]} {d[12].text.split()[6]}' \
               f'\n\U0001F690 ББМ: {d[1].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F69C Танки: {d[0].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F525 Артилерія: {d[2].text.split(maxsplit=2)[2]}' \
