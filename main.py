@@ -1328,13 +1328,20 @@ async def inventory(message):
 @dp.message_handler(commands=['pack'])
 async def pack(message):
     if r.hexists(message.from_user.id, 'name') == 1:
-        packs = int(r.hget(message.from_user.id, 'packs'))
-        if packs != 0:
-            await message.reply('\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
+        try:
+            n = int(message.text.split()[1])
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
+            await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
                                 reply_markup=unpack(message.from_user.id))
-        else:
-            await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
-                                '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
+        except:
+            packs = int(r.hget(message.from_user.id, 'packs'))
+            if packs != 0:
+                await message.reply('\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
+                                    reply_markup=unpack(message.from_user.id))
+            else:
+                await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
+                                    '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
     else:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -4555,6 +4562,17 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='В твого русака нема шапки')
+
+    elif call.data.startswith('buy_pack') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        n = int(call.data.split('_')[2])
+        if int(r.hget(call.from_user.id, 'money')) >= n * 20:
+            r.hincrby(call.from_user.id, 'money', -(n * 20))
+            r.hincrby(call.from_user.id, 'packs', n)
+            await bot.edit_message_text('\U0001F4E6 Пакунки придбано.',
+                                        call.message.chat.id, call.message.message_id, reply_markup=None)
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо коштів на рахунку')
 
     elif call.data.startswith('pack_'):
         try:
