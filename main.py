@@ -1330,10 +1330,11 @@ async def pack(message):
     if r.hexists(message.from_user.id, 'name') == 1:
         try:
             n = int(message.text.split()[1])
-            markup = InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
-            await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
-                                reply_markup=markup)
+            if 0 < n < 2000:
+                markup = InlineKeyboardMarkup()
+                markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
+                await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
+                                    reply_markup=markup)
         except:
             packs = int(r.hget(message.from_user.id, 'packs'))
             if packs != 0:
