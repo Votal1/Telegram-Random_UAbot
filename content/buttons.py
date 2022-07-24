@@ -1,15 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def skill_set():
-    markup = InlineKeyboardMarkup()
-    items = {'Прокачати алкоголізм': 'alcohol', 'Прокачати майстерність': 'master',
-             'Продовжити будівництво': 'cellar'}
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
 def battle_button():
     markup = InlineKeyboardMarkup()
     items = {'Відправити русака на бій': 'join'}

@@ -14,7 +14,7 @@ from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
 
-from content.buttons import skill_set, battle_button, battle_button_2, battle_button_3, \
+from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
@@ -1332,8 +1332,17 @@ async def pack(message):
 @dp.message_handler(commands=['skills'])
 async def skills(message):
     try:
+        markup = InlineKeyboardMarkup()
         s = r.hmget(message.from_user.id, 's1', 's2', 's3')
         s1, s2, s3 = int(s[0]), int(s[1]), int(s[2])
+
+        if s1 < 10:
+            markup.add(InlineKeyboardButton(text='Прокачати алкоголізм', callback_data='alcohol'))
+        if s2 < 5:
+            markup.add(InlineKeyboardButton(text='Прокачати майстерність', callback_data='master'))
+        if s3 < 5:
+            markup.add(InlineKeyboardButton(text='Продовжити будівництво', callback_data='cellar'))
+
         s11, s22, s221, s222 = s1, s2, 0, 0
         intel = ' гривень, а шанс підняти інтелект - 10%. '
         if s2 == 1:
@@ -1395,7 +1404,7 @@ async def skills(message):
             else:
                 msg = msg + '\U0001f7eb'
                 s3 = s3 - 1
-        await bot.send_message(message.from_user.id, msg, reply_markup=skill_set())
+        await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
     except:
