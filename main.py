@@ -67,6 +67,9 @@ async def get_help(message):
                         'зрозумієш.\n\nЩоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n'
                         '/wiki - вся інфа по грі\n'
                         '@randomuanews - новини', disable_web_page_preview=True)
+    if message.from_user.id == 456514639:
+        a = await bot.get_chat(-1001508218205)
+        await message.reply(a.username)
 
 
 @dp.message_handler(commands=['links'])
