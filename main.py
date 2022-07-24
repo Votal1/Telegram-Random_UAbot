@@ -1343,10 +1343,10 @@ async def skills(message):
             markup.add(InlineKeyboardButton(text='Прокачати майстерність', callback_data='master'))
         if s3 < 5:
             markup.add(InlineKeyboardButton(text='Продовжити будівництво', callback_data='cellar'))
-        #  if s4 < 5:
-        #  markup.add(InlineKeyboardButton(text='Прокачати наркозалежність', callback_data='addiction'))
-        #  if s5 < 5:
-        #  markup.add(InlineKeyboardButton(text='Прокачати психоз', callback_data='psycho'))
+        if s4 < 5:
+            markup.add(InlineKeyboardButton(text='Прокачати наркозалежність', callback_data='addiction'))
+        if s5 < 5:
+            markup.add(InlineKeyboardButton(text='Прокачати психоз', callback_data='psycho'))
 
         s11, s22, s221, s222, s41 = s1, s2, 0, 0, s4 * 10
         intel = ' гривень, а шанс підняти інтелект - 10%. '
