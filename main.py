@@ -3058,7 +3058,7 @@ async def handle_query(call):
     elif call.data.startswith('promote_to_leader'):
         try:
             uid1 = call.from_user.id
-            uid2 = call.data.split('_')[2]
+            uid2 = call.data.split('_')[3]
             uid2e = str(uid2).encode()
             c = 'c' + r.hget(uid1, 'clan').decode()
             cl = 'cl' + r.hget(uid1, 'clan').decode()
