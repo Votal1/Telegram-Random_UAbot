@@ -1333,7 +1333,7 @@ async def pack(message):
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
             await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
-                                reply_markup=unpack(message.from_user.id))
+                                reply_markup=markup)
         except:
             packs = int(r.hget(message.from_user.id, 'packs'))
             if packs != 0:
@@ -2202,8 +2202,8 @@ async def promote(message):
                 else:
                     markup = InlineKeyboardMarkup()
                     markup.add(InlineKeyboardButton(text='Так', callback_data='promote_to_leader'))
-                    n = r.hget(message.reply_to_message.from_user.id, 'firstname')
-                    await message.reply(f'\U0001F530 Підвищити {n} до лідера?')
+                    n = r.hget(message.reply_to_message.from_user.id, 'firstname').decode()
+                    await message.reply(f'\U0001F530 Підвищити {n} до лідера?', reply_markup=markup)
     except:
         pass
 
