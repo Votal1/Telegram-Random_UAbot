@@ -2569,6 +2569,12 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 's2', 1)
             if r.hexists(call.from_user.id, 's3') == 0:
                 r.hset(call.from_user.id, 's3', 1)
+            if r.hexists(call.from_user.id, 's4') == 0:
+                r.hset(call.from_user.id, 's4', 1)
+            if r.hexists(call.from_user.id, 's5') == 0:
+                r.hset(call.from_user.id, 's5', 1)
+            if r.hexists(call.from_user.id, 'purchase') == 0:
+                r.hset(call.from_user.id, 'purchase', 0)
             await bot.edit_message_text(text='\U0001F3DA Ти приходиш на Донбас - чудове місце для полювання на'
                                              ' русаків\n\n\U0001F412 Русака взято в полон...',
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
