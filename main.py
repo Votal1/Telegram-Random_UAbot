@@ -756,7 +756,7 @@ async def woman(message):
                 r.hset(message.from_user.id, 'time4', datetime.now().day)
                 r.hincrby(message.from_user.id, 'time5', 1)
                 if int(r.hget(message.from_user.id, 'time5')) >= 9:
-                    emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
                           'В тебе буде смачний сніданок!'
                     r.hincrby(message.from_user.id, 'childs', 1)
