@@ -4567,7 +4567,7 @@ async def handle_query(call):
 
     elif call.data.startswith('buy_pack') and call.from_user.id == call.message.reply_to_message.from_user.id:
         n = int(call.data.split('_')[2])
-        if int(r.hget(call.from_user.id, 'money')) >= n * 20:
+        if int(r.hget(call.from_user.id, 'money')) >= n * 20 and 0 < n < 2000:
             r.hincrby(call.from_user.id, 'money', -(n * 20))
             r.hincrby(call.from_user.id, 'packs', n)
             if n >= 10:
