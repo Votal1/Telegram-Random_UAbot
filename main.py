@@ -2201,7 +2201,8 @@ async def promote(message):
                         await message.reply('\u2705')
                 else:
                     markup = InlineKeyboardMarkup()
-                    markup.add(InlineKeyboardButton(text='Так', callback_data='promote_to_leader'))
+                    uid = message.reply_to_message.from_user.id
+                    markup.add(InlineKeyboardButton(text='Так', callback_data=f'promote_to_leader_{uid}'))
                     n = r.hget(message.reply_to_message.from_user.id, 'firstname').decode()
                     await message.reply(f'\U0001F530 Підвищити {n} до лідера?', reply_markup=markup)
     except:
@@ -3056,7 +3057,7 @@ async def handle_query(call):
     elif call.data.startswith('promote_to_leader'):
         try:
             uid1 = call.from_user.id
-            uid2 = call.message.reply_to_message.from_user.id
+            uid2 = call.data.split('_')[2]
             uid2e = str(uid2).encode()
             c = 'c' + r.hget(uid1, 'clan').decode()
             cl = 'cl' + r.hget(uid1, 'clan').decode()
