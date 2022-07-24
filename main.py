@@ -4568,6 +4568,8 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'money')) >= n * 20:
             r.hincrby(call.from_user.id, 'money', -(n * 20))
             r.hincrby(call.from_user.id, 'packs', n)
+            if n >= 10:
+                quest(call.from_user.id, 3, -2, 4)
             await bot.edit_message_text('\U0001F4E6 Пакунки придбано.',
                                         call.message.chat.id, call.message.message_id, reply_markup=None)
         else:
