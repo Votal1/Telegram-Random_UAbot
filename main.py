@@ -2188,10 +2188,15 @@ async def promote(message):
         if message.from_user.id == int(r.hget('c' + cid, 'leader')):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
                 uid = str(message.reply_to_message.from_user.id).encode()
-                if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid) and \
-                        message.reply_to_message.from_user.id != int(r.hget('c' + cid, 'leader')):
-                    r.sadd('cl2' + cid, uid)
-                    await message.reply('\u2705')
+                if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid):
+                    if message.reply_to_message.from_user.id != int(r.hget('c' + cid, 'leader')):
+                        r.sadd('cl2' + cid, uid)
+                        await message.reply('\u2705')
+                else:
+                    markup = InlineKeyboardMarkup()
+                    markup.add(InlineKeyboardButton(text='Так', callback_data='promote_to_leader'))
+                    n = r.hget(message.reply_to_message.from_user.id, 'firstname')
+                    await message.reply(f'\U0001F530 Підвищити {n} до лідера?')
     except:
         pass
 
@@ -3040,6 +3045,25 @@ async def handle_query(call):
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+
+    elif call.data.startswith('promote_to_leader'):
+        try:
+            uid1 = call.from_user.id
+            uid2 = call.message.reply_to_message.from_user.id
+            uid2e = str(uid2).encode()
+            c = 'c' + r.hget(uid1, 'clan').decode()
+            cl = 'cl' + r.hget(uid1, 'clan').decode()
+            cl2 = 'cl2' + r.hget(uid1, 'clan').decode()
+            if call.message.chat.id == r.hget(uid1, 'clan').decode():
+                if uid1 == int(r.hget(c, 'leader')):
+                    if uid2e in r.smembers(cl) and uid2e in r.smembers(cl2):
+                        r.hset(c, 'leader', uid2)
+                        r.sadd(cl2, uid1)
+                        r.srem(cl2, uid2)
+                        await bot.edit_message_text('\U0001F530 Змінено лідера клану!',
+                                                    call.message.chat.id, call.message.message_id)
+        except:
+            pass
 
     elif call.data.startswith('buy_axe'):
         if int(r.hget(call.from_user.id, 'support')) == 0:
