@@ -1333,8 +1333,9 @@ async def pack(message):
 async def skills(message):
     try:
         markup = InlineKeyboardMarkup()
-        s = r.hmget(message.from_user.id, 's1', 's2', 's3')
-        s1, s2, s3 = int(s[0]), int(s[1]), int(s[2])
+        s = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5')
+        pur = int(r.hget(message.from_user.id, 'purchase'))
+        s1, s2, s3, s4, s5 = int(s[0]), int(s[1]), int(s[2]), int(s[3]), int(s[4])
 
         if s1 < 10:
             markup.add(InlineKeyboardButton(text='Прокачати алкоголізм', callback_data='alcohol'))
@@ -1342,8 +1343,12 @@ async def skills(message):
             markup.add(InlineKeyboardButton(text='Прокачати майстерність', callback_data='master'))
         if s3 < 5:
             markup.add(InlineKeyboardButton(text='Продовжити будівництво', callback_data='cellar'))
+        #  if s4 < 5:
+        #  markup.add(InlineKeyboardButton(text='Прокачати наркозалежність', callback_data='addiction'))
+        #  if s5 < 5:
+        #  markup.add(InlineKeyboardButton(text='Прокачати психоз', callback_data='psycho'))
 
-        s11, s22, s221, s222 = s1, s2, 0, 0
+        s11, s22, s221, s222, s41 = s1, s2, 0, 0, s4 * 10
         intel = ' гривень, а шанс підняти інтелект - 10%. '
         if s2 == 1:
             s221, s222 = 3, 8
@@ -1372,6 +1377,7 @@ async def skills(message):
               '3. Будівництво (твій русак втратить 25% сили). ' \
               'На цьому етапі можна отримати додаткового русака (годувати одного в день)\n' \
               '4. Купівля припасів (1500 грн). Можна годувати і відправляти в шахти обох русаків.\n'
+        up4 = f'Для покращення цієї здібності треба здійснити {s41} покупок в сольовому магазині.\n{pur}/{s41}'
         if s1 >= 10:
             up1 = ''
         if s2 >= 5:
@@ -1404,6 +1410,20 @@ async def skills(message):
             else:
                 msg = msg + '\U0001f7eb'
                 s3 = s3 - 1
+
+        msg = msg + '\n\n\U0001F9C2 Наркозалежність\n\nЗбільшує вигоду купівлі сили в сольовому магазині.\n ' \
+                    'Бонуси за кожен рівень:\n' \
+                    '2. Зменшення шансу передозування з 10% до 5%\n.' \
+                    '3. Передозування даватиме 20 бойового трансу\n' \
+                    '4. Кількість негативних ефектів вдвічі зменшується\n' \
+                    '5. На 40% сили більше, купляючи її за сіль\n' + up4
+        for a in range(5):
+            if s4 <= 0:
+                msg = msg + '\u2B1C'
+            else:
+                msg = msg + '\U0001f7e6'
+                s4 = s4 - 1
+
         await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
