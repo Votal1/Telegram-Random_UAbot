@@ -67,9 +67,6 @@ async def get_help(message):
                         'зрозумієш.\n\nЩоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n'
                         '/wiki - вся інфа по грі\n'
                         '@randomuanews - новини', disable_web_page_preview=True)
-    if message.from_user.id == 456514639:
-        a = await bot.get_chat(-1001508218205)
-        await message.reply(a.username)
 
 
 @dp.message_handler(commands=['links'])
@@ -1041,7 +1038,7 @@ async def promo_code(message):
             msg = message.text.split(' ')[1]
             uid = str(message.from_user.id).encode()
             if msg.encode() in r.smembers('promo_codes'):
-                if msg.startswith('soledar') and uid not in r.smembers('first_code'):
+                if msg.startswith('soledar_n') and uid not in r.smembers('first_code'):
                     r.sadd('first_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
                     r.hincrby(message.from_user.id, 'vodka', 50)
@@ -1083,6 +1080,13 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'money', 300)
                     await message.reply('\u26CF Промокод активовано!\n\u2708\uFE0F +1 \U0001F4AA +100 '
                                         '\u2622 +200 \U0001F4B5 +300')
+                elif msg.startswith('soledar_1') and uid not in r.smembers('sixth_code'):
+                    r.sadd('sixth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'strength', 33)
+                    r.hincrby(message.from_user.id, 'packs', 22)
+                    r.hincrby(message.from_user.id, 'salt', 11)
+                    await message.reply('\u26CF Ювілейний Соледарський промокод активовано!\n'
+                                        '\U0001F9C2 +11 \U0001F4E6 +22 \U0001F4AA +33')
     except:
         pass
 
