@@ -202,10 +202,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1, bd1 = trance(uid1, s1, bd1, True)
             s11 = s1
             inj1 += '\U0001F44A '
+            if int(r.hget(uid1, 's5')) >= 3 and randint(1, 2) == 1:
+                increase_trance(1, uid1)
         if int(r.hget(uid2, 'buff')) > 0:
             s2, bd2 = trance(uid2, s2, bd2, True)
             s22 = s2
             inj2 += '\U0001F44A '
+            if int(r.hget(uid2, 's5')) >= 3 and randint(1, 2) == 1:
+                increase_trance(1, uid2)
 
         if head1 == 2:
             s1 = int(s1 * 1.31)
@@ -1836,7 +1840,7 @@ async def start_raid(cid):
             for mem in r.smembers('fighters_3' + str(cid)):
                 r.hincrby(mem, 'packs', packs)
                 quest(mem, 3, 3, 3)
-                if packs >= 20:
+                if packs >= 10:
                     quest(mem, 3, -2, 4)
         elif reward <= 0 and diff != 0:
             msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'

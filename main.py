@@ -333,13 +333,13 @@ async def feed(message):
                         ran = fr[1] + 15
                         if cl == 20 or cl == 30:
                             ran += 15
-                        r.hincrby(message.from_user.id, 'strength', ran)
                     else:
                         ran = fr[1]
-                        r.hincrby(message.from_user.id, 'strength', ran)
                 except:
                     ran = fr[1]
-                    r.hincrby(message.from_user.id, 'strength', ran)
+                if ran <= 10 and int(r.hget(message.from_user.id, 's5')) >= 5:
+                    ran = 10
+                r.hincrby(message.from_user.id, 'strength', ran)
                 bd = fr[3]
                 if int(r.hget(message.from_user.id, 'support')) == 5:
                     bd = 2
@@ -756,11 +756,21 @@ async def woman(message):
                 r.hset(message.from_user.id, 'time4', datetime.now().day)
                 r.hincrby(message.from_user.id, 'time5', 1)
                 if int(r.hget(message.from_user.id, 'time5')) >= 9:
-                    await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 '
-                                        'немовля. В тебе буде смачний сніданок!')
+                    emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
+                    msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
+                          'В тебе буде смачний сніданок!'
                     r.hincrby(message.from_user.id, 'childs', 1)
                     r.hincrby('all_children', 'children', 1)
                     r.hset(message.from_user.id, 'time5', 0)
+                    if int(r.hget(message.from_user.id, 's5')) >= 4:
+                        if r.hexists(message.from_user.id, 'time22') == 0:
+                            msg += f'\n{emoji} +1'
+                            r.hset(message.from_user.id, 'time', 0)
+                        else:
+                            msg += f'\n{emoji} +2'
+                            r.hset(message.from_user.id, 'time', 0)
+                            r.hset(message.from_user.id, 'time22', 0)
+                    await message.reply(msg)
                 else:
                     await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
                                         r.hget(message.from_user.id, 'time5').decode() + ' місяці.')

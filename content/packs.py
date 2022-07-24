@@ -1,5 +1,5 @@
 from config import r
-from random import choice, choices
+from random import choice, choices, randint
 from methods import checkClan
 from variables import icons
 from parameters import vodka
@@ -122,9 +122,13 @@ def open_pack(uid, cdata, edit):
                     msg = f'\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 \U0001F54A +{vo}'
                 elif ran == [8]:
                     msg = '\U0001f535 В цьому пакунку лежить мертвий русак...\n\u2620\uFE0F +1'
-                    r.hincrby(uid, 'deaths', 1)
-                    r.hincrby('all_deaths', 'deaths', 1)
+                    num = 1
                     quest(uid, 1, -4)
+                    if choice([1, 2, 3]) == 1 and int(r.hget(uid, 's5')) >= 2:
+                        num = randint(2, 3)
+                        msg = f'\U0001f535 В цьому пакунку лежать мертві русаки...\n\u2620\uFE0F +{num}'
+                    r.hincrby(uid, 'deaths', num)
+                    r.hincrby('all_deaths', 'deaths', num)
                 elif ran == [9]:
                     if int(r.hget(uid, 'intellect')) < 20:
                         if int(r.hget(uid, 'support')) != 6:
