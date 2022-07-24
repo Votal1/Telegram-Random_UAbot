@@ -2094,7 +2094,7 @@ async def join(message):
                 num += 10
                 ts = 10800
             diff = int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts'))
-            if diff > ts or message.from_user.id in sudoers:
+            if diff > ts:
                 if r.scard('cl' + str(message.chat.id)) < num:
                     if int(r.hget(c, 'allow')) == 0 or message.from_user.id in sudoers:
                         r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp())})
@@ -2110,6 +2110,7 @@ async def join(message):
                 else:
                     await message.reply('\U0001F4E5 Неможливо вступити в клан, оскільки він переповнений.')
             else:
+                markup = InlineKeyboardMarkup()
                 td = timedelta(seconds=ts-diff)
                 days, hours, minutes = td.days, td.seconds // 3600, (td.seconds // 60) % 60
                 if days > 0:
@@ -2120,7 +2121,14 @@ async def join(message):
                     msg = f'{minutes}хв.'
                 else:
                     msg = 'менше хвилини.'
-                await message.reply(f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: ' + msg)
+
+                if int(r.hget(message.from_user.id, 'strap')) > 0:
+                    msg = f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: {msg}\n\n' \
+                          f'\U0001F31F Онулити час очікування за погон?'
+                    markup.add(InlineKeyboardButton(text='\U0001F31F 1 -> \u23F1', callback_data='zero_time'))
+                else:
+                    msg = f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: {msg}'
+                await message.reply(msg, reply_markup=markup)
     except Exception as e:
         print(e)
 
@@ -4466,6 +4474,16 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Пізно пришвидшувати будівництво')
+
+    elif call.data.startswith('zero_time'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hset(call.from_user.id, 'clan_ts', 0)
+            await bot.edit_message_text('\u23F1 Час очікування онулений.',
+                                        call.message.chat.id, call.message.message_id, reply_markup=None)
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
 
     elif call.data.startswith('drop_w') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'weapon')) != 0:
