@@ -3063,7 +3063,7 @@ async def handle_query(call):
             c = 'c' + r.hget(uid1, 'clan').decode()
             cl = 'cl' + r.hget(uid1, 'clan').decode()
             cl2 = 'cl2' + r.hget(uid1, 'clan').decode()
-            if call.message.chat.id == r.hget(uid1, 'clan').decode():
+            if call.message.chat.id == int(r.hget(uid1, 'clan')):
                 if uid1 == int(r.hget(c, 'leader')):
                     if uid2e in r.smembers(cl) and uid2e in r.smembers(cl2):
                         r.hset(c, 'leader', uid2)
