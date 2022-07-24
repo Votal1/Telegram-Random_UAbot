@@ -719,8 +719,8 @@ async def account(message):
 async def passport(message):
     if r.hexists(message.from_user.id, 'wins') == 1:
         stats = r.hmget(message.from_user.id, 'wins', 'trophy', 'deaths', 'childs', 'vodka', 'opened', 'clan')
-        sk = r.hmget(message.from_user.id, 's1', 's2', 's3')
-        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2])) * 100 / 20)
+        sk = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5')
+        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4])) * 100 / 30)
         ac = 0
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
                       'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13', 'ac14', 'ac15', 'ac16')
@@ -1383,7 +1383,7 @@ async def skills(message):
               f'3. Передозування даватиме 20 бойового трансу\n' \
               f'4. Кількість негативних ефектів вдвічі зменшується\n' \
               f'5. На 40% сили більше, купляючи її за сіль\n'
-        up5 = f'Для покращення цієї здібності треба вбити {s5 * 20} русаків і з`їсти {s5 * 10} немовлят.\n' \
+        up5 = f'Для покращення цієї здібності треба набрати {s5 * 20} вбитих русаків і з`їсти {s5 * 10} немовлят.\n' \
               f'Бонуси за кожен рівень:\n' \
               f'2. 30% шанс знайти 2-3 мертвих русаків в пакунку\n' \
               f'3. 50% шанс не зменшити бойовий транс в дуелях\n' \
