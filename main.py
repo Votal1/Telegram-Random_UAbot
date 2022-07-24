@@ -3677,6 +3677,35 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='У вас вже нічого будувати.')
 
+    elif call.data.startswith('addiction'):
+        s4 = int(r.hget(call.from_user.id, 's4'))
+        if s4 < 5:
+            if int(r.hget(call.from_user.id, 'purchase')) >= s4 * 10:
+                r.hincrby(call.from_user.id, 's4', 1)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text=f'\U0001F9C2 Ви підняли рівень наркозалежності до {s4+1}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ще рано переходити на наступний етап наркозалежності.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Більше користі від солі не буде.')
+
+    elif call.data.startswith('psycho'):
+        s5 = int(r.hget(call.from_user.id, 's5'))
+        if s5 < 5:
+            if int(r.hget(call.from_user.id, 'childs')) >= s5 * 10 and \
+                    int(r.hget(call.from_user.id, 'deaths')) >= s5 * 20:
+                r.hincrby(call.from_user.id, 's5', 1)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text=f'\u2620\uFE0F Ви підняли рівень психозу до {s5+1}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ще рано переходити на наступний рівень психозу.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви вже достатньо псих.')
+
     elif call.data.startswith('vodka'):
         if int(r.hget(call.from_user.id, 'money')) >= 2:
             r.hincrby(call.from_user.id, 'money', -2)

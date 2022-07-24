@@ -101,6 +101,7 @@ def salt_shop(uid, cdata):
         if int(r.hget(uid, 'injure')) <= 0:
             if int(r.hget(uid, 'salt')) >= 5:
                 r.hincrby(uid, 'salt', -5)
+                r.hincrby(uid, 'purchase', 1)
                 st = int(r.hget(uid, 'strength'))
                 if st < 2000:
                     up = 30
@@ -114,7 +115,7 @@ def salt_shop(uid, cdata):
                     up = 3
                 r.hincrby(uid, 'strength', up)
                 quest(uid, 3, 2, 4)
-                if choices([1, 0], [5, 95]) == [1]:
+                if choices([1, 0], [10, 90]) == [1]:
                     return f'Передозування!\n\U0001F4AA +{up}'
                 else:
                     return f'\U0001F4AA +{up}'
@@ -167,6 +168,7 @@ def salt_shop(uid, cdata):
             else:
                 return 'У вас вже є спорядження цього типу'
             r.hincrby(uid, 'salt', -10)
+            r.hincrby(uid, 'purchase', 1)
             return 'Покращене класове спорядження успішно придбано.'
         else:
             return 'Недостатньо солі на рахунку.'
@@ -177,6 +179,7 @@ def salt_shop(uid, cdata):
                 r.hset(uid, 'head', 3)
                 r.hset(uid, 's_head', 1)
                 r.hincrby(uid, 'salt', -15)
+                r.hincrby(uid, 'purchase', 1)
                 return 'Ви успішно купили кавун базований'
             else:
                 return 'У вас вже є шапка'
@@ -188,6 +191,7 @@ def salt_shop(uid, cdata):
             if checkClan(uid):
                 c = 'c' + r.hget(uid, 'clan').decode()
                 r.hincrby(uid, 'salt', -20)
+                r.hincrby(uid, 'purchase', 1)
                 r.hincrby(c, 'technics', 22)
                 r.hincrby(c, 'brick', 55)
                 r.hincrby(c, 'cloth', 111)
@@ -201,6 +205,7 @@ def salt_shop(uid, cdata):
         if int(r.hget(uid, 'salt')) >= 30:
             cl = int(r.hget(uid, 'class'))
             r.hincrby(uid, 'salt', -30)
+            r.hincrby(uid, 'purchase', 1)
             if cl == 0:
                 r.hset(uid, 'photo', default[4])
             elif cl == 1 or cl == 11 or cl == 21:
@@ -237,6 +242,7 @@ def salt_shop(uid, cdata):
                 r.hset(uid, 'support', 10)
                 r.hset(uid, 's_support', 3)
                 r.hincrby(uid, 'salt', -33)
+                r.hincrby(uid, 'purchase', 1)
                 return 'Ви успішно купили Швайнокарася'
             else:
                 return 'У вас вже є допоміжне спорядження'
