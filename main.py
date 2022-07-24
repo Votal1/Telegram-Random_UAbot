@@ -4522,10 +4522,16 @@ async def handle_query(call):
         msg = salt_shop(call.from_user.id, call.data)
         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=msg)
         if msg.startswith('Передозування'):
-            ran1, ran2 = randint(50, 100), randint(50, 100)
+            s4 = int(r.hget(call.from_user.id, 's4'))
+            ran1, ran2, tr = randint(50, 100), randint(50, 100), ''
+            if s4 >= 4:
+                ran1, ran2 = int(ran1 / 2), int(ran2 / 2)
             r.hincrby(call.from_user.id, 'injure', ran1)
             r.hincrby(call.from_user.id, 'sch', ran2)
-            await bot.send_message(call.message.chat.id, f'Передозування!\n\U0001fa78 +{ran1} \U0001F464 +{ran2}')
+            if s4 >= 3:
+                increase_trance(20, call.from_user.id)
+                tr = ' \U0001F44A +20'
+            await bot.send_message(call.message.chat.id, f'Передозування!\n\U0001fa78 +{ran1} \U0001F464 +{ran2}{tr}')
         elif msg.startswith('Ви успішно купили ресурси для клану'):
             try:
                 msg = 'Ваше замовлення прибуло.\n\U0001F4FB 22 \U0001F9F1 55 \U0001F9F6 111'

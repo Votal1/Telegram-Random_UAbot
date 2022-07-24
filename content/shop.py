@@ -103,6 +103,7 @@ def salt_shop(uid, cdata):
                 r.hincrby(uid, 'salt', -5)
                 r.hincrby(uid, 'purchase', 1)
                 st = int(r.hget(uid, 'strength'))
+                s4 = int(r.hget(uid, 's4'))
                 if st < 2000:
                     up = 30
                 elif st < 3000:
@@ -113,12 +114,22 @@ def salt_shop(uid, cdata):
                     up = 5
                 else:
                     up = 3
+                if s4 >= 5:
+                    up = int(up * 1.4)
                 r.hincrby(uid, 'strength', up)
                 quest(uid, 3, 2, 4)
-                if choices([1, 0], [10, 90]) == [1]:
-                    return f'Передозування!\n\U0001F4AA +{up}'
+                if s4 < 2:
+                    if choices([1, 0], [10, 90]) == [1]:
+                        msg = f'Передозування!\n\U0001F4AA +{up}'
+                    else:
+                        msg = f'\U0001F4AA +{up}'
                 else:
-                    return f'\U0001F4AA +{up}'
+                    if choices([1, 0], [5, 95]) == [1]:
+                        msg = f'Передозування!\n\U0001F4AA +{up}'
+                    else:
+                        msg = f'\U0001F4AA +{up}'
+
+                return msg
             else:
                 return 'Недостатньо солі на рахунку.'
         else:
