@@ -1405,6 +1405,10 @@ async def skills(message):
             up2 = ''
         if s3 >= 5:
             up3 = ''
+        if s4 >= 5:
+            up4 = ''
+        if s5 >= 5:
+            up5 = ''
         msg = '\u2622 Алкоголізм:\n\nГорілка додає від ' + str(10 * s1) + ' до ' + str(70 * s1) + \
               ' бойового духу.' + up1 + '\n'
         for a in range(10):
