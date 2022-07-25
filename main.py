@@ -2615,8 +2615,7 @@ async def handle_query(call):
             r.hset(cid, 'name', n, {'strength': s, 'intellect': i, 'spirit': 0, 'class': 0, 'weapon': 0, 's_weapon': 0,
                                     'defense': 0, 's_defense': 0, 'support': 0, 's_support': 0, 'mushrooms': 0,
                                     'hp': 100, 'injure': 0, 'sch': 0, 'buff': 0, 'head': 0, 's_head': 0,
-                                    'photo': choice(default), 'firstname': call.from_user.first_name,
-                                    'q1': 0, 'q2': 0, 'q3': 0, 'q1t': 0, 'q2t': 0, 'q3t': 0, 'qt': 0})
+                                    'photo': choice(default), 'firstname': call.from_user.first_name})
             r.sadd('everyone', call.from_user.id)
             try:
                 r.hset(call.from_user.id, 'username', call.from_user.username)
@@ -2661,6 +2660,20 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 's5', 1)
             if r.hexists(call.from_user.id, 'purchase') == 0:
                 r.hset(call.from_user.id, 'purchase', 0)
+            if r.hexists(call.from_user.id, 'q1') == 0:
+                r.hset(call.from_user.id, 'q1', 0)
+            if r.hexists(call.from_user.id, 'q2') == 0:
+                r.hset(call.from_user.id, 'q2', 0)
+            if r.hexists(call.from_user.id, 'q3') == 0:
+                r.hset(call.from_user.id, 'q3', 0)
+            if r.hexists(call.from_user.id, 'q1t') == 0:
+                r.hset(call.from_user.id, 'q1t', 0)
+            if r.hexists(call.from_user.id, 'q2t') == 0:
+                r.hset(call.from_user.id, 'q2t', 0)
+            if r.hexists(call.from_user.id, 'q3t') == 0:
+                r.hset(call.from_user.id, 'q3t', 0)
+            if r.hexists(call.from_user.id, 'qt') == 0:
+                r.hset(call.from_user.id, 'qt', 0)
             await bot.edit_message_text(text='\U0001F3DA Ти приходиш на Донбас - чудове місце для полювання на'
                                              ' русаків\n\n\U0001F412 Русака взято в полон...',
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
