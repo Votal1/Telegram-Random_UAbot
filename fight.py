@@ -1123,7 +1123,7 @@ async def war(cid, location, big_battle):
     for member in r.smembers('fighters' + str(cid)):
         r.srem('fighters' + str(cid), member)
     end = ' завершена.'
-    if location == 'Штурм Горлівки' or location == 'Штурм ДАП' or 'Розгром командного пункту':
+    if location in ('Штурм Горлівки', 'Штурм ДАП', 'Розгром командного пункту'):
         end = ' завершено.'
     await bot.delete_message(m.chat.id, m.message_id)
     await bot.send_message(cid, location + end + winner + reward + class_reward, parse_mode='HTML')
