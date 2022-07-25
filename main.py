@@ -2366,7 +2366,6 @@ async def relax(message):
         name = names[int(r.hget(message.from_user.id, 'name'))]
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if int(r.hget(message.from_user.id, 'clan_time')) == datetime.now().day:
-                r.hset(message.from_user.id, 'clan_time', datetime.now().day)
                 msg = '\U0001F319 ' + name + ' відпочиває і готується до завтрашньої роботи.'
                 if int(r.hget(message.from_user.id, 'support')) == 10:
                     damage_support(message.from_user.id)
@@ -2996,7 +2995,9 @@ async def handle_query(call):
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
                         r.hset(call.from_user.id, 'clan', call.message.chat.id,
-                               {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+                               {'clan_ts': int(datetime.now().timestamp())})
+                        if r.hexists(call.from_user.id, 'clan_time') == 0:
+                            r.hset(call.from_user.id, 'clan_time', 0)
                         if call.data == 'create_hrn':
                             r.hincrby(call.from_user.id, 'money', -250)
                         else:
