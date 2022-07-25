@@ -2939,6 +2939,9 @@ async def handle_query(call):
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id)
                     await call.message.reply('\u2694 Русаки вирушили в рейд...')
                     await start_raid(call.message.chat.id)
+                elif r.scard('fighters_3' + str(call.message.chat.id)) > 5:
+                    await bot.edit_message_text(text=call.message.text,
+                                                chat_id=call.message.chat.id, message_id=call.message.message_id)
                 else:
                     await bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
