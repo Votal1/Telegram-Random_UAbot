@@ -2914,14 +2914,13 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Комендантська година, рейди недоступні.')
             else:
-                r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-                fighters = r.scard('fighters_3' + str(call.message.chat.id))
-                if fighters == 1:
+                r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
+                if r.scard('fighters_3' + str(call.message.chat.id)) == 1:
                     await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 reply_markup=battle_button_4())
-                elif fighters >= 5:
+                elif r.scard('fighters_3' + str(call.message.chat.id)) == 5:
                     await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
                                                                          '\n\nРейд почався...',
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id)
@@ -4590,7 +4589,7 @@ async def handle_query(call):
             if r.hexists('pack_ts', call.from_user.id) == 0:
                 r.hset('pack_ts', call.from_user.id, 0)
             timestamp = int(datetime.now().timestamp())
-            if not call.data.startswith('pack_unpack') and timestamp - int(r.hget('pack_ts', call.from_user.id)) < 1:
+            if not call.data.startswith('pack_unpack') and timestamp - int(r.hget('pack_ts', call.from_user.id)) < 2:
                 pass
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
