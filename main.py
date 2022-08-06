@@ -1075,10 +1075,10 @@ async def battle(message):
 
 @dp.message_handler(commands=['war'])
 async def war_battle(message):
-    banned = [-1001646765307, -1001475102262, -714355096, 557298328, 530769095, 470411500, 1767253195]
     c = await bot.get_chat_members_count(message.chat.id)
-    if message.chat.type != 'private' and c >= 10 \
-            and '@' not in message.chat.title and message.chat.id not in banned and message.from_user.id not in banned:
+    if message.chat.type != 'private' and c >= 10 and '@' not in message.chat.title and \
+            str(message.chat.id).encode() not in r.smembers('war_banned') and \
+            str(message.from_user.id).encode() not in r.smembers('war_banned'):
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
                 await bot.delete_message(message.chat.id, message.message_id)
