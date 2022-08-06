@@ -1,7 +1,9 @@
 names = ['Ваня', 'Ваня', 'Ваня', 'Славік', 'Колян', 'Вован', 'Мага', 'Махмед', 'Олег', 'Стасян',
          'Петруха', 'Алєксандр', 'Сашка', 'Міхаіл', 'Мішка', 'Юрас', 'Гіві', 'Андрюха', 'Хабіб',
          'Саньок', 'Льоха', 'Даня', 'Русік', 'Альоша', 'Вітя', 'Владос', 'Женя', 'Ігорь', 'Сірьога',
-         'Едік', 'Віталя', 'Ашот', 'Моторола', 'Бодя', 'Макс', 'Рамзан']
+         'Едік', 'Віталя', 'Ашот', 'Моторола', 'Бодя', 'Макс', 'Рамзан', 'Ванька', 'Льоня', 'Павлуха',
+         'Кіря', 'Іслам', 'Толік', 'Гріша', 'Мурат', 'Антоха', 'Дімас', 'Тимур', 'Тьома', 'Башир', 'Чингіс',
+         'Рома', 'Костя', 'Ілля']
 
 icons = ['', '\U0001F919', '\U0001F9F0', '\U0001F52E', '\U0001F5FF', '\U0001fa96',
          '\U0001F46E', '\U0001F921', '\U0001F4DF', '\u26D1', '\U0001F6AC',
@@ -31,14 +33,14 @@ defenses = ['', 'Колючий щит', 'Бронежилет вагнерів�
             '', '', '', '', '', '', 'Поліцейський щит', 'Важкий поліцейський щит']
 
 supports = ['', 'Аптечка', 'Дизель', 'Сокира', 'Кайло', 'Хліб справжній', 'Мухомор королівський', 'Цукор', 'Квас',
-            'Ракетне паливо']
+            'Ракетне паливо', 'Швайнокарась']
 
-heads = ['', 'Шапочка з фольги', 'Тактичний шолом', 'Кавун базований', 'Вушанка', 'Кавуняча крінжа']
+heads = ['', 'Шапочка з фольги', 'Тактичний шолом', 'Кавун базований', 'Вушанка', 'Кавуняча крінжа', 'Ярмулка']
 
 sudoers = [456514639, 634799543, 379620096]
 
 p1 = ['https://i.ibb.co/qmkDFTP/1.jpg', 'https://i.ibb.co/hDsXjZb/2.jpg', 'https://i.ibb.co/NNmfy50/3.jpg',
-      'https://i.ibb.co/gZ96zHK/4.jpg', 'https://i.ibb.co/8b0BWyR/5.jpg', 'https://i.ibb.co/L6PSNm8/6.jpg',
+      'https://i.ibb.co/gZ96zHK/4.jpg', 'https://i.ibb.co/8b0BWyR/5.jpg', 'https://i.ibb.co/b2RKgXW/6.png',
       'https://i.ibb.co/RgMxCZr/7.jpg', 'https://i.ibb.co/xDyqznw/8.jpg', 'https://i.ibb.co/vkPCzc2/9.jpg',
       'https://i.ibb.co/2jcjP3N/10.jpg']
 
@@ -91,7 +93,7 @@ p11 = ['https://ibb.co/5WPhmSn', 'https://ibb.co/Zfz7Nft', 'https://ibb.co/XF5Md
        'https://ibb.co/n1Yvrb7', 'https://ibb.co/ZTGP7TS', 'https://ibb.co/QC43pkJ', 'https://ibb.co/tPzYhXx',
        'https://ibb.co/DkxNyz0', 'https://ibb.co/fQbHYMK']
 
-p12 = ['https://ibb.co/hDHcqDC', 'https://ibb.co/0KqbjVz', 'https://ibb.co/swD4ZDn', 'https://ibb.co/HnBZqDB',
+p12 = ['https://i.ibb.co/Chv6rhW/1.png', 'https://ibb.co/0KqbjVz', 'https://ibb.co/swD4ZDn', 'https://ibb.co/HnBZqDB',
        'https://ibb.co/G2M15Pz', 'https://ibb.co/rxPcDsv', 'https://ibb.co/DWNzTnL', 'https://ibb.co/4P0vkJj',
        'https://ibb.co/PhzrB52', 'https://ibb.co/YfDzRY6']
 
@@ -104,6 +106,10 @@ premium2 = ['https://ibb.co/2d74PBj', 'https://ibb.co/Y09fjgM', 'https://ibb.co/
             'https://ibb.co/WsnGJdM', 'https://ibb.co/0BnbTm4', 'https://ibb.co/wcJ0B62', 'https://ibb.co/SnjZdMH',
             'https://ibb.co/tXnJcKc', 'https://ibb.co/2NJYsSQ', 'https://ibb.co/qRbSnJy', 'https://ibb.co/1vHr3hm']
 
+premium3 = ['https://ibb.co/FmrkDC3', 'https://ibb.co/jhf5RSW', 'https://ibb.co/VHy87KH', 'https://ibb.co/t4MsDt4',
+            'https://ibb.co/H2mHyqm', 'https://ibb.co/SNcXSbv', 'https://ibb.co/qYjnTJX', 'https://ibb.co/Hp2Wzrk',
+            'https://ibb.co/4sZshJ2', 'https://ibb.co/XbH7Wqg', 'https://ibb.co/PgfvSXD', 'https://ibb.co/qgLWW5G']
+
 chm = ['https://ibb.co/hHL9Gn6', 'https://ibb.co/2q1FRqp', 'https://ibb.co/Y0L764f', 'https://ibb.co/rdjfSxy',
        'https://ibb.co/sRzV5Zs', 'https://ibb.co/zPx2zKK', 'https://ibb.co/dQcFyKw', 'https://ibb.co/cXvjbkD',
        'https://ibb.co/QdP1KQZ', 'https://ibb.co/zfBD5ZW', 'https://ibb.co/wWV253v', 'https://ibb.co/KL5hS9J']
@@ -111,3 +117,4 @@ chm = ['https://ibb.co/hHL9Gn6', 'https://ibb.co/2q1FRqp', 'https://ibb.co/Y0L76
 default = ['https://ibb.co/PjxxLJr', 'https://ibb.co/mBLYqhC', 'https://ibb.co/vZ2R3fX', 'https://ibb.co/2SJjpqv',
            'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https://ibb.co/C7jCTRJ',
            'https://ibb.co/KK1WSyK', 'https://ibb.co/mFRGb0D']
+

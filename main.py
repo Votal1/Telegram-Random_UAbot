@@ -6,16 +6,20 @@ from aiogram.utils.executor import start_webhook
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, chm, default
+    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
-from buttons import goods, donate_goods, skill_set, battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick
-from merchant import merchant_msg
+
+from content.buttons import battle_button, battle_button_2, battle_button_3, \
+    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
+from content.merchant import merchant_msg
+from content.shop import shop_msg, salt_shop
+from content.packs import open_pack
+from content.quests import quests, quest
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -30,20 +34,21 @@ logging.basicConfig(level=logging.INFO)
 @dp.message_handler(commands=['gruz200', 'orki', 'z', 'poter_net', 'fertilizer', 'ruskie_idut_nahuy'])
 async def gruz200(message):
     try:
-        scraper = create_scraper(delay=10)
-        url = 'https://minusrus.com'
+        quest(message.from_user.id, 1, 5)
+        scraper = create_scraper(delay=10, browser='chrome')
+        url = 'https://index.minfin.com.ua/ua/russian-invading/casualties/'
         page = scraper.get(url).text
         soup = BeautifulSoup(page, 'html.parser')
-        title = '\U0001F437\U0001F436 ' + soup.find('div', 'title').text + ' на ' \
-                + soup.find('span', 'date__label').text
-        os = soup.find('div', 'amount-details').find_all('span')
-        t = soup.find_all('span', 'card__amount-total')
-        msg = title + '\n\n\u2620\uFE0F Вбито: ' + os[1].text + '\n\U0001fa78 Поранено: ' + os[3].text + \
-                      '\n\u26D3 Взято в полон: ' + os[5].text + '\n\U0001F690 ББМ: ' + t[1].text + \
-                      '\n\U0001F69C Танки: ' + t[2].text + '\n\U0001F525 Артилерія: ' + t[3].text + \
-                      '\n\u2708\uFE0F Літаки: ' + t[4].text + '\n\U0001F681 Гелікоптери: ' + t[5].text + \
-                      '\n\U0001F6A2 Кораблі та катери: ' + t[6].text + '\n\U0001F921 Жириновський, Медведчук, Шарій'
-        await message.reply(msg)
+        title = '\U0001F437\U0001F436 Втрати росії на ' + soup.find('span', 'black').text
+        d = soup.find('div', 'casualties').find_all('li')
+        msg = f'\n\n\u2620\uFE0F Вбито: {d[12].text.split()[4]} {d[12].text.split()[6]}' \
+              f'\n\U0001F690 ББМ: {d[1].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F69C Танки: {d[0].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F525 Артилерія: {d[2].text.split(maxsplit=2)[2]}' \
+              f'\n\u2708\uFE0F Літаки: {d[5].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F681 Гелікоптери: {d[6].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
+        await message.reply(title + msg)
     except Exception as e:
         print(e)
         await message.reply('minusrus.com', disable_web_page_preview=True)
@@ -52,17 +57,15 @@ async def gruz200(message):
 @dp.message_handler(commands=['start'])
 async def send_welcome(message):
     if message.chat.type == 'private':
-        await message.reply('Почнемо.\n\nЗайди в який-небудь чат (наприклад цей), напиши @Random_UAbot, а далі думаю'
-                            'все зрозумієш.\nДля деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?'
-                            ').\n\nЩоб взяти русака напиши команду \n/donbass\nДетальна інформація про русаків -'
-                            '\nhttps://t.me/randomuanews/4.', disable_web_page_preview=True)
+        await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
+                            '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['help'])
 async def get_help(message):
-    await message.reply('Зайди в який-небудь чат (наприклад цей), напиши @Random_UAbot, а далі думаю все зрозумієш.\n'
-                        'Для деяких команд потрібно додати текст, бажано зі сенсом (логічно, так?).\n\n'
-                        'Щоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n/wiki - вся інфа по грі\n'
+    await message.reply('Щоб почати дуель русаків зайди в який-небудь чат, напиши @Random_UAbot, а далі думаю все '
+                        'зрозумієш.\n\nЩоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n'
+                        '/wiki - вся інфа по грі\n'
                         '@randomuanews - новини', disable_web_page_preview=True)
 
 
@@ -310,6 +313,7 @@ async def feed(message):
             pass
         if not datetime.now().day == int(r.hget(message.from_user.id, 'time')):
             r.hset(message.from_user.id, 'time', datetime.now().day)
+            quest(message.from_user.id, 3, 2, 2)
             r.hset(message.from_user.id, 'hp', 100)
             if checkClan(message.from_user.id, building='build5', level=2) and\
                     int(r.hget(message.from_user.id, 'injure')) > 0:
@@ -321,7 +325,7 @@ async def feed(message):
             r.hincrby(message.from_user.id, 'eat', 1)
             success = fr[0]
             cl = int(r.hget(message.from_user.id, 'class'))
-            if cl == 2 or cl == 12 or cl == 22:
+            if cl in (2, 12, 22) or int(r.hget(message.from_user.id, 'support')) == 10:
                 success = 1
             if success == 1:
                 try:
@@ -329,13 +333,13 @@ async def feed(message):
                         ran = fr[1] + 15
                         if cl == 20 or cl == 30:
                             ran += 15
-                        r.hincrby(message.from_user.id, 'strength', ran)
                     else:
                         ran = fr[1]
-                        r.hincrby(message.from_user.id, 'strength', ran)
                 except:
                     ran = fr[1]
-                    r.hincrby(message.from_user.id, 'strength', ran)
+                if ran <= 10 and int(r.hget(message.from_user.id, 's5')) >= 5:
+                    ran = 10
+                r.hincrby(message.from_user.id, 'strength', ran)
                 bd = fr[3]
                 if int(r.hget(message.from_user.id, 'support')) == 5:
                     bd = 2
@@ -355,7 +359,7 @@ async def feed(message):
                             damage_support(message.from_user.id)
                             increase_trance(5, message.from_user.id)
                         else:
-                            decrease = choices([1, 0], [50, 50])
+                            decrease = choices([1, 0], [60, 40])
                     else:
                         if int(r.hget(message.from_user.id, 'support')) == 7:
                             decrease = choices([1, 0], [95, 5])
@@ -386,11 +390,22 @@ async def feed(message):
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 10000.'
                     spirit(10000, message.from_user.id, 0)
                     await message.reply_photo('https://i.ibb.co/bK2LrSD/feed.jpg', caption=msg)
-                elif bd == 1:
-                    msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
-                    spirit(1000, message.from_user.id, 0)
-                    await message.reply(msg)
                 else:
+                    if bd == 1:
+                        msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
+                        spirit(1000, message.from_user.id, 0)
+
+                    if word == 'зросла':
+                        if int(r.hget(message.from_user.id, 'support')) == 10 and choices([1, 0], [2, 8]) == [1]:
+                            if int(r.hget(message.from_user.id, 'injure')) > 0 \
+                                    or int(r.hget(message.from_user.id, 'sch')) > 0 \
+                                    or int(r.hget(message.from_user.id, 'mushrooms')) > 0:
+                                damage_support(message.from_user.id)
+                                r.hset(message.from_user.id, 'injure', 0)
+                                r.hset(message.from_user.id, 'sch', 0)
+                                r.hset(message.from_user.id, 'mushrooms', 0)
+                                msg += '\n\n\U0001F43D\U0001F41F Швайнокарась зняв з русака негативні ефекти.'
+
                     await message.reply(msg)
             else:
                 await message.reply('\U0001F9A0 Твій русак сьогодні захворів. Сили від їжі не прибавилось.')
@@ -407,9 +422,10 @@ async def mine(message):
             if r.hexists(message.from_user.id, 'time1') == 0:
                 r.hset(message.from_user.id, 'time1', 0)
             if not datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
-                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), int(r.hget(message.from_user.id, 'head')),
-                               datetime.today().weekday())
+                head = int(r.hget(message.from_user.id, 'head'))
+                ms = mine_salt(int(r.hget(message.from_user.id, 's2')), head, datetime.today().weekday())
                 r.hset(message.from_user.id, 'time1', datetime.now().day)
+                quest(message.from_user.id, 1, 4)
                 if message.text.startswith('/minecraft'):
                     if r.hexists(message.from_user.id, 'ac1') == 0:
                         r.hset(message.from_user.id, 'ac1', 1)
@@ -417,7 +433,8 @@ async def mine(message):
                 cl = int(r.hget(message.from_user.id, 'class'))
                 if cl == 2 or cl == 12 or cl == 22:
                     success = choice([0, 0, 1, 1, 1])
-                if int(r.hget(message.from_user.id, 'support')) == 8:
+                support = int(r.hget(message.from_user.id, 'support'))
+                if support == 8:
                     success = 1
                     increase_trance(5, message.from_user.id)
                     damage_support(message.from_user.id)
@@ -439,16 +456,29 @@ async def mine(message):
                         else:
                             msg += '\U0001F4B5 +20'
                             r.hincrby(message.from_user.id, 'money', 20)
+                    if choices([1, 0], [25, 75]) == [1] or head == 6:
+                        msg += '\n\U0001F9C2 +1'
+                        r.hincrby(message.from_user.id, 'salt', 1)
                     await message.reply(msg)
                 else:
-                    if cl == 2 or cl == 12 or cl == 22:
+                    fish = 0
+                    if support == 10:
+                        fish = choices([1, 0], [2, 8])[0]
+                    if cl in (2, 12, 22) and fish == 0:
                         msg = '\U0001F37A Твій роботяга втік з-під нагляду. Його знайшли п`яним біля шахти.\n\u2622 +5'
                         if cl == 12 or cl == 22:
-                            msg = msg + ' \U0001F4B5 + 8'
+                            msg = msg + ' \U0001F4B5 +8'
                             r.hincrby(message.from_user.id, 'money', 8)
                         r.hincrby(message.from_user.id, 'vodka', 5)
                         r.hincrby('all_vodka', 'vodka', 5)
                         await message.reply(msg)
+                    elif fish == 1:
+                        damage_support(message.from_user.id)
+                        await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля '
+                                            'шахти разом з швайнокарасем.\n\u2622 +100 \U0001F4B5 +100')
+                        r.hincrby(message.from_user.id, 'money', 100)
+                        r.hincrby(message.from_user.id, 'vodka', 100)
+                        r.hincrby('all_vodka', 'vodka', 100)
                     else:
                         await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля шахти'
                                             '.\n\u2622 +1')
@@ -659,28 +689,28 @@ async def fascist(message):
 async def shop(message):
     try:
         if r.hexists(message.from_user.id, 'money') == 0:
-            r.hset(message.from_user.id, 'money', 20)
-        else:
-            pass
-        if r.hexists(message.from_user.id, 'childs') == 0:
             await message.reply('У тебе ще не було русаків.\n\nРусака можна отримати, сходивши на /donbass')
         else:
-            money = r.hget(message.from_user.id, 'money').decode()
-            msg = f'\U0001F4B5 Гривні: {money}\n\nОсь опис товарів, які можна придбати:\n\n\u2622 Горілка "Козаки" - ' \
-                  f'збільшує русаку бойовий дух на 10-70.\n\U0001F5E1 Колючий дрин [Атака]- зменшує перед боєм ' \
-                  f'бойовий дух ворогу, якщо атакувати його (не використовується, якщо бойовий дух ворога менший ' \
-                  f'за 300, обнуляє, якщо від 300 до 1000, зменшує на 1000, якщо від 1000 до 2500 і зменшує на ' \
-                  f'20/30/40%, якщо бойовий дух більше 2500).\n\U0001F6E1 Колючий щит [Захист] - працює так само ' \
-                  f'як дрин, тільки знижує бойовий дух тому, хто атакує.\n\U0001F9EA Аптечка [Допомога, міцність=5]' \
-                  f' - збільшує здоров`я на 5 і на 10 кожного бою.\n\U0001F4B3 Трофейний паспорт - поміняє ім`я ' \
-                  f'русака на інше, випадкове.\n\U0001F3DA Утеплена будка - 15 додаткової сили при кожному ' \
-                  f'годуванні русака (до 2000 сили). \n\U0001F469\U0001F3FB Жінка - раз в 9 днів народжуватиме ' \
-                  f'смачне російське немовля. Жінку треба провідувати кожен день командою \n/woman\n\U0001F6AC Тютюн ' \
-                  f'та люлька - на це можна проміняти жінку і піти в козацький похід (бойовий дух русака збільшиться ' \
-                  f'на 5000, а кількість вбитих русаків збільшиться на 5).'
-            await bot.send_message(message.from_user.id, msg, reply_markup=goods())
+            msg, markup = shop_msg(message.from_user.id, 1)
+            await bot.send_message(message.from_user.id, msg, reply_markup=markup)
             if message.chat.type != 'private':
                 await message.reply('Надіслано в пп.')
+    except:
+        pass
+
+
+@dp.message_handler(commands=['account'])
+async def account(message):
+    try:
+        if r.hexists(message.from_user.id, 'money') == 0:
+            await message.reply('У тебе ще не було русаків.\n\nРусака можна отримати, сходивши на /donbass')
+        else:
+            m = r.hget(message.from_user.id, 'money').decode()
+            p = r.hget(message.from_user.id, 'packs').decode()
+            s = r.hget(message.from_user.id, 'strap').decode()
+            salt = r.hget(message.from_user.id, 'salt').decode()
+            msg = f'\U0001F4B5 Гривні: {m}\n\U0001F4E6 Пакунки: {p}\n\U0001F9C2 Сіль: {salt}\n\U0001F31F Погони: {s}'
+            await message.reply(msg)
     except:
         pass
 
@@ -689,8 +719,8 @@ async def shop(message):
 async def passport(message):
     if r.hexists(message.from_user.id, 'wins') == 1:
         stats = r.hmget(message.from_user.id, 'wins', 'trophy', 'deaths', 'childs', 'vodka', 'opened', 'clan')
-        sk = r.hmget(message.from_user.id, 's1', 's2', 's3')
-        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2])) * 100 / 20)
+        sk = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5')
+        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4])) * 100 / 30)
         ac = 0
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
                       'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13', 'ac14', 'ac15', 'ac16')
@@ -719,17 +749,28 @@ async def woman(message):
         if r.hexists(message.from_user.id, 'time4') == 0:
             r.hset(message.from_user.id, 'time4', 0)
         if int(r.hget(message.from_user.id, 'woman')) == 1:
+            quest(message.from_user.id, 1, -3)
             if int(r.hget(message.from_user.id, 'time4')) != datetime.now().day:
                 if r.hexists(message.from_user.id, 'time5') == 0:
                     r.hset(message.from_user.id, 'time5', 0)
                 r.hset(message.from_user.id, 'time4', datetime.now().day)
                 r.hincrby(message.from_user.id, 'time5', 1)
                 if int(r.hget(message.from_user.id, 'time5')) >= 9:
-                    await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 '
-                                        'немовля. В тебе буде смачний сніданок!')
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
+                          'В тебе буде смачний сніданок!'
                     r.hincrby(message.from_user.id, 'childs', 1)
                     r.hincrby('all_children', 'children', 1)
                     r.hset(message.from_user.id, 'time5', 0)
+                    if int(r.hget(message.from_user.id, 's5')) >= 4:
+                        if r.hexists(message.from_user.id, 'time22') == 0:
+                            msg += f'\n{emoji} +1'
+                            r.hset(message.from_user.id, 'time', 0)
+                        else:
+                            msg += f'\n{emoji} +2'
+                            r.hset(message.from_user.id, 'time', 0)
+                            r.hset(message.from_user.id, 'time22', 0)
+                    await message.reply(msg)
                 else:
                     await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
                                         r.hget(message.from_user.id, 'time5').decode() + ' місяці.')
@@ -743,8 +784,11 @@ async def woman(message):
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
-        msg = await top(message.chat.id, message.from_user.id, message.text)
-        await message.reply(msg)
+        if message.chat.id != -1001211933154:
+            msg = await top(message.chat.id, message.from_user.id, message.text)
+            await message.reply(msg)
+        else:
+            await message.reply('В Соледарі ця команда недоступна.')
     except:
         pass
 
@@ -789,7 +833,7 @@ async def classes(message):
           ' втричі більше бойового духу.\n\n' \
           'Гарматне м`ясо \U0001fa96 - +50% сили в бою, якщо є АК-47 (зброя, яку можна придбати в ' \
           'мандрівного торговця). 1% шанс отримати поранення в бою від АК-47 (втрачає весь бойовий' \
-          ' дух, здоров`я, все спорядження, на 150 боїв вдвічі зменшує бойовий дух та втричі - силу).\n\n' \
+          ' дух, здоров`я, зброю, захист, на 150 боїв вдвічі зменшує бойовий дух та втричі - силу).\n\n' \
           'Мусор \U0001F46E - має постійну зброю, яка перед боєм ігнорує бойовий дух двох сторін.' \
           ' Якщо є захист, ігнорує лише бойовий дух ворога.\n+30% сили при охороні клану від рейдерів.\n\n' \
           'Малорос \U0001F921 - моментально віднімає 2 інтелекту. При жертві віднімає у всіх' \
@@ -878,9 +922,8 @@ async def classes_3(message):
           'обидва русаки можуть отримати поранення на 150 боїв (якщо в героя є АК-47), з шансом 10%' \
           ' в бою герой і ворог отримають невелике поранення (герой: +1 \U0001fa78, ворог +5-10' \
           '\U0001fa78).\n\n' \
-          'Товариш майор \U0001F46E\U0001F46E\U0001F46E - 20% шанс вилучити в ворога зброю при ' \
-          'захисті і захист при атаці і отримати щит або підняти його міцність на 10 (не діє проти' \
-          ' інших мусорів).\n\n' \
+          'Товариш майор \U0001F46E\U0001F46E\U0001F46E - якщо є поліцейський щит - 20% шанс вилучити в ворога зброю' \
+          ' при захисті і захист при атаці і збільшити міцність щита на 10 (не діє проти інших мусорів).\n\n' \
           'Агент ФСБ \U0001F921\U0001F921\U0001F921 - одноразова премія - 300 гривень. В бою проти ' \
           'русака без класу є 5% шанс перетворити його в малороса. За це агент отримує 20 гривень. ' \
           'Можливість на території ворожого клану вкрасти гроші командою clan.\n\n' \
@@ -946,11 +989,14 @@ async def merchant(message):
 @dp.message_handler(commands=['donate'])
 async def donate(message):
     markup = InlineKeyboardMarkup()
-    await message.answer('Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n'
-                         '\U0001F31F погон російського генерала, який можна потратити в \n/donate_shop:'
-                         '\n\n<code>5375414105409873</code>',
-                         reply_markup=markup.add(InlineKeyboardButton(text='Як отримати погони?',
-                                                                      callback_data='donate')), parse_mode='HTML')
+    url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
+    markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
+    msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
+          'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону - 30грн.\n' \
+          '\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.'
+    await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True)
+    if message.chat.type != 'private':
+        await message.reply('Надіслано в пп.')
 
 
 @dp.message_handler(commands=['donated'])
@@ -975,19 +1021,8 @@ async def donate_shop(message):
     try:
         if r.hexists(message.from_user.id, 'strap') == 0:
             r.hset(message.from_user.id, 'strap', 0)
-        strap = r.hget(message.from_user.id, 'strap').decode()
-        msg = f'\U0001F31F Погони російських генералів: {strap}\n\nОсь опис товарів, які можна придбати:\n\n' \
-              f'\U0001F4F8 Заміна фото русака (ціна 1 погон):\n\U0001F304 Класове преміум фото 1 (Кадиров, Обеме, ' \
-              f'Горшок, Тесак, Захарченко, Дерек Шовін, Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, ' \
-              f'Шойгу).\n\U0001F307 Класове преміум фото 2 (Хасбулла, Стаханов, Мавроді, Просвірін, Гіркін-Стрєлков, ' \
-              f'Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Каневський, Герасімов).\n\U0001F309 Класовий ' \
-              f'Чмоня.\n\n\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n\U0001F943 Настоянка глоду ' \
-              f'- буст для новачків. Якщо в русака менше 1000 сили і 5 інтелекту, то настоянка моментально додасть' \
-              f' 400 сили і 4 інтелекту.\n\U0001F4E6 40 Донбаських пакунків\n\U0001F9FE Ресурси для клану: ' \
-              f'\U0001F333 2222 \U0001faa8 1111 \U0001F47E 33\n\U0001F393 Курс перекваліфікації - дозволяє русаку ' \
-              f'наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал найвищого рівня (покупка ' \
-              f'доступна до етапу 2. Купівля будівельних матеріалів).'
-        await bot.send_message(message.from_user.id, msg, reply_markup=donate_goods())
+        msg, markup = shop_msg(message.from_user.id, 2)
+        await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
     except:
@@ -1003,7 +1038,7 @@ async def promo_code(message):
             msg = message.text.split(' ')[1]
             uid = str(message.from_user.id).encode()
             if msg.encode() in r.smembers('promo_codes'):
-                if msg.startswith('soledar') and uid not in r.smembers('first_code'):
+                if msg.startswith('soledar_n') and uid not in r.smembers('first_code'):
                     r.sadd('first_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
                     r.hincrby(message.from_user.id, 'vodka', 50)
@@ -1028,6 +1063,30 @@ async def promo_code(message):
                     r.hset(message.from_user.id, 'weapon', 12)
                     r.hset(message.from_user.id, 's_weapon', 50)
                     await message.reply('\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 \U0001F5E1 +50')
+                elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
+                    r.sadd('fourth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 10)
+                    r.hincrby(message.from_user.id, 'money', 200)
+                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    await message.reply('\u26CF Промокод активовано!\n\U0001F4E6 +10 \u2622 +100 \U0001F4B5 +200')
+                elif msg.startswith('cr') and uid not in r.smembers('fifth_code') \
+                        and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
+                    r.sadd('fifth_code', message.from_user.id)
+                    if int(r.hget(message.from_user.id, 'weapon')) == 0:
+                        r.hset(message.from_user.id, 'weapon', 5)
+                        r.hset(message.from_user.id, 's_weapon', 1)
+                    r.hincrby(message.from_user.id, 'strength', 100)
+                    r.hincrby(message.from_user.id, 'vodka', 200)
+                    r.hincrby(message.from_user.id, 'money', 300)
+                    await message.reply('\u26CF Промокод активовано!\n\u2708\uFE0F +1 \U0001F4AA +100 '
+                                        '\u2622 +200 \U0001F4B5 +300')
+                elif msg.startswith('soledar_1') and uid not in r.smembers('sixth_code'):
+                    r.sadd('sixth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'strength', 33)
+                    r.hincrby(message.from_user.id, 'packs', 22)
+                    r.hincrby(message.from_user.id, 'salt', 11)
+                    await message.reply('\u26CF Ювілейний Соледарський промокод активовано!\n'
+                                        '\U0001F9C2 +11 \U0001F4E6 +22 \U0001F4AA +33')
     except:
         pass
 
@@ -1143,9 +1202,11 @@ async def crash(message):
 async def quit_from_battle(message):
     try:
         if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'w_ts')) > 1800:
-            cid = r.hget(message.from_user.id, 'in_war').decode()
             r.hdel(message.from_user.id, 'in_war')
-            r.srem('fighters_2' + cid, message.chat.id)
+            '''
+            cid = r.hget(message.from_user.id, 'in_war').decode()
+            r.srem('fighters_2' + cid, message.from_user.id)
+            '''
             await message.reply('\u2705')
         else:
             await bot.send_message(message.from_user.id, 'Покидати міжчатові битви можна тільки раз в пів години.')
@@ -1274,13 +1335,21 @@ async def inventory(message):
 @dp.message_handler(commands=['pack'])
 async def pack(message):
     if r.hexists(message.from_user.id, 'name') == 1:
-        packs = int(r.hget(message.from_user.id, 'packs'))
-        if packs != 0:
-            await message.reply('\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
-                                reply_markup=unpack())
-        else:
-            await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
-                                '\n\nКупити один і відкрити?', reply_markup=unpack())
+        try:
+            n = int(message.text.split()[1])
+            if 0 < n < 2000:
+                markup = InlineKeyboardMarkup()
+                markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
+                await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
+                                    reply_markup=markup)
+        except:
+            packs = int(r.hget(message.from_user.id, 'packs'))
+            if packs != 0:
+                await message.reply('\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
+                                    reply_markup=unpack(message.from_user.id))
+            else:
+                await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
+                                    '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
     else:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -1288,9 +1357,23 @@ async def pack(message):
 @dp.message_handler(commands=['skills'])
 async def skills(message):
     try:
-        s = r.hmget(message.from_user.id, 's1', 's2', 's3')
-        s1, s2, s3 = int(s[0]), int(s[1]), int(s[2])
-        s11, s22, s221, s222 = s1, s2, 0, 0
+        markup = InlineKeyboardMarkup()
+        s = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5')
+        pur = int(r.hget(message.from_user.id, 'purchase'))
+        s1, s2, s3, s4, s5 = int(s[0]), int(s[1]), int(s[2]), int(s[3]), int(s[4])
+
+        if s1 < 10:
+            markup.add(InlineKeyboardButton(text='Прокачати алкоголізм', callback_data='alcohol'))
+        if s2 < 5:
+            markup.add(InlineKeyboardButton(text='Прокачати майстерність', callback_data='master'))
+        if s3 < 5:
+            markup.add(InlineKeyboardButton(text='Продовжити будівництво', callback_data='cellar'))
+        if s4 < 5:
+            markup.add(InlineKeyboardButton(text='Прокачати наркозалежність', callback_data='addiction'))
+        if s5 < 5:
+            markup.add(InlineKeyboardButton(text='Прокачати психоз', callback_data='psycho'))
+
+        s11, s22, s221, s222, s41 = s1, s2, 0, 0, s4 * 10
         intel = ' гривень, а шанс підняти інтелект - 10%. '
         if s2 == 1:
             s221, s222 = 3, 8
@@ -1319,12 +1402,28 @@ async def skills(message):
               '3. Будівництво (твій русак втратить 25% сили). ' \
               'На цьому етапі можна отримати додаткового русака (годувати одного в день)\n' \
               '4. Купівля припасів (1500 грн). Можна годувати і відправляти в шахти обох русаків.\n'
+        up4 = f'Для покращення цієї здібності треба здійснити {s41} покупок в сольовому магазині.\n{pur}/{s41}\n' \
+              f'Бонуси за кожен рівень:\n' \
+              f'2. Зменшення шансу передозування з 10% до 5%\n' \
+              f'3. Передозування даватиме 20 бойового трансу\n' \
+              f'4. Кількість негативних ефектів вдвічі зменшується\n' \
+              f'5. На 40% сили більше, купляючи її за сіль\n'
+        up5 = f'Для покращення цієї здібності треба набрати {s5 * 20} вбитих русаків і з`їсти {s5 * 10} немовлят.\n' \
+              f'Бонуси за кожен рівень:\n' \
+              f'2. 30% шанс знайти 2-3 мертвих русаків в пакунку\n' \
+              f'3. 50% шанс не зменшити бойовий транс в дуелях\n' \
+              f'4. Русаки отримають порцію їжі, коли жінка народить немовля\n' \
+              f'5. Мінімальна сила від годування - 10\n'
         if s1 >= 10:
             up1 = ''
         if s2 >= 5:
             up2 = ''
         if s3 >= 5:
             up3 = ''
+        if s4 >= 5:
+            up4 = ''
+        if s5 >= 5:
+            up5 = ''
         msg = '\u2622 Алкоголізм:\n\nГорілка додає від ' + str(10 * s1) + ' до ' + str(70 * s1) + \
               ' бойового духу.' + up1 + '\n'
         for a in range(10):
@@ -1351,7 +1450,24 @@ async def skills(message):
             else:
                 msg = msg + '\U0001f7eb'
                 s3 = s3 - 1
-        await bot.send_message(message.from_user.id, msg, reply_markup=skill_set())
+
+        msg = msg + '\n\n\U0001F9C2 Наркозалежність\n\nЗбільшує вигоду купівлі сили в сольовому магазині.\n' + up4
+        for a in range(5):
+            if s4 <= 0:
+                msg = msg + '\u2B1C'
+            else:
+                msg = msg + '\U0001f7e6'
+                s4 = s4 - 1
+
+        msg = msg + '\n\n\u2620\uFE0F Психоз\n\nПокращує вміння різати русню.\n' + up5
+        for a in range(5):
+            if s5 <= 0:
+                msg = msg + '\u2B1C'
+            else:
+                msg = msg + '\U0001f7e8'
+                s5 = s5 - 1
+
+        await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
     except:
@@ -1392,7 +1508,8 @@ async def swap(message):
                     r.hset(message.from_user.id, 'time23', a2)
                 await message.reply('Бойового русака змінено.')
             else:
-                await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+                await message.reply('\U0001F3DA Візьми русака, щоб змінити його на другого'
+                                    '.\n\nРусака можна отримати, сходивши на \n/donbass')
     except:
         pass
 
@@ -1453,14 +1570,14 @@ async def clan(message):
                         building += ', цех'
                     if int(r.hget(c, 'storage')) == 1:
                         building += ', склад'
-                        resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} / 5000"
-                        if base >= 3:
+                        if int(r.hget(c, 'cloth')) > 0:
+                            resources += f"\n\U0001F9F6 Тканина: {r.hget(c, 'cloth').decode()} / 5000"
+                        if int(r.hget(c, 'brick')) > 0:
                             resources += f"\n\U0001F9F1 Цегла: {r.hget(c, 'brick').decode()} / 3000"
-                            if int(r.hget(c, 'technics')) > 0:
-                                resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
-                        if base > 4:
-                            if int(r.hget(c, 'codes')) > 0:
-                                resources += '\n\U0001F916 Секретні коди: ' + r.hget(c, 'codes').decode()
+                        if int(r.hget(c, 'technics')) > 0:
+                            resources += '\n\U0001F4FB Радіотехніка: ' + r.hget(c, 'technics').decode()
+                        if int(r.hget(c, 'codes')) > 0:
+                            resources += '\n\U0001F916 Секретні коди: ' + r.hget(c, 'codes').decode()
                         resources += '\n\U0001F47E Рускій дух: ' + r.hget(c, 'r_spirit').decode()
 
                     if int(r.hget(c, 'silicate')) == 1:
@@ -1474,6 +1591,8 @@ async def clan(message):
                         building += ', їдальня'
                     if int(r.hget(c, 'monument')) == 1:
                         building += ', монумент'
+                    if int(r.hget(c, 'wall')) == 1:
+                        building += ', стіна оголошень'
                     if int(r.hget(c, 'post')) == 1:
                         building += ', блокпост'
                     if int(r.hget(c, 'camp')) == 1:
@@ -1512,6 +1631,18 @@ async def clan(message):
         msg = '\U0001F530 Тут можна знайти собі клан'
         for mem in r.smembers('recruitment'):
             c = 'c' + mem.decode()
+            if int(r.hget(c, 'rec_time')) != datetime.now().day:
+                if int(r.hget(c, 'technics')) >= 3:
+                    r.hset(c, 'rec_time', datetime.now().day)
+                    r.hincrby(c, 'technics', -3)
+                else:
+                    try:
+                        await bot.revoke_chat_invite_link(int(mem), r.hget(c, 'link').decode())
+                    except:
+                        pass
+                    r.hset(c, 'recruitment', 0)
+                    r.srem('recruitment', mem)
+                    continue
             num1 = r.scard('cl' + mem.decode())
             num2 = 25
             cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
@@ -1608,8 +1739,7 @@ async def upgrade(message):
                         and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
                         and int(r.hget(c, 'technics')) >= 100\
                         and int(r.hget(c, 'money')) >= 5000 and int(r.hget(c, 'r_spirit')) >= 100:
-                    msg += '\n\nДостатньо ресурсів для покращення. Який шлях розвитку ви обираєте?\n\nНа даний' \
-                           ' момент не можна вибрати організацію.'
+                    msg += '\n\nДостатньо ресурсів для покращення. Який шлях розвитку ви обираєте?'
                     markup.add(InlineKeyboardButton(text='Комуна', callback_data='clan_side_1'),
                                InlineKeyboardButton(text='Коаліція', callback_data='clan_side_2'))
                     markup.add(InlineKeyboardButton(text='Асоціація', callback_data='clan_side_3'),
@@ -1687,6 +1817,13 @@ async def build(message):
                     if int(r.hget(c, 'storage')) == 0:
                         markup.add(InlineKeyboardButton(text='Побудувати склад', callback_data='build_storage'))
                         msg += '\nСклад (\U0001F333 200, \U0001faa8 100) - доступ до всіх видів ресурсів.'
+                    if int(r.hget(c, 'new_post')) == 0:
+                        markup.add(InlineKeyboardButton(text='Побудувати відділення НП',
+                                                        callback_data='build_new_post'))
+                        msg += '\nВідділення НП (\U0001F333 100, \U0001faa8 50, ' \
+                               '\U0001F4B5 1000, \U0001F47E 1) - можливість отримувати ' \
+                               '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
+                               'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
                     if int(r.hget(c, 'base')) >= 3:
                         if int(r.hget(c, 'silicate')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати силікатний завод',
@@ -1700,7 +1837,7 @@ async def build(message):
                                    '\U0001F9F1 50, \U0001F4B5 500) - розширення максимальної кількості учасників ' \
                                    'з 25 до 50.'
                         if int(r.hget(c, 'shop')) == 0:
-                            markup.add(InlineKeyboardButton(text='Побудувати магазин',
+                            markup.add(InlineKeyboardButton(text='Побудувати їдальню',
                                                             callback_data='build_shop'))
                             msg += '\nЇдальня (\U0001F333 1000, \U0001faa8 200, \U0001F9F6 400, ' \
                                    '\U0001F9F1 40, \U0001F4B5 300) - доступ до команди /clan_shop. Кілька товарів, ' \
@@ -1711,6 +1848,12 @@ async def build(message):
                             msg += '\nМонумент (\U0001F333 100, \U0001faa8 1000, \U0001F9F6 50, ' \
                                    '\U0001F9F1 100, \U0001F4B5 2000, \U0001F47E 50) - можливість для лідера у \n' \
                                    '/clan_shop витрачати \U0001F47E.'
+                        if int(r.hget(c, 'wall')) == 0:
+                            markup.add(InlineKeyboardButton(text='Побудувати стіну оголошень',
+                                                            callback_data='build_wall'))
+                            msg += '\nСтіна оголошень (\U0001F333 500, \U0001faa8 250, \U0001F9F6 150, ' \
+                                   '\U0001F9F1 100, \U0001F4B5 1000, \U0001F47E 30) - додатковий щоденний' \
+                                   ' квест (ще +1 через два апгрейда).'
                     if int(r.hget(c, 'base')) >= 4:
                         if int(r.hget(c, 'post')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати блокпост',
@@ -1729,13 +1872,6 @@ async def build(message):
                             msg += '\nМорг (\U0001F333 1000, \U0001faa8 2000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 5000, \U0001F47E 100) - +0.2% сили в міжчатовій битві ' \
                                    'за кожного вбитого русака (максимум 20%). \U0001F47E +1 за кожне жертвоприношення.'
-                        if int(r.hget(c, 'new_post')) == 0:
-                            markup.add(InlineKeyboardButton(text='Побудувати відділення НП',
-                                                            callback_data='build_new_post'))
-                            msg += '\nВідділення НП (\U0001F333 800, \U0001faa8 500, \U0001F9F6 500, ' \
-                                   '\U0001F9F1 200, \U0001F4B5 2000, \U0001F47E 30) - можливість отримувати ' \
-                                   '\U0001F4FB радіотехніку з пакунків. При включеній зарплаті, за роботу ' \
-                                   'видаватиметься \U0001F4E6 пакунок (але +2грн податку).'
                     if int(r.hget(c, 'base')) in (5, 9):
                         if int(r.hget(c, 'build1')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати тракторний завод',
@@ -1866,15 +2002,15 @@ async def build(message):
                                                             callback_data='build6'))
                             msg += '\nЯдерний бункер (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
                                    '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
-                                   ' - Шизофренія не впливатиме негативно на міжчатові битви та рейди, а навпаки - ' \
-                                   'додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
+                                   ' - Шизофренія не впливатиме негативно на міжчатові битви, рейди та охорону, а ' \
+                                   'навпаки - додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
                     if int(r.hget(c, 'base')) == 11:
                         if int(r.hget(c, 'build5')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати готель',
                                                             callback_data='build5'))
                             msg += '\nГотель (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
                                    '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - максимальна кількість ' \
-                                   'учасників збільшується на 10. Можливість вступити в клан без обмежень в часі.'
+                                   'учасників збільшується на 10. Можливість вступити в клан майже без обмежень в часі.'
                         if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
                                 and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
                                 and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
@@ -1939,15 +2075,19 @@ async def clan_settings(message):
             if int(r.hget(c, 'war_allow')) == 0:
                 msg += '\n\nВ міжчатову битву може зайти кожен бажаючий.'
             else:
-                msg += '\n\nВ міжчатову битву в перші 5 хвилин може зайти тільки учасник клану.'
+                msg += '\n\nВ міжчатову битву в перші 10 хвилин може зайти тільки учасник клану.'
             if int(r.hget(c, 'salary')) == 0:
                 msg += '\n\nЗа роботу не видається зарплата з кланових ресурсів.'
             else:
                 msg += '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
             if int(r.hget(c, 'recruitment')) == 0:
-                msg += '\n\nВ Соледарі не відкрито набір в клан.'
+                msg += '\n\nВ Соледарі не відкрито набір в клан. Щоб відкрити, треба платити по 3 радіотехніки в день.'
             else:
                 msg += '\n\nВ Соледарі відкрито набір в клан.'
+            if int(r.hget(c, 'notification')) == 0:
+                msg += '\n\nСповіщення про конвой вимкнені. Щоб увімкнути, треба платити по 5 радіотехніки в день.'
+            else:
+                msg += '\n\nСповіщення про конвой увімкнені.'
             await bot.send_message(message.from_user.id, msg, reply_markup=clan_set())
     except:
         pass
@@ -1967,9 +2107,9 @@ async def join(message):
                 num += 25
             if int(r.hget(c, 'build5')) == 3:
                 num += 10
-                ts = 0
-            if int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts')) > ts or \
-                    message.from_user.id in sudoers:
+                ts = 10800
+            diff = int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts'))
+            if diff > ts:
                 if r.scard('cl' + str(message.chat.id)) < num:
                     if int(r.hget(c, 'allow')) == 0 or message.from_user.id in sudoers:
                         r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp())})
@@ -1985,7 +2125,25 @@ async def join(message):
                 else:
                     await message.reply('\U0001F4E5 Неможливо вступити в клан, оскільки він переповнений.')
             else:
-                await message.reply('\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+                markup = InlineKeyboardMarkup()
+                td = timedelta(seconds=ts-diff)
+                days, hours, minutes = td.days, td.seconds // 3600, (td.seconds // 60) % 60
+                if days > 0:
+                    msg = f'{days}д.'
+                elif hours > 0:
+                    msg = f'{hours}г.'
+                elif minutes > 0:
+                    msg = f'{minutes}хв.'
+                else:
+                    msg = 'менше хвилини.'
+
+                if int(r.hget(message.from_user.id, 'strap')) > 0:
+                    msg = f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: {msg}\n\n' \
+                          f'\U0001F31F Онулити час очікування за погон?'
+                    markup.add(InlineKeyboardButton(text='\U0001F31F 1 -> \u23F1', callback_data='zero_time'))
+                else:
+                    msg = f'\U0001F4E5 Вступати в клан можна лише раз в тиждень.\n\nЗалишилось часу: {msg}'
+                await message.reply(msg, reply_markup=markup)
     except Exception as e:
         print(e)
 
@@ -2005,6 +2163,8 @@ async def invest(message):
                         r.hincrby(c, 'money', m)
                         r.hincrby(message.from_user.id, 'money', -m)
                         msg = f'\U0001F4B5 Клановий рахунок поповнено на {m} гривень.'
+                        if m >= 50:
+                            quest(message.from_user.id, 2, 3)
                         if m >= 500:
                             if r.hexists(message.from_user.id, 'ac15') == 0:
                                 r.hset(message.from_user.id, 'ac15', 1)
@@ -2012,6 +2172,7 @@ async def invest(message):
                             p = int(m / 20)
                             r.hincrby(message.from_user.id, 'packs', p)
                             msg += f'\n\U0001F4E6 +{p}'
+                            quest(message.from_user.id, 3, -2, 4)
                         await message.reply(msg)
                     else:
                         await message.reply('Недостатньо коштів на рахунку.')
@@ -2042,10 +2203,16 @@ async def promote(message):
         if message.from_user.id == int(r.hget('c' + cid, 'leader')):
             if message.chat.id == int(r.hget(message.from_user.id, 'clan')):
                 uid = str(message.reply_to_message.from_user.id).encode()
-                if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid) and \
-                        message.reply_to_message.from_user.id != int(r.hget('c' + cid, 'leader')):
-                    r.sadd('cl2' + cid, uid)
-                    await message.reply('\u2705')
+                if uid in r.smembers('cl' + cid) and uid not in r.smembers('cl2' + cid):
+                    if message.reply_to_message.from_user.id != int(r.hget('c' + cid, 'leader')):
+                        r.sadd('cl2' + cid, uid)
+                        await message.reply('\u2705')
+                else:
+                    markup = InlineKeyboardMarkup()
+                    uid = message.reply_to_message.from_user.id
+                    markup.add(InlineKeyboardButton(text='Так', callback_data=f'promote_to_leader_{uid}'))
+                    n = r.hget(message.reply_to_message.from_user.id, 'firstname').decode()
+                    await message.reply(f'\U0001F530 Підвищити {n} до лідера?', reply_markup=markup)
     except:
         pass
 
@@ -2112,6 +2279,7 @@ async def work(message):
                         await message.reply('Зберіть гроші, щоб побудувати пилораму і шахту.\n\n/build')
                     else:
                         r.hset(message.from_user.id, 'clan_time', datetime.now().day)
+                        quest(message.from_user.id, 3, 1, 1)
                         camp = 0
                         packs = int(r.hget(message.from_user.id, 'packs'))
                         side = int(r.hget(c, 'side'))
@@ -2192,6 +2360,30 @@ async def work(message):
         pass
 
 
+@dp.message_handler(commands=['relax'])
+async def relax(message):
+    try:
+        name = names[int(r.hget(message.from_user.id, 'name'))]
+        if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
+            if int(r.hget(message.from_user.id, 'clan_time')) == datetime.now().day:
+                msg = '\U0001F319 ' + name + ' відпочиває і готується до завтрашньої роботи.'
+                if int(r.hget(message.from_user.id, 'support')) == 10:
+                    damage_support(message.from_user.id)
+                    if int(r.hget(message.from_user.id, 'head')) == 0:
+                        r.hset(message.from_user.id, 'head', 3)
+                        r.hset(message.from_user.id, 's_head', 1)
+                    spirit(10000, message.from_user.id, 0)
+                    increase_trance(20, message.from_user.id)
+                    hp(100, message.from_user.id)
+                    msg += '\n\n\U0001F349 +1 \U0001F44A +20 \U0001fac0 +100 \U0001F54A +10000'
+                quest(message.from_user.id, 2, -3)
+                await message.reply(msg)
+            else:
+                await message.reply('Рано відпочивати...')
+    except:
+        pass
+
+
 @dp.message_handler(commands=['guard'])
 async def guard(message):
     try:
@@ -2212,9 +2404,13 @@ async def guard(message):
                         r.hset(mid, 'weapon', 15, {'s_weapon': 30})
                     if int(r.hget(mid, 'head')) == 0:
                         r.hset(mid, 'head', 4, {'s_head': 20})
+                        quest(message.from_user.id, 3, 2, 1)
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
-                    st = int(st * (1 + 0.01 * int(int(r.hget(c, 'money')) / 1000)))
+                    money = int(r.hget(c, 'money'))
+                    if money > 200000:
+                        money = 200000
+                    st = int(st * (1 + 0.01 * int(money / 1000)))
                 r.hincrby(c, 'power', st)
                 r.sadd(g, mid)
                 name = names[int(r.hget(mid, 'name'))]
@@ -2242,18 +2438,54 @@ async def guard(message):
                             r.hincrby('soledar', 'money', 5)
                             msg += ' \U0001F4E6 +1'
                             r.hincrby(message.from_user.id, 'packs', 1)
+                if int(r.hget(c, 'build6')) == 1:
+                    ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
+                         int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))
+                    if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
+                        r.hset(message.from_user.id, 'time', 0)
+                        msg += '\n\U0001F372 +1'
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
                     if int(r.hget('convoy', 'day')) != datetime.now().day:
                         r.hset('convoy', 'power', 2000000)
                         r.hset('convoy', 'day', datetime.now().day)
                     r.hincrby('convoy', 'power', 500000)
+                    for mem in r.smembers('followers'):
+                        try:
+                            c3 = 'c' + mem.decode()
+                            if int(r.hget(c3, 'not_time')) != datetime.now().day:
+                                if int(r.hget(c3, 'technics')) >= 3:
+                                    r.hset(c3, 'not_time', datetime.now().day)
+                                    r.hincrby(c3, 'technics', -3)
+                                else:
+                                    r.hset(c3, 'notification', 0)
+                                    r.srem('followers', mem)
+                                    continue
+                            await bot.send_message(int(mem), '\U0001F69B Додатковий гумконвой вже в дорозі!')
+                        except:
+                            pass
                     msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
-                await message.reply(msg + '\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
-                                    '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
+                msg += f"\n\U0001F4AA Загальна сила: {r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: " \
+                       f"{r.scard(g)}/5"
+                mines = int(r.hget(c, 'mines'))
+                if mines > 0:
+                    msg += f'\n\U0001F6A7 Кількість мін: {mines}'
+                await message.reply(msg)
             else:
-                await message.reply('Твій русак сьогодні вже своє відпрацював.'
-                                    '\n\n\U0001F4AA Загальна сила: ' + r.hget(c, 'power').decode() +
-                                    '\n\U0001F5E1 Кількість сторожів: ' + str(r.scard(g)) + '/5')
+                msg = f"Твій русак сьогодні вже своє відпрацював\n\n\U0001F4AA Загальна сила: " \
+                      f"{r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: {r.scard(g)}/5"
+                mines = int(r.hget(c, 'mines'))
+                if mines > 0:
+                    msg += f'\n\U0001F6A7 Кількість мін: {mines}'
+                await message.reply(msg)
+    except:
+        pass
+
+
+@dp.message_handler(commands=['quest'])
+async def get_quest(message):
+    try:
+        msg = quests(message.from_user.id)
+        await message.reply(msg)
     except:
         pass
 
@@ -2292,8 +2524,11 @@ async def raid(message):
                         except:
                             pass
                     else:
-                        t = str(int((3600 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60))
-                        await message.reply('Рейди можна проводити один раз в годину.\nЗалишилось ' + t + 'хв.')
+                        t = int((3600 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60)
+                        msg = f'Рейди можна проводити один раз в годину.\nЗалишилось {t}хв.'
+                        if t == 0:
+                            msg = f'Рейди можна проводити один раз в годину.\nЗалишилось менше хвилини.'
+                        await message.reply(msg)
             else:
                 try:
                     await bot.send_message(message.chat.id, '\U0001F4B0 Підготовка до рейду тут\n\nКількість бійців: ' +
@@ -2339,6 +2574,7 @@ async def commands(message):
                         '/i - інвентар\n'
                         '/battle - чатова битва (5-10 русаків)\n'
                         '/war - міжчатова битва 5х5\n'
+                        '/quests - щоденні квести\n'
                         '...', reply_markup=markup,
                         parse_mode='HTML', disable_web_page_preview=True)
 
@@ -2395,6 +2631,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'money', 20)
             if r.hexists(call.from_user.id, 'strap') == 0:
                 r.hset(call.from_user.id, 'strap', 0)
+            if r.hexists(call.from_user.id, 'salt') == 0:
+                r.hset(call.from_user.id, 'salt', 0)
             if r.hexists(call.from_user.id, 'opened') == 0:
                 r.hset(call.from_user.id, 'opened', 0)
             if r.hexists(call.from_user.id, 'childs') == 0:
@@ -2415,6 +2653,26 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 's2', 1)
             if r.hexists(call.from_user.id, 's3') == 0:
                 r.hset(call.from_user.id, 's3', 1)
+            if r.hexists(call.from_user.id, 's4') == 0:
+                r.hset(call.from_user.id, 's4', 1)
+            if r.hexists(call.from_user.id, 's5') == 0:
+                r.hset(call.from_user.id, 's5', 1)
+            if r.hexists(call.from_user.id, 'purchase') == 0:
+                r.hset(call.from_user.id, 'purchase', 0)
+            if r.hexists(call.from_user.id, 'q1') == 0:
+                r.hset(call.from_user.id, 'q1', 0)
+            if r.hexists(call.from_user.id, 'q2') == 0:
+                r.hset(call.from_user.id, 'q2', 0)
+            if r.hexists(call.from_user.id, 'q3') == 0:
+                r.hset(call.from_user.id, 'q3', 0)
+            if r.hexists(call.from_user.id, 'q1t') == 0:
+                r.hset(call.from_user.id, 'q1t', 0)
+            if r.hexists(call.from_user.id, 'q2t') == 0:
+                r.hset(call.from_user.id, 'q2t', 0)
+            if r.hexists(call.from_user.id, 'q3t') == 0:
+                r.hset(call.from_user.id, 'q3t', 0)
+            if r.hexists(call.from_user.id, 'qt') == 0:
+                r.hset(call.from_user.id, 'qt', 0)
             await bot.edit_message_text(text='\U0001F3DA Ти приходиш на Донбас - чудове місце для полювання на'
                                              ' русаків\n\n\U0001F412 Русака взято в полон...',
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
@@ -2585,7 +2843,7 @@ async def handle_query(call):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
                     if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)) and \
                             int(datetime.now().timestamp()) - \
-                            int(r.hget('war_battle' + str(call.message.chat.id), 'war_ts')) < 300:
+                            int(r.hget('war_battle' + str(call.message.chat.id), 'war_ts')) < 600:
                         allow = False
             if allow:
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
@@ -2653,7 +2911,7 @@ async def handle_query(call):
                         message_id=call.message.message_id, reply_markup=battle_button_3())
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Ти не в цьому клані, тому зайти зможеш через 5 хвилин після'
+                                                text='Ти не в цьому клані, тому зайти зможеш через 10 хвилин після'
                                                      ' початку набору.')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -2668,19 +2926,21 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Комендантська година, рейди недоступні.')
             else:
-                r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-                fighters = r.scard('fighters_3' + str(call.message.chat.id))
-                if fighters == 1:
+                r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
+                if r.scard('fighters_3' + str(call.message.chat.id)) == 1:
                     await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 reply_markup=battle_button_4())
-                elif fighters >= 5:
+                elif r.scard('fighters_3' + str(call.message.chat.id)) == 5:
                     await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
                                                                          '\n\nРейд почався...',
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id)
                     await call.message.reply('\u2694 Русаки вирушили в рейд...')
                     await start_raid(call.message.chat.id)
+                elif r.scard('fighters_3' + str(call.message.chat.id)) > 5:
+                    await bot.edit_message_text(text=call.message.text,
+                                                chat_id=call.message.chat.id, message_id=call.message.message_id)
                 else:
                     await bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
@@ -2728,13 +2988,16 @@ async def handle_query(call):
                                 'r_spirit': 0, 'storage': 0, 'sawmill': 0, 'mine': 0, 'craft': 0, 'silicate': 0,
                                 'shop': 0, 'complex': 0, 'monument': 0, 'camp': 0, 'morgue': 0, 'post': 0, 'day': 0,
                                 'power': 0, 'new_post': 0, 'salary': 0, 'war_allow': 0, 'recruitment': 0,
+                                'notification': 0, 'mines': 0, 'wall': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title,
                                 'side': 0, 'build1': 0, 'build2': 0, 'build3': 0, 'build4': 0,
                                 'build5': 0, 'build6': 0})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
                         r.hset(call.from_user.id, 'clan', call.message.chat.id,
-                               {'clan_ts': int(datetime.now().timestamp()), 'clan_time': 0})
+                               {'clan_ts': int(datetime.now().timestamp())})
+                        if r.hexists(call.from_user.id, 'clan_time') == 0:
+                            r.hset(call.from_user.id, 'clan_time', 0)
                         if call.data == 'create_hrn':
                             r.hincrby(call.from_user.id, 'money', -250)
                         else:
@@ -2750,10 +3013,7 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_side'):
         c = 'c' + str(call.message.chat.id)
-        if call.data.startswith('clan_side_4'):
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Організацій забагато, виберіть щось інше.')
-        elif int(r.hget(c, 'side')) == 0:
+        if int(r.hget(c, 'side')) == 0:
             if call.from_user.id == int(r.hget(c, 'leader')):
                 if int(r.hget(c, 'wood')) >= 6000 and int(r.hget(c, 'stone')) >= 3000 \
                         and int(r.hget(c, 'cloth')) >= 1500 and int(r.hget(c, 'brick')) >= 1000 \
@@ -2801,7 +3061,7 @@ async def handle_query(call):
             num += 25
         if int(r.hget('c' + str(call.message.chat.id), 'build5')) == 3:
             num += 10
-            ts = 0
+            ts = 10800
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
                 r.scard('cl' + str(call.message.chat.id)) < num:
@@ -2817,6 +3077,25 @@ async def handle_query(call):
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+
+    elif call.data.startswith('promote_to_leader'):
+        try:
+            uid1 = call.from_user.id
+            uid2 = call.data.split('_')[3]
+            uid2e = str(uid2).encode()
+            c = 'c' + r.hget(uid1, 'clan').decode()
+            cl = 'cl' + r.hget(uid1, 'clan').decode()
+            cl2 = 'cl2' + r.hget(uid1, 'clan').decode()
+            if call.message.chat.id == int(r.hget(uid1, 'clan')):
+                if uid1 == int(r.hget(c, 'leader')):
+                    if uid2e in r.smembers(cl) and uid2e in r.smembers(cl2):
+                        r.hset(c, 'leader', uid2)
+                        r.sadd(cl2, uid1)
+                        r.srem(cl2, uid2)
+                        await bot.edit_message_text('\U0001F530 Змінено лідера клану!',
+                                                    call.message.chat.id, call.message.message_id)
+        except:
+            pass
 
     elif call.data.startswith('buy_axe'):
         if int(r.hget(call.from_user.id, 'support')) == 0:
@@ -2902,19 +3181,24 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Режим видачі зарплати за роботу змінено.')
 
-    elif call.data.startswith('recruitment'):
+    elif call.data.startswith('recruit'):
         c = int(r.hget(call.from_user.id, 'clan'))
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c) \
-                and str(call.chat.id).encode() not in r.smembers('banned'):
+                and str(c).encode() not in r.smembers('banned'):
             try:
                 if int(r.hget('c' + str(c), 'recruitment')) == 0:
-                    try:
-                        await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
-                    except:
-                        pass
-                    a = await bot.create_chat_invite_link(c, creates_join_request=True)
-                    r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link})
-                    r.sadd('recruitment', c)
+                    if int(r.hget('c' + str(c), 'technics')) >= 3:
+                        try:
+                            await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
+                        except:
+                            pass
+                        a = await bot.create_chat_invite_link(c, creates_join_request=True)
+                        r.hset('c' + str(c), 'recruitment', 1, {'link': a.invite_link, 'rec_time': datetime.now().day})
+                        r.sadd('recruitment', c)
+                        r.hincrby('c' + str(c), 'technics', -3)
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Недостатньо радіотехніки.')
                 else:
                     try:
                         await bot.revoke_chat_invite_link(c, r.hget('c' + str(c), 'link').decode())
@@ -2927,6 +3211,23 @@ async def handle_query(call):
             except:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Схоже в бота нема прав додавати користувачів.')
+
+    elif call.data.startswith('notification'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
+            if int(r.hget('c' + str(c), 'notification')) == 0:
+                if int(r.hget('c' + str(c), 'technics')) >= 3:
+                    r.hset('c' + str(c), 'notification', 1)
+                    r.sadd('followers', c)
+                    r.hincrby('c' + str(c), 'technics', -3)
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо радіотехніки.')
+            else:
+                r.hset('c' + str(c), 'notification', 0, {'not_time': datetime.now().day})
+                r.srem('followers', c)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Сповіщення змінено.')
 
     elif call.data.startswith('get_members'):
         uid = call.from_user.id
@@ -3074,6 +3375,24 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо ресурсів.')
 
+    elif call.data.startswith('build_wall') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        c = 'c' + str(call.message.chat.id)
+        if int(r.hget(c, 'wall')) == 0:
+            if int(r.hget(c, 'wood')) >= 500 and int(r.hget(c, 'stone')) >= 250 and int(r.hget(c, 'cloth')) >= 150 \
+                    and int(r.hget(c, 'brick')) >= 100 and int(r.hget(c, 'money')) >= 1000 \
+                    and int(r.hget(c, 'r_spirit')) >= 30:
+                r.hincrby(c, 'wood', -500)
+                r.hincrby(c, 'stone', -250)
+                r.hincrby(c, 'cloth', -150)
+                r.hincrby(c, 'brick', -100)
+                r.hincrby(c, 'money', -1000)
+                r.hincrby(c, 'r_spirit', -30)
+                r.hset(c, 'wall', 1)
+                await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано стіну оголошень.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо ресурсів.')
+
     elif call.data.startswith('build_post') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
         if int(r.hget(c, 'post')) == 0:
@@ -3130,15 +3449,12 @@ async def handle_query(call):
     elif call.data.startswith('build_new_post') and call.from_user.id == call.message.reply_to_message.from_user.id:
         c = 'c' + str(call.message.chat.id)
         if int(r.hget(c, 'new_post')) == 0:
-            if int(r.hget(c, 'wood')) >= 800 and int(r.hget(c, 'stone')) >= 500 and int(r.hget(c, 'cloth')) >= 500 \
-                    and int(r.hget(c, 'brick')) >= 200 and int(r.hget(c, 'money')) >= 2000 \
-                    and int(r.hget(c, 'r_spirit')) >= 30:
-                r.hincrby(c, 'wood', -800)
-                r.hincrby(c, 'stone', -500)
-                r.hincrby(c, 'cloth', -500)
-                r.hincrby(c, 'brick', -200)
-                r.hincrby(c, 'money', -2000)
-                r.hincrby(c, 'r_spirit', -30)
+            if int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 50 and int(r.hget(c, 'money')) >= 1000 \
+                    and int(r.hget(c, 'r_spirit')) >= 1:
+                r.hincrby(c, 'wood', -100)
+                r.hincrby(c, 'stone', -50)
+                r.hincrby(c, 'money', -1000)
+                r.hincrby(c, 'r_spirit', -1)
                 r.hset(c, 'new_post', 1)
                 await bot.send_message(call.message.chat.id, 'На території вашого клану побудовано '
                                                              'відділення Нової пошти.')
@@ -3278,7 +3594,7 @@ async def handle_query(call):
                     mem = int(member)
                     try:
                         st = await bot.get_chat_member(call.message.chat.id, mem)
-                        if st.status == 'left' or st.status == 'kicked' or st.status == 'banned':
+                        if st.status in ('left', 'kicked', 'banned'):
                             r.srem(call.message.chat.id, mem)
                             continue
                     except:
@@ -3439,9 +3755,42 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='У вас вже нічого будувати.')
 
+    elif call.data.startswith('addiction'):
+        s4 = int(r.hget(call.from_user.id, 's4'))
+        if s4 < 5:
+            if int(r.hget(call.from_user.id, 'purchase')) >= s4 * 10:
+                r.hincrby(call.from_user.id, 's4', 1)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text=f'\U0001F9C2 Ви підняли рівень наркозалежності до {s4+1}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ще рано переходити на наступний етап наркозалежності.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Більше користі від солі не буде.')
+
+    elif call.data.startswith('psycho'):
+        s5 = int(r.hget(call.from_user.id, 's5'))
+        if s5 < 5:
+            if int(r.hget(call.from_user.id, 'childs')) >= s5 * 10 and \
+                    int(r.hget(call.from_user.id, 'deaths')) >= s5 * 20:
+                r.hincrby(call.from_user.id, 's5', 1)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text=f'\u2620\uFE0F Ви підняли рівень психозу до {s5+1}.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ще рано переходити на наступний рівень психозу.')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви вже достатньо псих.')
+
     elif call.data.startswith('vodka'):
         if int(r.hget(call.from_user.id, 'money')) >= 2:
             r.hincrby(call.from_user.id, 'money', -2)
+            quest(call.from_user.id, 1, 2)
+            quest(call.from_user.id, 3, -1, 1)
+            if int(r.hget(call.from_user.id, 'spirit')) == 10000:
+                quest(call.from_user.id, 3, 3, 2)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
                                                  vodka(call.from_user.id))
@@ -3521,8 +3870,9 @@ async def handle_query(call):
             r.hset(call.from_user.id, 'name', ran)
             if r.hexists(call.from_user.id, 'ac3') == 0:
                 r.hset(call.from_user.id, 'ac3', 1)
+            name = names[ran]
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили трофейний паспорт')
+                                            text=f'Ви успішно купили трофейний паспорт\nНове ім`я - {name}')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо коштів на рахунку')
@@ -3553,6 +3903,7 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= price:
                 r.hincrby(call.from_user.id, 'money', -price)
                 r.hset(call.from_user.id, 'woman', 1)
+                quest(call.from_user.id, 3, 1, 3)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили жінку')
             else:
@@ -3564,6 +3915,7 @@ async def handle_query(call):
 
     elif call.data.startswith('pipe'):
         if r.hexists(call.from_user.id, 'woman') and int(r.hget(call.from_user.id, 'woman')) == 1:
+            quest(call.from_user.id, 1, -4)
             r.hset(call.from_user.id, 'woman', 0)
             r.hset(call.from_user.id, 'time5', 0)
             spirit(5000, call.from_user.id, 0)
@@ -3584,6 +3936,7 @@ async def handle_query(call):
                     r.hincrby(call.from_user.id, 'money', -10)
                     r.hset(call.from_user.id, 'defense', 9)
                     r.hset(call.from_user.id, 's_defense', 7)
+                    quest(call.from_user.id, 3, 3, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили уламок бронетехніки')
                 else:
@@ -3743,6 +4096,7 @@ async def handle_query(call):
                     r.hincrby(call.from_user.id, 'money', -30)
                     r.hset(call.from_user.id, 'head', 4)
                     r.hset(call.from_user.id, 's_head', 20)
+                    quest(call.from_user.id, 3, 2, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили вушанку')
                 else:
@@ -3975,11 +4329,27 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
             r.hincrby(call.from_user.id, 'packs', 40)
+            quest(call.from_user.id, 3, -2, 4)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно замовили 40 донбаських пакунків')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('jew'):
+        if int(r.hget(call.from_user.id, 'head')) == 0:
+            if int(r.hget(call.from_user.id, 'strap')) >= 1:
+                r.hincrby(call.from_user.id, 'strap', -1)
+                r.hset(call.from_user.id, 'head', 6)
+                r.hset(call.from_user.id, 's_head', 7)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви успішно купили ярмулку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо погонів на рахунку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='У вас вже є шапка')
 
     elif call.data.startswith('buy_resources'):
         if checkClan(call.from_user.id):
@@ -4036,36 +4406,34 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку, або русак без класу')
 
-    elif call.data.startswith('premium2'):
+    elif call.data.startswith('premium4'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name'):
             r.hincrby(call.from_user.id, 'strap', -1)
             cl = int(r.hget(call.from_user.id, 'class'))
-            if cl == 0:
-                r.hset(call.from_user.id, 'photo', default[4])
-            elif cl == 1 or cl == 11 or cl == 21:
-                r.hset(call.from_user.id, 'photo', chm[0])
+            if cl == 1 or cl == 11 or cl == 21:
+                r.hset(call.from_user.id, 'photo', premium3[0])
             elif cl == 2 or cl == 12 or cl == 22:
-                r.hset(call.from_user.id, 'photo', chm[1])
+                r.hset(call.from_user.id, 'photo', premium3[1])
             elif cl == 3 or cl == 13 or cl == 23:
-                r.hset(call.from_user.id, 'photo', chm[2])
+                r.hset(call.from_user.id, 'photo', premium3[2])
             elif cl == 4 or cl == 14 or cl == 24:
-                r.hset(call.from_user.id, 'photo', chm[3])
+                r.hset(call.from_user.id, 'photo', premium3[3])
             elif cl == 5 or cl == 15 or cl == 25:
-                r.hset(call.from_user.id, 'photo', chm[4])
+                r.hset(call.from_user.id, 'photo', premium3[4])
             elif cl == 6 or cl == 16 or cl == 26:
-                r.hset(call.from_user.id, 'photo', chm[5])
+                r.hset(call.from_user.id, 'photo', premium3[5])
             elif cl == 7 or cl == 17 or cl == 27:
-                r.hset(call.from_user.id, 'photo', chm[6])
+                r.hset(call.from_user.id, 'photo', premium3[6])
             elif cl == 8 or cl == 18 or cl == 28:
-                r.hset(call.from_user.id, 'photo', chm[7])
+                r.hset(call.from_user.id, 'photo', premium3[7])
             elif cl == 9 or cl == 19 or cl == 29:
-                r.hset(call.from_user.id, 'photo', chm[8])
+                r.hset(call.from_user.id, 'photo', premium3[8])
             elif cl == 10 or cl == 20 or cl == 30:
-                r.hset(call.from_user.id, 'photo', chm[9])
+                r.hset(call.from_user.id, 'photo', premium3[9])
             elif cl == 31 or cl == 32 or cl == 33:
-                r.hset(call.from_user.id, 'photo', chm[10])
+                r.hset(call.from_user.id, 'photo', premium3[10])
             elif cl == 34 or cl == 35 or cl == 36:
-                r.hset(call.from_user.id, 'photo', chm[11])
+                r.hset(call.from_user.id, 'photo', premium3[11])
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно змінили фото русаку')
         else:
@@ -4126,12 +4494,14 @@ async def handle_query(call):
             r.hincrby(call.from_user.id, 'strap', -2)
             if cl == 21:
                 r.hincrby(call.from_user.id, 'strength', -200)
+            if cl in (6, 16, 26):
+                r.hset(call.from_user.id, 'weapon', 0)
             r.srem('class-' + str(cl), call.from_user.id)
             r.hset(call.from_user.id, 'class', 0)
             if int(r.hget(call.from_user.id, 'intellect')) < 5:
                 r.hset(call.from_user.id, 'intellect', 5)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили курс перекваліфікаації русаку')
+                                            text='Ви успішно купили курс перекваліфікації русаку')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку, або русак без класу')
@@ -4160,6 +4530,16 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Пізно пришвидшувати будівництво')
+
+    elif call.data.startswith('zero_time'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hset(call.from_user.id, 'clan_ts', 0)
+            await bot.edit_message_text('\u23F1 Час очікування онулений.',
+                                        call.message.chat.id, call.message.message_id, reply_markup=None)
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
 
     elif call.data.startswith('drop_w') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'weapon')) != 0:
@@ -4208,242 +4588,63 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='В твого русака нема шапки')
 
-    elif call.data.startswith('unpack') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        uid = call.from_user.id
-        cl = int(r.hget(uid, 'class'))
-
-        if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
-            if int(r.hget(uid, 'packs')) > 0:
-                r.hincrby(uid, 'packs', -1)
-            else:
-                r.hincrby(uid, 'money', -20)
-            r.hincrby(uid, 'opened', 1)
-            r.hincrby('all_opened', 'packs', 1)
-
-            ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-                          weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.45, 0.45, 0.1])
-            if ran == [1]:
-                if checkClan(uid, base=4, building='new_post') and choice([0, 1]) == 1:
-                    await bot.edit_message_text('\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1',
-                                                call.message.chat.id, call.message.message_id)
-                    r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
-                else:
-                    await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
-                                                call.message.chat.id, call.message.message_id)
-            elif ran == [2]:
-                await bot.edit_message_text('\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку '
-                                            '(класове спорядження)! ' + icons[cl], call.message.chat.id,
-                                            call.message.message_id)
-                if cl == 1 or cl == 11 or cl == 21:
-                    if int(r.hget(uid, 'weapon')) in (11, 22):
-                        r.hincrby(uid, 's_weapon', 5)
-                        if int(r.hget(uid, 's_weapon')) >= 50:
-                            r.hset(uid, 'weapon', 22)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 11)
-                        r.hset(uid, 's_weapon', 5)
-                elif cl == 2 or cl == 12 or cl == 22:
-                    if int(r.hget(uid, 'weapon')) in (12, 23):
-                        r.hincrby(uid, 's_weapon', 25)
-                        if int(r.hget(uid, 's_weapon')) >= 250:
-                            r.hset(uid, 'weapon', 23)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 12)
-                        r.hset(uid, 's_weapon', 25)
-                elif cl == 3 or cl == 13 or cl == 23:
-                    if int(r.hget(uid, 'weapon')) in (13, 24):
-                        r.hincrby(uid, 's_weapon', 3)
-                        if int(r.hget(uid, 's_weapon')) >= 30:
-                            r.hset(uid, 'weapon', 24)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 13)
-                        r.hset(uid, 's_weapon', 3)
-                elif cl == 4 or cl == 14 or cl == 24:
-                    if int(r.hget(uid, 'weapon')) in (14, 25):
-                        r.hincrby(uid, 's_weapon', 1)
-                        if int(r.hget(uid, 's_weapon')) >= 10:
-                            r.hset(uid, 'weapon', 25)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 14)
-                        r.hset(uid, 's_weapon', 1)
-                elif cl == 5 or cl == 15 or cl == 25:
-                    if int(r.hget(uid, 'weapon')) in (15, 26):
-                        r.hincrby(uid, 's_weapon', 30)
-                        if int(r.hget(uid, 's_weapon')) >= 300:
-                            r.hset(uid, 'weapon', 26)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 15)
-                        r.hset(uid, 's_weapon', 30)
-                elif cl == 6 or cl == 16 or cl == 26:
-                    if int(r.hget(uid, 'defense')) in (16, 17):
-                        r.hincrby(uid, 's_defense', 10)
-                        if int(r.hget(uid, 's_defense')) >= 100:
-                            r.hset(uid, 'defense', 17)
-                    elif int(r.hget(uid, 'defense')) != 2:
-                        r.hset(uid, 'defense', 16)
-                        r.hset(uid, 's_defense', 10)
-                elif cl == 7 or cl == 17 or cl == 27:
-                    if int(r.hget(uid, 'weapon')) in (17, 28):
-                        r.hincrby(uid, 's_weapon', 8)
-                        if int(r.hget(uid, 's_weapon')) >= 80:
-                            r.hset(uid, 'weapon', 28)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 17)
-                        r.hset(uid, 's_weapon', 8)
-                elif cl == 8 or cl == 18 or cl == 28:
-                    if int(r.hget(uid, 'weapon')) in (18, 29):
-                        r.hincrby(uid, 's_weapon', 2)
-                        if int(r.hget(uid, 's_weapon')) >= 20:
-                            r.hset(uid, 'weapon', 29)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 18)
-                        r.hset(uid, 's_weapon', 2)
-                elif cl == 9 or cl == 19 or cl == 29:
-                    if int(r.hget(uid, 'weapon')) in (19, 30):
-                        r.hincrby(uid, 's_weapon', 8)
-                        if int(r.hget(uid, 's_weapon')) >= 80:
-                            r.hset(uid, 'weapon', 30)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 19)
-                        r.hset(uid, 's_weapon', 8)
-                elif cl == 10 or cl == 20 or cl == 30:
-                    if int(r.hget(uid, 'weapon')) in (20, 31):
-                        r.hincrby(uid, 's_weapon', 10)
-                        if int(r.hget(uid, 's_weapon')) >= 100:
-                            r.hset(uid, 'weapon', 31)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 20)
-                        r.hset(uid, 's_weapon', 10)
-                elif cl == 31 or cl == 32 or cl == 33:
-                    if int(r.hget(uid, 'support')) in (2, 9):
-                        r.hincrby(uid, 's_support', 5)
-                        if int(r.hget(uid, 's_support')) >= 50:
-                            r.hset(uid, 'support', 9)
-                    elif int(r.hget(uid, 'support')) not in (6, 7):
-                        r.hset(uid, 'support', 2)
-                        r.hset(uid, 's_support', 5)
-                elif cl == 34 or cl == 35 or cl == 36:
-                    if int(r.hget(uid, 'weapon')) in (21, 32):
-                        r.hincrby(uid, 's_weapon', 15)
-                        if int(r.hget(uid, 's_weapon')) >= 150:
-                            r.hset(uid, 'weapon', 32)
-                    elif int(r.hget(uid, 'weapon')) != 2:
-                        r.hset(uid, 'weapon', 21)
-                        r.hset(uid, 's_weapon', 15)
-                else:
-                    await bot.edit_message_text('\u26AA В цьому пакунку лежать дивні речі, якими '
-                                                'русак не вміє користуватись...', call.message.chat.id,
-                                                call.message.message_id)
-            elif ran == [3]:
-                await bot.edit_message_text('\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).',
-                                            call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'weapon')) == 0:
-                    r.hset(uid, 'weapon', 1)
-                    r.hset(uid, 's_weapon', 1)
-                elif int(r.hget(uid, 'weapon')) == 1:
-                    r.hincrby(uid, 's_weapon', 1)
-                if int(r.hget(uid, 'defense')) == 0:
-                    r.hset(uid, 'defense', 1)
-                    r.hset(uid, 's_defense', 1)
-                elif int(r.hget(uid, 'defense')) == 1:
-                    r.hincrby(uid, 's_defense', 1)
-            elif ran == [4]:
-                await bot.edit_message_text('\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).'
-                                            '\n\U0001F4B5 + 4', call.message.chat.id, call.message.message_id)
-                r.hincrby(uid, 'money', 4)
-            elif ran == [5]:
-                await bot.edit_message_text('\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n\U0001F6E1 +7',
-                                            call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1 or \
-                        int(r.hget(uid, 'defense')) == 3:
-                    r.hset(uid, 'defense', 9)
-                    r.hset(uid, 's_defense', 7)
-                else:
-                    r.hincrby(uid, 's_defense', 7)
-            elif ran == [6]:
-                await bot.edit_message_text('\U0001f535 Знайдено: \U0001F4B5 50 гривень.',
-                                            call.message.chat.id, call.message.message_id)
-                r.hincrby(uid, 'money', 50)
-            elif ran == [7]:
-                vo = 0
-                for v in range(20):
-                    vo += int(vodka(uid))
-                await bot.edit_message_text('\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 \U0001F54A +' +
-                                            str(vo), call.message.chat.id, call.message.message_id)
-            elif ran == [8]:
-                await bot.edit_message_text('\U0001f535 В цьому пакунку лежить мертвий русак...\n\u2620\uFE0F +1',
-                                            call.message.chat.id, call.message.message_id)
-                r.hincrby(uid, 'deaths', 1)
-                r.hincrby('all_deaths', 'deaths', 1)
-            elif ran == [9]:
-                if int(r.hget(uid, 'intellect')) < 20:
-                    await bot.edit_message_text('\U0001f7e3 Знайдено: \U0001F6E1 Мухомор королівський.',
-                                                call.message.chat.id, call.message.message_id)
-                    if int(r.hget(uid, 'support')) != 6:
-                        r.hset(uid, 'support', 6)
-                        r.hset(uid, 's_support', 1)
-                    elif int(r.hget(uid, 'support')) == 6:
-                        r.hincrby(uid, 's_support', 1)
-                else:
-                    await bot.edit_message_text('\u26AA В пакунку знайдено лише пил і гнилі недоїдки.',
-                                                call.message.chat.id, call.message.message_id)
-            elif ran == [10]:
-                msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити непогану шапку ' \
-                      'для русака.\n'
-                if int(r.hget(uid, 'head')) == 1:
-                    r.hincrby(uid, 'sch', 30)
-                    r.hincrby(uid, 's_head', 20)
-                    msg += '\U0001F464 +30'
-                elif int(r.hget(uid, 'head')) not in (2, 3, 4):
-                    r.hset(uid, 'sch', 30)
-                    r.hset(uid, 'head', 1)
-                    r.hset(uid, 's_head', 20)
-                    msg += '\U0001F464 +30'
-                else:
-                    msg += 'Але в цьому немає потреби.\n\U0001F464 +10'
-                    r.hincrby(uid, 'sch', 10)
-                await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id)
-            elif ran == [11]:
-                emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                await bot.edit_message_text('\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої'
-                                            ' бараболі і закруток з помідорами (можна згодувати русаку).'
-                                            '\n\u2B50 +1 \U0001F4B5 +300 ' + emoji + ' +1',
-                                            call.message.chat.id, call.message.message_id)
-                r.hincrby(uid, 'money', 300)
-                r.hset(uid, 'time', 0)
-                if r.hexists(uid, 'ac13') == 0:
-                    r.hset(uid, 'ac13', 1)
-            elif ran == [12]:
-                await bot.edit_message_text(
-                    '\U0001f7e1 В цьому пакунку знайдено неушкоджений Бронежилет вагнерівця [Захист, '
-                    'міцність=50] - зменшує силу ворога на бій на 75% та захищає від РПГ-7.',
-                    call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'defense')) == 2:
-                    r.hincrby(uid, 's_defense', 50)
-                else:
-                    r.hset(uid, 'defense', 2)
-                    r.hset(uid, 's_defense', 50)
-            elif ran == [13]:
-                await bot.edit_message_text('\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет '
-                                            'РПГ-7 і одну гранату до нього [Атака, міцність=1] - завдає ворогу важке по'
-                                            'ранення (віднімає бойовий дух, здоров`я і все спорядження, на 300 боїв '
-                                            'бойовий дух впаде вдвічі а сила втричі).',
-                                            call.message.chat.id, call.message.message_id)
-                if int(r.hget(uid, 'weapon')) == 2:
-                    r.hincrby(uid, 's_weapon', 1)
-                else:
-                    r.hset(uid, 'weapon', 2)
-                    r.hset(uid, 's_weapon', 1)
-            elif ran == [14]:
-                await bot.edit_message_text(
-                    '\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.'
-                    '\n\U0001F31F +1',
-                    call.message.chat.id, call.message.message_id)
-                r.hincrby(uid, 'strap', 1)
+    elif call.data.startswith('buy_pack') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        n = int(call.data.split('_')[2])
+        if int(r.hget(call.from_user.id, 'money')) >= n * 20 and 0 < n < 2000:
+            r.hincrby(call.from_user.id, 'money', -(n * 20))
+            r.hincrby(call.from_user.id, 'packs', n)
+            if n >= 10:
+                quest(call.from_user.id, 3, -2, 4)
+            await bot.edit_message_text('\U0001F4E6 Пакунки придбано.',
+                                        call.message.chat.id, call.message.message_id, reply_markup=None)
         else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо коштів на рахунку')
+
+    elif call.data.startswith('pack_'):
+        try:
+            if r.hexists('pack_ts', call.from_user.id) == 0:
+                r.hset('pack_ts', call.from_user.id, 0)
+            timestamp = int(datetime.now().timestamp())
+            if not call.data.startswith('pack_unpack') and timestamp - int(r.hget('pack_ts', call.from_user.id)) < 2:
+                pass
+            else:
+                r.hset('pack_ts', call.from_user.id, timestamp)
+                msg = open_pack(call.from_user.id, call.data, call.message.text)
+                if msg:
+                    await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
+                                                reply_markup=msg[1])
+        except:
+            pass
+
+    elif call.data.startswith('switch1'):
+        msg, markup = shop_msg(call.from_user.id, 1)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith('switch2'):
+        msg, markup = shop_msg(call.from_user.id, 2)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+    elif call.data.startswith('switch3'):
+        msg, markup = shop_msg(call.from_user.id, 3)
+        await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+
+    elif call.data.startswith('salt_'):
+        msg = salt_shop(call.from_user.id, call.data)
+        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=msg)
+        if msg.startswith('Передозування'):
+            s4 = int(r.hget(call.from_user.id, 's4'))
+            ran1, ran2, tr = randint(50, 100), randint(50, 100), ''
+            if s4 >= 4:
+                ran1, ran2 = int(ran1 / 2), int(ran2 / 2)
+            r.hincrby(call.from_user.id, 'injure', ran1)
+            r.hincrby(call.from_user.id, 'sch', ran2)
+            if s4 >= 3:
+                increase_trance(20, call.from_user.id)
+                tr = ' \U0001F44A +20'
+            await bot.send_message(call.message.chat.id, f'Передозування!\n\U0001fa78 +{ran1} \U0001F464 +{ran2}{tr}')
+        elif msg.startswith('Ви успішно купили ресурси для клану'):
             try:
-                await bot.edit_message_text('Недостатньо коштів на рахунку.', call.message.chat.id,
-                                            call.message.message_id)
+                msg = 'Ваше замовлення прибуло.\n\U0001F4FB 22 \U0001F9F1 55 \U0001F9F6 111'
+                await bot.send_message(int(r.hget(call.from_user.id, 'clan')), msg)
             except:
                 pass
 
@@ -4462,6 +4663,8 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= price:
                 r.hincrby(call.from_user.id, 'money', -price)
                 ran = randint(1, 3)
+                quest(call.from_user.id, 2, -1)
+                quest(call.from_user.id, 3, 3, 4)
                 if ran == 1:
                     spirit(1000, call.from_user.id, 0)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -4499,6 +4702,7 @@ async def handle_query(call):
     elif call.data.startswith('clan_fragment'):
         if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
             if int(r.hget(call.from_user.id, 'money')) >= 15:
+                quest(call.from_user.id, 3, 3, 1)
                 if int(r.hget(call.from_user.id, 'defense')) == 0 or int(r.hget(call.from_user.id, 'defense')) == 1:
                     r.hset(call.from_user.id, 'defense', 9)
                     r.hset(call.from_user.id, 's_defense', 7)
@@ -4565,6 +4769,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'weapon', 3)
                     r.hset(call.from_user.id, 's_weapon', 3)
                     r.hincrby(call.from_user.id, 'money', -60)
+                    quest(call.from_user.id, 3, 1, 3)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили батіг')
                 else:
@@ -4585,6 +4790,7 @@ async def handle_query(call):
                         r.hset(call.from_user.id, 'support', 6)
                         r.hset(call.from_user.id, 's_support', 1)
                         r.hincrby(call.from_user.id, 'money', -100)
+                        quest(call.from_user.id, 3, 3, 4)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили мухомор королівський.')
                     else:
@@ -4608,6 +4814,7 @@ async def handle_query(call):
                         r.hset(call.from_user.id, 'support', 2)
                         r.hset(call.from_user.id, 's_support', 5)
                         r.hincrby(call.from_user.id, 'money', -20)
+                        quest(call.from_user.id, 3, 3, 4)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили дизель.')
                     else:
@@ -4649,6 +4856,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'head', 4)
                     r.hset(call.from_user.id, 's_head', 20)
                     r.hincrby(call.from_user.id, 'money', -20)
+                    quest(call.from_user.id, 3, 2, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили вушанку.')
                 else:
@@ -4668,6 +4876,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'support', 7)
                     r.hset(call.from_user.id, 's_support', 1)
                     r.hincrby(call.from_user.id, 'money', -55)
+                    quest(call.from_user.id, 3, 3, 4)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили цукор.')
                 else:
@@ -4687,6 +4896,7 @@ async def handle_query(call):
                     r.hset(call.from_user.id, 'support', 8)
                     r.hset(call.from_user.id, 's_support', 5)
                     r.hincrby(call.from_user.id, 'money', -15)
+                    quest(call.from_user.id, 3, 3, 4)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили квас.')
                 else:
@@ -4725,6 +4935,7 @@ async def handle_query(call):
                 r.hincrby(call.from_user.id, 'money', -100)
                 r.hincrby(call.from_user.id, 'childs', 1)
                 r.hincrby('all_children', 'children', 1)
+                quest(call.from_user.id, 3, 3, 4)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили російське немовля.')
             else:
@@ -4760,7 +4971,11 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', -10)
                 s = 1 if int(r.hget(c, 'side')) == 2 else 0
                 for mem in r.smembers('cl' + str(call.message.chat.id)):
-                    increase_trance(5, mem)
+                    try:
+                        quest(mem, 2, -2)
+                        increase_trance(5, mem)
+                    except:
+                        pass
                     if s == 1:
                         spirit(int(int(r.hget(mem, 'spirit')) * 0.5), mem, 0)
                 await bot.send_message(call.message.chat.id, '\U0001F44A Клан готовий йти в бій.')
@@ -4812,7 +5027,7 @@ async def handle_query(call):
 
     elif call.data.startswith('clan_rpg'):
         c = 'c' + str(call.message.chat.id)
-        if checkClan(call.from_user.id) and call.from_user.id == int(r.hget(c, 'leader')):
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
             if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 250:
                 if int(r.hget(call.from_user.id, 'weapon')) == 0:
                     r.hset(call.from_user.id, 'weapon', 2)
@@ -4862,6 +5077,7 @@ async def handle_query(call):
                     if int(r.hget(mem, 'head')) == 0:
                         r.hset(mem, 'head', 3)
                         r.hset(mem, 's_head', 1)
+                        quest(mem, 3, 3, 4)
                 await bot.send_message(call.message.chat.id, '\U0001F349 Клан очманів від бази.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

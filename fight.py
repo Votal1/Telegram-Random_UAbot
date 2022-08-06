@@ -7,6 +7,7 @@ from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, 
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
 from methods import checkClan, wood, stone, cloth, brick
+from content.quests import quest
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
@@ -31,9 +32,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         m_bonus, hach1, hach2 = [0], 0, 0
 
         if c1 == 1 or c1 == 11 or c1 == 21:
+            quest(uid2, 3, -1, 2)
             if weapon2 == 0:
                 hach1 = 1
+        if weapon2 == 0:
+            quest(uid1, 3, -1, 3)
+        if weapon1 == 0:
+            quest(uid2, 3, -1, 3)
         if c2 == 1 or c2 == 11 or c2 == 21:
+            quest(uid1, 3, -1, 2)
             if weapon1 == 0:
                 hach2 = 1
         if c1 == 21 and t == 1:
@@ -67,33 +74,27 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid2, 'worker', datetime.now().day)
                     r.hset(uid2, 'time', 0)
         if c1 == 26 and t == 1:
-            if c2 != 6 and c2 != 16 and c2 != 26:
+            quest(uid2, 3, -1, 1)
+            if c2 not in (6, 16, 26) and defense1 in (16, 17):
                 if weapon2 != 0:
                     cop1 = choices([1, 0], weights=[20, 80])
                     if cop1 == [1]:
                         r.hset(uid2, 'weapon', 0)
                         r.hset(uid2, 's_weapon', 0)
-                        if defense1 == 0:
-                            r.hset(uid1, 'defense', 16)
-                            r.hset(uid1, 's_defense', 10)
-                        elif defense1 in (16, 17):
-                            r.hincrby(uid1, 's_defense', 10)
+                        r.hincrby(uid1, 's_defense', 10)
                         cop += '\n\U0001F46E ' + names[name1] + \
-                               ' вилучив у ворога зброю! За це він отримав поліцейський щит.\n'
+                               ' вилучив у ворога зброю!\n\U0001F6E1 +10\n'
         if c2 == 26 and t == 1:
-            if c1 != 6 and c1 != 16 and c1 != 26:
+            quest(uid1, 3, -3, 1)
+            if c1 not in (6, 16, 26) and defense2 in (16, 17):
                 if weapon1 != 0:
                     cop2 = choices([1, 0], weights=[20, 80])
                     if cop2 == [1]:
                         r.hset(uid1, 'defense', 0)
                         r.hset(uid1, 's_defense', 0)
-                        if defense2 == 0:
-                            r.hset(uid2, 'defense', 16)
-                            r.hset(uid2, 's_defense', 10)
-                        elif defense2 in (16, 17):
-                            r.hincrby(uid2, 's_defense', 10)
+                        r.hincrby(uid2, 's_defense', 10)
                         cop += '\n\U0001F46E ' + names[name2] + \
-                               ' вилучив у ворога захисне спорядження! За це він отримав поліцейський щит.\n'
+                               ' вилучив у ворога захисне спорядження!\n\U0001F6E1 +10\n'
 
         if c1 == 27 and c2 == 0 and t == 1:
             fsb1 = choices([1, 0], weights=[5, 95])
@@ -130,6 +131,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 weapon = '\n\n\U0001F52E ' + names[name1] + ' ухилився від дрина!\n\U0001F464 +5'
                 r.hincrby(uid2, 'sch', 5)
+                quest(uid2, 3, -2, 3)
 
         if weapon2 == 4 and int(r.hget(uid1, 'spirit')) >= 300:
             if int(r.hget(uid1, 'spirit')) <= 1000:
@@ -200,10 +202,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1, bd1 = trance(uid1, s1, bd1, True)
             s11 = s1
             inj1 += '\U0001F44A '
+            if int(r.hget(uid1, 's5')) >= 3 and randint(1, 2) == 1:
+                increase_trance(1, uid1)
         if int(r.hget(uid2, 'buff')) > 0:
             s2, bd2 = trance(uid2, s2, bd2, True)
             s22 = s2
             inj2 += '\U0001F44A '
+            if int(r.hget(uid2, 's5')) >= 3 and randint(1, 2) == 1:
+                increase_trance(1, uid2)
 
         if head1 == 2:
             s1 = int(s1 * 1.31)
@@ -261,6 +267,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     sh = 5
                 r.hincrby(uid1, 'sch', sh)
                 r.hincrby(uid2, 'sch', -sh)
+                quest(uid1, 3, -2, 3)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' поміняв характеристики місцями!'
             damage_weapon(uid2, c2)
         elif weapon2 in (15, 26) and c2 in (5, 15, 25):
@@ -272,7 +279,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if ran == [2] and defense1 != 2:
                 weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                   'і отримав важкі поранення.'
-                r.hset(uid2, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0, 'weapon': 0})
+                r.hset(uid2, 'spirit', 0, {'hp': 0, 'defense': 0, 'weapon': 0})
                 r.hincrby(uid2, 'injure', 150)
                 if c2 == 25 and int(r.hget(uid2, 'strength')) >= 300:
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений ' + ak + '...' \
@@ -280,7 +287,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                 ' важкі поранення, як і ' + names[name1] + '.'
                     if c1 != 6 and c1 != 16 and c1 != 26:
                         r.hset(uid1, 'weapon', 0)
-                    r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0})
+                    r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0})
                     r.hincrby(uid1, 'injure', 150)
         elif defense2 in (16, 17):
             s1 = int(s1 * 0.8)
@@ -292,9 +299,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
                 if weapon2 == 30:
                     r.hincrby(uid1, 's_defense', -3)
-                    if int(r.hget(uid1, 's_defense')) == 0:
+                    if int(r.hget(uid1, 's_defense')) <= 0:
                         r.hset(uid1, 's_defense', 0, {'defense': 0})
-            elif int(r.hget(uid1, 'injure')) > 4:
+            elif int(r.hget(uid1, 'injure')) >= 4:
                 inj = 10
                 if weapon2 == 30:
                     inj = 15
@@ -302,6 +309,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if int(r.hget(uid1, 'injure')) < 0:
                     r.hset(uid1, 'injure', 0)
                 hp(-10, uid1)
+                if int(r.hget(uid1, 'hp')) == 0:
+                    quest(uid1, 3, -1, 4)
                 weapon = f'\n\n\U0001F5E1 {names[name2]} припинив ворогу кровотечу.\n\U0001fa78 -{inj} \U0001fac0 -10'
             damage_weapon(uid2, c2)
         elif weapon2 in (20, 31):
@@ -325,13 +334,23 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if checkClan(uid1):
                     damage_weapon(uid2, c2)
 
-        if weapon2 == 2 and defense1 != 2 and defense1 != 17 and t == 1:
+        if weapon2 == 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
-            r.hincrby(uid1, 'injure', 300)
-            if c1 != 6 and c1 != 16 and c1 != 26:
-                r.hset(uid1, 'weapon', 0)
-            r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0})
             damage_weapon(uid2, c2)
+            if defense1 in (2, 17):
+                damage = int(int(r.hget(uid1, 's_defense')) / 2 - 5)
+                r.hset(uid1, 's_defense', damage)
+                if damage <= 0:
+                    r.hset(uid1, 'defense', 0)
+                    r.hset(uid1, 's_defense', 0)
+            else:
+                r.hincrby(uid1, 'injure', 300)
+                if c1 != 6 and c1 != 16 and c1 != 26:
+                    r.hset(uid1, 'weapon', 0)
+                r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0})
+                if head1 != 6:
+                    r.hset(uid1, 'head', 0)
+                quest(uid1, 3, -1, 4)
 
         elif weapon1 in (15, 26) and c1 in (5, 15, 25):
             s1 = int(s1 * 1.75)
@@ -342,7 +361,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if ran == [2] and defense2 != 2:
                 defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                     'і отримав важкі поранення.'
-                r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0, 'weapon': 0})
+                r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'weapon': 0})
                 r.hincrby(uid1, 'injure', 150)
                 if c1 == 25 and int(r.hget(uid1, 'strength')) >= 300:
                     defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...' \
@@ -350,7 +369,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                 ' важкі поранення, як і ' + names[name2] + '.'
                     if c2 != 6 and c2 != 16 and c2 != 26:
                         r.hset(uid2, 'weapon', 0)
-                    r.hset(uid2, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0, 'head': 0})
+                    r.hset(uid2, 'spirit', 0, {'hp': 0, 'defense': 0})
                     r.hincrby(uid2, 'injure', 150)
 
         if support1 == 6 and t == 1:
@@ -524,6 +543,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         nar = r.hmget(uid2, 'mushrooms', 's1')
                         r.hincrby(uid2, 'injure', 2 + int(nar[0]))
                         hp(-int(nar[1]), uid2)
+                        if int(r.hget(uid2, 'hp')) == 0:
+                            quest(uid2, 3, -1, 4)
                         m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
             if hp1 < 50:
@@ -559,6 +580,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             nar = r.hmget(uid1, 'mushrooms', 's1')
                             r.hincrby(uid1, 'injure', 2 + int(nar[0]))
                             hp(-int(nar[1]), uid1)
+                            if int(r.hget(uid1, 'hp')) == 0:
+                                quest(uid1, 3, -1, 4)
                             m2 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
 
         if c1 in (20, 30):
@@ -700,17 +723,25 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     spirit(10000, uid1, 0)
                     spirit(10000, uid2, 0)
                 if weapon2 == 25:
-                    increase_trance(int(r.hget(uid2, 'buff')), uid1)
-                    increase_trance(-int(r.hget(uid2, 'buff')), uid2)
-                    pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли русак програв' \
-                                                           ', його бойовий дух та транс влились у ворога...'
+                    ran = randint(0, 5)
+                    r.hincrby(uid1, 'injure', ran)
+                    r.hincrby(uid1, 'sch', 5-ran)
+                    pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з рунічною сокирою Перуна. Коли русак' \
+                                                           ' програв, ворога вдарило блискавкою...'
 
             spirit(bonus, uid1, c1)
             spirit(-bonus, uid2, 0)
             r.hincrby(uid1, 'wins', 1)
+            quest(uid1, 1, 1)
+            quest(uid1, 1, -1)
             r.hincrby('win_rate', f'win-{c1}', 1)
             r.hincrby('win_rate', f'lose-{c2}', 1)
             r.hincrby('all_wins', 'wins', 1)
+
+            if c1 == 36:
+                quest(uid2, 3, -2, 2)
+            if c2 in (7, 17, 27):
+                quest(uid1, 3, -3, 3)
 
             hack = ''
             if c2 == 8 or c2 == 18 or c2 == 28:
@@ -735,6 +766,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
+                        quest(uid1, 3, -3, 4)
                     if checkClan(uid2, building='build4', level=4):
                         r.hincrby('c' + r.hget(uid2, 'clan').decode(), 'money', money)
                     r.hincrby(uid2, 'money', money)
@@ -746,6 +778,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if c1 not in (5, 15, 25):
                     damage_weapon(uid1, c1)
             hp(-1, uid2)
+            if int(r.hget(uid2, 'hp')) == 0:
+                quest(uid2, 3, -1, 4)
             info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)' + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
@@ -814,15 +848,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     spirit(10000, uid1, 0)
                     spirit(10000, uid2, 0)
                 if weapon2 == 25:
-                    increase_trance(int(r.hget(uid1, 'buff')), uid2)
-                    increase_trance(-int(r.hget(uid1, 'buff')), uid1)
-                    pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з сокирою Перуна. Коли ворог програв' \
-                                                           ', його бойовий дух та транс влились у русака...'
+                    pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з рунічною сокирою Перуна. Коли ворог ' \
+                                                           'програв, його бойовий дух влився у русака...'
 
             elif weapon2 in (17, 28):
                 r.hincrby(uid2, 'wins', 1)
-                fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор новоросії.' \
-                                                          '\n\U0001F3C6 +1'
+                if weapon2 == 17:
+                    fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор новоросії.' \
+                                                              '\n\U0001F3C6 +1'
                 damage_weapon(uid2, c2)
                 if weapon2 == 28:
                     increase_trance(2, uid2)
@@ -832,9 +865,16 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
             r.hincrby(uid2, 'wins', 1)
+            quest(uid2, 1, 1)
+            quest(uid2, 1, -1)
             r.hincrby('win_rate', f'win-{c2}', 1)
             r.hincrby('win_rate', f'lose-{c1}', 1)
             r.hincrby('all_wins', 'wins', 1)
+
+            if c2 == 36:
+                quest(uid1, 3, -2, 2)
+            if c1 in (7, 17, 27):
+                quest(uid2, 3, -3, 3)
 
             hack = ''
             if c1 == 8 or c1 == 18 or c1 == 28:
@@ -851,7 +891,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     money = 1
                     if c1 == 28:
                         money2 = int(r.hget(uid2, 'money'))
-                        if money2 > 250:
+                        if money2 > 250 and weapon1 != 29:
                             money2 = 250
                         elif money2 > 500 and weapon1 == 29:
                             money2 = 500
@@ -859,6 +899,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
+                        if money == 10:
+                            quest(uid2, 3, -3, 4)
                     if checkClan(uid1, building='build4', level=4):
                         r.hincrby('c' + r.hget(uid1, 'clan').decode(), 'money', money)
                     r.hincrby(uid1, 'money', money)
@@ -870,6 +912,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if c2 not in (5, 15, 25):
                     damage_weapon(uid2, c2)
             hp(-1, uid1)
+            if int(r.hget(uid1, 'hp')) == 0:
+                quest(uid1, 3, -1, 4)
             info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode() + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
                            '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
@@ -907,7 +951,7 @@ async def war(cid, location, big_battle):
                 if w == 5:
                     mas = int(r.hget(member, 's2'))
                     w = 0.25 + 0.5 * mas
-                    if choices([1, 0], [100 - 16 * mas, 16 * mas]) == [1]:
+                    if choices([1, 0], [100 - 18 * mas, 18 * mas]) == [1]:
                         damage_weapon(member, int(r.hget(member, 'class')))
                 else:
                     w = 0.25
@@ -934,6 +978,8 @@ async def war(cid, location, big_battle):
                 head = 0
             chance = s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
             fighters.update({member: chance})
+
+            quest(member, 1, 6)
         except:
             continue
 
@@ -963,6 +1009,7 @@ async def war(cid, location, big_battle):
             fighters.update({key: chance})
     win = choices(list(fighters.keys()), weights=list(fighters.values()))
     win = int(str(win)[3:-2])
+    quest(win, 1, -2)
     wc = int(r.hget(win, 'class'))
     user_name = r.hget(win, 'firstname').decode()
     winner = '\n\n\U0001F3C6 ' + ' ' + f'<a href="tg://user?id={win}">{user_name}</a>' + ' перемагає!'
@@ -977,6 +1024,7 @@ async def war(cid, location, big_battle):
         reward = '\n\n\U0001F3C6 Переможців немає.\n\U0001fa78 +' + str(n)
         for member in r.smembers('fighters' + str(cid)):
             r.hincrby(member, 'injure', n)
+            quest(member, 1, -6)
     else:
         reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
         r.hincrby(win, 'trophy', 1)
@@ -1056,6 +1104,8 @@ async def war(cid, location, big_battle):
             r.hincrby(win, 'money', 8)
             r.hincrby(win, 'vodka', 1)
             r.hincrby('all_vodka', 'vodka', 1)
+        for member in r.smembers('fighters' + str(cid)):
+            quest(member, 3, -2, 1)
     elif location == 'Битва біля розбитої колони':
         if wc in (31, 32, 33):
             class_reward = '\U0001F695: \U0001F4E6 +2'
@@ -1073,7 +1123,7 @@ async def war(cid, location, big_battle):
     for member in r.smembers('fighters' + str(cid)):
         r.srem('fighters' + str(cid), member)
     end = ' завершена.'
-    if location == 'Штурм Горлівки' or location == 'Штурм ДАП' or 'Розгром командного пункту':
+    if location in ('Штурм Горлівки', 'Штурм ДАП', 'Розгром командного пункту'):
         end = ' завершено.'
     await bot.delete_message(m.chat.id, m.message_id)
     await bot.send_message(cid, location + end + winner + reward + class_reward, parse_mode='HTML')
@@ -1167,7 +1217,11 @@ async def war_power(sett, cid):
                     intellect(1, member)
                 if gen1 == 1 and meat > 0:
                     s = int(s + s * meat * 0.25)
+            if meat > 0:
+                quest(member, 3, -3, 2)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
+
+            quest(member, 1, 3)
         except:
             continue
     if m == 1:
@@ -1237,9 +1291,12 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
             r.hincrby(n, 'money', money)
+            quest(n, 3, 1, 2)
         r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid1, 1)
         if clan1 >= 5:
+            for n in a:
+                quest(n, 2, 2)
             if int(r.hget('c' + str(cid1), 'base')) > 1:
                 r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
                 if int(r.hget('c' + str(cid1), 'side')) == 4:
@@ -1268,9 +1325,12 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(n, 'trophy', 1)
             r.hincrby(n, 'wins', 1)
             r.hincrby(n, 'money', money)
+            quest(n, 3, 1, 2)
         r.hincrby('all_trophy', 'trophy', 5)
         r.hincrby(222, cid2, 1)
         if clan2 >= 5:
+            for n in b:
+                quest(n, 2, 2)
             if int(r.hget('c' + str(cid2), 'base')) > 1:
                 r.hincrby('c' + str(cid2), 'r_spirit', r_spirit)
                 if int(r.hget('c' + str(cid2), 'side')) == 4:
@@ -1311,7 +1371,11 @@ async def guard_power(mid):
     if int(stats[5]) > 0:
         s, bd = injure(int(mid), s, bd, True)
     if int(stats[6]) > 0:
-        i, bd = schizophrenia(int(mid), i, bd, True)
+        if checkClan(mid, building='build6', level=2):
+            r.hincrby(mid, 'sch', -1)
+            i += 5
+        else:
+            i, bd = schizophrenia(int(mid), i, bd, True)
     if int(stats[8]) > 0:
         s, bd = trance(int(mid), s, bd, True)
 
@@ -1329,6 +1393,9 @@ async def guard_power(mid):
     d = int(stats[4])
     if d > 0:
         d = 0.25
+        if d == 3:
+            r.hincrby('c' + r.hget(mid, 'clan').decode(), 'mines', 1)
+            damage_defense(mid, 3)
     else:
         d = 0
     support = int(stats[9])
@@ -1356,8 +1423,10 @@ async def start_raid(cid):
         r.hset('convoy', 'day', datetime.now().day)
 
     chance1 = 0
+    hack = 0
     mar = 0
     rocket = 0
+    fish = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in list(r.smembers('fighters_3' + str(cid)))[0:5]:
         try:
@@ -1390,6 +1459,8 @@ async def start_raid(cid):
                 s = int(s * 1.5)
                 if cl == 30:
                     mar += 1
+            if cl in (8, 18, 28):
+                hack += 1
             if cl == 33 and int(r.hget('convoy', 'power')) > 0:
                 raid1 -= 10
                 raid2 -= 10
@@ -1411,6 +1482,8 @@ async def start_raid(cid):
                 d = 0
             support = int(stats[9])
             if support > 0:
+                if support == 10:
+                    fish += 1
                 if support in (2, 9):
                     support = 0.5
                     damage_support(member)
@@ -1426,11 +1499,17 @@ async def start_raid(cid):
             else:
                 head = 0
             chance1 += int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head))
+
+            quest(member, 2, 1)
         except:
             continue
     if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0:
         raid1, raid2, raid3 = 40, 40, 20
     mode = choices([1, 2, 3], [raid1, raid2, raid3])
+
+    if chance1 >= 100000:
+        for member in r.smembers('fighters_3' + str(cid)):
+            quest(member, 3, 2, 3)
 
     enemy = c2 = ''
     if mode == [1]:
@@ -1517,7 +1596,15 @@ async def start_raid(cid):
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
         elif win == ['b']:
-            reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            if int(r.hget(c2, 'mines')) > 0:
+                ran = randint(1, 5)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    if int(r.hget(mem, 'defense')) != 2:
+                        r.hincrby(mem, 'injure', ran)
+                r.hincrby(c2, 'mines', -1)
+                reward += f'Русаки підірвались на міні...\n\U0001fa78 +{ran} \U0001fac0 -100'
+            else:
+                reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             if mar >= 1 and chance2 > 0:
                 lose = int(chance2 * (1 - 0.1 * mar))
                 reward += f'\nОхорона втратила \U0001F4AA {chance2 - lose}'
@@ -1528,7 +1615,11 @@ async def start_raid(cid):
 
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
-        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!' + reward.replace('+', '-')
+        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!'
+        if win == ['a']:
+            msg2 += reward.replace('+', '-')
+        else:
+            msg2 += reward
 
         if choices([1, 0], [5, 95]) == [1]:
             r.hincrby(c, 'codes', 1)
@@ -1543,8 +1634,12 @@ async def start_raid(cid):
         s = int(r.hget(c, 'side'))
         if s == 3:
             chances = ['0', '0.05', '0.1', '0.15', '0.25']
-        location = choice(locations)
-        chance2 = int(chance1 * float(chances[locations.index(location)]))
+        if fish >= 5:
+            location = 'Ставок швайнокарасів'
+            chance2 = 0
+        else:
+            location = choice(locations)
+            chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
             await bot.send_message(cid, msg0)
@@ -1554,8 +1649,25 @@ async def start_raid(cid):
         reward = '\n\n'
 
         if win == ['a']:
-            if locations.index(location) == 0:
-                reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
+            if location == 'Ставок швайнокарасів':
+                reward += f"Русаки випустили швайнокарасів в ставок і знайшли камінь, на якому було написано...\n\n" \
+                          f"{r.hget('promo_code', 'fish_promo_code').decode()}"
+                r.sadd('fifth_code_allowed', cid)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hset(mem, 'support', 0, {'s_support': 0})
+            elif locations.index(location) == 0:
+                if hack >= 2:
+                    ran = randint(100, 500)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += 'Хакери отримали доступ до рахунків монобанку!\n\U0001F4B5 +' + str(ran)
+                    r.hincrby(c, 'money', ran)
+                    if s == 3:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hincrby(mem, 'money', int(ran / 5))
+                else:
+                    reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
+
             elif locations.index(location) == 1:
                 reward += 'Русаки пограбували магазин алкоголю\n'
                 ran = randint(5, 20)
@@ -1569,72 +1681,96 @@ async def start_raid(cid):
                     spirit(10000, mem, 0)
             elif locations.index(location) == 2:
                 reward += 'Русаки пограбували АТБ\n'
-                mode = choices([1, 2, 3, 4], [40, 30, 20, 10])
-                if mode == [1]:
+                mode = choice([1, 2, 3, 4])
+                mode2 = choice([1, 2])
+                if mode == 1:
+                    s = 3
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'support')) == 8:
+                            r.hincrby(mem, 's_support', s)
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10):
+                            r.hset(mem, 'support', 8)
+                            r.hset(mem, 's_support', s)
+                if mode == 2:
+                    s = 2
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'support')) == 7:
+                            r.hincrby(mem, 's_support', s)
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10):
+                            r.hset(mem, 'support', 7)
+                            r.hset(mem, 's_support', s)
+                if mode == 3:
+                    reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'head')) not in (1, 6):
+                            r.hset(mem, 'head', 3)
+                            r.hset(mem, 's_head', 1)
+                if mode == 4:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    reward += emoji + ' +1'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hset(mem, 'time', 0)
+                if mode2 == 1:
                     ran = randint(100, 200)
                     if mar >= 1:
                         ran *= 2
-                    reward += '\U0001F4B5 +' + str(ran)
+                    reward += '\n\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
                     if s == 3:
                         for mem in r.smembers('fighters_3' + str(cid)):
                             r.hincrby(mem, 'money', int(ran / 5))
-                if mode == [2]:
-                    s = 2
-                    if mar >= 1:
-                        s = 4
-                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) == 7:
-                            r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) != 6:
-                            r.hset(mem, 'support', 7)
-                            r.hset(mem, 's_support', s)
-                if mode == [3]:
-                    reward += '\U0001F349 Кавун базований [Шапка, міцність=1]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'head')) != 1:
-                            r.hset(mem, 'head', 3)
-                            r.hset(mem, 's_head', 1)
-                if mode == [4]:
-                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                    reward += emoji + ' +1'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        r.hset(mem, 'time', 0)
             elif locations.index(location) == 3:
                 reward += 'Русаки пограбували Сільпо\n'
-                mode = choices([1, 2, 3, 4], [40, 20, 20, 20])
-                if mode == [1]:
-                    ran = randint(150, 300)
+                mode = choice([1, 2, 3, 4])
+                mode2 = choice([1, 2])
+                if mode == 1:
+                    s = 6
                     if mar >= 1:
-                        ran *= 2
-                    reward += '\U0001F4B5 +' + str(ran)
-                    r.hincrby(c, 'money', ran)
-                    if s == 3:
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            r.hincrby(mem, 'money', int(ran / 5))
-                if mode == [2]:
-                    s = 2
+                        s *= 2
+                    reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'support')) == 8:
+                            r.hincrby(mem, 's_support', s)
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10):
+                            r.hset(mem, 'support', 8)
+                            r.hset(mem, 's_support', s)
+                if mode == 2:
+                    s = 4
                     if mar >= 1:
-                        s = 4
+                        s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:
                             r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) != 6:
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10):
                             r.hset(mem, 'support', 7)
                             r.hset(mem, 's_support', s)
-                if mode == [3]:
-                    reward += '\U0001F349 Кавун базований [Шапка, міцність=1]'
+                if mode == 3:
+                    reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
                     for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'head')) != 1:
+                        if int(r.hget(mem, 'head')) not in (1, 6):
                             r.hset(mem, 'head', 3)
                             r.hset(mem, 's_head', 1)
-                if mode == [4]:
+                if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hset(mem, 'time', 0)
+                if mode2 == 1:
+                    ran = randint(200, 400)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += '\n\U0001F4B5 +' + str(ran)
+                    r.hincrby(c, 'money', ran)
+                    if s == 3:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hincrby(mem, 'money', int(ran / 5))
             elif locations.index(location) == 4:
                 reward += 'Русаки пограбували Епіцентр\n'
                 base = int(r.hget(c, 'base'))
@@ -1689,7 +1825,7 @@ async def start_raid(cid):
         if diff == 0:
             r.hset('convoy', 'power', 0)
             msg += 'Від гумконвою більше нічого не залишилось!\n'
-            packs += 20
+            packs += 5
             '''
             r.hincrby('resources', 'wood', 1500)
             r.hincrby('resources', 'stone', 1000)
@@ -1704,6 +1840,9 @@ async def start_raid(cid):
             msg += f'\U0001F4E6 +{packs}'
             for mem in r.smembers('fighters_3' + str(cid)):
                 r.hincrby(mem, 'packs', packs)
+                quest(mem, 3, 3, 3)
+                if packs >= 10:
+                    quest(mem, 3, -2, 4)
         elif reward <= 0 and diff != 0:
             msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'
 
@@ -1713,16 +1852,21 @@ async def start_raid(cid):
 
         await sleep(10)
         await bot.send_message(cid, msg)
-        '''
         if diff == 0:
-            for c in r.smembers('groupings'):
+            for mem in r.smembers('followers'):
                 try:
-                    await bot.send_message(int(c), '\U0001F69B Гумконвой розграбовано, '
-                                                   'в магазин завезено свіжі ресурси.')
+                    c3 = 'c' + mem.decode()
+                    if int(r.hget(c3, 'not_time')) != datetime.now().day:
+                        if int(r.hget(c3, 'technics')) >= 3:
+                            r.hset(c3, 'not_time', datetime.now().day)
+                            r.hincrby(c3, 'technics', -3)
+                        else:
+                            r.hset(c3, 'notification', 0)
+                            r.srem('followers', mem)
+                            continue
+                    await bot.send_message(int(mem), '\U0001F69B Гумконвой розграбовано.')
                 except:
                     pass
-        '''
-
     try:
         await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
     except:

@@ -1,40 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def goods():
-    markup = InlineKeyboardMarkup()
-    items = {'Горілка "Козаки" - 2 грн': 'vodka', 'Колючий дрин - 4 грн': 'weapon', 'Колючий щит - 5 грн': 'defense',
-             'Аптечка - 4 грн': 'aid_kit', 'Трофейний паспорт - 10 грн': 'passport', 'Утеплена будка - 30 грн': 'cabin',
-             'Жінка - 150 грн': 'woman', 'Тютюн та люлька - 1 жінка': 'pipe'}
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def donate_goods():
-    markup = InlineKeyboardMarkup()
-    items = {'\U0001F943 Настоянка глоду - \U0001F31F 1 погон': 'hawthorn',
-             '\U0001F4E6 40 пакунків - \U0001F31F 1 погон': '40_packs',
-             '\U0001F9FE Ресурси - \U0001F31F 2 погони': 'buy_resources',
-             '\U0001F393 Курс перекваліфікації - \U0001F31F 2 погони': 'course',
-             '\U0001F3E0 Велике будівництво - \U0001F31F 3 погони': 'fast_cellar'}
-    markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
-               InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
-               InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium2'))
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
-def skill_set():
-    markup = InlineKeyboardMarkup()
-    items = {'Прокачати алкоголізм': 'alcohol', 'Прокачати майстерність': 'master',
-             'Продовжити будівництво': 'cellar'}
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
-    return markup
-
-
 def battle_button():
     markup = InlineKeyboardMarkup()
     items = {'Відправити русака на бій': 'join'}
@@ -86,9 +52,9 @@ def invent(w, d, s, h):
     return markup
 
 
-def unpack():
+def unpack(uid):
     markup = InlineKeyboardMarkup()
-    items = {'Так': 'unpack'}
+    items = {'Так': f'pack_unpack_{uid}'}
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup
@@ -122,7 +88,8 @@ def clan_set():
     markup = InlineKeyboardMarkup()
     items = {'Змінити назву на актуальну назву чату - \U0001F4B5 100': 'change_title',
              'Змінити режим набору': 'toggle_allow', 'Змінити режим входу в битву': 'toggle_war', 'Зарплата': 'salary',
-             'Змінити набір': 'recruitment', 'Отримати список членів клану': 'get_members'}
+             'Змінити набір': 'recruit', 'Змінити сповіщення': 'notification',
+             'Отримати список членів клану': 'get_members'}
     for key, value in items.items():
         markup.add(InlineKeyboardButton(text=key, callback_data=value))
     return markup
