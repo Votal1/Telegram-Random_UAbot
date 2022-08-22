@@ -5224,35 +5224,36 @@ async def echo(message):
                 await message.reply('\u26A0\uFE0F УВАГА! \u26A0\uFE0F\n\nЦей канал розповсюджує фейки.')
         except:
             pass
-        if 'Кубик' in message.text or 'кубик' in message.text:
-            await bot.send_dice(chat_id=message.chat.id, reply_to_message_id=message.message_id)
+        if message.chat.id != -1001211386939:
+            if 'Кубик' in message.text or 'кубик' in message.text:
+                await bot.send_dice(chat_id=message.chat.id, reply_to_message_id=message.message_id)
 
-        elif 'казино' in message.text.lower():
-            await bot.send_sticker(message.chat.id,
-                                   'CAACAgIAAxkBAAEIjuhhS6oNEVDkBDkBUokJJLjTBRloBAACCQADT9w1GxCgVEna0OwQIQQ',
-                                   reply_to_message_id=message.message_id)
-        elif 'мавпа' in message.text.lower():
-            await bot.send_sticker(message.chat.id,
-                                   'CAACAgIAAxkBAAEMZfVim53LeR6F2ivPdG-_GmEUXcigIQACDAgAAnTPIUglz-b_Qh_CJCQE',
-                                   reply_to_message_id=message.message_id)
-        elif message.text.lower() == 'карта' or message.text.lower() == 'мапа':
-            await message.reply('https://deepstatemap.live')
+            elif 'казино' in message.text.lower():
+                await bot.send_sticker(message.chat.id,
+                                       'CAACAgIAAxkBAAEIjuhhS6oNEVDkBDkBUokJJLjTBRloBAACCQADT9w1GxCgVEna0OwQIQQ',
+                                       reply_to_message_id=message.message_id)
+            elif 'мавпа' in message.text.lower():
+                await bot.send_sticker(message.chat.id,
+                                       'CAACAgIAAxkBAAEMZfVim53LeR6F2ivPdG-_GmEUXcigIQACDAgAAnTPIUglz-b_Qh_CJCQE',
+                                       reply_to_message_id=message.message_id)
+            elif message.text.lower() == 'карта' or message.text.lower() == 'мапа':
+                await message.reply('https://deepstatemap.live')
 
-        elif message.text == '\U0001F346':
-            await bot.send_sticker(message.chat.id,
-                                   'CAACAgEAAxkBAAEJbHxho8TpMNv1z5ilwsnv5-ls4prPZQACowgAAuN4BAABejm_DcUkS2oiBA',
-                                   reply_to_message_id=message.message_id)
+            elif message.text == '\U0001F346':
+                await bot.send_sticker(message.chat.id,
+                                       'CAACAgEAAxkBAAEJbHxho8TpMNv1z5ilwsnv5-ls4prPZQACowgAAuN4BAABejm_DcUkS2oiBA',
+                                       reply_to_message_id=message.message_id)
 
-        elif message.text == '\U0001F351':
-            await bot.send_sticker(message.chat.id,
-                                   'CAACAgEAAxkBAAEJbIlho8a1VzFNc2lFs2mvQpIDruqNxQAChwgAAuN4BAABd8eOV12a0r4iBA',
-                                   reply_to_message_id=message.message_id)
+            elif message.text == '\U0001F351':
+                await bot.send_sticker(message.chat.id,
+                                       'CAACAgEAAxkBAAEJbIlho8a1VzFNc2lFs2mvQpIDruqNxQAChwgAAuN4BAABd8eOV12a0r4iBA',
+                                       reply_to_message_id=message.message_id)
 
-        elif message.text == 'Чат хуйня':
-            await message.reply('+')
+            elif message.text == 'Чат хуйня':
+                await message.reply('+')
 
-        elif message.text == 'N':
-            await message.answer('I')
+            elif message.text == 'N':
+                await message.answer('I')
 
         elif message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
