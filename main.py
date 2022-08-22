@@ -5255,7 +5255,7 @@ async def echo(message):
             elif message.text == 'N':
                 await message.answer('I')
 
-        elif message.chat.type == 'private':
+        if message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
                 if int(r.hget(message.from_user.id, 'intellect')) >= 5 and \
                         int(r.hget(message.from_user.id, 'class')) == 0:
