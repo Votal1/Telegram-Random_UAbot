@@ -1041,10 +1041,12 @@ async def promo_code(message):
                 if msg.startswith('soledar_n') and uid not in r.smembers('first_code'):
                     r.sadd('first_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
+                    r.hincrby(message.from_user.id, 'money', 30)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     r.hincrby('all_vodka', 'vodka', 50)
-                    await message.reply('\u26CF Соледарський промокод активовано!\n\U0001F4E6 +10 \u2622 +50')
-                elif msg.startswith('n') and uid not in r.smembers('second_code'):
+                    await message.reply('\u26CF Соледарський промокод активовано!'
+                                        '\n\U0001F4E6 +10 \U0001F4B5 +30 \u2622 +50')
+                elif msg.startswith('si') and uid not in r.smembers('second_code'):
                     msg = '\u26CF Хакерський промокод активовано!\n\U0001F4E6 +10 \U0001F4B5 +100 \u2622 +50'
                     r.sadd('second_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
@@ -1063,23 +1065,30 @@ async def promo_code(message):
                     r.hset(message.from_user.id, 'weapon', 12)
                     r.hset(message.from_user.id, 's_weapon', 50)
                     await message.reply('\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 \U0001F5E1 +50')
-                elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
-                    r.sadd('fourth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'packs', 10)
-                    r.hincrby(message.from_user.id, 'money', 200)
-                    r.hincrby(message.from_user.id, 'vodka', 100)
-                    await message.reply('\u26CF Промокод активовано!\n\U0001F4E6 +10 \u2622 +100 \U0001F4B5 +200')
                 elif msg.startswith('cr') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
                     if int(r.hget(message.from_user.id, 'weapon')) == 0:
                         r.hset(message.from_user.id, 'weapon', 5)
                         r.hset(message.from_user.id, 's_weapon', 1)
-                    r.hincrby(message.from_user.id, 'strength', 100)
+                    if int(r.hget(message.from_user.id, 'strength')) >= 5000:
+                        st = 10
+                    elif int(r.hget(message.from_user.id, 'strength')) >= 4000:
+                        st = 50
+                    else:
+                        st = 100
+                    r.hincrby(message.from_user.id, 'strength', st)
                     r.hincrby(message.from_user.id, 'vodka', 200)
                     r.hincrby(message.from_user.id, 'money', 300)
-                    await message.reply('\u26CF Промокод активовано!\n\u2708\uFE0F +1 \U0001F4AA +100 '
-                                        '\u2622 +200 \U0001F4B5 +300')
+                    await message.reply(f'\u26CF Промокод швайнокарасів активовано!\n\u2708\uFE0F +1 \U0001F4AA +{st} '
+                                        f'\u2622 +200 \U0001F4B5 +300')
+                '''
+                elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
+                    r.sadd('fourth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs', 10)
+                    r.hincrby(message.from_user.id, 'money', 200)
+                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    await message.reply('\u26CF Промокод активовано!\n\U0001F4E6 +10 \u2622 +100 \U0001F4B5 +200')
                 elif msg.startswith('soledar_1') and uid not in r.smembers('sixth_code'):
                     r.sadd('sixth_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'strength', 33)
@@ -1087,6 +1096,7 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'salt', 11)
                     await message.reply('\u26CF Ювілейний Соледарський промокод активовано!\n'
                                         '\U0001F9C2 +11 \U0001F4E6 +22 \U0001F4AA +33')
+                '''
     except:
         pass
 
