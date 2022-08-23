@@ -1073,10 +1073,10 @@ async def promo_code(message):
                     else:
                         st = 100
                     r.hincrby(message.from_user.id, 'strength', st)
-                    r.hincrby(message.from_user.id, 'vodka', 200)
-                    r.hincrby(message.from_user.id, 'money', 300)
+                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    r.hincrby(message.from_user.id, 'money', 200)
                     await message.reply(f'\u26CF Промокод швайнокарасів активовано!\n\u2708\uFE0F +1 \U0001F4AA +{st} '
-                                        f'\u2622 +200 \U0001F4B5 +300')
+                                        f'\u2622 +100 \U0001F4B5 +200')
                 '''
                 elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
                     r.sadd('fourth_code', message.from_user.id)
