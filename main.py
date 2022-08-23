@@ -4542,8 +4542,8 @@ async def handle_query(call):
                                             text='Твій русак не отримає жодного ефекту від цього товару')
     elif call.data.startswith('course'):
         cl = int(r.hget(call.from_user.id, 'class'))
-        if int(r.hget(call.from_user.id, 'strap')) >= 4 and cl > 0:
-            r.hincrby(call.from_user.id, 'strap', -4)
+        if int(r.hget(call.from_user.id, 'strap')) >= 3 and cl > 0:
+            r.hincrby(call.from_user.id, 'strap', -3)
             if cl == 21:
                 r.hincrby(call.from_user.id, 'strength', -200)
             if cl in (6, 16, 26):

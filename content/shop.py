@@ -40,7 +40,7 @@ def shop_msg(uid, mode):
                  '\U0001F4E6 40 пакунків - \U0001F31F 1 погон': '40_packs',
                  '\u2721\uFE0F Ярмулка - \U0001F31F 1 погон': 'jew',
                  '\U0001F9FE Ресурси - \U0001F31F 2 погони': 'buy_resources',
-                 '\U0001F393 Курс перекваліфікації - \U0001F31F 4 погони': 'course',
+                 '\U0001F393 Курс перекваліфікації - \U0001F31F 3 погони': 'course',
                  '\U0001F3E0 Велике будівництво - \U0001F31F 3 погони': 'fast_cellar',
                  '\U0001F9C2 6 солі - \U0001F31F 1 погон': 'strap_to_salt'}
         markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
