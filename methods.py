@@ -532,7 +532,9 @@ def wiki_text(data):
               '\u26CF Вміння можна качати в /skills\n' \
               '\u2B50 /achieve - подивитись досягнення (ачівки - фрази з українських пісень).\n\n' \
               '\U0001F947 Формула розрахунку рейтингу:\n' \
-              'Рейтинг = сила + інтелект * 10 + перемоги + трофеї * 10 + вбивства * 14 + немовлята * 88'
+              'Рейтинг = сила + інтелект * 10 + перемоги + трофеї * 10 + вбивства * 14 + немовлята * 88\n\n' \
+              '\U0001F4E6 Промокоди - невелика нагорода, яку можна отримати один раз. Промокод, який зміцнює ' \
+              'спорядження:\n' + r.hget('promo_code', 'strength_promo_code').decode()
     if data.startswith('wiki_pack'):
         markup.add(InlineKeyboardButton(text='\U0001F4DC', callback_data='wiki_passport'),
                    InlineKeyboardButton(text='\u2B50', callback_data='wiki_achieve'))

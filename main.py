@@ -1077,6 +1077,53 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'money', 200)
                     await message.reply(f'\u26CF Промокод швайнокарасів активовано!\n\u2708\uFE0F +1 \U0001F4AA +{st} '
                                         f'\u2622 +100 \U0001F4B5 +200')
+                elif msg.startswith('ran') and uid not in r.smembers('seventh_code'):
+                    r.sadd('seventh_code', message.from_user.id)
+                    if int(r.hget(message.from_user.id, 'weapon')) == 2:
+                        weapon = 1
+                    elif int(r.hget(message.from_user.id, 'weapon')) == 5:
+                        weapon = 0
+                    elif int(r.hget(message.from_user.id, 'weapon')) == 0:
+                        weapon = 5
+                        r.hset(message.from_user.id, 'weapon', 4)
+                        r.hset(message.from_user.id, 's_weapon', 0)
+                    else:
+                        weapon = 5
+                    r.hincrby(message.from_user.id, 's_weapon', weapon)
+
+                    if int(r.hget(message.from_user.id, 'defense')) == 0:
+                        defense = 5
+                        r.hset(message.from_user.id, 'defense', 9)
+                        r.hset(message.from_user.id, 's_defense', 0)
+                    else:
+                        defense = 5
+                    r.hincrby(message.from_user.id, 's_defense', defense)
+
+                    if int(r.hget(message.from_user.id, 'support')) == 6:
+                        support = 1
+                    elif int(r.hget(message.from_user.id, 'support')) == 5:
+                        support = 0
+                    elif int(r.hget(message.from_user.id, 'support')) == 0:
+                        support = 5
+                        r.hset(message.from_user.id, 'support', 7)
+                        r.hset(message.from_user.id, 's_support', 0)
+                    else:
+                        support = 5
+                    r.hincrby(message.from_user.id, 's_support', support)
+
+                    if int(r.hget(message.from_user.id, 'head')) in (3, 5):
+                        head = 0
+                    elif int(r.hget(message.from_user.id, 'head')) == 0:
+                        head = 5
+                        r.hset(message.from_user.id, 'head', 4)
+                        r.hset(message.from_user.id, 's_head', 0)
+                    else:
+                        head = 5
+                    r.hincrby(message.from_user.id, 's_head', head)
+
+                    await message.reply(f'\u26CF Промокод міцності активовано!\n'
+                                        f'\U0001F5E1 +{weapon} \U0001F6E1 +{defense} '
+                                        f'\U0001F9EA +{support} \U0001F3A9 +{head}')
                 '''
                 elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
                     r.sadd('fourth_code', message.from_user.id)
