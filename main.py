@@ -4583,6 +4583,26 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Пізно пришвидшувати будівництво')
 
+    elif call.data.startswith('strap_to_salt'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'salt', 6)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно купили 6 солі')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('sal_to_strap'):
+        if int(r.hget(call.from_user.id, 'salt')) >= 66:
+            r.hincrby(call.from_user.id, 'strap', 1)
+            r.hincrby(call.from_user.id, 'salt', -66)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно обміняли сіль на погон')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо солі на рахунку')
+
     elif call.data.startswith('zero_time'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
