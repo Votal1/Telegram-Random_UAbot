@@ -1057,9 +1057,9 @@ async def promo_code(message):
                 elif msg.startswith('mine') and uid not in r.smembers('third_code'):
                     r.sadd('third_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 30)
-                    r.hset(message.from_user.id, 'weapon', 12)
-                    r.hset(message.from_user.id, 's_weapon', 50)
-                    await message.reply('\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 \U0001F5E1 +50')
+                    r.hset(message.from_user.id, 'weapon', 23)
+                    r.hset(message.from_user.id, 's_weapon', 100)
+                    await message.reply('\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 \U0001F5E1 +100')
                 elif msg.startswith('cr') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
