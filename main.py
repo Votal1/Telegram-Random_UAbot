@@ -3643,6 +3643,8 @@ async def handle_query(call):
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
         r.hset(call.from_user.id, 'time2', datetime.now().day)
+        name = int(r.hget(call.from_user.id, 'name'))
+        r.hdel(call.from_user.id, 'name')
         try:
             cl = int(r.hget(call.from_user.id, 'class'))
             for member in r.smembers(call.message.chat.id):
@@ -3672,10 +3674,8 @@ async def handle_query(call):
                     pass
         except:
             pass
-        name = int(r.hget(call.from_user.id, 'name'))
         clm = int(r.hget(call.from_user.id, 'class'))
         r.srem('class-' + str(clm), call.from_user.id)
-        r.hdel(call.from_user.id, 'name')
         r.hset(call.from_user.id, 'photo', 0, {'strength': 0, 'intellect': 0, 'spirit': 0,
                                                'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
                                                'support': 0, 's_support': 0, 'mushrooms': 0})
