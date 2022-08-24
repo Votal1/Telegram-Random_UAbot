@@ -1101,7 +1101,7 @@ async def promo_code(message):
 
                     if int(r.hget(message.from_user.id, 'support')) == 6:
                         support = 1
-                    elif int(r.hget(message.from_user.id, 'support')) == 5:
+                    elif int(r.hget(message.from_user.id, 'support')) in (5, 10):
                         support = 0
                     elif int(r.hget(message.from_user.id, 'support')) == 0:
                         support = 5
