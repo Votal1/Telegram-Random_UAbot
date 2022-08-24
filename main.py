@@ -1101,7 +1101,7 @@ async def promo_code(message):
 
                     if int(r.hget(message.from_user.id, 'support')) == 6:
                         support = 1
-                    elif int(r.hget(message.from_user.id, 'support')) in (5, 10):
+                    elif int(r.hget(message.from_user.id, 'support')) == 5:
                         support = 0
                     elif int(r.hget(message.from_user.id, 'support')) == 0:
                         support = 5
@@ -1110,6 +1110,8 @@ async def promo_code(message):
                     else:
                         support = 5
                     r.hincrby(message.from_user.id, 's_support', support)
+                    if int(r.hget(message.from_user.id, 'support')) == 10:
+                        r.hset(message.from_user.id, 's_support', 3)
 
                     if int(r.hget(message.from_user.id, 'head')) in (3, 5):
                         head = 0
