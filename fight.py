@@ -1118,8 +1118,9 @@ async def war(cid, location, big_battle):
                 class_reward += ' \U0001F4FB +3'
                 r.hincrby('c' + r.hget(win, 'clan').decode(), 'technics', 3)
     elif location == 'Битва на херсонському баштані':
-        class_reward = '\U0001F349: всі учасники битви отримали кавуна.'
-        for member in r.smembers('fighters' + str(cid)):
+        class_reward = '\U0001F349: три випадкові учасники отримали кавуна.'
+        winners = r.srandmember('fighters' + str(cid), 3)
+        for member in winners:
             if int(r.hget(member, 'head')) == 0:
                 r.hset(member, 'head', 3)
                 r.hset(member, 's_head', 1)
