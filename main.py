@@ -3676,9 +3676,9 @@ async def handle_query(call):
             pass
         clm = int(r.hget(call.from_user.id, 'class'))
         r.srem('class-' + str(clm), call.from_user.id)
-        r.hset(call.from_user.id, 'photo', 0, {'strength': 0, 'intellect': 0, 'spirit': 0,
-                                               'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
-                                               'support': 0, 's_support': 0, 'mushrooms': 0})
+        r.hset(call.from_user.id, 'spirit', 0, {'strength': 100, 'intellect': 1, 'photo': choice(default),
+                                                'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
+                                                'support': 0, 's_support': 0, 'mushrooms': 0})
         r.hincrby(call.from_user.id, 'deaths', 1)
         r.hincrby('all_deaths', 'deaths', 1)
         msg = '\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, а вторий насрав в штани.'
