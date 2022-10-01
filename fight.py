@@ -1636,11 +1636,11 @@ async def start_raid(cid):
         await bot.send_message(int(enemy), msg2)
 
     elif mode == [2]:
-        locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр']
-        chances = ['0', '0.1', '0.2', '0.3', '0.5']
+        locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївський роднічок']
+        chances = ['0', '0.1', '0.2', '0.3', '0.5', '0.75']
         s = int(r.hget(c, 'side'))
         if s == 3:
-            chances = ['0', '0.05', '0.1', '0.15', '0.25']
+            chances = ['0', '0.05', '0.1', '0.15', '0.25', '0.375']
         if fish >= 5:
             location = 'Ставок швайнокарасів'
             chance2 = 0
@@ -1805,8 +1805,20 @@ async def start_raid(cid):
                         ran *= 2
                     reward += ' \U0001F9F1 +' + str(ran)
                     brick(c, ran)
+            elif locations.index(location) == 5:
+                reward += 'Русаки вчинили жахливий теракт...\n'
+                ran = randint(10, 20)
+                if mar >= 1:
+                    ran *= 2
+                reward += ' \U0001F47E +' + str(ran)
+                r.hincrby(c, 'r_spirit', ran)
         elif win == ['b']:
-            reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            if location != 'Макіївський роднічок':
+                reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
+            else:
+                reward += 'Русаки вирішили напитись води...\n\U0001F44A +20 \U0001fac0 -100'
+                for member in r.smembers('fighters_3' + str(cid)):
+                    increase_trance(20, member)
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
         if choices([1, 0], [5, 95]) == [1]:
