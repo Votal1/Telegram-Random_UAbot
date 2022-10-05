@@ -113,6 +113,9 @@ def quests(uid):
     q = r.hmget(uid, 'q1', 'q1t', 'q2', 'q2t', 'q3', 'q3t')
     if int(q[0]) == 0 and int(q[2]) == 0 and int(q[4]) == 0:
         msg += '\u2705 Всі завдання на сьогодні виконані.'
+    elif int(q[0]) == 0 and not checkClan(uid, building='wall'):
+        r.hset(uid, 'q2', 0, {'q2t': 0, 'q3': 0, 'q3t': 0})
+        msg += '\u2705 Всі завдання на сьогодні виконані.'
     else:
         if int(q[0]) > 0:
             msg += f"{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
