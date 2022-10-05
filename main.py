@@ -1587,8 +1587,8 @@ async def clan(message):
         else:
             if str(message.from_user.id).encode() in r.smembers('cl' + cid) or message.from_user.id in sudoers:
                 base = int(r.hget(c, 'base'))
-                title = r.hget(c, 'title').decode()
-                leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode()
+                title = r.hget(c, 'title').decode().replace('<', '.').replace('>', '.')
+                leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode().replace('<', '.').replace('>', '.')
                 if r.scard('cl2' + cid) == 1:
                     leader += f"\nЗаступник: {r.hget(r.srandmember('cl2' + cid), 'firstname').decode()}"
                 elif r.scard('cl2' + cid) == 2:
@@ -1703,12 +1703,13 @@ async def clan(message):
             num1 = r.scard('cl' + mem.decode())
             num2 = 25
             cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
+            title = cl[4].decode().replace('<', '.').replace('>', '.')
             link = cl[1].decode()
             if int(cl[2]) == 1:
                 num2 += 25
             if int(cl[3]) == 3:
                 num2 += 10
-            msg += f'\n\n<i>{prefix[int(cl[0])]}</i> <a href="{link}">{cl[4].decode()}</a>\nУчасники: {num1} / {num2}'
+            msg += f'\n\n<i>{prefix[int(cl[0])]}</i> <a href="{link}">{title}</a>\nУчасники: {num1} / {num2}'
         if r.scard('recruitment') == 0:
             msg = '\U0001F530 На даний момент ніхто не шукає учасників в клан.'
         a = await bot.send_message(message.chat.id, msg, disable_web_page_preview=True, parse_mode='HTML')
@@ -3298,7 +3299,7 @@ async def handle_query(call):
                     msg += '\U0001f7e9 '
                 else:
                     msg += '\U0001f7e5 '
-                name = r.hget(mem, 'firstname').decode()
+                name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Отримати список з user id', callback_data='get_id_members'))
@@ -3314,7 +3315,7 @@ async def handle_query(call):
                     msg += '\U0001f7e9 '
                 else:
                     msg += '\U0001f7e5 '
-                name = r.hget(mem, 'firstname').decode()
+                name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> {mem.decode()}\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
 

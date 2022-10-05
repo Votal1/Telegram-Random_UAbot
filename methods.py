@@ -738,7 +738,8 @@ async def ctop(sett, uid):
                         else:
                             title = r.hget('war_battle' + member.decode(), 'title').decode()
                     except:
-                        title = r.hget('war_battle' + member.decode(), 'title').decode()
+                        title = r.hget('war_battle' + member.decode(), 'title').decode().\
+                            replace('<', '.').replace('>', '.')
                     if '@' in title:
                         continue
                     stats = int(r.hget(222, member))
