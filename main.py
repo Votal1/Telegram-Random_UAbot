@@ -1049,7 +1049,7 @@ async def promo_code(message):
                     r.hincrby('all_vodka', 'vodka', 50)
                     await message.reply('\u26CF Соледарський промокод активовано!'
                                         '\n\U0001F4E6 +10 \U0001F4B5 +30 \u2622 +50')
-                elif msg.startswith('si') and uid not in r.smembers('second_code'):
+                elif msg.startswith('an') and uid not in r.smembers('second_code'):
                     msg = '\u26CF Хакерський промокод активовано!\n\U0001F4E6 +10 \u2622 +50 \U0001F4B5 +100'
                     r.sadd('second_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
