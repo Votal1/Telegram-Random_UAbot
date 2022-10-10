@@ -8,7 +8,7 @@ from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
-    question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups
+    question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
@@ -5655,8 +5655,14 @@ async def inline_echo(inline_query):
             input_message_content=InputTextMessageContent('\U0001F4AA Роби ' + roll_push_ups()),
             thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
             description='ти ж цього не зробиш, чи не так?')
+        r15 = InlineQueryResultArticle(
+            id='15',
+            title='Скільки задонатиш на ЗСУ?',
+            input_message_content=InputTextMessageContent(donate_to_zsu()),
+            thumb_url='https://i.ibb.co/WkpvSdd/zsu.png',
+            description='прямо зараз')
         await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12,
-                                                                r13, r14], cache_time=0)
+                                                                r13, r14, r15], cache_time=0)
     except:
         pass
 

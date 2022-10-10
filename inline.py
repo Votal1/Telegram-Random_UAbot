@@ -300,3 +300,23 @@ def roll_push_ups():
         step = ' підходи.'
     ran = str(randint(15, 50)) + ' віджимань за ' + str(n) + step
     return ran
+
+
+def donate_to_zsu():
+    mode = randint(1, 5)
+    if mode == 1:
+        if randint(1, 2) == 1:
+            money = 100
+        else:
+            money = randint(2, 10) * 100
+    else:
+        money = randint(10, 100)
+    money_end = money % 10
+    if money_end == 1:
+        end = 'гривню.'
+    elif 1 < money_end < 5:
+        end = 'гривні.'
+    else:
+        end = 'гривень.'
+    ran = f'Я задоначу на ЗСУ {money} {end}'
+    return ran
