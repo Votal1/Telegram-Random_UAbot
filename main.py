@@ -5796,8 +5796,14 @@ async def inline_echo(inline_query):
                                                           roll_push_ups()),
             thumb_url='https://i.ibb.co/xjQ56rR/billy.png',
             description='ти ж цього не зробиш, чи не так?')
+        r14 = InlineQueryResultArticle(
+            id='14',
+            title='Скільки задонатиш на ЗСУ?',
+            input_message_content=InputTextMessageContent(donate_to_zsu()),
+            thumb_url='https://i.ibb.co/WkpvSdd/zsu.png',
+            description='прямо зараз')
         await bot.answer_inline_query(inline_query.id, results=[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12,
-                                                                r13], cache_time=0)
+                                                                r13, r14], cache_time=0)
     except:
         pass
 

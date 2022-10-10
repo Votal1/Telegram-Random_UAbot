@@ -303,6 +303,7 @@ def roll_push_ups():
 
 
 def donate_to_zsu():
+    emoji = choice(['\U0001F4B3', '\U0001F4B8', '\U0001F4B5', '\U0001F4B6', '\U0001F4B0'])
     mode = randint(1, 5)
     if mode == 1:
         if randint(1, 2) == 1:
@@ -318,5 +319,5 @@ def donate_to_zsu():
         end = 'гривні.'
     else:
         end = 'гривень.'
-    ran = f'Я задоначу на ЗСУ {money} {end}'
+    ran = f'{emoji} Я задоначу на ЗСУ {money} {end}'
     return ran
