@@ -4534,6 +4534,30 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку, або русак без класу')
 
+    elif call.data.startswith('copium'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hset(call.from_user.id, 'mushrooms', 0)
+            hp(100, call.from_user.id)
+            if int(r.hget(call.from_user.id, 'injure')) < 300:
+                r.hset(call.from_user.id, 'injure', 0)
+            else:
+                r.hincrby(call.from_user.id, 'injure', -300)
+
+            if int(r.hget(call.from_user.id, 'sch')) < 300:
+                r.hset(call.from_user.id, 'sch', 0)
+            else:
+                r.hincrby(call.from_user.id, 'sch', -300)
+
+            if int(r.hget(call.from_user.id, 'strength')) < 4000:
+                r.hset(call.from_user.id, 'time', 0)
+
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно купили копіум')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
+
     elif call.data.startswith('hawthorn'):
         if int(r.hget(call.from_user.id, 'strength')) < 1000 and int(r.hget(call.from_user.id, 'intellect')) < 5:
             if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
