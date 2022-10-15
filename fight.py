@@ -1399,10 +1399,10 @@ async def guard_power(mid):
         w = 0
     d = int(stats[4])
     if d > 0:
-        d = 0.25
         if d == 3:
             r.hincrby('c' + r.hget(mid, 'clan').decode(), 'mines', 1)
             damage_defense(mid, 3)
+        d = 0.25
     else:
         d = 0
     support = int(stats[9])
