@@ -73,6 +73,7 @@ async def get_help(message):
 async def handle_links(message):
     await message.reply('<a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a> - місце, де збираються люди з усіх '
                         'куточків України, щоб похизуватись своїми бойовими русаками!\n'
+                        '<a href="https://telegra.ph/Pravila-Soledaru-01-11">Правила</a> чату\n'
                         '@randomuanews - новини, патчноути, опитування\n\n'
                         '@borykva - осередок цебулізму\n'
                         '@ukrnastup - осередок сучасного українського націоналізму\n'
