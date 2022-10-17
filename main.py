@@ -2849,7 +2849,7 @@ async def handle_query(call):
                 await bot.edit_message_text(
                     text=call.message.text + '\n\nБійці: ' + call.from_user.first_name, chat_id=call.message.chat.id,
                     message_id=call.message.message_id, reply_markup=battle_button())
-            elif 5 <= fighters <= 9:
+            elif 5 <= fighters <= 9 and call.message.chat.id != -1001211933154:
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                     message_id=call.message.message_id, reply_markup=battle_button_2())
