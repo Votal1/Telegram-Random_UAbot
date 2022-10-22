@@ -311,7 +311,7 @@ def donate_to_zsu():
         else:
             money = randint(2, 10) * 100
     else:
-        money = randint(10, 100)
+        money = randint(20, 100)
     money_end = money % 10
     if money_end == 1:
         end = 'гривню.'

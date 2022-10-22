@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from os import environ
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.utils.executor import start_webhook
+from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
 from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
@@ -3052,7 +3053,7 @@ async def handle_query(call):
                                 'notification': 0, 'mines': 0, 'wall': 0,
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title,
                                 'side': 0, 'build1': 0, 'build2': 0, 'build3': 0, 'build4': 0,
-                                'build5': 0, 'build6': 0, 'war': 0})
+                                'build5': 0, 'build6': 0, 'war': 0, 'tier': 3, 'war_wins': 0})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
                         r.hset(call.from_user.id, 'clan', call.message.chat.id,
