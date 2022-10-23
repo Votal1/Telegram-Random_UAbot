@@ -159,6 +159,9 @@ def quests(uid):
                     msg += f"{q34p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q34pt[-int(q[4])] - int(q[5])}/{q34pt[-int(q[4])]}"
 
+            if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
+                msg += '\n\n\U0001fa99 +1 за кожну отриману сіль'
+
     return msg
 
 
