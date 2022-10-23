@@ -173,8 +173,23 @@ def quest(uid, number, unit, side=0):
             if int(r.hget(uid, qt)) <= 0:
                 if int(r.hget(uid, q)) > 0:
                     r.hincrby(uid, 'salt', 1)
+
+                    if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
+                        if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 500:
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', 1)
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', 1)
+
                 elif int(r.hget(uid, q)) < 0:
                     r.hincrby(uid, 'salt', 2)
+
+                    if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
+                        if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) == 499:
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', 1)
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', 1)
+                        elif int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 499:
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', 2)
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', 2)
+
                 r.hset(uid, q, 0)
     except:
         pass
