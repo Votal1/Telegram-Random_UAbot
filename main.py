@@ -1769,8 +1769,8 @@ async def clan_war(message):
                 title = r.hget("c" + r.hget(c, "enemy").decode(), "title").decode()
                 await bot.send_message(cid, f'Триває війна з {title}\n\n'
                                             f'Ваш прогрес:\n\U0001fa99 Загальна кількість очків (за міжчатові битви):'
-                                            f' {int(r.hget(c, "points"))}\n')
-                                            #f'Додаткові очки: {int(r.hget(c, "q-points"))}/500')
+                                            f' {int(r.hget(c, "points"))}\n'
+                                            f'Додаткові очки (за квести): {int(r.hget(c, "q-points"))}/500')
             else:
                 await message.answer('Зареєсруватись на війни кланів можна у вихідні')
 
