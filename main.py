@@ -1724,7 +1724,7 @@ async def clan_war(message):
     cid = message.chat.id
     c = f'c{cid}'
 
-    if str(message.from_user.id).encode() in r.smembers('cl' + cid):
+    if str(message.from_user.id).encode() in r.smembers(f'cl{cid}'):
         if not r.hexists('clan_wars', 'x'):
             r.hset('clan_wars', 'x', 0)
 
