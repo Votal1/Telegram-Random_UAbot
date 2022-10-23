@@ -1731,7 +1731,7 @@ async def clan_war(message):
         if int(r.hget('clan_wars', 'x')) == 1:
             await sleep(5)
 
-        if cid in r.smembers('clans'):
+        if str(cid).encode() in r.smembers('clans'):
             if weekday in (5, 6):
 
                 if int(r.hget(c, 'war')) == 1 and int(r.hget('clan_wars', 'x')) == 0:
