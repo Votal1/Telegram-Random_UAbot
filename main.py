@@ -1743,9 +1743,12 @@ async def clan_war(message):
                 if r.hexists(c, 'result'):
                     r.srem(c, 'result')
                 elif int(r.hget(c, 'tier')) == 3:
-                    markup = InlineKeyboardMarkup()
-                    markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
-                    await message.answer('Відкрита реєстрація на тестові війни кланів!', reply_markup=markup)
+                    if str(cid).encode() in r.smembers('registered'):
+                        await message.answer('Ваш клан вже зареєстровано на тестові війни кланів')
+                    else:
+                        markup = InlineKeyboardMarkup()
+                        markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
+                        await message.answer('Відкрита реєстрація на тестові війни кланів!', reply_markup=markup)
             else:
                 await message.answer('Зареєсруватись на війни кланів можна у вихідні')
 
@@ -3112,7 +3115,7 @@ async def handle_query(call):
         c = f'c{cid}'
         if checkLeader(uid, cid):
             if weekday in (5, 6) and int(r.hget(c, 'tier')) == 3:
-                r.sadd(f'registered', cid)
+                r.sadd('registered', cid)
                 await bot.edit_message_text('Ваш клан зареєстровано на тестові війни кланів.\nСамі війни повинні'
                                             ' відбудуться наступного тижня',
                                             call.message.chat.id, call.message.message_id)
