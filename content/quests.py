@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 def quests(uid):
-    msg = '\U0001F4F0 Щоденні квести\n\n'
+    msg = '\U0001F4F0 Щоденні квести'
     head = int(r.hget(uid, 'head'))
 
     q1 = ['', '\U0001F3C6 Виграти в 10 дуелях', '\u2622 Купити 5 горілки',
@@ -112,16 +112,16 @@ def quests(uid):
 
     q = r.hmget(uid, 'q1', 'q1t', 'q2', 'q2t', 'q3', 'q3t')
     if int(q[0]) == 0 and int(q[2]) == 0 and int(q[4]) == 0:
-        msg += '\u2705 Всі завдання на сьогодні виконані.'
+        msg += '\n\n\u2705 Всі завдання на сьогодні виконані.'
     elif int(q[0]) == 0 and not checkClan(uid, building='wall'):
         r.hset(uid, 'q2', 0, {'q2t': 0, 'q3': 0, 'q3t': 0})
-        msg += '\u2705 Всі завдання на сьогодні виконані.'
+        msg += '\n\n\u2705 Всі завдання на сьогодні виконані.'
     else:
         if int(q[0]) > 0:
-            msg += f"{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+            msg += f"\n\n{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                    f"\U0001F4CA Прогрес - {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}"
         elif int(q[0]) < 0:
-            msg += f"{q1p[-int(q[0])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+            msg += f"\n\n{q1p[-int(q[0])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                    f"\U0001F4CA Прогрес - {q1pt[-int(q[0])] - int(q[1])}/{q1pt[-int(q[0])]}"
         if checkClan(uid, building='wall'):
             if int(q[2]) > 0:
