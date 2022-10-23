@@ -119,44 +119,44 @@ def quests(uid):
     else:
         if int(q[0]) > 0:
             msg += f"{q1[int(q[0])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
-                   f"\U0001F4CA Прогрес - {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}\n\n"
+                   f"\U0001F4CA Прогрес - {q1t[int(q[0])] - int(q[1])}/{q1t[int(q[0])]}"
         elif int(q[0]) < 0:
             msg += f"{q1p[-int(q[0])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
-                   f"\U0001F4CA Прогрес - {q1pt[-int(q[0])] - int(q[1])}/{q1pt[-int(q[0])]}\n\n"
+                   f"\U0001F4CA Прогрес - {q1pt[-int(q[0])] - int(q[1])}/{q1pt[-int(q[0])]}"
         if checkClan(uid, building='wall'):
             if int(q[2]) > 0:
-                msg += f"{q2[int(q[2])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
-                       f"\U0001F4CA Прогрес - {q2t[int(q[2])] - int(q[3])}/{q2t[int(q[2])]}\n\n"
+                msg += f"\n\n{q2[int(q[2])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                       f"\U0001F4CA Прогрес - {q2t[int(q[2])] - int(q[3])}/{q2t[int(q[2])]}"
             elif int(q[2]) < 0:
-                msg += f"{q2p[-int(q[2])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
-                       f"\U0001F4CA Прогрес - {q2pt[-int(q[2])] - int(q[3])}/{q2pt[-int(q[2])]}\n\n"
+                msg += f"\n\n{q2p[-int(q[2])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                       f"\U0001F4CA Прогрес - {q2pt[-int(q[2])] - int(q[3])}/{q2pt[-int(q[2])]}"
 
             side = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'side'))
             if int(q[4]) > 0:
                 if side == 1:
-                    msg += f"{q31[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"\n\n{q31[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                            f"\U0001F4CA Прогрес - {q31t[int(q[4])] - int(q[5])}/{q31t[int(q[4])]}"
                 elif side == 2:
-                    msg += f"{q32[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"\n\n{q32[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                            f"\U0001F4CA Прогрес - {q32t[int(q[4])] - int(q[5])}/{q32t[int(q[4])]}"
                 elif side == 3:
-                    msg += f"{q33[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"\n\n{q33[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                            f"\U0001F4CA Прогрес - {q33t[int(q[4])] - int(q[5])}/{q33t[int(q[4])]}"
                 elif side == 4:
-                    msg += f"{q34[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
+                    msg += f"\n\n{q34[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                            f"\U0001F4CA Прогрес - {q34t[int(q[4])] - int(q[5])}/{q34t[int(q[4])]}"
             elif int(q[4]) < 0:
                 if side == 1:
-                    msg += f"{q31p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                    msg += f"\n\n{q31p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q31pt[-int(q[4])] - int(q[5])}/{q31pt[-int(q[4])]}"
                 elif side == 2:
-                    msg += f"{q32p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                    msg += f"\n\n{q32p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q32pt[-int(q[4])] - int(q[5])}/{q32pt[-int(q[4])]}"
                 elif side == 3:
-                    msg += f"{q33p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                    msg += f"\n\n{q33p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q33pt[-int(q[4])] - int(q[5])}/{q33pt[-int(q[4])]}"
                 elif side == 4:
-                    msg += f"{q34p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
+                    msg += f"\n\n{q34p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
                            f"\U0001F4CA Прогрес - {q34pt[-int(q[4])] - int(q[5])}/{q34pt[-int(q[4])]}"
 
             if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
