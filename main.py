@@ -1718,6 +1718,38 @@ async def clan(message):
         r.hset('soledar', 'clan', a.message_id)
 
 
+@dp.message_handler(commands=['clan_war'])
+async def clan_war(message):
+    weekday = datetime.today().weekday()
+    cid = message.chat.id
+    c = f'c{cid}'
+
+    if str(message.from_user.id).encode() in r.smembers('cl' + cid):
+        if not r.hexists('clan_wars', 'x'):
+            r.hset('clan_wars', 'x', 0)
+
+        if int(r.hget('clan_wars', 'x')) == 1:
+            await sleep(5)
+
+        if cid in r.smembers('clans'):
+            if weekday in (5, 6):
+
+                if int(r.hget(c, 'war')) == 1 and int(r.hget('clan_wars', 'x')) == 0:
+                    r.hset('clan_wars', 'x', 1)
+                    for mem in r.smembers('clans_in_war'):
+                        r.hset('c' + mem.decode(), 'war', 0)
+                    r.hset('clan_wars', 'x', 0)
+
+                if r.hexists(c, 'result'):
+                    r.srem(c, 'result')
+                elif int(r.hget(c, 'tier')) == 3:
+                    markup = InlineKeyboardMarkup()
+                    markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
+                    await message.answer('Відкрита реєстрація на тестові війни кланів!')
+            else:
+                await message.answer('Зареєсруватись на війни кланів можна у вихідні')
+
+
 @dp.message_handler(commands=['upgrade'])
 async def upgrade(message):
     try:
@@ -3072,6 +3104,24 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ти не адміністратор.')
+
+    elif call.data.startswith('enter_war'):
+        weekday = datetime.today().weekday()
+        cid = call.message.chat.id
+        uid = call.from_user.id
+        c = f'c{cid}'
+        if checkLeader(uid, cid):
+            if weekday in (5, 6) and int(r.hget(c, 'tier')) == 3:
+                r.sadd(f'registered', cid)
+                await bot.edit_message_text('Ваш клан зареєстровано на тестові війни кланів.\nСамі війни повинні'
+                                            ' відбудуться наступного тижня',
+                                            call.message.chat.id, call.message.message_id)
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Реєстрація тільки у вихідні, і тільки для тір-3 кланів')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Тільки лідер або заступники можуть натискати цю кнопку')
 
     elif call.data.startswith('clan_side'):
         c = 'c' + str(call.message.chat.id)
