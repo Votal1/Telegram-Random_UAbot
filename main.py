@@ -1745,7 +1745,7 @@ async def clan_war(message):
                 elif int(r.hget(c, 'tier')) == 3:
                     markup = InlineKeyboardMarkup()
                     markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
-                    await message.answer('Відкрита реєстрація на тестові війни кланів!')
+                    await message.answer('Відкрита реєстрація на тестові війни кланів!', reply_markup=markup)
             else:
                 await message.answer('Зареєсруватись на війни кланів можна у вихідні')
 
