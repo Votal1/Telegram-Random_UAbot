@@ -1308,6 +1308,10 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
                 if int(r.hget('c' + str(cid1), 'side')) == 4:
                     r.hincrby('c' + str(cid1), 'money', money)
+            if int(r.hget('c' + str(cid1), 'war')) == 1 and int(r.hget('c' + str(cid1), 'enemy')) == cid2:
+                ran = randint(1, 5)
+                r.hincrby('c' + str(cid1), 'points', ran)
+                reward += f' \U0001fa99 +{ran}'
     elif win == ['b']:
         if cid2 == -1001211933154:
             money = randint(3, 10)
@@ -1342,6 +1346,10 @@ async def great_war(cid1, cid2, a, b):
                 r.hincrby('c' + str(cid2), 'r_spirit', r_spirit)
                 if int(r.hget('c' + str(cid2), 'side')) == 4:
                     r.hincrby('c' + str(cid2), 'money', money)
+            if int(r.hget('c' + str(cid2), 'war')) == 1 and int(r.hget('c' + str(cid2), 'enemy')) == cid1:
+                ran = randint(1, 5)
+                r.hincrby('c' + str(cid2), 'points', ran)
+                reward += f' \U0001fa99 +{ran}'
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     await sleep(10)
 

@@ -1749,6 +1749,27 @@ async def clan_war(message):
                         markup = InlineKeyboardMarkup()
                         markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
                         await message.answer('Відкрита реєстрація на тестові війни кланів!', reply_markup=markup)
+            elif str(cid).encode() in r.smembers('registered'):
+                if r.scard('registered') < 2:
+                    r.srem('registered', cid)
+                    await message.answer('Не вдалось знайти суперників, спробуйте ще раз через тиждень')
+                else:
+                    r.srem('registered', cid)
+                    enemy = r.srandmember('registered')
+                    c2 = f'c{enemy.decode()}'
+                    r.srem('registered', enemy)
+                    r.sadd('in_clan_war', cid, enemy)
+                    r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
+                    r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
+                    await bot.send_message(cid, f'Кланові війни починаються!\n\n'
+                                                f'Ваш противник:\n{r.hget(c2, "title")}')
+                    await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
+                                                       f'Ваш противник:\n{r.hget(c, "title")}')
+            elif int(r.hget(c, 'war')) == 1:
+                await bot.send_message(cid, f'Триває війна з {r.hget("c" + r.hget(c, "enemy").decode(), "title")}\n\n'
+                                            f'Ваш прогрес:\n\U0001fa99 Загальна кількість очків (за міжчатові битви):'
+                                            f' {int(r.hget(c, "points"))}\n')
+                                            #f'Додаткові очки: {int(r.hget(c, "q-points"))}/500')
             else:
                 await message.answer('Зареєсруватись на війни кланів можна у вихідні')
 
