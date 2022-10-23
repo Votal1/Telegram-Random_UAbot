@@ -1762,9 +1762,9 @@ async def clan_war(message):
                     r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
                     r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
                     await bot.send_message(cid, f'Кланові війни починаються!\n\n'
-                                                f'Ваш противник:\n{r.hget(c2, "title")}')
+                                                f'Ваш противник:\n{r.hget(c2, "title").decode()}')
                     await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
-                                                       f'Ваш противник:\n{r.hget(c, "title")}')
+                                                       f'Ваш противник:\n{r.hget(c, "title").decode()}')
             elif int(r.hget(c, 'war')) == 1:
                 await bot.send_message(cid, f'Триває війна з {r.hget("c" + r.hget(c, "enemy").decode(), "title")}\n\n'
                                             f'Ваш прогрес:\n\U0001fa99 Загальна кількість очків (за міжчатові битви):'
