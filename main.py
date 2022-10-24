@@ -640,48 +640,61 @@ async def sacrifice(message):
 @dp.message_handler(commands=['fascist'])
 async def fascist(message):
     try:
-        if int(r.hget('c' + str(message.chat.id), 'base')) > 0 and len(r.smembers(message.chat.id)) >= 14:
-            if r.hexists('f' + str(message.chat.id), 'time3') == 0:
-                r.hset('f' + str(message.chat.id), 'time3', 0)
-            if int(r.hget('f' + str(message.chat.id), 'time3')) != int(datetime.now().day):
-                r.hset('f' + str(message.chat.id), 'time3', datetime.now().day)
-                ran = []
-                for member in r.smembers(message.chat.id):
-                    mem = int(member)
-                    try:
-                        st = await bot.get_chat_member(message.chat.id, mem)
-                        if st.status == 'left' or st.status == 'kicked' or st.status == 'banned':
+        if int(r.hget('c' + str(message.chat.id), 'base')) > 0 or message.chat.id == -1001211933154:
+            if r.scard(message.chat.id) >= 14:
+                if r.hexists('f' + str(message.chat.id), 'time3') == 0:
+                    r.hset('f' + str(message.chat.id), 'time3', 0)
+                if int(r.hget('f' + str(message.chat.id), 'time3')) != int(datetime.now().day):
+                    r.hset('f' + str(message.chat.id), 'time3', datetime.now().day)
+                    ran = []
+                    for member in r.smembers(message.chat.id):
+                        mem = int(member)
+                        try:
+                            st = await bot.get_chat_member(message.chat.id, mem)
+                            if st.status == 'left' or st.status == 'kicked' or st.status == 'banned':
+                                r.srem(message.chat.id, mem)
+                            else:
+                                ran.append(member)
+                        except:
                             r.srem(message.chat.id, mem)
-                        else:
-                            ran.append(member)
-                    except:
-                        r.srem(message.chat.id, mem)
-                ran = choice(ran)
-                ran = int(ran)
-                r.hset('f' + str(message.chat.id), 'username', r.hget(ran, 'username').decode())
-                r.hincrby(ran, 'childs', 1)
-                r.hincrby('all_children', 'children', 1)
-                pin = await message.reply('\U0001F468\U0001F3FB\u200D\u2708\uFE0F @' +
-                                          r.hget('f' + str(message.chat.id), 'username').decode() +
-                                          ' сьогодні займає посаду Фашист дня! Йому видано одне \U0001F476 '
-                                          'російське немовля!')
-                try:
+                    ran = choice(ran)
+                    ran = int(ran)
+                    r.hset('f' + str(message.chat.id), 'username', r.hget(ran, 'username').decode())
+                    username = r.hget('f' + str(message.chat.id), 'username').decode()
+                    if message.chat.id == -1001211933154:
+                        msg = f'\U0001F468\U0001F3FB\u200D\u2708\uFE0F @{username} сьогодні займає посаду Фашист дня!' \
+                              f' Йому видано один \U0001F31F погон російського генерала!'
+                        r.hincrby(ran, 'strap', 1)
+
+                    else:
+                        msg = f'\U0001F468\U0001F3FB\u200D\u2708\uFE0F @{username} сьогодні займає посаду Фашист дня!' \
+                              f' Йому видано одне \U0001F476 російське немовля!'
+                        r.hincrby(ran, 'childs', 1)
+                        r.hincrby('all_children', 'children', 1)
+
+                    pin = await message.reply(msg)
+
                     try:
-                        await bot.unpin_chat_message(chat_id=pin.chat.id,
-                                                     message_id=int(r.hget('f' + str(message.chat.id), 'pin')))
+                        try:
+                            await bot.unpin_chat_message(chat_id=pin.chat.id,
+                                                         message_id=int(r.hget('f' + str(message.chat.id), 'pin')))
+                        except:
+                            pass
+                        await bot.pin_chat_message(chat_id=pin.chat.id, message_id=pin.message_id,
+                                                   disable_notification=True)
+                        r.hset('f' + str(message.chat.id), 'pin', pin.message_id)
                     except:
                         pass
-                    await bot.pin_chat_message(chat_id=pin.chat.id, message_id=pin.message_id,
-                                               disable_notification=True)
-                    r.hset('f' + str(message.chat.id), 'pin', pin.message_id)
-                except:
-                    pass
 
+                else:
+                    await message.reply('\U0001F468\U0001F3FB\u200D\u2708\uFE0F Сьогодні вже вибраний фашист дня - ' +
+                                        r.hget('f' + str(message.chat.id), 'username').decode())
             else:
-                await message.reply('\U0001F468\U0001F3FB\u200D\u2708\uFE0F Сьогодні вже вибраний фашист дня - ' +
-                                    r.hget('f' + str(message.chat.id), 'username').decode())
+                await message.reply('Фашиста дня можна обирати раз в добу і в чатах,'
+                                    ' де є від 14 власників русаків (з юзернеймами) та заснований клан.')
         else:
-            raise Exception
+            await message.reply('Фашиста дня можна обирати раз в добу і в чатах,'
+                                ' де є від 14 власників русаків (з юзернеймами) та заснований клан.')
     except:
         await message.reply('Фашиста дня можна обирати раз в добу і в чатах,'
                             ' де є від 14 власників русаків (з юзернеймами) та заснований клан.')
