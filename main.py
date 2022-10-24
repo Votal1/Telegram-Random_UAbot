@@ -646,19 +646,18 @@ async def fascist(message):
                     r.hset('f' + str(message.chat.id), 'time3', 0)
                 if int(r.hget('f' + str(message.chat.id), 'time3')) != int(datetime.now().day):
                     r.hset('f' + str(message.chat.id), 'time3', datetime.now().day)
-                    ran = []
-                    for member in r.smembers(message.chat.id):
-                        mem = int(member)
-                        try:
-                            st = await bot.get_chat_member(message.chat.id, mem)
-                            if st.status == 'left' or st.status == 'kicked' or st.status == 'banned':
-                                r.srem(message.chat.id, mem)
-                            else:
-                                ran.append(member)
-                        except:
+
+                    for i in range(100):
+                        mem = r.srandmember(message.chat.id)
+                        st = await bot.get_chat_member(message.chat.id, int(mem))
+                        if st.status not in ('banned', 'left', 'kicked'):
+                            break
+                        else:
                             r.srem(message.chat.id, mem)
-                    ran = choice(ran)
-                    ran = int(ran)
+                    else:
+                        raise Exception
+
+                    ran = int(mem)
                     r.hset('f' + str(message.chat.id), 'username', r.hget(ran, 'username').decode())
                     username = r.hget('f' + str(message.chat.id), 'username').decode()
                     if message.chat.id == -1001211933154:
