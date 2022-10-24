@@ -734,15 +734,17 @@ async def passport(message):
         clan1 = ''
         if checkClan(message.from_user.id):
             clan1 = '\n\U0001F3E0 Клан: ' + r.hget('c' + stats[6].decode(), 'title').decode()
-        await message.reply('\U0001F4DC ' + message.from_user.first_name +
-                            '\n\n\U0001F3C6 Кількість перемог: ' + stats[0].decode() +
-                            '\n\U0001F3C5 Кількість трофеїв: ' + stats[1].decode() +
-                            '\n\u2620\uFE0F Вбито русаків: ' + stats[2].decode() +
-                            '\n\U0001F476 З`їдено немовлят: ' + stats[3].decode() +
-                            '\n\u2622 Випито горілки: ' + stats[4].decode() +
-                            '\n\U0001F4E6 Відкрито пакунків: ' + stats[5].decode() + clan1 +
-                            '\n\u26CF Скіли: ' + str(skill) + '%' +
-                            '\n\u2B50 Досягнення: ' + str(int(ac * 100 / 32)) + '%')
+        msg = f'\U0001F4DC {message.from_user.first_name}\n\n' \
+              f'\U0001F3C6 Кількість перемог: {stats[0].decode()}' \
+              f'\n\U0001F3C5 Кількість трофеїв: {stats[1].decode()}' \
+              f'\n\u2620\uFE0F Вбито русаків: {stats[2].decode()}' \
+              f'\n\U0001F476 З`їдено немовлят: {stats[3].decode()}' \
+              f'\n\u2622 Випито горілки: {stats[4].decode()}' \
+              f'\n\U0001F4E6 Відкрито пакунків: {stats[5].decode()}{clan1}' \
+              f'\n\u26CF Скіли: {skill}%' \
+              f'\n\u2B50 Досягнення: {int(ac * 100 / 32)}%'
+
+        await message.reply(msg)
 
 
 @dp.message_handler(commands=['woman'])
