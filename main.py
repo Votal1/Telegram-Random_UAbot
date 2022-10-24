@@ -640,7 +640,7 @@ async def sacrifice(message):
 @dp.message_handler(commands=['fascist'])
 async def fascist(message):
     try:
-        if int(r.hget('c' + str(message.chat.id), 'base')) > 0 or message.chat.id == -1001211933154:
+        if message.chat.id == -1001211933154 or int(r.hget('c' + str(message.chat.id), 'base')) > 0:
             if r.scard(message.chat.id) >= 14:
                 if r.hexists('f' + str(message.chat.id), 'time3') == 0:
                     r.hset('f' + str(message.chat.id), 'time3', 0)
