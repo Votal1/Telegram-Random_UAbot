@@ -1612,6 +1612,14 @@ async def start_raid(cid):
                 reward += '\U0001F47E +' + str(ran)
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
+
+            if int(r.hget(c, 'war')) == 1 and int(r.hget(c, 'enemy')) == int(enemy) \
+                    and int(r.hget(enemy, 'points')) >= 10:
+                ran = randint(5, 10)
+                r.hincrby(c, 'points', ran)
+                r.hincrby(c2, 'points', -ran)
+                reward += '\n\U0001fa99 +' + str(ran)
+
         elif win == ['b']:
             if int(r.hget(c2, 'mines')) > 0:
                 ran = randint(1, 5)
