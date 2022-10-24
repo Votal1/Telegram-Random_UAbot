@@ -743,7 +743,8 @@ async def passport(message):
               f'\n\U0001F4E6 Відкрито пакунків: {stats[5].decode()}{clan1}' \
               f'\n\u26CF Скіли: {skill}%' \
               f'\n\u2B50 Досягнення: {int(ac * 100 / 32)}%'
-
+        if message.from_user.id == 1897184980:
+            msg += '\n\U0001F468\U0001F3FB\u200D\u2708\uFE0F Фашист року'
         await message.reply(msg)
 
 
