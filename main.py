@@ -2206,8 +2206,10 @@ async def clan_settings(message):
                 msg += '\n\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
             if int(r.hget(c, 'war_allow')) == 0:
                 msg += '\n\nВ міжчатову битву може зайти кожен бажаючий.'
-            else:
+            elif int(r.hget(c, 'war_allow')) == 1:
                 msg += '\n\nВ міжчатову битву в перші 10 хвилин може зайти тільки учасник клану.'
+            else:
+                msg += '\n\nВ міжчатову битву в можуть зайти тільки учасники клану.'
             if int(r.hget(c, 'salary')) == 0:
                 msg += '\n\nЗа роботу не видається зарплата з кланових ресурсів.'
             else:
@@ -2972,13 +2974,18 @@ async def handle_query(call):
         if str(call.from_user.id).encode() not in r.smembers('fighters_2' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
                 call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
-            allow = True
+            allow, msg = True, ''
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
                     if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)) and \
                             int(datetime.now().timestamp()) - \
                             int(r.hget('war_battle' + str(call.message.chat.id), 'war_ts')) < 600:
                         allow = False
+                        msg = 'Ти не в цьому клані, тому зайти зможеш через 10 хвилин після початку набору.'
+                elif int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 2:
+                    if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)):
+                        allow = False
+                        msg = 'Ти не в цьому клані, тому ти не зможеш зайти в битву.'
             if allow:
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
@@ -3045,8 +3052,7 @@ async def handle_query(call):
                         message_id=call.message.message_id, reply_markup=battle_button_3())
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Ти не в цьому клані, тому зайти зможеш через 10 хвилин після'
-                                                     ' початку набору.')
+                                                text=msg)
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ти або вже в битві, або в тебе відсутній русак')
@@ -3318,6 +3324,8 @@ async def handle_query(call):
         if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
             if int(r.hget('c' + str(c), 'war_allow')) == 0:
                 r.hset('c' + str(c), 'war_allow', 1)
+            elif int(r.hget('c' + str(c), 'war_allow')) == 1:
+                r.hset('c' + str(c), 'war_allow', 2)
             else:
                 r.hset('c' + str(c), 'war_allow', 0)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
