@@ -1614,7 +1614,7 @@ async def start_raid(cid):
                 r.hincrby(c2, 'r_spirit', -ran)
 
             if int(r.hget(c, 'war')) == 1 and int(r.hget(c, 'enemy')) == int(enemy) \
-                    and int(r.hget(enemy, 'points')) >= 10:
+                    and int(r.hget(c2, 'points')) >= 10:
                 ran = randint(5, 10)
                 r.hincrby(c, 'points', ran)
                 r.hincrby(c2, 'points', -ran)
