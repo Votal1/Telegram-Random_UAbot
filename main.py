@@ -1805,6 +1805,7 @@ async def clan_war(message):
                     c2 = f'c{r.hget(c, "enemy").decode()}'
                     points1 = int(r.hget(c, "points"))
                     points2 = int(r.hget(c2, "points"))
+                    packs = points1 // 7
                     msg = f'Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
                           f'Ваші очки: {points1}\n' \
                           f'Очки ворога: {points2}\n\n'
@@ -1832,7 +1833,16 @@ async def clan_war(message):
                         elif tier == 1:
                             msg += '\n Ви тепер Тір-2 клан'
 
+                    msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
+
                     r.srem(c, 'result')
+
+                    for mem in r.smembers('cl' + cid):
+                        r.hincrby(mem, 'salt', 5)
+                        r.hincrby(mem, 'packs', packs)
+
+                    await message.answer(msg)
+
                 elif int(r.hget(c, 'tier')) == 3:
                     if str(cid).encode() in r.smembers('registered'):
                         await message.answer('Ваш клан вже зареєстровано на тестові війни кланів')
