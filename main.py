@@ -1762,7 +1762,7 @@ async def clan_war(message):
 
                 if int(r.hget(c, 'war')) == 1 and int(r.hget('clan_wars', 'x')) == 0:
                     r.hset('clan_wars', 'x', 1)
-                    for mem in r.smembers('clans_in_war'):
+                    for mem in r.smembers('in_clan_war'):
                         try:
                             ct = 'c' + mem.decode()
                             r.hset(ct, 'war', 0)
