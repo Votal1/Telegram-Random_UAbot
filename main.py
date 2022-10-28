@@ -1011,7 +1011,7 @@ async def donate(message):
         markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
         msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
               'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону - 30грн.\n' \
-              '\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.\n\npay_to_win_game'
+              '\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.'
         await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
@@ -1146,6 +1146,7 @@ async def promo_code(message):
                     await message.reply(f'\u26CF Промокод міцності активовано!\n'
                                         f'\U0001F5E1 +{weapon} \U0001F6E1 +{defense} '
                                         f'\U0001F9EA +{support} \U0001F3A9 +{head}')
+                '''
                 if msg.startswith('pa') and uid not in r.smembers('eighth_code') \
                         and uid in r.smembers('premium_users'):
                     r.sadd('eighth_code', message.from_user.id)
@@ -1157,7 +1158,6 @@ async def promo_code(message):
                         r.hset(message.from_user.id, 'support', 7, {'s_support': 21})
                     await message.reply('\u26CF Промокод донатера активовано!'
                                         '\n\U0001F9C2 +21 \U0001F9EA +21 \U0001F4E6 +21')
-                '''
                 elif msg.startswith('de') and uid not in r.smembers('fourth_code'):
                     r.sadd('fourth_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs', 10)
