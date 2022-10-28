@@ -1801,6 +1801,37 @@ async def clan_war(message):
                     r.hset('clan_wars', 'x', 0)
 
                 if r.hexists(c, 'result'):
+                    tier = int(r.hget(c, 'tier'))
+                    c2 = f'c{r.hget(c, "enemy").decode()}'
+                    points1 = int(r.hget(c, "points"))
+                    points2 = int(r.hget(c2, "points"))
+                    msg = f'Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
+                          f'Ваші очки: {points1}\n' \
+                          f'Очки ворога: {points2}\n\n'
+                    if points1 < points2:
+                        msg += 'Ви програли...'
+                    elif points1 > points2:
+                        msg += 'Ви виграли!'
+                    else:
+                        msg += 'На війні немає переможців, є тільки ті, хто залишився в живих.'
+
+                    if points1 != 0:
+                        if points2 != 0 and points1 / points2 >= 1.25:
+                            if tier == 3:
+                                msg += '\n Ви тепер Тір-2 клан'
+                            elif tier == 2:
+                                msg += '\n Ви тепер Тір-1 клан'
+                        elif points2 != 0 and points1 / points2 <= 0.75:
+                            if tier == 2:
+                                msg += '\n Ви тепер Тір-3 клан'
+                            elif tier == 1:
+                                msg += '\n Ви тепер Тір-2 клан'
+                    else:
+                        if tier == 2:
+                            msg += '\n Ви тепер Тір-3 клан'
+                        elif tier == 1:
+                            msg += '\n Ви тепер Тір-2 клан'
+
                     r.srem(c, 'result')
                 elif int(r.hget(c, 'tier')) == 3:
                     if str(cid).encode() in r.smembers('registered'):
@@ -1809,6 +1840,8 @@ async def clan_war(message):
                         markup = InlineKeyboardMarkup()
                         markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
                         await message.answer('Відкрита реєстрація на тестові війни кланів!', reply_markup=markup)
+                elif int(r.hget(c, 'tier')) in (2, 1):
+                    await message.answer('Ваш клан автоматично бере участь в наступних кланових війнах')
             elif str(cid).encode() in r.smembers('registered'):
                 if r.scard('registered') < 2:
                     r.srem('registered', cid)
