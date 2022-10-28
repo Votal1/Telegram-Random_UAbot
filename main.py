@@ -1763,7 +1763,41 @@ async def clan_war(message):
                 if int(r.hget(c, 'war')) == 1 and int(r.hget('clan_wars', 'x')) == 0:
                     r.hset('clan_wars', 'x', 1)
                     for mem in r.smembers('clans_in_war'):
-                        r.hset('c' + mem.decode(), 'war', 0)
+                        try:
+                            ct = 'c' + mem.decode()
+                            r.hset(ct, 'war', 0)
+                            r.srem('clans_in_war', mem)
+                            enemy = r.hget(ct, 'enemy').decode()
+                            tier = int(r.hget(ct, 'tier'))
+                            points1 = int(r.hget(ct, 'points'))
+                            points2 = int(r.hget('c' + enemy, 'points'))
+                            if points1 != 0:
+                                if points2 != 0 and points1 / points2 >= 1.25:
+                                    if tier == 3:
+                                        r.hset(ct, 'tier', 2)
+                                        r.sadd('tier2_clans', mem)
+                                    elif tier == 2:
+                                        r.hset(ct, 'tier', 1)
+                                        r.srem('tier2_clans', mem)
+                                        r.sadd('tier1_clans', mem)
+                                elif points2 != 0 and points1 / points2 <= 0.75:
+                                    if tier == 2:
+                                        r.hset(ct, 'tier', 3)
+                                        r.srem('tier2_clans', mem)
+                                    elif tier == 1:
+                                        r.hset(ct, 'tier', 2)
+                                        r.srem('tier1_clans', mem)
+                                        r.sadd('tier2_clans', mem)
+                            else:
+                                if tier == 2:
+                                    r.hset(ct, 'tier', 3)
+                                    r.srem('tier2_clans', mem)
+                                elif tier == 1:
+                                    r.hset(ct, 'tier', 2)
+                                    r.srem('tier1_clans', mem)
+                                    r.sadd('tier2_clans', mem)
+                        except:
+                            pass
                     r.hset('clan_wars', 'x', 0)
 
                 if r.hexists(c, 'result'):
@@ -1784,6 +1818,36 @@ async def clan_war(message):
                     enemy = r.srandmember('registered')
                     c2 = f'c{enemy.decode()}'
                     r.srem('registered', enemy)
+                    r.sadd('in_clan_war', cid, enemy)
+                    r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
+                    r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
+                    await bot.send_message(cid, f'Кланові війни починаються!\n\n'
+                                                f'Ваш противник:\n{r.hget(c2, "title").decode()}')
+                    await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
+                                                       f'Ваш противник:\n{r.hget(c, "title").decode()}')
+            elif str(cid).encode() in r.smembers('tier2_clans'):
+                if r.scard('tier2_clans') < 2:
+                    await message.answer('Не вдалось знайти суперників, спробуйте ще раз через тиждень')
+                else:
+                    r.srem('tier2_clans', cid)
+                    enemy = r.srandmember('tier2_clans')
+                    c2 = f'c{enemy.decode()}'
+                    r.srem('tier2_clans', enemy)
+                    r.sadd('in_clan_war', cid, enemy)
+                    r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
+                    r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
+                    await bot.send_message(cid, f'Кланові війни починаються!\n\n'
+                                                f'Ваш противник:\n{r.hget(c2, "title").decode()}')
+                    await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
+                                                       f'Ваш противник:\n{r.hget(c, "title").decode()}')
+            elif str(cid).encode() in r.smembers('tier1_clans'):
+                if r.scard('tier1_clans') < 2:
+                    await message.answer('Не вдалось знайти суперників, спробуйте ще раз через тиждень')
+                else:
+                    r.srem('tier1_clans', cid)
+                    enemy = r.srandmember('tier2_clans')
+                    c2 = f'c{enemy.decode()}'
+                    r.srem('tier1_clans', enemy)
                     r.sadd('in_clan_war', cid, enemy)
                     r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
                     r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
