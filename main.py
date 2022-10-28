@@ -1766,7 +1766,7 @@ async def clan_war(message):
                         try:
                             ct = 'c' + mem.decode()
                             r.hset(ct, 'war', 0)
-                            r.srem('clans_in_war', mem)
+                            r.srem('in_clan_war', mem)
                             enemy = r.hget(ct, 'enemy').decode()
                             tier = int(r.hget(ct, 'tier'))
                             points1 = int(r.hget(ct, 'points'))
