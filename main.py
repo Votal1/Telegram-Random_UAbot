@@ -1836,11 +1836,11 @@ async def clan_war(message):
                     msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
 
                     r.hdel(c, 'result')
-
+                    '''
                     for mem in r.smembers('cl' + cid):
                         r.hincrby(mem, 'salt', 5)
                         r.hincrby(mem, 'packs', packs)
-
+                    '''
                     await message.answer(msg)
 
                 elif int(r.hget(c, 'tier')) == 3:
