@@ -1833,7 +1833,7 @@ async def clan_war(message):
                         elif tier == 1:
                             msg += '\n Ви тепер Тір-2 клан'
 
-                    msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
+                    # msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
 
                     r.hdel(c, 'result')
                     '''
