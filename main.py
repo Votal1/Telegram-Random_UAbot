@@ -1835,7 +1835,7 @@ async def clan_war(message):
 
                     msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
 
-                    r.srem(c, 'result')
+                    r.hdel(c, 'result')
 
                     for mem in r.smembers('cl' + cid):
                         r.hincrby(mem, 'salt', 5)
