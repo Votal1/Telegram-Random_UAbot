@@ -743,12 +743,19 @@ async def passport(message):
                 ac += int(a)
             except:
                 pass
+        wins = f'\U0001F3C6 Кількість перемог: {stats[0].decode()}\n\U0001F3C5 Кількість трофеїв: {stats[1].decode()}'
+        try:
+            if message.text.endswith(' -all'):
+                wins = f'\U0001F3C6 Кількість перемог за всі сезони: ' \
+                       f'{int(stats[0]) + int(r.hget(message.from_user.id, "wins_all"))}\n' \
+                       f'\U0001F3C5 Кількість трофеїв за всі сезони: ' \
+                       f'{int(stats[1]) + int(r.hget(message.from_user.id, "trophy_all"))}'
+        except:
+            pass
         clan1 = ''
         if checkClan(message.from_user.id):
             clan1 = '\n\U0001F3E0 Клан: ' + r.hget('c' + stats[6].decode(), 'title').decode()
-        msg = f'\U0001F4DC {message.from_user.first_name}\n\n' \
-              f'\U0001F3C6 Кількість перемог: {stats[0].decode()}' \
-              f'\n\U0001F3C5 Кількість трофеїв: {stats[1].decode()}' \
+        msg = f'\U0001F4DC {message.from_user.first_name}\n\n{wins}' \
               f'\n\u2620\uFE0F Вбито русаків: {stats[2].decode()}' \
               f'\n\U0001F476 З`їдено немовлят: {stats[3].decode()}' \
               f'\n\u2622 Випито горілки: {stats[4].decode()}' \
