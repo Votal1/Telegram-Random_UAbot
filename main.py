@@ -1895,7 +1895,7 @@ async def clan_war(message):
                     await message.answer('Не вдалось знайти суперників, спробуйте ще раз через тиждень')
                 else:
                     r.srem('tier1_clans', cid)
-                    enemy = r.srandmember('tier2_clans')
+                    enemy = r.srandmember('tier1_clans')
                     c2 = f'c{enemy.decode()}'
                     r.srem('tier1_clans', enemy)
                     r.sadd('in_clan_war', cid, enemy)
