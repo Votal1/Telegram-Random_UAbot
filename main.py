@@ -1447,9 +1447,12 @@ async def inventory(message):
         else:
             m4 = '\nМіцність: ' + inv[7].decode()
 
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'))
+
         await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
                             f'Допомога: {supports[s]}{m3}\n\U0001F3A9 Шапка: {heads[h]}{m4}',
-                            reply_markup=invent(w, d, s, h))
+                            reply_markup=markup)
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -4899,6 +4902,13 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('drop_open') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        await bot.edit_message_text(call.message.text, call.message.chat.id, call.message.message_id,
+                                    reply_markup=invent(int(r.hget(call.from_user.id, 'weapon')),
+                                                        int(r.hget(call.from_user.id, 'defense')),
+                                                        int(r.hget(call.from_user.id, 'support')),
+                                                        int(r.hget(call.from_user.id, 'head'))))
 
     elif call.data.startswith('drop_w') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'weapon')) != 0:
