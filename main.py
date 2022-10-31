@@ -776,7 +776,7 @@ async def woman(message):
         if int(r.hget(uid, 'woman')) == 1:
             if str(uid).encode() in r.smembers('nnn_registered_2022') and int(r.hget('nnn_2022', uid)) \
                     in (datetime.now().day, datetime.now().day - 1):
-                await message.reply('\U0001F469\U0001F3FB Жінки під час Недристопаду заборонені!')
+                await message.reply('\U0001F469\U0001F3FB Жінки під час NNN заборонені!')
             else:
                 quest(uid, 1, -3)
                 if int(r.hget(uid, 'time4')) != datetime.now().day:
@@ -819,7 +819,7 @@ async def no_nut(message):
             name = names[int(r.hget(uid, 'name'))]
             r.sadd('nnn_registered_2022', uid)
             r.hset('nnn_2022', uid, 1)
-            await message.reply(f'\U0001F330 {name} приєднюється до челенджу Недристопад!\n1/30')
+            await message.reply(f'\U0001F330 {name} приєднюється до челенджу No Nut November!\n1/30')
         elif str(uid).encode() in r.smembers('nnn_registered_2022'):
             nnn_day = int(r.hget('nnn_2022', uid))
             if nnn_day == day:
