@@ -6,14 +6,14 @@ from aiogram.utils.executor import start_webhook
 from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
-from variables import names, icons, class_name, weapons, defenses, supports, heads, sudoers, \
+from variables import names, icons, class_name, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick
+    wood, stone, cloth, brick, show_inventory
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
@@ -1420,39 +1420,10 @@ async def achievements(message):
 @dp.message_handler(commands=['i'])
 async def inventory(message):
     try:
-        inv = r.hmget(message.from_user.id, 'weapon', 'defense', 'support', 'head',
-                      's_weapon', 's_defense', 's_support', 's_head')
-        w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
-        if w == 16:
-            m1 = '\nМіцність: ∞'
-        elif w == 0:
-            m1 = '[Порожньо]'
-        else:
-            m1 = '\nМіцність: ' + inv[4].decode()
-
-        if d == 0:
-            m2 = '[Порожньо]'
-        else:
-            m2 = '\nМіцність: ' + inv[5].decode()
-
-        if s == 0:
-            m3 = '[Порожньо]'
-        else:
-            m3 = '\nМіцність: ' + inv[6].decode()
-
-        if h == 0:
-            m4 = '[Порожньо]'
-        elif h == 3:
-            m4 = '\nМіцність: ∞'
-        else:
-            m4 = '\nМіцність: ' + inv[7].decode()
-
         markup = InlineKeyboardMarkup()
         markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'))
 
-        await message.reply(f'\U0001F5E1 Зброя: {weapons[w]}{m1}\n\U0001F6E1 Захист: {defenses[d]}{m2}\n\U0001F9EA '
-                            f'Допомога: {supports[s]}{m3}\n\U0001F3A9 Шапка: {heads[h]}{m4}',
-                            reply_markup=markup)
+        await message.reply(show_inventory(message.from_user.id), reply_markup=markup)
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -4904,7 +4875,7 @@ async def handle_query(call):
                                             text='Недостатньо погонів на рахунку')
 
     elif call.data.startswith('drop_open') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        await bot.edit_message_text(call.message.text, call.message.chat.id, call.message.message_id,
+        await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id, call.message.message_id,
                                     reply_markup=invent(int(r.hget(call.from_user.id, 'weapon')),
                                                         int(r.hget(call.from_user.id, 'defense')),
                                                         int(r.hget(call.from_user.id, 'support')),
