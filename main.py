@@ -825,10 +825,10 @@ async def woman(message):
         elif str(uid).encode() in r.smembers('nnn_registered_2022'):
             nnn_day = int(r.hget('nnn_2022', uid))
             if nnn_day == day:
-                await message.reply(f'{nnn_day}/30')
+                await message.reply(f'{day}/30')
             elif day - nnn_day == 1:
                 r.hset('nnn_2022', uid, day)
-                await message.reply(f'\U0001F535 {nnn_day}/30')
+                await message.reply(f'\U0001F535 {day}/30')
             else:
                 r.srem('nnn_registered_2022', uid)
                 await message.reply(f'\U0001F534 Твій русак не впорався з цим важким челенджом...')
