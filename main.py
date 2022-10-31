@@ -4121,20 +4121,19 @@ async def handle_query(call):
     elif call.data.startswith('aid_kit'):
         if r.hexists(call.from_user.id, 's_support') == 0:
             r.hset(call.from_user.id, 's_support', 0)
-        if int(r.hget(call.from_user.id, 'support')) == 0:
-            if int(r.hget(call.from_user.id, 'money')) >= 4:
-                r.hincrby(call.from_user.id, 'money', -4)
+        if int(r.hget(call.from_user.id, 'money')) >= 4:
+            r.hincrby(call.from_user.id, 'money', -4)
+            if int(r.hget(call.from_user.id, 'support')) == 0:
                 hp(5, call.from_user.id)
                 r.hset(call.from_user.id, 'support', 1)
                 r.hset(call.from_user.id, 's_support', 5)
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Ви успішно купили аптечку')
             else:
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Недостатньо коштів на рахунку')
+                hp(50, call.from_user.id)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно купили аптечку')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='У вас вже є допоміжне спорядження')
+                                            text='Недостатньо коштів на рахунку')
 
     elif call.data.startswith('passport'):
         if int(r.hget(call.from_user.id, 'money')) >= 10:
