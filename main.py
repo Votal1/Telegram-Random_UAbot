@@ -815,6 +815,8 @@ async def woman(message):
     try:
         uid = message.from_user.id
         day = datetime.now().day
+        if uid == 456514639:
+            day = 1
         if day == 1 and str(uid).encode() not in r.smembers('nnn_registered_2022'):
             name = names[int(r.hget(uid, 'name'))]
             r.sadd('nnn_registered_2022', uid)
