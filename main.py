@@ -16,7 +16,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
     wood, stone, cloth, brick, show_inventory
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools
+    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, invent0
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack
@@ -1419,12 +1419,9 @@ async def achievements(message):
 
 @dp.message_handler(commands=['i'])
 async def inventory(message):
-    try:
-        markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'))
-
-        await message.reply(show_inventory(message.from_user.id), reply_markup=markup)
-    except:
+    if r.hexists(message.from_user.id, 'name'):
+        await message.reply(show_inventory(message.from_user.id), reply_markup=invent0())
+    else:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
 
@@ -4892,6 +4889,8 @@ async def handle_query(call):
                 cl = int(r.hget(call.from_user.id, 'class'))
                 if cl == 6 or cl == 16 or cl == 26:
                     r.hset(call.from_user.id, 'weapon', 16)
+                await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
+                                            call.message.message_id, reply_markup=invent0())
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Русак викинув зброю')
         else:
@@ -4902,6 +4901,8 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'defense')) != 0:
             r.hset(call.from_user.id, 'defense', 0)
             r.hset(call.from_user.id, 's_defense', 0)
+            await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
+                                        call.message.message_id, reply_markup=invent0())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Русак викинув захисне спорядження')
         else:
@@ -4912,6 +4913,8 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'support')) != 0:
             r.hset(call.from_user.id, 'support', 0)
             r.hset(call.from_user.id, 's_support', 0)
+            await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
+                                        call.message.message_id, reply_markup=invent0())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Русак викинув допоміжне спорядження')
         else:
@@ -4922,6 +4925,8 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'head')) != 0:
             r.hset(call.from_user.id, 'head', 0)
             r.hset(call.from_user.id, 's_head', 0)
+            await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
+                                        call.message.message_id, reply_markup=invent0())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Русак викинув шапку')
         else:

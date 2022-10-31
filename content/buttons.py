@@ -52,6 +52,12 @@ def invent(w, d, s, h):
     return markup
 
 
+def invent0():
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'))
+    return markup
+
+
 def unpack(uid):
     markup = InlineKeyboardMarkup()
     items = {'Так': f'pack_unpack_{uid}'}
