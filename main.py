@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, show_inventory
+    wood, stone, cloth, brick, show_inventory, auto_clan_settings
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, invent0
@@ -2318,7 +2318,6 @@ async def clan_shop(message):
 async def clan_settings(message):
     try:
         c = 'c' + r.hget(message.from_user.id, 'clan').decode()
-        msg = 'Які налаштування бажаєте змінити?\n\nНазва: ' + r.hget(c, 'title').decode()
         if message.chat.type != 'private':
             try:
                 await bot.delete_message(message.chat.id, message.message_id)
@@ -2326,29 +2325,7 @@ async def clan_settings(message):
                 pass
         if checkLeader(message.from_user.id, int(r.hget(message.from_user.id, 'clan'))) or \
                 message.from_user.id in sudoers:
-            if int(r.hget(c, 'allow')) == 0:
-                msg += '\n\nВ клан може приєднатись кожен бажаючий.'
-            else:
-                msg += '\n\nВ клан можна приєднатись тільки з дозволу адміністраторів.'
-            if int(r.hget(c, 'war_allow')) == 0:
-                msg += '\n\nВ міжчатову битву може зайти кожен бажаючий.'
-            elif int(r.hget(c, 'war_allow')) == 1:
-                msg += '\n\nВ міжчатову битву в перші 10 хвилин може зайти тільки учасник клану.'
-            else:
-                msg += '\n\nВ міжчатову битву в можуть зайти тільки учасники клану.'
-            if int(r.hget(c, 'salary')) == 0:
-                msg += '\n\nЗа роботу не видається зарплата з кланових ресурсів.'
-            else:
-                msg += '\n\nЗа роботу з рахунку клану зніматиметься 8 гривень: 5 гривень робітнику, 3 - податок.'
-            if int(r.hget(c, 'recruitment')) == 0:
-                msg += '\n\nВ Соледарі не відкрито набір в клан. Щоб відкрити, треба платити по 3 радіотехніки в день.'
-            else:
-                msg += '\n\nВ Соледарі відкрито набір в клан.'
-            if int(r.hget(c, 'notification')) == 0:
-                msg += '\n\nСповіщення про конвой вимкнені. Щоб увімкнути, треба платити по 5 радіотехніки в день.'
-            else:
-                msg += '\n\nСповіщення про конвой увімкнені.'
-            await bot.send_message(message.from_user.id, msg, reply_markup=clan_set())
+            await bot.send_message(message.from_user.id, auto_clan_settings(c), reply_markup=clan_set())
     except:
         pass
 
@@ -3442,6 +3419,8 @@ async def handle_query(call):
                 r.hset('c' + str(c), 'allow', 1)
             else:
                 r.hset('c' + str(c), 'allow', 0)
+            await bot.edit_message_text(auto_clan_settings('c' + str(c)), call.message.chat.id,
+                                        call.message.message_id, reply_markup=clan_set())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Режим набору змінено.')
 
@@ -3454,6 +3433,8 @@ async def handle_query(call):
                 r.hset('c' + str(c), 'war_allow', 2)
             else:
                 r.hset('c' + str(c), 'war_allow', 0)
+            await bot.edit_message_text(auto_clan_settings('c' + str(c)), call.message.chat.id,
+                                        call.message.message_id, reply_markup=clan_set())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Режим входу в міжчатові битви змінено.')
 
@@ -3464,6 +3445,8 @@ async def handle_query(call):
                 r.hset('c' + str(c), 'salary', 1)
             else:
                 r.hset('c' + str(c), 'salary', 0)
+            await bot.edit_message_text(auto_clan_settings('c' + str(c)), call.message.chat.id,
+                                        call.message.message_id, reply_markup=clan_set())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Режим видачі зарплати за роботу змінено.')
 
@@ -3492,6 +3475,8 @@ async def handle_query(call):
                         pass
                     r.hset('c' + str(c), 'recruitment', 0)
                     r.srem('recruitment', c)
+                await bot.edit_message_text(auto_clan_settings('c' + str(c)), call.message.chat.id,
+                                            call.message.message_id, reply_markup=clan_set())
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Режим набору змінено.')
             except:
@@ -3512,6 +3497,8 @@ async def handle_query(call):
             else:
                 r.hset('c' + str(c), 'notification', 0, {'not_time': datetime.now().day})
                 r.srem('followers', c)
+            await bot.edit_message_text(auto_clan_settings('c' + str(c)), call.message.chat.id,
+                                        call.message.message_id, reply_markup=clan_set())
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Сповіщення змінено.')
 
