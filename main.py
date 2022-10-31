@@ -775,7 +775,7 @@ async def woman(message):
             r.hset(uid, 'time4', 0)
         if int(r.hget(uid, 'woman')) == 1:
             if str(uid).encode() in r.smembers('nnn_registered_2022'):
-                message.reply('\U0001F469\U0001F3FB Жінки під час Недристопаду заборонені!')
+                await message.reply('\U0001F469\U0001F3FB Жінки під час Недристопаду заборонені!')
             else:
                 quest(uid, 1, -3)
                 if int(r.hget(uid, 'time4')) != datetime.now().day:
