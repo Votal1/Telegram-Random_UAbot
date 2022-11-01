@@ -25,6 +25,7 @@ from content.quests import quests, quest
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
 
+import requests
 import logging
 import sentry_sdk
 
@@ -5587,6 +5588,20 @@ async def echo(message):
 
         elif message.text == 'N':
             await message.answer('I')
+
+        elif message.from_user.id in sudoers and message.text.lower() in ('Тривога', '/alert'):
+            with open('pic1.webp', 'wb') as handle:
+                response = requests.get('https://alerts.com.ua/map.png', stream=True)
+                if not response.ok:
+                    print(response)
+                for block in response.iter_content(1024):
+                    if not block:
+                        break
+                    handle.write(block)
+
+            await bot.send_sticker(message.chat.id,
+                                   open("pic1.webp", "rb"),
+                                   reply_to_message_id=message.message_id)
 
         if message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
