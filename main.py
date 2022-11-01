@@ -5589,7 +5589,7 @@ async def echo(message):
         elif message.text == 'N':
             await message.answer('I')
 
-        elif message.from_user.id in sudoers and message.text.lower() in ('Тривога', '/alert'):
+        elif message.text.lower() in ('тривога', '/alert'):
             with open('pic1.webp', 'wb') as handle:
                 response = requests.get('https://alerts.com.ua/map.png', stream=True)
                 if not response.ok:
