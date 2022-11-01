@@ -25,6 +25,7 @@ from content.quests import quests, quest
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
 
+from PIL import Image
 import requests
 import logging
 import sentry_sdk
@@ -5590,7 +5591,7 @@ async def echo(message):
             await message.answer('I')
 
         elif message.text.lower() in ('тривога', '/alert'):
-            with open('pic1.webp', 'wb') as handle:
+            with open('pic.png', 'wb') as handle:
                 response = requests.get('https://alerts.com.ua/map.png', stream=True)
                 if not response.ok:
                     print(response)
@@ -5599,8 +5600,11 @@ async def echo(message):
                         break
                     handle.write(block)
 
+            webp = Image.open('pic.png')
+            webp.save('pic.webp', format="webp")
+
             await bot.send_sticker(message.chat.id,
-                                   open("pic1.webp", "rb"),
+                                   open("pic.webp", "rb"),
                                    reply_to_message_id=message.message_id)
 
         if message.chat.type == 'private':
