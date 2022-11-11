@@ -1119,13 +1119,13 @@ async def promo_code(message):
                     r.hset(message.from_user.id, 'weapon', 23)
                     r.hset(message.from_user.id, 's_weapon', 100)
                     await message.reply('\u26CF Промокод Майнкрафту активовано!\n \U0001F4E6 +30 \U0001F5E1 +100')
-                elif msg.startswith('cr') and uid not in r.smembers('fifth_code') \
+                elif msg.startswith('kh') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
                     if int(r.hget(message.from_user.id, 'weapon')) == 0:
                         r.hset(message.from_user.id, 'weapon', 5)
                         r.hset(message.from_user.id, 's_weapon', 1)
-                    if int(r.hget(message.from_user.id, 'strength')) >= 5000:
+                    if int(r.hget(message.from_user.id, 'strength')) >= 8000:
                         st = 10
                     elif int(r.hget(message.from_user.id, 'strength')) >= 4000:
                         st = 50
@@ -1185,6 +1185,14 @@ async def promo_code(message):
                     await message.reply(f'\u26CF Промокод міцності активовано!\n'
                                         f'\U0001F5E1 +{weapon} \U0001F6E1 +{defense} '
                                         f'\U0001F9EA +{support} \U0001F3A9 +{head}')
+                elif msg.startswith('ko') and uid not in r.smembers('ninth_code'):
+                    msg = '\u26CF Промокод Козака активовано!\n\u2620\uFE0F +5 \U0001F476 +5 \u2622 +50'
+                    r.sadd('ninth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'deaths', 5)
+                    r.hincrby(message.from_user.id, 'childs', 5)
+                    r.hincrby(message.from_user.id, 'vodka', 50)
+                    r.hincrby('all_vodka', 'vodka', 50)
+                    await message.reply(msg)
                 '''
                 if msg.startswith('pa') and uid not in r.smembers('eighth_code') \
                         and uid in r.smembers('premium_users'):

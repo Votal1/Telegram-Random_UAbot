@@ -929,7 +929,10 @@ async def war(cid, location, big_battle):
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
     await bot.send_message(cid, ran + ' Русаки несамовито молотять один одного...')
     await sleep(3)
-    m = await bot.send_message(cid, '\u2694 Йде бій...')
+    msg1 = '\u2694 Йде бій...'
+    if randint(1, 10) == 10 and location == 'Штурм Горлівки':
+        msg1 += f"\n{r.hget('promo_code', 'battle_promo_code').decode()}"
+    m = await bot.send_message(cid, msg)
 
     everyone = r.smembers('fighters' + str(cid))
     fighters = {}
