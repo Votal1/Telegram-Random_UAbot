@@ -99,7 +99,7 @@ def c_shop(c, page):
               '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
               '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
         price = 4 if int(r.hget(c, 'side')) == 1 else 10
-        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - {price} грн', callback_data='ration'))
+        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - {price} грн', callback_data='clan_ration'))
         if int(r.hget(c, 'build1')) == 1:
             msg += '\n\U0001F6E1 Уламок бронетехніки [Захист, міцність=7] - збільшує силу на бій на 30%, або' \
                    ' збільшує міцність захисту на 7. Після зношення повертаються 4 гривні.'
@@ -159,7 +159,7 @@ def c_shop(c, page):
         if int(r.hget(c, 'monument')) == 1:
             msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
             markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
-                                            callback_data='monument'))
+                                            callback_data='clan_monument'))
         if int(r.hget(c, 'base')) == 9:
             msg += '\n\U0001F5E1\U0001F6E1 Колючий комплект - закупити всьому клану дрин і щит.'
             markup.add(InlineKeyboardButton(text='Колючий комплект - \U0001F333 200, \U0001faa8 100',
