@@ -1834,6 +1834,7 @@ async def clan_war(message):
                     points1 = int(r.hget(c, "points"))
                     points2 = int(r.hget(c2, "points"))
                     packs = points1 // 7
+                    salt = 5
                     msg = f'Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
                           f'Ваші очки: {points1}\n' \
                           f'Очки ворога: {points2}\n\n'
@@ -1841,6 +1842,7 @@ async def clan_war(message):
                         msg += 'Ви програли...'
                     elif points1 > points2:
                         msg += 'Ви виграли!'
+                        salt = 10
                     else:
                         msg += 'На війні немає переможців, є тільки ті, хто залишився в живих.'
 
@@ -1861,14 +1863,14 @@ async def clan_war(message):
                         elif tier == 2:
                             msg += '\n Ви тепер Тір-2 клан'
 
-                    # msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
+                    msg += f'\n\n\U0001F9C2 +{salt} \U0001F4E6 +{packs}'
 
                     r.hdel(c, 'result')
-                    '''
+
                     for mem in r.smembers('cl' + cid):
-                        r.hincrby(mem, 'salt', 5)
+                        r.hincrby(mem, 'salt', salt)
                         r.hincrby(mem, 'packs', packs)
-                    '''
+
                     await message.answer(msg)
 
                 elif int(r.hget(c, 'tier')) == 3:
