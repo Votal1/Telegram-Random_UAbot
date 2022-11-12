@@ -1867,9 +1867,12 @@ async def clan_war(message):
                     else:
                         markup = InlineKeyboardMarkup()
                         markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
-                        await message.answer('Відкрита реєстрація на тестові війни кланів!', reply_markup=markup)
-                elif int(r.hget(c, 'tier')) in (2, 1):
-                    await message.answer('Ваш клан автоматично бере участь в наступних кланових війнах')
+                        await message.answer('Відкрита реєстрація для тір-3 кланів на тестові кланові війни!',
+                                             reply_markup=markup)
+                elif int(r.hget(c, 'tier')) == 2:
+                    await message.answer('Ваш тір-2 клан автоматично бере участь в наступних кланових війнах')
+                elif int(r.hget(c, 'tier')) == 1:
+                    await message.answer('Ваш тір-1 клан автоматично бере участь в наступних кланових війнах')
             elif str(cid).encode() in r.smembers('registered'):
                 if r.scard('registered') < 2:
                     r.srem('registered', cid)
