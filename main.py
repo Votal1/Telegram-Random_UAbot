@@ -1789,8 +1789,10 @@ async def clan_war(message):
                             tier = int(r.hget(ct, 'tier'))
                             points1 = int(r.hget(ct, 'points'))
                             points2 = int(r.hget('c' + enemy, 'points'))
-                            if points1 != 0:
-                                if points2 != 0 and points1 / points2 >= 1.25:
+                            if points1 > 0:
+                                if points2 == 0:
+                                    points2 = 0.1
+                                if points1 / points2 >= 1.25:
                                     if tier == 3:
                                         r.hset(ct, 'tier', 2)
                                         r.sadd('tier2_clans', mem)
@@ -1798,7 +1800,9 @@ async def clan_war(message):
                                         r.hset(ct, 'tier', 1)
                                         r.srem('tier2_clans', mem)
                                         r.sadd('tier1_clans', mem)
-                                elif points2 != 0 and points1 / points2 <= 0.75:
+                                    elif tier == 1:
+                                        r.sadd('tier1_clans', mem)
+                                elif points1 / points2 <= 0.75:
                                     if tier == 2:
                                         r.hset(ct, 'tier', 3)
                                         r.srem('tier2_clans', mem)
@@ -1806,6 +1810,12 @@ async def clan_war(message):
                                         r.hset(ct, 'tier', 2)
                                         r.srem('tier1_clans', mem)
                                         r.sadd('tier2_clans', mem)
+                                elif 0.75 < points1 / points2 < 1.25:
+                                    if tier == 2:
+                                        r.sadd('tier2_clans', mem)
+                                    elif tier == 1:
+                                        r.sadd('tier1_clans', mem)
+
                             else:
                                 if tier == 2:
                                     r.hset(ct, 'tier', 3)
@@ -1836,19 +1846,19 @@ async def clan_war(message):
 
                     if points1 != 0:
                         if points2 != 0 and points1 / points2 >= 1.25:
-                            if tier == 3:
+                            if tier == 2:
                                 msg += '\n Ви тепер Тір-2 клан'
-                            elif tier == 2:
+                            elif tier == 1:
                                 msg += '\n Ви тепер Тір-1 клан'
                         elif points2 != 0 and points1 / points2 <= 0.75:
-                            if tier == 2:
+                            if tier == 3:
                                 msg += '\n Ви тепер Тір-3 клан'
-                            elif tier == 1:
+                            elif tier == 2:
                                 msg += '\n Ви тепер Тір-2 клан'
                     else:
-                        if tier == 2:
+                        if tier == 3:
                             msg += '\n Ви тепер Тір-3 клан'
-                        elif tier == 1:
+                        elif tier == 2:
                             msg += '\n Ви тепер Тір-2 клан'
 
                     # msg += f'\n\n\U0001F9C2 +5 \U0001F4E6 +{packs}'
