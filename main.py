@@ -1867,7 +1867,7 @@ async def clan_war(message):
 
                     r.hdel(c, 'result')
 
-                    for mem in r.smembers('cl' + cid):
+                    for mem in r.smembers(f'cl{cid}'):
                         r.hincrby(mem, 'salt', salt)
                         r.hincrby(mem, 'packs', packs)
 
