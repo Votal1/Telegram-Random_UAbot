@@ -152,7 +152,8 @@ def c_shop(c, page):
                                             callback_data='clan_uav'))
 
         markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
-                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
+                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'),
+                   InlineKeyboardButton(text='\U0001faac', callback_data='clan_shop_4'))
 
     if page == 2:
         msg = '\U0001F451 Товари для лідера і заступників:'
@@ -192,7 +193,8 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Перерозподіл - \U0001F47E 10, \U0001F4B5 500 ',
                                             callback_data='clan_money'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
-                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
+                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'),
+                   InlineKeyboardButton(text='\U0001faac', callback_data='clan_shop_4'))
 
     if page == 3:
         w, s, cl, b = r.hmget('resources', 'wood', 'stone', 'cloth', 'brick')
@@ -229,21 +231,27 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Продати код - \U0001F916 1 -> \U0001F4B5 500, \U0001F47E '
                                                  '50', callback_data='clan_sell_code'))
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
-                   InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'))
+                   InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
+                   InlineKeyboardButton(text='\U0001faac', callback_data='clan_shop_4'))
 
     if page == 4:
         msg = f"\U0001faac Магазин бафів\n\n"
         if int(r.hget(c, 'war')) == 1:
             if int(r.hget(c, 'buff_1')) == 0:
-                msg += 'Додаткаова нагорода за рейди на клани (залежить від його рівня).'
-                markup.add(InlineKeyboardButton(text='Купити баф 1 - \U0001F47E 50 \U0001F9F6 100 '
+                msg += '\U0001f7e2 Додаткова нагорода за рейди на клани (залежить від його рівня).\n'
+                markup.add(InlineKeyboardButton(text='\U0001f7e2 - \U0001F47E 100 \U0001F9F6 200 '
                                                      '\U0001faa8 1000 \U0001F333 2000',
                                                 callback_data='clan_buff_1'))
             if int(r.hget(c, 'buff_2')) == 0:
-                msg += 'Рейд може проводитись тільки на клан, з яким йде війна. В міжчатовій битві ' \
-                       'проти такого клану - прибрано вплив рандому. Можливість бачити очки ворога.'
-                markup.add(InlineKeyboardButton(text='Купити баф 2 - \U0001F916 20 \U0001F4FB 100',
+                msg += '\U0001f7e0 Вдвічі більше очків отримується за рейд на ворожий клан. ' \
+                       'Вдвічі більше пакунків за перемогу у війні.\n'
+                markup.add(InlineKeyboardButton(text='\U0001f7e0 - \U0001F4B5 10000',
                                                 callback_data='clan_buff_2'))
+            if int(r.hget(c, 'buff_3')) == 0:
+                msg += '\U0001f534 Рейд може проводитись тільки на клан, з яким йде війна. В міжчатовій битві ' \
+                       'проти такого клану - прибрано вплив рандому. Можливість бачити очки ворога.\n'
+                markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
+                                                callback_data='clan_buff_3'))
         else:
             'Вступіть в кланові війни, щоб купляти бафи\n/clan_war'
 

@@ -1273,6 +1273,15 @@ async def great_war(cid1, cid2, a, b):
     await sleep(3)
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
+
+    if r.hexists('c' + str(cid1), 'enemy'):
+        if int(r.hget('c' + str(cid1), 'enemy')) == cid2:
+            if int(r.hget('c' + str(cid1), 'buff_3')) == 1 or int(r.hget('c' + str(cid2), 'buff_3')) == 1:
+                if chance1 > chance2:
+                    win = ['a']
+                elif chance1 < chance2:
+                    win = ['b']
+
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward = '3'
     money = 3
@@ -1534,8 +1543,13 @@ async def start_raid(cid):
     enemy = c2 = ''
     if mode == [1]:
         enemy = r.srandmember('groupings')
+
         while int(enemy) == cid:
             enemy = r.srandmember('groupings')
+
+        if int(r.hget(c, 'buff_3')) == 1:
+            enemy = r.hget(c, 'enemy')
+
         c2 = 'c' + enemy.decode()
         res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick')
         if int(res[0]) < 1500 or int(res[1]) < 1000 or int(res[2]) < 500 or int(res[3]) < 300:
@@ -1619,6 +1633,8 @@ async def start_raid(cid):
             if int(r.hget(c, 'war')) == 1 and int(r.hget(c, 'enemy')) == int(enemy) \
                     and int(r.hget(c2, 'points')) >= 10:
                 ran = randint(5, 10)
+                if int(r.hget(c, 'buff_2')) == 1:
+                    ran *= 2
                 r.hincrby(c, 'points', ran)
                 r.hincrby(c2, 'points', -ran)
                 reward += '\n\U0001fa99 +' + str(ran)
@@ -1648,6 +1664,75 @@ async def start_raid(cid):
             msg2 += reward.replace('+', '-')
         else:
             msg2 += reward
+
+        if win == ['a'] and int(r.hget(c, 'buff_1')) == 1:
+            side2 = int(r.hget(c2, 'side'))
+
+            if side2 == 1:
+                if randint(1, 5) == 5:
+                    r.hincrby(c, 'codes')
+                    msg += '\n\U0001F916 +1'
+                else:
+                    msg += '\n\U0001F6E1 +10'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'defense')) == 0 or int(r.hget(mem, 'defense')) == 1:
+                            r.hset(mem, 'defense', 9)
+                            r.hset(mem, 's_defense', 10)
+                        else:
+                            r.hincrby(mem, 's_defense', 10)
+
+            if side2 == 2:
+                if randint(1, 5) == 5:
+                    msg += '\n\u2620\uFE0F +5'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'deaths', 5)
+                else:
+                    msg += '\n\U0001F3A9 +20'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'head')) == 0:
+                            r.hset(mem, 'head', 2)
+                            r.hset(mem, 's_head', 20)
+                        elif int(r.hget(mem, 'head')) == 2:
+                            r.hincrby(mem, 's_head', 20)
+
+            if side2 == 3:
+                if randint(1, 5) == 5:
+                    msg += '\n\U0001fac0 +100 \U0001F4B5 +100'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hset(mem, 'hp', 100)
+                        r.hincrby(mem, 'money', 100)
+                else:
+                    msg += '\n\U0001F5E1 +3'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'weapon')) in (0, 1, 4):
+                            r.hset(mem, 'weapon', 3)
+                            r.hset(mem, 's_weapon', 3)
+                        elif int(r.hget(mem, 'weapon')) == 3:
+                            r.hincrby(mem, 's_weapon', 3)
+
+            if side2 == 4:
+                if randint(1, 5) == 5:
+                    msg += '\n\U0001F476 +1'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'childs', 1)
+                else:
+                    msg += '\n\U0001F9EA +1'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'support')) == 0:
+                            r.hset(mem, 'support', 7)
+                            r.hset(mem, 's_support', 1)
+                        else:
+                            r.hincrby(mem, 's_support', 1)
+            else:
+                if randint(1, 5) == 5:
+                    msg += '\n\U0001F4E6 +3'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'packs', 3)
+                else:
+                    msg += '\u2622 +5'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        for i in range(5):
+                            vodka(mem)
 
         if choices([1, 0], [5, 95]) == [1]:
             r.hincrby(c, 'codes', 1)
