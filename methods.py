@@ -253,7 +253,7 @@ def c_shop(c, page):
                 markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
                                                 callback_data='clan_buff_3'))
         else:
-            'Вступіть в кланові війни, щоб купляти бафи\n/clan_war'
+            msg += 'Вступіть в кланові війни, щоб купляти бафи\n/clan_war'
 
         markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
                    InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
