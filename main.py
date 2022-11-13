@@ -5031,6 +5031,9 @@ async def handle_query(call):
         elif call.data.startswith('clan_shop_3'):
             msg, markup = c_shop('c' + str(call.message.chat.id), 3)
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+        elif call.data.startswith('clan_shop_4'):
+            msg, markup = c_shop('c' + str(call.message.chat.id), 4)
+            await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
 
         elif call.data.startswith('clan_fragment'):
             if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
