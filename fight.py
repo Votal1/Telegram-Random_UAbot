@@ -1721,7 +1721,7 @@ async def start_raid(cid):
                         if int(r.hget(mem, 'support')) == 0:
                             r.hset(mem, 'support', 7)
                             r.hset(mem, 's_support', 1)
-                        else:
+                        elif int(r.hget(mem, 'support')) != 10:
                             r.hincrby(mem, 's_support', 1)
             else:
                 if randint(1, 5) == 5:
