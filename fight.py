@@ -1681,7 +1681,7 @@ async def start_raid(cid):
                         else:
                             r.hincrby(mem, 's_defense', 10)
 
-            if side2 == 2:
+            elif side2 == 2:
                 if randint(1, 5) == 5:
                     msg += '\n\u2620\uFE0F +5'
                     for mem in r.smembers('fighters_3' + str(cid)):
@@ -1695,7 +1695,7 @@ async def start_raid(cid):
                         elif int(r.hget(mem, 'head')) == 2:
                             r.hincrby(mem, 's_head', 20)
 
-            if side2 == 3:
+            elif side2 == 3:
                 if randint(1, 5) == 5:
                     msg += '\n\U0001fac0 +100 \U0001F4B5 +100'
                     for mem in r.smembers('fighters_3' + str(cid)):
@@ -1710,7 +1710,7 @@ async def start_raid(cid):
                         elif int(r.hget(mem, 'weapon')) == 3:
                             r.hincrby(mem, 's_weapon', 3)
 
-            if side2 == 4:
+            elif side2 == 4:
                 if randint(1, 5) == 5:
                     msg += '\n\U0001F476 +1'
                     for mem in r.smembers('fighters_3' + str(cid)):
