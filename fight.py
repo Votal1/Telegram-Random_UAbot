@@ -1729,7 +1729,7 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'packs', 3)
                 else:
-                    msg += '\u2622 +5'
+                    msg += '\n\u2622 +5'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         for i in range(5):
                             vodka(mem)
