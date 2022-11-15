@@ -3525,7 +3525,7 @@ async def handle_query(call):
                 name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> {mem.decode()}\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
-    elif call.data.startswith('build_'):
+    elif call.data.startswith('build'):
         if call.data.startswith('build_sawmill') and call.from_user.id == call.message.reply_to_message.from_user.id:
             c = 'c' + str(call.message.chat.id)
             if int(r.hget(c, 'sawmill')) == 0:
