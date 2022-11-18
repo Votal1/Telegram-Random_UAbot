@@ -1834,9 +1834,21 @@ async def clan_war(message):
                     points1 = int(r.hget(c, "points"))
                     points2 = int(r.hget(c2, "points"))
                     packs = points1 // 10
-                    if int(r.hget(c, 'buff_2')) == 1:
-                        packs *= 2
-                    salt = 5
+                    salt, codes = 0, 0
+                    if tier == 3:
+                        packs = points1 // 20
+                    elif tier == 2:
+                        packs = points1 // 15
+                        if points1 > points2:
+                            salt = 5
+                    elif tier == 1:
+                        packs = points1 // 10
+                        if points1 > points2:
+                            codes = 5
+                            salt = 10
+                        else:
+                            salt = 5
+                    r.hincrby(c, 'codes', codes)
                     msg = f'Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
                           f'Ваші очки: {points1}\n' \
                           f'Очки ворога: {points2}\n\n'
@@ -1844,7 +1856,8 @@ async def clan_war(message):
                         msg += 'Ви програли...'
                     elif points1 > points2:
                         msg += 'Ви виграли!'
-                        salt = 10
+                        if int(r.hget(c, 'buff_2')) == 1:
+                            packs *= 2
                     else:
                         msg += 'На війні немає переможців, є тільки ті, хто залишився в живих.'
 
@@ -1865,7 +1878,11 @@ async def clan_war(message):
                         elif tier == 2:
                             msg += '\n Ви тепер Тір-2 клан'
 
-                    msg += f'\n\n\U0001F9C2 +{salt} \U0001F4E6 +{packs}'
+                    msg += f'\n\n\U0001F4E6 +{packs}'
+                    if salt > 0:
+                        msg += f' \U0001F9C2 +{salt}'
+                    if codes > 0:
+                        msg += f' \U0001F916 +{codes}'
 
                     r.hdel(c, 'result')
 
@@ -5592,58 +5609,62 @@ async def handle_query(call):
         elif call.data.startswith('clan_buff'):
             c = 'c' + str(call.message.chat.id)
             if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
-                if call.data.startswith('clan_buff_1'):
-                    if int(r.hget(c, 'buff_1')) == 0:
-                        if int(r.hget(c, 'wood')) >= 2000 and int(r.hget(c, 'stone')) >= 1000 \
-                                and int(r.hget(c, 'cloth')) >= 200 and int(r.hget(c, 'r_spirit')) >= 100:
-                            r.hincrby(c, 'wood', -2000)
-                            r.hincrby(c, 'stone', -1000)
-                            r.hincrby(c, 'cloth', -200)
-                            r.hincrby(c, 'r_spirit', -100)
-                            r.hset(c, 'buff_1', 1)
-                            await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f7e2 Додаткова '
-                                                                         'нагорода за рейди на клани '
-                                                                         '(залежить від його рівня).')
+                if int(r.hget(c, 'war')) == 1:
+                    if call.data.startswith('clan_buff_1'):
+                        if int(r.hget(c, 'buff_1')) == 0:
+                            if int(r.hget(c, 'wood')) >= 2000 and int(r.hget(c, 'stone')) >= 1000 \
+                                    and int(r.hget(c, 'cloth')) >= 200 and int(r.hget(c, 'r_spirit')) >= 100:
+                                r.hincrby(c, 'wood', -2000)
+                                r.hincrby(c, 'stone', -1000)
+                                r.hincrby(c, 'cloth', -200)
+                                r.hincrby(c, 'r_spirit', -100)
+                                r.hset(c, 'buff_1', 1)
+                                await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f7e2 Додаткова '
+                                                                             'нагорода за рейди на клани '
+                                                                             '(залежить від його рівня).')
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='Недостатньо ресурсів.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо ресурсів.')
-                    else:
-                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='У вас вже є цей баф.')
+                                                            text='У вас вже є цей баф.')
 
-                if call.data.startswith('clan_buff_2'):
-                    if int(r.hget(c, 'buff_2')) == 0:
-                        if int(r.hget(c, 'money')) >= 10000:
-                            r.hincrby(c, 'money', -10000)
-                            r.hset(c, 'buff_2', 1)
-                            await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f7e0 Вдвічі більше '
-                                                                         'очків отримується за рейд на ворожий клан. '
-                                                                         'Вдвічі більше пакунків за перемогу у війні.')
+                    if call.data.startswith('clan_buff_2'):
+                        if int(r.hget(c, 'buff_2')) == 0:
+                            if int(r.hget(c, 'money')) >= 10000:
+                                r.hincrby(c, 'money', -10000)
+                                r.hset(c, 'buff_2', 1)
+                                await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f7e0 Вдвічі більше '
+                                                                             'очків отримується за рейд на ворожий клан. '
+                                                                             'Вдвічі більше пакунків за перемогу у війні.')
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='Недостатньо ресурсів.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо ресурсів.')
-                    else:
-                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='У вас вже є цей баф.')
+                                                            text='У вас вже є цей баф.')
 
-                if call.data.startswith('clan_buff_3'):
-                    if int(r.hget(c, 'buff_2')) == 0:
-                        if int(r.hget(c, 'codes')) >= 20 and int(r.hget(c, 'technics')) >= 100:
-                            r.hincrby(c, 'codes', -20)
-                            r.hincrby(c, 'technics', -100)
-                            r.hset(c, 'buff_3', 1)
-                            await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f534 Рейд може '
-                                                                         'проводитись тільки на клан, з яким йде '
-                                                                         'війна. В міжчатовій битві проти такого '
-                                                                         'клану - прибрано вплив рандому. '
-                                                                         'Можливість бачити очки ворога.')
+                    if call.data.startswith('clan_buff_3'):
+                        if int(r.hget(c, 'buff_2')) == 0:
+                            if int(r.hget(c, 'codes')) >= 20 and int(r.hget(c, 'technics')) >= 100:
+                                r.hincrby(c, 'codes', -20)
+                                r.hincrby(c, 'technics', -100)
+                                r.hset(c, 'buff_3', 1)
+                                await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f534 Рейд може '
+                                                                             'проводитись тільки на клан, з яким йде '
+                                                                             'війна. В міжчатовій битві проти такого '
+                                                                             'клану - прибрано вплив рандому. '
+                                                                             'Можливість бачити очки ворога.')
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='Недостатньо ресурсів.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо ресурсів.')
-                    else:
-                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='У вас вже є цей баф.')
+                                                            text='У вас вже є цей баф.')
 
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Вступіть в кланові війни, щоб купляти бафи.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Це може зробити тільки лідер чи заступник.')
