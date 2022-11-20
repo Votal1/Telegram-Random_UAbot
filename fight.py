@@ -1459,11 +1459,7 @@ async def start_raid(cid):
         r.hset('convoy', 'power', 2000000)
         r.hset('convoy', 'day', datetime.now().day)
 
-    chance1 = 0
-    hack = 0
-    mar = 0
-    rocket = 0
-    fish = 0
+    chance1, hack, mar, rocket, fish, jew = 0, 0, 0, 0, 0, 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in list(r.smembers('fighters_3' + str(cid)))[0:5]:
         try:
@@ -1522,16 +1518,18 @@ async def start_raid(cid):
                 if support == 10:
                     fish += 1
                 if support in (2, 9):
-                    support = 0.5
-                    damage_support(member)
                     if support == 9:
                         rocket += 1
+                    support = 0.5
+                    damage_support(member)
                 else:
                     support = 0.25
             else:
                 support = 0
             head = int(stats[10])
             if head > 0:
+                if head == 6:
+                    jew += 1
                 head = 0.25
             else:
                 head = 0
@@ -1758,6 +1756,9 @@ async def start_raid(cid):
         if fish >= 5:
             location = 'Ставок швайнокарасів'
             chance2 = 0
+        elif jew >= 5 and int(r.hget(c, 'buff_5')) == 0:
+            location = 'Синагога'
+            chance2 = chance1 * 3
         else:
             location = choice(locations)
             chance2 = int(chance1 * float(chances[locations.index(location)]))
@@ -1774,6 +1775,13 @@ async def start_raid(cid):
                 reward += f"Русаки випустили швайнокарасів в ставок і знайшли камінь, на якому було написано...\n\n" \
                           f"{r.hget('promo_code', 'fish_promo_code').decode()}"
                 r.sadd('fifth_code_allowed', cid)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hset(mem, 'support', 0, {'s_support': 0})
+            elif location == 'Синагога':
+                r.hset(c, 'buff_5', 1)
+                reward += f"Русаки повернулись з синагоги...\n\n" \
+                          f"Отримано баф:\n\n\U0001f7e1 +1 очко за виконання кошерних квестів. +40 " \
+                          f"квестових очків за купівлю ресурсів за погон."
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hset(mem, 'support', 0, {'s_support': 0})
             elif locations.index(location) == 0:
@@ -1927,12 +1935,14 @@ async def start_raid(cid):
                 reward += ' \U0001F47E +' + str(ran)
                 r.hincrby(c, 'r_spirit', ran)
         elif win == ['b']:
-            if location != 'Макіївський роднічок':
-                reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
-            else:
+            if location == 'Макіївський роднічок':
                 reward += 'Русаки вирішили напитись води...\n\U0001F44A +20 \U0001fac0 -100'
                 for member in r.smembers('fighters_3' + str(cid)):
                     increase_trance(20, member)
+            elif location == 'Синагога':
+                reward += 'Жиди вигнали русаків з синагоги...\n\U0001fac0 -100'
+            else:
+                reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
         if choices([1, 0], [5, 95]) == [1]:
