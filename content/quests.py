@@ -174,7 +174,7 @@ def quests(uid):
                         msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'
 
                 elif int(q[0]) < 0 or int(q[2]) < 0 or int(q[4]) < 0:
-                    if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_5')) == 1:
+                    if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_5')) > 0:
                         msg += '\n\n\U0001fa99 +2 за кожен виконаний квест'
                     else:
                         msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'

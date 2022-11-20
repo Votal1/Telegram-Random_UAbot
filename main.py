@@ -4679,7 +4679,7 @@ async def handle_query(call):
                 r.hincrby(c, 'r_spirit', 33)
                 wood(c, 2222)
                 stone(c, 1111)
-                if int(r.hget(c, 'buff_5')) > 0:
+                if int(r.hget(c, 'buff_5')) > 1:
                     q_points(call.from_user.id, 40)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно замовили ресурси для свого клану')

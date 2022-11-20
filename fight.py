@@ -1756,7 +1756,7 @@ async def start_raid(cid):
         if fish >= 5:
             location = 'Ставок швайнокарасів'
             chance2 = 0
-        elif jew >= 5 and int(r.hget(c, 'buff_5')) == 0:
+        elif jew >= 5 and int(r.hget(c, 'buff_5')) < 3:
             location = 'Синагога'
             chance2 = chance1 * 3
         else:
@@ -1778,12 +1778,14 @@ async def start_raid(cid):
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hset(mem, 'support', 0, {'s_support': 0})
             elif location == 'Синагога':
-                r.hset(c, 'buff_5', 1)
+                r.hincrby(c, 'buff_5', 1)
                 reward += f"Русаки повернулись з синагоги...\n\n" \
-                          f"Отримано баф:\n\n\U0001f7e1 +1 очко за виконання кошерних квестів. +40 " \
-                          f"квестових очків за купівлю ресурсів за погон."
-                for mem in r.smembers('fighters_3' + str(cid)):
-                    r.hset(mem, 'support', 0, {'s_support': 0})
+                          f"Отримано баф:\n\n\U0001f7e1 +1 очко за виконання кошерних квестів."
+                if int(r.hget(c, 'buff_5')) > 1:
+                    reward += ' +40 квестових очків за купівлю ресурсів за погон.'
+                if int(r.hget(c, 'buff_5')) > 2:
+                    reward += '\n\n\U0001fa99 +100'
+                    r.hincrby(c, 'points', 100)
             elif locations.index(location) == 0:
                 if hack >= 2:
                     ran = randint(100, 500)
