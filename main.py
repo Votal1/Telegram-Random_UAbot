@@ -1783,7 +1783,7 @@ async def clan_war(message):
                     for mem in r.smembers('in_clan_war'):
                         try:
                             ct = 'c' + mem.decode()
-                            r.hset(ct, 'war', 0, {'buff_1': 0, 'buff_2': 0, 'buff_3': 0, 'buff_4': 0})
+                            r.hset(ct, 'war', 0, {'buff_1': 0, 'buff_2': 0, 'buff_3': 0, 'buff_4': 0, 'buff_5': 0})
                             r.srem('in_clan_war', mem)
                             enemy = r.hget(ct, 'enemy').decode()
                             tier = int(r.hget(ct, 'tier'))
@@ -3283,7 +3283,7 @@ async def handle_query(call):
                                 'leader': call.from_user.id, 'allow': 0, 'title': call.message.chat.title,
                                 'side': 0, 'build1': 0, 'build2': 0, 'build3': 0, 'build4': 0,
                                 'build5': 0, 'build6': 0, 'war': 0, 'tier': 3, 'war_wins': 0,
-                                'buff_1': 0, 'buff_2': 0, 'buff_3': 0, 'buff_4': 0})
+                                'buff_1': 0, 'buff_2': 0, 'buff_3': 0, 'buff_4': 0, 'buff_5': 0})
                         r.sadd('cl' + str(call.message.chat.id), call.from_user.id)
                         r.sadd('clans', call.message.chat.id)
                         r.hset(call.from_user.id, 'clan', call.message.chat.id,
