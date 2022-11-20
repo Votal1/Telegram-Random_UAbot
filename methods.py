@@ -266,42 +266,46 @@ def c_shop(c, page):
             '''
             if int(r.hget(c, 'buff_4')) == 0 and int(r.hget(c, 'base')) >= 4:
                 msg += '\nОберіть один з наступних бафів:\n' \
-                       '\U0001f534 За роботу на благо громади буде нараховано 1-3 квестових очків замість зарплати.\n'
-                markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
+                       '\U0001f7e3 За роботу на благо громади буде нараховано 1-3 квестових очків замість зарплати.\n'
+                markup.add(InlineKeyboardButton(text='\U0001f7e3 - \U0001F9F6 200 \U0001F9F1 200',
                                                 callback_data='clan_buff_4_0'))
 
                 if int(r.hget(c, 'side')) == 1:
-                    msg += '\U0001f534 +2 очка за звичайні квести.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
+                    msg += '\U0001f7e3\U0001f7e3 +2 очка за звичайні квести.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F9F1 500 \U0001F9F6 1000 '
+                                                         '\U0001faa8 2000 \U0001F333 4000',
                                                     callback_data='clan_buff_4_1_1'))
-                    msg += '\U0001f534 Онулення квестових очків.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
+                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 '
+                                                         '\U0001F9F1\U0001F9F6\U0001faa8\U0001F333 30%',
                                                     callback_data='clan_buff_4_1_2'))
 
                 elif int(r.hget(c, 'side')) == 2:
-                    msg += '\U0001f534 1% отримати квестове очко в дуелі з учасником твого клану.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
-                                                    callback_data='clan_buff_4_1_1'))
-                    msg += '\U0001f534 +12 квестових очків за охорону території.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
-                                                    callback_data='clan_buff_4_1_2'))
+                    msg += '\U0001f7e3\U0001f7e3 1% шанс непомітно отримати квестове очко за перемогу в дуелі.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F47E 300',
+                                                    callback_data='clan_buff_4_2_1'))
+                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
+                                                         '\U0001F916 10 \U0001F47E 30%',
+                                                    callback_data='clan_buff_4_2_2'))
 
                 elif int(r.hget(c, 'side')) == 3:
-                    msg += '\U0001f534 +10 квестових очків за пограбування гумконвою.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
-                                                    callback_data='clan_buff_4_1_1'))
-                    msg += '\U0001f534 +10 квестових очків за приєднання учасника в клан.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
-                                                    callback_data='clan_buff_4_1_2'))
+                    msg += '\U0001f7e3\U0001f7e3 +10 квестових очків за пограбування гумконвою.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 250 \U0001F4B5 2500',
+                                                    callback_data='clan_buff_4_3_1'))
+                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків за приєднання учасника в клан.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4FB 30%',
+                                                    callback_data='clan_buff_4_3_2'))
 
                 elif int(r.hget(c, 'side')) == 4:
-                    msg += '\U0001f534 Шанс знайти 1-3 квестові очка в пакунку замість радіотехніки.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
-                                                    callback_data='clan_buff_4_1_1'))
-                    msg += '\U0001f534 +250 квестових очків.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
-                                                    callback_data='clan_buff_4_1_2'))
+                    msg += '\U0001f7e3\U0001f7e3 Шанс знайти 1-3 квестові очка в пакунку замість радіотехніки.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 100 \U0001F4B5 10000',
+                                                    callback_data='clan_buff_4_4_1'))
+                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n'
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4B5 30%',
+                                                    callback_data='clan_buff_4_4_2'))
             '''
+
 
 
         else:
