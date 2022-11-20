@@ -5702,7 +5702,7 @@ async def handle_query(call):
                                     r.hincrby(c, 'brick', -200)
                                     r.hset(c, 'buff_4', 5)
                                     msg = 'Отримано баф:\n\n\U0001f7e3 За роботу на благо громади ' \
-                                          'буде нараховано 1-2 квестових очків замість зарплати.'
+                                          'буде нараховано 1-3 квестових очків замість зарплати.'
                                     await bot.send_message(call.message.chat.id, msg)
                                 else:
                                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -5784,7 +5784,7 @@ async def handle_query(call):
                                     r.hincrby(c, 'technics', -50)
                                     r.hincrby(c, 'money', -10000)
                                     r.hset(c, 'buff_4', 41)
-                                    msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 Шанс знайти 1-3 квестові ' \
+                                    msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 Шанс знайти 1-2 квестові ' \
                                           'очка в пакунку замість радіотехніки.'
                                     await bot.send_message(call.message.chat.id, msg)
                                 else:

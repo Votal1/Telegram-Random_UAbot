@@ -266,7 +266,7 @@ def c_shop(c, page):
 
             if int(r.hget(c, 'buff_4')) == 0 and int(r.hget(c, 'base')) >= 4:
                 msg += '\nОберіть один з наступних бафів:\n' \
-                       '\U0001f7e3 За роботу на благо громади буде нараховано 1-2 квестових очків замість зарплати.\n'
+                       '\U0001f7e3 За роботу на благо громади буде нараховано 1-3 квестових очків замість зарплати.\n'
                 markup.add(InlineKeyboardButton(text='\U0001f7e3 - \U0001F9F6 200 \U0001F9F1 200',
                                                 callback_data='clan_buff_4_0'))
 
@@ -298,7 +298,7 @@ def c_shop(c, page):
                                                     callback_data='clan_buff_4_3_2'))
 
                 elif int(r.hget(c, 'side')) == 4:
-                    msg += '\U0001f7e3\U0001f7e3 Шанс знайти 1-3 квестові очка в пакунку замість радіотехніки.\n'
+                    msg += '\U0001f7e3\U0001f7e3 Шанс знайти 1-2 квестові очка в пакунку замість радіотехніки.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 50 \U0001F4B5 10000',
                                                     callback_data='clan_buff_4_4_1'))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n'
