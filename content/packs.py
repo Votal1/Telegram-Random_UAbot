@@ -1,6 +1,6 @@
 from config import r
 from random import choice, choices, randint
-from methods import checkClan
+from methods import checkClan, q_points
 from variables import icons
 from parameters import vodka
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -26,8 +26,13 @@ def open_pack(uid, cdata, edit):
                               weights=[20, 18, 15, 12, 10, 7, 6, 5, 3, 2, 1, 0.225, 0.225, 0.225, 0.225, 0.1])
                 if ran == [1]:
                     if checkClan(uid, base=2, building='new_post') and choice([0, 1]) == 1:
-                        msg = '\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1'
-                        r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
+                        if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 41:
+                            ran = randint(1, 3)
+                            msg = f'\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001fa99 +{ran}'
+                            q_points(uid, ran)
+                        else:
+                            msg = '\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1'
+                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
                         quest(uid, 3, 3, 3)
                     else:
                         msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
