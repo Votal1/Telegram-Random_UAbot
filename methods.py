@@ -277,7 +277,7 @@ def c_shop(c, page):
                                                     callback_data='clan_buff_4_1_1'))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 '
-                                                         '\U0001F9F1\U0001F9F6\U0001faa8\U0001F333 30%',
+                                                         '\U0001F9F1\U0001F9F6\U0001faa8\U0001F333 25%',
                                                     callback_data='clan_buff_4_1_2'))
 
                 elif int(r.hget(c, 'side')) == 2:
@@ -286,7 +286,7 @@ def c_shop(c, page):
                                                     callback_data='clan_buff_4_2_1'))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
-                                                         '\U0001F916 10 \U0001F47E 30%',
+                                                         '\U0001F916 10 \U0001F47E 25%',
                                                     callback_data='clan_buff_4_2_2'))
 
                 elif int(r.hget(c, 'side')) == 3:
@@ -294,7 +294,7 @@ def c_shop(c, page):
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 120 \U0001F4B5 2500',
                                                     callback_data='clan_buff_4_3_1'))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків за приєднання учасника в клан.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4FB 30%',
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4FB 25%',
                                                     callback_data='clan_buff_4_3_2'))
 
                 elif int(r.hget(c, 'side')) == 4:
@@ -302,7 +302,7 @@ def c_shop(c, page):
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 50 \U0001F4B5 10000',
                                                     callback_data='clan_buff_4_4_1'))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4B5 30%',
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4B5 25%',
                                                     callback_data='clan_buff_4_4_2'))
             '''
 
