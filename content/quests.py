@@ -146,12 +146,6 @@ def quests(uid):
                     msg += f"\n\n{q34[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                            f"\U0001F4CA Прогрес - {q34t[int(q[4])] - int(q[5])}/{q34t[int(q[4])]}"
 
-                if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
-                    if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 11:
-                        msg += '\n\n\U0001fa99 +3 за кожен виконаний квест'
-                    else:
-                        msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'
-
             elif int(q[4]) < 0:
                 if side == 1:
                     msg += f"\n\n{q31p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
