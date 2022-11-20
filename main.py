@@ -2403,6 +2403,8 @@ async def join(message):
                             r.hset(message.from_user.id, 'clan_time', 0)
                         r.sadd('cl' + str(message.chat.id), message.from_user.id)
                         r.hset(message.from_user.id, 'firstname', message.from_user.first_name)
+                        if int(r.hget(c, 'buff_4')) == 32:
+                            q_points(message.from_user.id, 10)
                         await message.reply('\U0001F4E5 Ти вступив в клан ' +
                                             r.hget('c' + str(message.chat.id), 'title').decode() + '.')
                     elif int(r.hget(c, 'allow')) == 1:
@@ -2745,6 +2747,9 @@ async def guard(message):
                             r.hincrby('soledar', 'money', 5)
                             msg += ' \U0001F4E6 +1'
                             r.hincrby(message.from_user.id, 'packs', 1)
+                    if int(r.hget(c, 'buff_4')) == 22:
+                        q_points(message.from_user.id, 12)
+                        msg += ' \U0001fa99 +12'
                 if int(r.hget(c, 'build6')) == 1:
                     ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
                          int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))
@@ -3365,6 +3370,8 @@ async def handle_query(call):
                 if r.hexists(uid, 'clan_time') == 0:
                     r.hset(uid, 'clan_time', 0)
                 r.sadd('cl' + str(call.message.chat.id), uid)
+                if int(r.hget('c' + str(call.message.chat.id), 'buff_4')) == 32:
+                    q_points(call.from_user.id, 10)
                 await bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
                                             r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
                                             call.message.chat.id, call.message.message_id)
@@ -5718,7 +5725,7 @@ async def handle_query(call):
                                     r.hset(c, 'stone', int(int(r.hget(c, 'stone')) * 0.75))
                                     r.hset(c, 'cloth', int(int(r.hget(c, 'cloth')) * 0.75))
                                     r.hset(c, 'brick', int(int(r.hget(c, 'brick')) * 0.75))
-                                    r.hset(c, 'buff_4', 12)
+                                    r.hset(c, 'buff_4', 12, {'q-points': 0})
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.'
                                     await bot.send_message(call.message.chat.id, msg)
                                 else:

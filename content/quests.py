@@ -145,6 +145,13 @@ def quests(uid):
                 elif side == 4:
                     msg += f"\n\n{q34[int(q[4])]}\n\U0001F9C2 Нагорода - 1 сіль\n" \
                            f"\U0001F4CA Прогрес - {q34t[int(q[4])] - int(q[5])}/{q34t[int(q[4])]}"
+
+                if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
+                    if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 11:
+                        msg += '\n\n\U0001fa99 +3 за кожен виконаний квест'
+                    else:
+                        msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'
+
             elif int(q[4]) < 0:
                 if side == 1:
                     msg += f"\n\n{q31p[-int(q[4])]}\n\U0001F9C2 Нагорода - 2 солі\n" \
@@ -160,7 +167,17 @@ def quests(uid):
                            f"\U0001F4CA Прогрес - {q34pt[-int(q[4])] - int(q[5])}/{q34pt[-int(q[4])]}"
 
             if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
-                msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'
+                if int(q[0]) > 0 or int(q[2]) > 0 or int(q[4]) > 0:
+                    if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 11:
+                        msg += '\n\n\U0001fa99 +3 за кожен виконаний квест'
+                    else:
+                        msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'
+
+                elif int(q[0]) < 0 or int(q[2]) < 0 or int(q[4]) < 0:
+                    if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_5')) == 1:
+                        msg += '\n\n\U0001fa99 +2 за кожен виконаний квест'
+                    else:
+                        msg += '\n\n\U0001fa99 +1 за кожен виконаний квест'
 
     return msg
 

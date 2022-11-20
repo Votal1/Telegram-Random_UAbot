@@ -6,7 +6,7 @@ from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
-from methods import checkClan, wood, stone, cloth, brick
+from methods import checkClan, wood, stone, cloth, brick, q_points
 from content.quests import quest
 
 
@@ -743,6 +743,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if c2 in (7, 17, 27):
                 quest(uid1, 3, -3, 3)
 
+            if randint(1, 100) == 100:
+                if checkClan(uid1) and int(r.hget('c' + r.hget(uid1, 'clan').decode(), 'buff_4')) == 21:
+                    q_points(uid1, 12)
+
             hack = ''
             if c2 == 8 or c2 == 18 or c2 == 28:
                 hack1 = choices([0, 1], weights=[82, 18])
@@ -875,6 +879,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 quest(uid1, 3, -2, 2)
             if c1 in (7, 17, 27):
                 quest(uid2, 3, -3, 3)
+
+            if randint(1, 100) == 100:
+                if checkClan(uid2) and int(r.hget('c' + r.hget(uid2, 'clan').decode(), 'buff_4')) == 21:
+                    q_points(uid2, 12)
 
             hack = ''
             if c1 == 8 or c1 == 18 or c1 == 28:
@@ -1951,12 +1959,6 @@ async def start_raid(cid):
             r.hset('convoy', 'power', 0)
             msg += 'Від гумконвою більше нічого не залишилось!\n'
             packs += 5
-            '''
-            r.hincrby('resources', 'wood', 1500)
-            r.hincrby('resources', 'stone', 1000)
-            r.hincrby('resources', 'cloth', 500)
-            r.hincrby('resources', 'brick', 300)
-            '''
         else:
             r.hincrby('convoy', 'power', -chance1)
         reward = int(chance2 / 20000 - (diff / 20000))
@@ -1966,8 +1968,12 @@ async def start_raid(cid):
             for mem in r.smembers('fighters_3' + str(cid)):
                 r.hincrby(mem, 'packs', packs)
                 quest(mem, 3, 3, 3)
+
                 if packs >= 10:
                     quest(mem, 3, -2, 4)
+            if int(r.hget(c, 'buff_4')) == 31:
+                q_points(int(r.srandmember('fighters_3' + str(cid))), 10)
+                msg += ' \U0001fa99 +10'
         elif reward <= 0 and diff != 0:
             msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'
 
