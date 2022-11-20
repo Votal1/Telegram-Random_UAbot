@@ -263,7 +263,7 @@ def c_shop(c, page):
                        'проти такого клану - прибрано вплив рандому. Можливість бачити очки ворога.\n'
                 markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
                                                 callback_data='clan_buff_3'))
-            '''
+
             if int(r.hget(c, 'buff_4')) == 0 and int(r.hget(c, 'base')) >= 4:
                 msg += '\nОберіть один з наступних бафів:\n' \
                        '\U0001f7e3 За роботу на благо громади буде нараховано 1-3 квестових очків замість зарплати.\n'
@@ -304,9 +304,6 @@ def c_shop(c, page):
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 \U0001F4B5 25%',
                                                     callback_data='clan_buff_4_4_2'))
-            '''
-
-
 
         else:
             msg += 'Вступіть в кланові війни, щоб купляти бафи\n/clan_war'
