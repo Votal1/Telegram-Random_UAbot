@@ -13,7 +13,8 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, show_inventory, auto_clan_settings
+    wood, stone, cloth, brick, show_inventory, auto_clan_settings, q_points
+
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, invent0
@@ -2609,25 +2610,46 @@ async def work(message):
                         if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
                             if side == 4:
                                 if int(r.hget(c, 'new_post')) == 0:
-                                    resources += ' \n\U0001F4B5 +8'
-                                    r.hincrby(message.from_user.id, 'money', 8)
                                     r.hincrby(c, 'money', -8)
+                                    if int(r.hget(c, 'buff_4')) == 5:
+                                        ran = randint(1, 3)
+                                        q_points(message.from_user.id, ran)
+                                        resources += f' \n\U0001fa99 {ran}'
+                                    else:
+                                        resources += ' \n\U0001F4B5 +8'
+                                        r.hincrby(message.from_user.id, 'money', 8)
                                 else:
-                                    r.hincrby(message.from_user.id, 'money', 10)
-                                    r.hincrby(c, 'money', -10)
-                                    resources += ' \n\U0001F4B5 +10 \U0001F4E6 +1'
-                                    r.hincrby(message.from_user.id, 'packs', 1)
+                                    if int(r.hget(c, 'buff_4')) == 5:
+                                        ran = randint(1, 3)
+                                        q_points(message.from_user.id, ran)
+                                        resources += f' \n\U0001fa99 {ran}'
+                                    else:
+                                        r.hincrby(message.from_user.id, 'money', 10)
+                                        r.hincrby(c, 'money', -10)
+                                        resources += ' \n\U0001F4B5 +10 \U0001F4E6 +1'
+                                        r.hincrby(message.from_user.id, 'packs', 1)
                             else:
-                                resources += ' \n\U0001F4B5 +5'
-                                r.hincrby(message.from_user.id, 'money', 5)
                                 if int(r.hget(c, 'new_post')) == 0:
                                     r.hincrby(c, 'money', -8)
                                     r.hincrby('soledar', 'money', 3)
+                                    if int(r.hget(c, 'buff_4')) == 5:
+                                        ran = randint(1, 3)
+                                        q_points(message.from_user.id, ran)
+                                        resources += f' \n\U0001fa99 {ran}'
+                                    else:
+                                        r.hincrby(message.from_user.id, 'money', 5)
+                                        resources += ' \n\U0001F4B5 +5'
                                 else:
                                     r.hincrby(c, 'money', -10)
                                     r.hincrby('soledar', 'money', 5)
-                                    resources += ' \U0001F4E6 +1'
-                                    r.hincrby(message.from_user.id, 'packs', 1)
+                                    if int(r.hget(c, 'buff_4')) == 5:
+                                        ran = randint(1, 3)
+                                        q_points(message.from_user.id, ran)
+                                        resources += f' \n\U0001fa99 {ran}'
+                                    else:
+                                        r.hincrby(message.from_user.id, 'money', 5)
+                                        r.hincrby(message.from_user.id, 'packs', 1)
+                                        resources += ' \n\U0001F4B5 +5 \U0001F4E6 +1'
                         if int(r.hget(c, 'build6')) == 1:
                             ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
                                  int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))

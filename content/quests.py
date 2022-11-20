@@ -1,5 +1,5 @@
 from config import r
-from methods import checkClan
+from methods import checkClan, q_points
 from parameters import damage_head
 from random import randint
 from datetime import datetime
@@ -174,24 +174,14 @@ def quest(uid, number, unit, side=0):
         if int(r.hget(uid, 'qt')) == datetime.now().day and int(r.hget(uid, qt)) > 0 and int(r.hget(uid, q)) == unit:
             r.hincrby(uid, qt, -1)
             if int(r.hget(uid, qt)) <= 0:
+
                 if int(r.hget(uid, q)) > 0:
                     r.hincrby(uid, 'salt', 1)
-
-                    if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
-                        if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 500:
-                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', 1)
-                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', 1)
+                    q_points(uid, 1)
 
                 elif int(r.hget(uid, q)) < 0:
                     r.hincrby(uid, 'salt', 2)
-
-                    if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
-                        if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) == 499:
-                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', 1)
-                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', 1)
-                        elif int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 499:
-                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', 2)
-                            r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', 2)
+                    q_points(uid, 2)
 
                 r.hset(uid, q, 0)
     except:
