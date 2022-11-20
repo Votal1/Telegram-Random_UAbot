@@ -181,7 +181,7 @@ def quest(uid, number, unit, side=0):
 
                 elif int(r.hget(uid, q)) < 0:
                     r.hincrby(uid, 'salt', 2)
-                    q_points(uid, 2)
+                    q_points(uid, 1)
 
                 r.hset(uid, q, 0)
     except:
