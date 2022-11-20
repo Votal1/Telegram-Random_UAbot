@@ -5699,12 +5699,12 @@ async def handle_query(call):
                                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                     text='Недостатньо ресурсів.')
                             if call.data.startswith('clan_buff_4_1_1'):
-                                if int(r.hget(c, 'cloth')) >= 1000 and int(r.hget(c, 'brick')) >= 500 \
-                                        and int(r.hget(c, 'wood')) >= 4000 and int(r.hget(c, 'stone')) >= 2000:
-                                    r.hincrby(c, 'cloth', -1000)
-                                    r.hincrby(c, 'brick', -500)
-                                    r.hincrby(c, 'wood', -4000)
-                                    r.hincrby(c, 'stone', -2000)
+                                if int(r.hget(c, 'cloth')) >= 600 and int(r.hget(c, 'brick')) >= 300 \
+                                        and int(r.hget(c, 'wood')) >= 3000 and int(r.hget(c, 'stone')) >= 1500:
+                                    r.hincrby(c, 'cloth', -600)
+                                    r.hincrby(c, 'brick', -300)
+                                    r.hincrby(c, 'wood', -3000)
+                                    r.hincrby(c, 'stone', -1500)
                                     r.hset(c, 'buff_4', 11)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 +2 очка за звичайні квести.'
                                     await bot.send_message(call.message.chat.id, msg)
@@ -5726,8 +5726,8 @@ async def handle_query(call):
                                                                     text='Недостатньо ресурсів.')
 
                             if call.data.startswith('clan_buff_4_2_1'):
-                                if int(r.hget(c, 'r_spirit')) >= 300:
-                                    r.hincrby(c, 'r_spirit', -300)
+                                if int(r.hget(c, 'r_spirit')) >= 180:
+                                    r.hincrby(c, 'r_spirit', -180)
                                     r.hset(c, 'buff_4', 21)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 1% шанс непомітно отримати' \
                                           ' квестове очко за перемогу в дуелі.'
@@ -5748,8 +5748,8 @@ async def handle_query(call):
                                                                     text='Недостатньо ресурсів.')
 
                             if call.data.startswith('clan_buff_4_3_1'):
-                                if int(r.hget(c, 'technics')) >= 250 and int(r.hget(c, 'money')) >= 2500:
-                                    r.hincrby(c, 'technics', -250)
+                                if int(r.hget(c, 'technics')) >= 120 and int(r.hget(c, 'money')) >= 2500:
+                                    r.hincrby(c, 'technics', -120)
                                     r.hincrby(c, 'money', -2500)
                                     r.hset(c, 'buff_4', 31)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 +10 квестових очків ' \
@@ -5771,8 +5771,8 @@ async def handle_query(call):
                                                                     text='Недостатньо ресурсів.')
 
                             if call.data.startswith('clan_buff_4_4_1'):
-                                if int(r.hget(c, 'technics')) >= 100 and int(r.hget(c, 'money')) >= 10000:
-                                    r.hincrby(c, 'technics', -100)
+                                if int(r.hget(c, 'technics')) >= 50 and int(r.hget(c, 'money')) >= 10000:
+                                    r.hincrby(c, 'technics', -50)
                                     r.hincrby(c, 'money', -10000)
                                     r.hset(c, 'buff_4', 41)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 Шанс знайти 1-3 квестові ' \
@@ -5786,6 +5786,7 @@ async def handle_query(call):
                                     r.hincrby(c, 'codes', -10)
                                     r.hset(c, 'money', int(int(r.hget(c, 'money')) * 0.7))
                                     r.hset(c, 'buff_4', 42)
+                                    q_points(call.from_user.id, 250)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.'
                                     await bot.send_message(call.message.chat.id, msg)
                                 else:
