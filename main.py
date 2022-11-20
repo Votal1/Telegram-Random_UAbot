@@ -1856,7 +1856,7 @@ async def clan_war(message):
                         msg += 'Ви програли...'
                     elif points1 > points2:
                         msg += 'Ви виграли!'
-                        if int(r.hget(c, 'buff_2')) == 1:
+                        if int(r.hget(c, 'result')) == 2:
                             packs *= 2
                     else:
                         msg += 'На війні немає переможців, є тільки ті, хто залишився в живих.'
@@ -5634,6 +5634,7 @@ async def handle_query(call):
                             if int(r.hget(c, 'money')) >= 10000:
                                 r.hincrby(c, 'money', -10000)
                                 r.hset(c, 'buff_2', 1)
+                                r.hset(c, 'result', 2)
                                 await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f7e0 Вдвічі більше '
                                                                              'очків отримується за рейд на ворожий клан. '
                                                                              'Вдвічі більше пакунків за перемогу у війні.')
