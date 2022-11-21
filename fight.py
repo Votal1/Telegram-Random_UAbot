@@ -1758,7 +1758,7 @@ async def start_raid(cid):
             chance2 = 0
         elif jew >= 5 and int(r.hget(c, 'war')) == 1 and int(r.hget(c, 'buff_5')) < 3:
             location = 'Синагога'
-            chance2 = chance1 * 3
+            chance2 = int(chance1 * choice([0.5, 1, 2, 3]))
         else:
             location = choice(locations)
             chance2 = int(chance1 * float(chances[locations.index(location)]))
