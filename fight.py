@@ -1684,7 +1684,7 @@ async def start_raid(cid):
                         if int(r.hget(mem, 'defense')) == 0 or int(r.hget(mem, 'defense')) == 1:
                             r.hset(mem, 'defense', 9)
                             r.hset(mem, 's_defense', 10)
-                        else:
+                        elif int(r.hget(mem, 'defense')) != 3:
                             r.hincrby(mem, 's_defense', 10)
 
             elif side2 == 2:
