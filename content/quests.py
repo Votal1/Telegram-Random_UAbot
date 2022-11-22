@@ -188,11 +188,17 @@ def quest(uid, number, unit, side=0):
 
                 if int(r.hget(uid, q)) > 0:
                     r.hincrby(uid, 'salt', 1)
-                    q_points(uid, 1)
+                    if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 11:
+                        q_points(uid, 3)
+                    else:
+                        q_points(uid, 1)
 
                 elif int(r.hget(uid, q)) < 0:
                     r.hincrby(uid, 'salt', 2)
-                    q_points(uid, 1)
+                    if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_5')) > 1:
+                        q_points(uid, 2)
+                    else:
+                        q_points(uid, 1)
 
                 r.hset(uid, q, 0)
     except:
