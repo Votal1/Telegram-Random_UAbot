@@ -12,7 +12,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, wiki_text, c_shop, top, itop, ctop, \
+from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick, show_inventory, auto_clan_settings, q_points
 
 
@@ -22,6 +22,7 @@ from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack
 from content.quests import quests, quest
+from content.wiki import wiki_text
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
