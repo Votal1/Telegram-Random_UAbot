@@ -1854,9 +1854,9 @@ async def clan_war(message):
                         else:
                             salt = 5
                     r.hincrby(c, 'codes', codes)
-                    msg = f'Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
-                          f'Ваші очки: {points1}\n' \
-                          f'Очки ворога: {points2}\n\n'
+                    msg = f'\U0001f4ef Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
+                          f'\U0001fa99 Ваші очки: {points1}\n' \
+                          f'\U0001fa99 Очки ворога: {points2}\n\n'
                     if points1 < points2:
                         msg += 'Ви програли...'
                     elif points1 > points2:
@@ -1899,11 +1899,11 @@ async def clan_war(message):
 
                 elif int(r.hget(c, 'tier')) == 3:
                     if str(cid).encode() in r.smembers('registered'):
-                        await message.answer('Ваш клан вже зареєстровано на тестові війни кланів')
+                        await message.answer('Ваш клан вже зареєстровано на війни кланів')
                     else:
                         markup = InlineKeyboardMarkup()
                         markup.add(InlineKeyboardButton(text='Зареєструватись', callback_data='enter_war'))
-                        await message.answer('Відкрита реєстрація для тір-3 кланів на тестові кланові війни!',
+                        await message.answer('\U0001f4ef Відкрита реєстрація для тір-3 кланів на кланові війни!',
                                              reply_markup=markup)
                 elif int(r.hget(c, 'tier')) == 2:
                     await message.answer('Ваш тір-2 клан автоматично бере участь в наступних кланових війнах')
@@ -1921,9 +1921,9 @@ async def clan_war(message):
                     r.sadd('in_clan_war', cid, enemy)
                     r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
                     r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
-                    await bot.send_message(cid, f'Кланові війни починаються!\n\n'
+                    await bot.send_message(cid, f'\U0001f4ef Кланові війни починаються!\n\n'
                                                 f'Ваш противник:\n{r.hget(c2, "title").decode()}')
-                    await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
+                    await bot.send_message(int(enemy), f'\U0001f4ef Кланові війни починаються!\n\n'
                                                        f'Ваш противник:\n{r.hget(c, "title").decode()}')
             elif str(cid).encode() in r.smembers('tier2_clans'):
                 if r.scard('tier2_clans') < 2:
@@ -1936,9 +1936,9 @@ async def clan_war(message):
                     r.sadd('in_clan_war', cid, enemy)
                     r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
                     r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
-                    await bot.send_message(cid, f'Кланові війни починаються!\n\n'
+                    await bot.send_message(cid, f'\U0001f4ef Кланові війни починаються!\n\n'
                                                 f'Ваш противник:\n{r.hget(c2, "title").decode()}')
-                    await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
+                    await bot.send_message(int(enemy), f'\U0001f4ef Кланові війни починаються!\n\n'
                                                        f'Ваш противник:\n{r.hget(c, "title").decode()}')
             elif str(cid).encode() in r.smembers('tier1_clans'):
                 if r.scard('tier1_clans') < 2:
@@ -1951,22 +1951,22 @@ async def clan_war(message):
                     r.sadd('in_clan_war', cid, enemy)
                     r.hset(c, 'war', 1, {'enemy': enemy, 'result': 1, 'points': 0, 'q-points': 0})
                     r.hset(c2, 'war', 1, {'enemy': cid, 'result': 1, 'points': 0, 'q-points': 0})
-                    await bot.send_message(cid, f'Кланові війни починаються!\n\n'
+                    await bot.send_message(cid, f'\U0001f4ef Кланові війни починаються!\n\n'
                                                 f'Ваш противник:\n{r.hget(c2, "title").decode()}')
-                    await bot.send_message(int(enemy), f'Кланові війни починаються!\n\n'
+                    await bot.send_message(int(enemy), f'\U0001f4ef Кланові війни починаються!\n\n'
                                                        f'Ваш противник:\n{r.hget(c, "title").decode()}')
             elif int(r.hget(c, 'war')) == 1:
                 title = r.hget("c" + r.hget(c, "enemy").decode(), "title").decode()
-                msg = f'Триває війна з {title}\n\n' \
+                msg = f'\U0001f4ef Триває війна з {title}\n\n' \
                       f'Ваш прогрес:\n' \
-                      f'\U0001fa99 Загальна кількість очків (за міжчатові битви): {int(r.hget(c, "points"))}\n' \
-                      f'Додаткові очки (за квести): {int(r.hget(c, "q-points"))}/500'
+                      f'\U0001fa99 Очки: {int(r.hget(c, "points"))}\n' \
+                      f'\U0001fa99 Квестові очки: {int(r.hget(c, "q-points"))}/500'
                 if int(r.hget(c, 'buff_3')) == 1:
                     points2 = int(r.hget('c' + r.hget(c, 'enemy').decode(), 'points'))
-                    msg += f'\nОчки ворога: {points2}'
+                    msg += f'\n\U0001fa99Очки ворога: {points2}'
                 await bot.send_message(cid, msg)
             else:
-                await message.answer('Зареєсруватись на війни кланів можна у вихідні')
+                await message.answer('\U0001f4ef Зареєструватись на війни кланів можна у вихідні')
 
 
 @dp.message_handler(commands=['upgrade'])
@@ -3335,7 +3335,7 @@ async def handle_query(call):
         if checkLeader(uid, cid):
             if weekday in (5, 6) and int(r.hget(c, 'tier')) == 3:
                 r.sadd('registered', cid)
-                await bot.edit_message_text('Ваш клан зареєстровано на тестові війни кланів.\nСамі війни повинні'
+                await bot.edit_message_text('Ваш клан зареєстровано на війни кланів.\nСамі війни повинні'
                                             ' відбудуться наступного тижня',
                                             call.message.chat.id, call.message.message_id)
             else:
