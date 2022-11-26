@@ -627,7 +627,7 @@ async def ctop(sett, uid):
                     elif tier == 2:
                         rating2.update({line: stats})
                     else:
-                        rating3.update({line: stats})
+                        rating1.update({line: stats})
                 except:
                     continue
             s_rating1 = sorted(rating1, key=rating1.get, reverse=True)
