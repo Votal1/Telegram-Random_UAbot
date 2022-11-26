@@ -1626,6 +1626,7 @@ async def swap(message):
 async def clan(message):
     cid = str(message.chat.id)
     c = 'c' + cid
+    tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
     prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
               'Комуна', 'Коаліція', 'Асоціація', 'Організація',
               'Союз', 'Орден', 'Ліга', 'Корпорація']
@@ -1737,7 +1738,6 @@ async def clan(message):
         except:
             pass
         msg = '\U0001F530 Тут можна знайти собі клан'
-        tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
         for mem in r.smembers('recruitment'):
             c = 'c' + mem.decode()
             if int(r.hget(c, 'rec_time')) != datetime.now().day:

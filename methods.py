@@ -430,7 +430,7 @@ def com(data):
         markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
         msg = 'Топ\n\n/ltop - топ цього чату\n/gtop - глобальний топ\n/itop - яке я місце в топі?\n' \
               '/ctop - топ чатів\n/passport - твої характеристики\n\nОпції для ltop та gtop:\n' \
-              '-s, -d, -c, -w, -t, -p, -a'
+              '-s, -d, -c, -w, -t, -p, -a\nОпція для ctop: -w'
     elif data == 'full_list_4':
         markup.add(InlineKeyboardButton(text='Інформація', callback_data='full_list_1'))
         markup.add(InlineKeyboardButton(text='Гра в русаків', callback_data='full_list_2'))
