@@ -2158,7 +2158,7 @@ async def build(message):
                                                             callback_data='build_wall'))
                             msg += '\nСтіна оголошень (\U0001F333 500, \U0001faa8 250, \U0001F9F6 150, ' \
                                    '\U0001F9F1 100, \U0001F4B5 1000, \U0001F47E 30) - додатковий щоденний' \
-                                   ' квест (ще +1 через два апгрейда).'
+                                   ' квест (ще +1 через два апгрейди).'
                     if int(r.hget(c, 'base')) >= 4:
                         if int(r.hget(c, 'post')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати блокпост',
