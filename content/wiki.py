@@ -15,8 +15,8 @@ def wiki_text(data):
               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
               'русаків, об`єднувати в клани, а також - вбивати.\nТут можна знайти майже всю інформацію щодо гри.'
     elif data.startswith('wiki_duel'):
-        markup.add(InlineKeyboardButton(text='\U0001F523', callback_data='wiki_chances'),
-                   InlineKeyboardButton(text='\U0001F4B0', callback_data='wiki_raid'))
+        markup.add(InlineKeyboardButton(text='\U0001F523 Шанси', callback_data='wiki_chances'),
+                   InlineKeyboardButton(text='\U0001F4B0 Рейди', callback_data='wiki_raid'))
         msg = '\u2694\uFE0F Існує 4 типи боїв:\n\n\U0001F5E1 Дуелі - проводяться за викликом бота в інлайн режимі. ' \
               'Нагорода - бойовий дух та гроші. Якщо ворожий русак вдвічі слабший - грошової нагороди не буде, рівн' \
               'ий по силі - 0-3 гривні, вдвічі сильніший - 1-3 гривні. В дуелях використовується більшість спорядже' \
@@ -32,8 +32,8 @@ def wiki_text(data):
               '\U0001F4B0 Рейди (/raid) - 5 русаків в своєму клані збираються проводити рейд на інший клан або локац' \
               'ію. Можна проводити раз в годину.'
     elif data.startswith('wiki_chances'):
-        markup.add(InlineKeyboardButton(text='\u2694\uFE0F', callback_data='wiki_duel'),
-                   InlineKeyboardButton(text='\U0001F4B0', callback_data='wiki_raid'))
+        markup.add(InlineKeyboardButton(text='\u2694\uFE0F Бої', callback_data='wiki_duel'),
+                   InlineKeyboardButton(text='\U0001F4B0 Рейди', callback_data='wiki_raid'))
         msg = '\U0001F523 Шанси\n\nДуелі:\n' \
               'Шанс = сила * (1 + 0.1 * інтелект) * (1 + 0.0001 * бойовий дух)\n\n' \
               'У масових і міжчатових битвах, рейдах та охороні формула та сама, тільки додається ще 25% шансу за ' \
@@ -44,8 +44,8 @@ def wiki_text(data):
               '\U0001F44A Бойовий транс - збільшує силу на 20% та бойовий дух - на 80%. Кількість трансу не може ' \
               'бути більшою, ніж кількість інтелекту.'
     elif data.startswith('wiki_raid'):
-        markup.add(InlineKeyboardButton(text='\u2694\uFE0F', callback_data='wiki_duel'),
-                   InlineKeyboardButton(text='\U0001F523', callback_data='wiki_chances'))
+        markup.add(InlineKeyboardButton(text='\u2694\uFE0F Бої', callback_data='wiki_duel'),
+                   InlineKeyboardButton(text='\U0001F523 Шанси', callback_data='wiki_chances'))
         msg = '\U0001F4B0 Рейди\n\nМожна проводити, починаючи з будь-якого рівня, але зарейдити можуть тільки, якщо ' \
               'ваш рівень, як мінімум, угруповання і склад, заповнений на 10%.\nЯкщо рейд проти клану - 70% шанс ' \
               'вкрасти ресурси, 20% - гроші, 10% - рускій дух.\n\nРейдові локації та нагороди:\n' \
@@ -341,8 +341,8 @@ def wiki_text(data):
               'Міцність зменшується при взятті квестів. Можна знайти в пакунку або купити в магазині за погон.'
 
     elif data.startswith('wiki_passport'):
-        markup.add(InlineKeyboardButton(text='\U0001F4E6', callback_data='wiki_pack'),
-                   InlineKeyboardButton(text='\u2B50', callback_data='wiki_achieve'))
+        markup.add(InlineKeyboardButton(text='\U0001F4E6 Пакунки', callback_data='wiki_pack'),
+                   InlineKeyboardButton(text='\u2B50 Досягнення', callback_data='wiki_achieve'))
         msg = '\U0001F4DC Паспорт\n\n' \
               '\U0001F3C6 Перемоги можна отримати за... перемоги в дуелях, масових та міжчатових битвах.\n' \
               '\U0001F3C5 Трофеї можна отримати за перемоги в масових та міжчатових битвах.\n' \
@@ -359,8 +359,8 @@ def wiki_text(data):
               '/promo_code <промокод>. Промокод, який зміцнює спорядження:\n' \
               + r.hget('promo_code', 'strength_promo_code').decode()
     elif data.startswith('wiki_pack'):
-        markup.add(InlineKeyboardButton(text='\U0001F4DC', callback_data='wiki_passport'),
-                   InlineKeyboardButton(text='\u2B50', callback_data='wiki_achieve'))
+        markup.add(InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'),
+                   InlineKeyboardButton(text='\u2B50 Досягнення', callback_data='wiki_achieve'))
         msg = 'Предмети в пакунках і шанси випадіння:\n\n' \
               '\u26AA Нічого - 20% (або радіотехніка)\n' \
               '\u26AA Спорядження класу - 18%\n' \
@@ -379,8 +379,8 @@ def wiki_text(data):
               '\U0001f7e1 Ярмулка - 0.225%\n' \
               '\U0001f7e1 Погон російського генерала - 0.1%'
     elif data.startswith('wiki_achieve'):
-        markup.add(InlineKeyboardButton(text='\U0001F4DC', callback_data='wiki_passport'),
-                   InlineKeyboardButton(text='\U0001F4E6', callback_data='wiki_pack'))
+        markup.add(InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'),
+                   InlineKeyboardButton(text='\U0001F4E6 Пакунки', callback_data='wiki_pack'))
         msg = 'Досягнення і як їх отримати:\n\n' \
               '\u26AA Хто не з нами, той нехай йде собі до сраки - попрацювати в Соледарі за допомогою секретної ' \
               'команди\n' \
