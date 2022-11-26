@@ -2895,14 +2895,7 @@ async def commands(message):
 @dp.message_handler(commands=['wiki'])
 async def wiki(message):
     try:
-        msg = '\U0001F1FA\U0001F1E6 @Random_UAbot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
-               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
-               'русаків, об`єднувати в клани, а також - вбивати.\nТут можна знайти майже всю інформацію щодо гри.'
-        markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton(text='\U0001F5E1 Бої', callback_data='wiki_duel'),
-                   InlineKeyboardButton(text='\U0001F4C8 Розвиток', callback_data='wiki_grow_feed'))
-        markup.add(InlineKeyboardButton(text='\U0001F530 Клан', callback_data='wiki_clan'),
-                   InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
+        msg, markup = wiki_text('wiki_menu')
         await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
