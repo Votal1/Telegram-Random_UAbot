@@ -497,6 +497,9 @@ async def mine(message):
                 await message.reply('Твій русак сьогодні відпрацював зміну.')
         except:
             await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+    else:
+        msg = 'Соляні шахти тут -> <a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>.'
+        await message.answer(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
 @dp.message_handler(commands=['stat'])

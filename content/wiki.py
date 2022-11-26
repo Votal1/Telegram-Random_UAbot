@@ -143,7 +143,7 @@ def wiki_text(data):
     elif data.startswith('wiki_org'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
-        markup.add(InlineKeyboardButton(text='\U0001f7e9Асоціація', callback_data='wiki_aso'),
+        markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
                    InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'))
         msg = '\U0001f7e8 Організація\n' \
               'Скасовуються податки. +6 гривень в кланову скарбницю за перемогу в міжчатовій битві.' \
@@ -160,9 +160,8 @@ def wiki_text(data):
               'Невільничий ринок - можливість купувати російських немовлят. Нові русаки з`являтимуться з 500+ сили.'
 
     elif data.startswith('wiki_grow_feed'):
-        markup.add(InlineKeyboardButton(text='\u2692', callback_data='wiki_grow_mine'),
-                   InlineKeyboardButton(text='\U0001F349', callback_data='wiki_grow_support'),
-                   InlineKeyboardButton(text='\U0001F919', callback_data='wiki_grow_class'))
+        markup.add(InlineKeyboardButton(text='\U0001F9C2 Сіль', callback_data='wiki_grow_mine'),
+                   InlineKeyboardButton(text='\U0001F919 Класи', callback_data='wiki_grow_class'))
         msg = '\U0001F4C8 Розвиток\n\nУ русака є дві основні характеристики - \U0001F4AA сила та \U0001F9E0 інтелект.' \
               '\n\n\U0001F372 Годуючи, можна збільшити силу на 1-30 та інтелект на 1 (шанс 20%). В магазині можна ' \
               'купити утеплену будку, яка збільшуватиме силу на 15 до 2000 сили. Якщо в русака від 3000 сили, то вона' \
@@ -170,31 +169,20 @@ def wiki_text(data):
               'зміниться.\nЗ шансом 30% годування збільшить \U0001F54A бойовий дух на 1000, а з шансом 5% - до ' \
               'максимуму(10000).\nМаксимальна кількість інтелекту - 20.'
     elif data.startswith('wiki_grow_mine'):
-        markup.add(InlineKeyboardButton(text='\U0001F372', callback_data='wiki_grow_feed'),
-                   InlineKeyboardButton(text='\U0001F349', callback_data='wiki_grow_support'),
-                   InlineKeyboardButton(text='\U0001F919', callback_data='wiki_grow_class'))
-        msg = '\u2692 Соляні шахти - місце, де можна заробити гроші (3-8) або інтелект (шанс 10%), відпрацювавши ' \
-              'зміну. Повністю прокачавши майстерність (/skills) можна заробляти на 2 гривні більше, збільшити шанс ' \
+        markup.add(InlineKeyboardButton(text='\U0001F372 Розвиток', callback_data='wiki_grow_feed'),
+                   InlineKeyboardButton(text='\U0001F919 Класи', callback_data='wiki_grow_class'))
+        msg = '\u2692 Соляні шахти (/mine)- місце, де можна заробити гроші (3-8) або інтелект (шанс 10%), ' \
+              'відпрацювавши зміну. ' \
+              'Повністю прокачавши майстерність (/skills) можна заробляти на 2 гривні більше, збільшити шанс ' \
               'отримати інтелект до 20% та зразу отримати 2 інтелекту. Якщо інтелект максимальний - може бути ' \
               'додатково видано 20 гривень. В суботу і неділю зарплата вдвічі більша. Також 20% шанс, що русак ' \
-              'втече і нап`ється. 25% шанс забрати з собою одну сіль.'
-    elif data.startswith('wiki_grow_support'):
-        markup.add(InlineKeyboardButton(text='\U0001F372', callback_data='wiki_grow_feed'),
-                   InlineKeyboardButton(text='\u26CF', callback_data='wiki_grow_mine'),
-                   InlineKeyboardButton(text='\U0001F919', callback_data='wiki_grow_class'))
-        msg = 'Спорядження, яке впливає на розвиток:\n\U0001F344 Мухомор королівський - в дуелі збільшує інтелект на ' \
-              '1, якщо русак б`ється проти розумнішого. Можна купити до 3 штук в мандрівного торговця.\n' \
-              '\U0001F35E Хліб справжній - збільшує шанс отримати 10000 бойового духу за годування до 100%.\n' \
-              '\U0001F9EA Цукор - збільшує силу за годування на 15 (до 3000) або зменшує шанс зменшення сили на ' \
-              '15%, додає 5 бойового трансу.\n' \
-              '\U0001F349 Кавун базований - збільшує силу за годування і гроші за зміну на 5. Зникає тільки ' \
-              'тоді, коли сила за годування зменшиться.\n' \
-              '\U0001F37A Квас - русак не втече зі зміни на соляних шахтах. Додає 5 бойового трансу.'
+              'втече і нап`ється. 25% шанс забрати з собою одну сіль.\n\n' \
+              '\U0001F9C2 Також сіль можна отримати виконуючи щоденні квести (/quest). Витрачати її можна в ' \
+              'спеціальному магазині на підвищення сили або інші товари.'
     elif data.startswith('wiki_grow_class'):
-        markup.add(InlineKeyboardButton(text='\U0001F372', callback_data='wiki_grow_feed'),
-                   InlineKeyboardButton(text='\u2692', callback_data='wiki_grow_mine'),
-                   InlineKeyboardButton(text='\U0001F349', callback_data='wiki_grow_support'))
-        msg = 'Розвинувши інтелект до певного рівня, можна вибрати клас. Вплив класів на розвиток:\n' \
+        markup.add(InlineKeyboardButton(text='\U0001F372 Розвиток', callback_data='wiki_grow_feed'),
+                   InlineKeyboardButton(text='\U0001F9C2 Сіль', callback_data='wiki_grow_mine'))
+        msg = 'Розвинувши інтелект до певного рівня, можна вибрати клас (/class). Вплив класів на розвиток:\n' \
               '\U0001F919\U0001F919\U0001F919 Гроза Кавказу кожен день може збільшувати силу на 10 та один раз - ' \
               'на 200.\n\U0001F9F0 Роботяга не хворіє, але вдвічі більше п`є.\n' \
               '\U0001F9F0\U0001F9F0 - Почесний алкаш швидше качає вміння.\n' \
