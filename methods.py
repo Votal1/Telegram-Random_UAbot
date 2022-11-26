@@ -600,16 +600,19 @@ async def ctop(sett, uid):
         if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
             r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
             everyone = r.hkeys(sett)
-            rating = {}
+            rating1, rating2, rating3 = {}, {}, {}
+            prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
+                      'Комуна', 'Коаліція', 'Асоціація', 'Організація',
+                      'Союз', 'Орден', 'Ліга', 'Корпорація']
+            tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
             for member in everyone:
                 try:
+                    tier = 3
                     try:
                         i = int(r.hget('c' + member.decode(), 'base'))
                         if i > 0:
-                            prefix = ['', 'Банда', 'Клан', 'Гільдія', 'Угруповання',
-                                      'Комуна', 'Коаліція', 'Асоціація', 'Організація',
-                                      'Союз', 'Орден', 'Ліга', 'Корпорація']
                             title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + member.decode(), 'title').decode()
+                            tier = int(r.hget('c' + member.decode(), 'tier'))
                         else:
                             title = r.hget('war_battle' + member.decode(), 'title').decode()
                     except:
@@ -618,14 +621,33 @@ async def ctop(sett, uid):
                     if '@' in title:
                         continue
                     stats = int(r.hget(222, member))
-                    line = title + '\n\U0001F3C5 ' + str(stats) + '\n'
-                    rating.update({line: stats})
+                    line = f'{title}\n\U0001F3C5 {stats} {tier_emoji[tier]}\n'
+                    if tier == 3:
+                        rating3.update({line: stats})
+                    elif tier == 2:
+                        rating2.update({line: stats})
+                    else:
+                        rating3.update({line: stats})
                 except:
                     continue
-            s_rating = sorted(rating, key=rating.get, reverse=True)
+            s_rating1 = sorted(rating1, key=rating1.get, reverse=True)
+            s_rating2 = sorted(rating2, key=rating2.get, reverse=True)
+            s_rating3 = sorted(rating3, key=rating3.get, reverse=True)
             result = ''
             place = 1
-            for n in s_rating:
+            for n in s_rating1:
+                place1 = str(place) + '. '
+                result += place1 + n
+                place += 1
+                if place == 11:
+                    break
+            for n in s_rating2:
+                place1 = str(place) + '. '
+                result += place1 + n
+                place += 1
+                if place == 11:
+                    break
+            for n in s_rating3:
                 place1 = str(place) + '. '
                 result += place1 + n
                 place += 1
