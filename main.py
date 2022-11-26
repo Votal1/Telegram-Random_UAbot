@@ -1737,6 +1737,7 @@ async def clan(message):
         except:
             pass
         msg = '\U0001F530 Тут можна знайти собі клан'
+        tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
         for mem in r.smembers('recruitment'):
             c = 'c' + mem.decode()
             if int(r.hget(c, 'rec_time')) != datetime.now().day:
@@ -1753,14 +1754,16 @@ async def clan(message):
                     continue
             num1 = r.scard('cl' + mem.decode())
             num2 = 25
-            cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title')
+            cl = r.hmget(c, 'base', 'link', 'complex', 'build5', 'title', 'tier')
             title = cl[4].decode().replace('<', '.').replace('>', '.')
+            tier = int(cl[5])
             link = cl[1].decode()
             if int(cl[2]) == 1:
                 num2 += 25
             if int(cl[3]) == 3:
                 num2 += 10
-            msg += f'\n\n<i>{prefix[int(cl[0])]}</i> <a href="{link}">{title}</a>\nУчасники: {num1} / {num2}'
+            msg += f'\n\n{tier_emoji[tier]}<i>{prefix[int(cl[0])]}</i> <a href="{link}">{title}</a>\n' \
+                   f'Учасники: {num1} / {num2}'
         if r.scard('recruitment') == 0:
             msg = '\U0001F530 На даний момент ніхто не шукає учасників в клан.'
         a = await bot.send_message(message.chat.id, msg, disable_web_page_preview=True, parse_mode='HTML')
