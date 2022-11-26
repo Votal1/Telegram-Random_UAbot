@@ -641,18 +641,20 @@ async def ctop(sett, uid):
                 place += 1
                 if place == 11:
                     break
-            for n in s_rating2:
-                place1 = str(place) + '. '
-                result += place1 + n
-                place += 1
-                if place == 11:
-                    break
-            for n in s_rating3:
-                place1 = str(place) + '. '
-                result += place1 + n
-                place += 1
-                if place == 11:
-                    break
+            if place != 11:
+                for n in s_rating2:
+                    place1 = str(place) + '. '
+                    result += place1 + n
+                    place += 1
+                    if place == 11:
+                        break
+            if place != 11:
+                for n in s_rating3:
+                    place1 = str(place) + '. '
+                    result += place1 + n
+                    place += 1
+                    if place == 11:
+                        break
             return 'Рейтинг найсильніших чатів\n\n' + result
 
     except:
