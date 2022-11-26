@@ -593,7 +593,7 @@ async def itop(uid, cid, chat):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-async def ctop(sett, uid):
+async def ctop(sett, uid, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
@@ -622,12 +622,18 @@ async def ctop(sett, uid):
                         continue
                     stats = int(r.hget(222, member))
                     line = f'{title}\n\U0001F3C5 {stats} {tier_emoji[tier]}\n'
-                    if tier == 3:
-                        rating3.update({line: stats})
-                    elif tier == 2:
-                        rating2.update({line: stats})
-                    else:
-                        rating1.update({line: stats})
+                    try:
+                        if text.split(' ')[1] == '-w':
+                            rating1.update({line: stats})
+                        else:
+                            raise Exception
+                    except:
+                        if tier == 3:
+                            rating3.update({line: stats})
+                        elif tier == 2:
+                            rating2.update({line: stats})
+                        else:
+                            rating1.update({line: stats})
                 except:
                     continue
             s_rating1 = sorted(rating1, key=rating1.get, reverse=True)
