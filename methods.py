@@ -124,7 +124,7 @@ def c_shop(c, page):
                    'Бронежилет захищає від мін.'
             markup.add(InlineKeyboardButton(text='Міни - 20 грн', callback_data='clan_bombs'))
         elif int(r.hget(c, 'build1')) == 3:
-            msg += '\n\U0001F5E1 Батіг [Атака, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
+            msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
                    'якщо нема жінки.'
             markup.add(InlineKeyboardButton(text='Батіг - 60 грн', callback_data='clan_lash'))
         elif int(r.hget(c, 'build1')) == 4:
@@ -136,7 +136,7 @@ def c_shop(c, page):
                    'битвах або рейдах на 25% (тільки для таксистів).'
             markup.add(InlineKeyboardButton(text='Дизель - 20 грн', callback_data='clan_diesel'))
         if int(r.hget(c, 'build5')) == 1:
-            msg += '\n\U0001F5E1 АК-47 [Атака, міцність=30] - після перемоги активує ефект горілки.'
+            msg += '\n\U0001F5E1 АК-47 [Зброя, міцність=30] - після перемоги активує ефект горілки.'
             markup.add(InlineKeyboardButton(text='АК-47 - 15 грн', callback_data='clan_ak'))
             msg += '\n\u2744\uFE0F Вушанка [Шапка, міцність=20] - збільшує ефективність бойового трансу на 2% за' \
                    ' кожен рівень алкоголізму.'
@@ -157,7 +157,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Російське немовля - 100 грн', callback_data='clan_children'))
 
         if int(r.hget(c, 'base')) == 11:
-            msg += '\n\u2708\uFE0F БпЛА [Атака, міцність=1] - за кожен рівень майстерності збільшує силу в ' \
+            msg += '\n\u2708\uFE0F БпЛА [Зброя, міцність=1] - за кожен рівень майстерності збільшує силу в ' \
                    'масовій битві на 50% та збільшує шанс не втратити зброю на 18%.'
             markup.add(InlineKeyboardButton(text='БпЛА - \U0001F4B5 50.',
                                             callback_data='clan_uav'))
@@ -181,7 +181,7 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='Горілка - \U0001F4B5 300',
                                             callback_data='clan_vodka'))
         if int(r.hget(c, 'base')) == 10:
-            msg += '\n\U0001f7e1 РПГ-7 [Атака, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
+            msg += '\n\U0001f7e1 РПГ-7 [Зброя, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
                    ' здоров`я і все спорядження).'
             markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 250, \U0001F4B5 500',
                                             callback_data='clan_rpg'))
