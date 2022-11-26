@@ -9,7 +9,8 @@ def wiki_text(data):
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Бої', callback_data='wiki_duel'),
                    InlineKeyboardButton(text='\U0001F4C8 Розвиток', callback_data='wiki_grow_feed'),
                    InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
-        markup.add(InlineKeyboardButton(text='\U0001F530 Клан', callback_data='wiki_clan'),
+        markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
+                   InlineKeyboardButton(text='\U0001F9ED Рівні', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
         msg = '\U0001F1FA\U0001F1E6 @Random_UAbot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
@@ -48,12 +49,14 @@ def wiki_text(data):
                    InlineKeyboardButton(text='\U0001F523 Шанси', callback_data='wiki_chances'))
         msg = '\U0001F4B0 Рейди\n\nМожна проводити, починаючи з будь-якого рівня, але зарейдити можуть тільки, якщо ' \
               'ваш рівень, як мінімум, угруповання і склад, заповнений на 10%.\nЯкщо рейд проти клану - 70% шанс ' \
-              'вкрасти ресурси, 20% - гроші, 10% - рускій дух.\n\nРейдові локації та нагороди:\n' \
+              'вкрасти ресурси, 20% - гроші, 10% - руській дух.\n\nРейдові локації та нагороди:\n' \
               'Відділення монобанку - гроші, якщо в групі є 2 хакери\n' \
               'Магазин алкоголю - горілка, здоров`я, бойовий дух\n' \
               'АТБ, Сільпо - квас / цукор / кавун / годування, 50% - гроші\n' \
               'Епіцентр - ресурси\n' \
-              'Макіївський роднічок - рускій дух\n\n' \
+              'Макіївський роднічок - рускій дух\n' \
+              'Ставок швайнокарасів - промокод\n' \
+              'Синагога - очки та баф, який збільшує нагороду за кошерні квести та замовлення ресурсів за погон\n\n' \
               'Перехоплення гумконвою - рейдовий режим, який можуть активувати тільки танкісти. Сила - ' \
               '2000000, оновлюється раз в день. Нагорода - по 1 пакунку за кожні 20000 сили команди. ' \
               'За повне розграбування додається 5 пакунків.\n' \
@@ -61,23 +64,71 @@ def wiki_text(data):
               'Синагога - можна активувати, перебуваючи у кланівій війні та якщо у всієї команди будуть ярмулки.' \
               '\n\nЗа будь-який рейд є 5% шанс випадіння \U0001F916 секретного коду.'
 
+    elif data.startswith('wiki_clan_description'):
+        markup.add(InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'),
+                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'))
+        msg = '\U0001F530 Клан - об`єднання русаків, яке з кожним рівнем додає більше бонусів.\n' \
+              'Всі команди для керування кланом є у /commands.\n Творець клану стає лідером. Заступники можуть' \
+              ' бути призначені лідером і мати майже такі самі можливості як лідер.\n\n' \
+              '\U0001F47E Для розвитку клану необхідно збирати ресурси (/work) та інвестувати гроші (/invest), щоб ' \
+              'покращувати рівень (/upgrade) та розвивати інфраструктуру (/build), ходити в міжчатові битви (/war) ' \
+              'та рейди (/raid) разом з учасниками. В певний момент доведеться захищатись від рейдерів (/guard).'
+
+    elif data.startswith('wiki_clan_build'):
+        markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
+                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'))
+        msg = '\U0001F3D7 Список побудов клану, гільдії та угруповання\n\n' \
+              '\U0001F3E0 Пилорама - можливість добувати \U0001F333 5-15 деревини від роботи.\n' \
+              '\U0001F3E0 Шахта - можливість добувати \U0001faa8 2-10 каміння від роботи.\n' \
+              '\U0001F3E0 Склад - можливість зберігати всі види ресурсів.\n' \
+              '\U0001F3E0 Цех - можливість добувати \U0001F9F6 2-5 тканини від роботи.\n' \
+              '\U0001F3E0 Відділення НП - можливість отримувати \U0001F4FB радіотехніку з пакунків. При включеній ' \
+              'зарплаті (/clan_settings), за роботу видаватиметься \U0001F4E6 пакунок (але +2грн податку).\n\n' \
+              '\U0001F3E1 Силікатний завод - можливість добувати \U0001F9F1 1-3 цегли від роботи.\n' \
+              '\U0001F3E1 Житловий комплекс - розширення максимальної кількості учасників з 25 до 50.\n' \
+              '\U0001F3E1 Їдальня - доступ до команди /clan_shop. Продаж кількох товарів, що збільшують ' \
+              'бойовий дух русаків.\n' \
+              '\U0001F3E1 Монумент - можливість для лідера у \n/clan_shop витрачати \U0001F47E рускій дух.\n' \
+              '\U0001F3E1 Стіна оголошень - додатковий щоденний квест (ще +1 через два апгрейди).\n\n' \
+              '\U0001F3D8 Блокпост - можливість захищатись від рейдів.\n' \
+              '\U0001F3D8 Концтабір - вдвічі більше ресурсів від роботи, якщо є другий русак.\n' \
+              '\U0001F3D8 Морг - +0.2% сили в міжчатовій битві за кожного вбитого русака (максимум 20%). ' \
+              '\U0001F47E +1 за кожне жертвоприношення.\n'
+
+    elif data.startswith('wiki_clan_war'):
+        markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
+                   InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'))
+        msg = '[beta]\n\n\U0001f4ef Кланові війни - спосіб просунути клан в топ та отримати додаткові нагороди. ' \
+              'Їхня суть - за 5 днів набрати більше очок ніж ворожий клан.\n/clan_war - зареєструватись на війни ' \
+              '(тільки на вихідних). Проходитимуть вони протягом робочого тижня.\n\n' \
+              '\U0001fa99 Від 1 до 5 очків можна гарантовано отримати за перемогу проти ворожого клану в міжчатовій' \
+              ' битві або рейді та з шансом 10% проти будь-якого клану в міжчатовій битві. Квестові очки видаються ' \
+              'за квести або бафи (максимум 500) та сумуються до загальної кількості.\n\n' \
+              '\U0001f7e1 Бафи додають певні бонуси у війнах. Чотири з них можна купити у /clan_shop. Перші три ' \
+              'одинакові для всіх, четвертий може відрізнятись від рівня клану. П`ятий баф можна отримати з ' \
+              'успішних рейдів на синагогу (три рази на війну).\n\n' \
+              '\U0001F947 Якщо набрати на 25% більше чи меншу очків, ніж противник - клан змінисть свій тір. ' \
+              'Від нього залежить нагорода, підбір ворогів та рейтинг клану.\n\n' \
+              '\U0001fa99 Не зважаючи на те, перемогли ви чи ні, кожному учаснику буде видано по (очки/15) пакунків.' \
+              ' А за перемогу отримаєте:\n' \
+              'Тір-3: \U0001F9C2 5\n' \
+              'Тір-2: \U0001F9C2 10\n' \
+              'Тір-1: \U0001F9C2 20 \U0001F916 5'
+
     elif data.startswith('wiki_clan'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
                    InlineKeyboardButton(text='\U0001f7e8 Організація', callback_data='wiki_org'))
-        msg = '\U0001F530 Клан - об`єднання русаків, яке з кожним рівнем додає більше бонусів.\n' \
-              'Всі команди для керування кланом є у /commands.\n' \
-              'Творець клану стає лідером. Заступники можуть бути призначеі лідером і мати майже такі самі можливості' \
-              ' як лідер.\n\nРівні кланів:\n\n\U0001f6d6 Банда - можливість обирати фашиста дня, добувати та зберігат' \
-              'и деревину і каміння.\n' \
+        msg = '\U0001F9ED Рівні кланів:\n\n' \
+              '\U0001f6d6 Банда - можливість обирати фашиста дня, добувати та зберігати деревину і каміння.\n' \
               '\U0001F3E0 Клан - \U0001F4B5 +6 гривень та \U0001F47E +1 рускій дух за перемоги в міжчатових боях, ' \
               'якщо серед учасників всі з клану.\n' \
               '\U0001F3E1 Гільдія - \U0001F4B5 +34% за роботу на шахтах Соледару.\n' \
               '\U0001F3D8 Угруповання - \U0001F4B5 шанс подвоїти грошову нагороду за перемогу в дуелях.\n\n' \
               'Далі доведеться вибрати один з чотирьох рівнів, які є відсиланням на політичний компас.'
     elif data.startswith('wiki_com'):
-        markup.add(InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'),
+        markup.add(InlineKeyboardButton(text='\U0001F9ED', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
                    InlineKeyboardButton(text='\U0001f7e8 Організація', callback_data='wiki_org'))
@@ -97,7 +148,7 @@ def wiki_text(data):
               'отримати додаткове годування по 1% за кожну тисячу деревини, каменю, тканини і цегли.'
     elif data.startswith('wiki_coa'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
-                   InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'))
+                   InlineKeyboardButton(text='\U0001F9ED', callback_data='wiki_clan'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
                    InlineKeyboardButton(text='\U0001f7e8 Організація', callback_data='wiki_org'))
         msg = '\U0001f7e6 Коаліція\n' \
@@ -121,7 +172,7 @@ def wiki_text(data):
     elif data.startswith('wiki_aso'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
-        markup.add(InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'),
+        markup.add(InlineKeyboardButton(text='\U0001F9ED', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001f7e8 Організація', callback_data='wiki_org'))
         msg = '\U0001f7e9 Асоціація\n' \
               'Зменшує силу локацій в рейдах на 50%. При отриманні грошової нагороди - ' \
@@ -144,7 +195,7 @@ def wiki_text(data):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
-                   InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'))
+                   InlineKeyboardButton(text='\U0001F9ED', callback_data='wiki_clan'))
         msg = '\U0001f7e8 Організація\n' \
               'Скасовуються податки. +6 гривень в кланову скарбницю за перемогу в міжчатовій битві.' \
               '\n\nІнфраструктура:\n' \
