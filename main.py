@@ -1718,7 +1718,7 @@ async def clan(message):
                     r.hset(message.from_user.id, 'fsb', datetime.now().day)
                     ran = choice([2, 1, 1, 1, 0])
                     if ran == 2:
-                        await bot.send_message(message.from_user.id, 'Агент втервся в довіру до керівництва і випросив '
+                        await bot.send_message(message.from_user.id, 'Агент втерся в довіру до керівництва і випросив '
                                                                      'трохи грошей.\n\U0001F4B5 +20')
                         r.hincrby(message.from_user.id, 'money', 20)
                         r.hincrby(c, 'money', -20)
