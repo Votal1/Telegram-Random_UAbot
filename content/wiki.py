@@ -7,13 +7,14 @@ def wiki_text(data):
     markup = InlineKeyboardMarkup()
     if data == 'wiki_menu':
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Бої', callback_data='wiki_duel'),
-                   InlineKeyboardButton(text='\U0001F4C8 Розвиток', callback_data='wiki_grow_feed'))
+                   InlineKeyboardButton(text='\U0001F4C8 Розвиток', callback_data='wiki_grow_feed'),
+                   InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
         markup.add(InlineKeyboardButton(text='\U0001F530 Клан', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
         msg = '\U0001F1FA\U0001F1E6 @Random_UAbot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
               'русаків, об`єднувати в клани, а також - вбивати.\nТут можна знайти майже всю інформацію щодо гри.'
-    if data.startswith('wiki_duel'):
+    elif data.startswith('wiki_duel'):
         markup.add(InlineKeyboardButton(text='\U0001F523', callback_data='wiki_chances'),
                    InlineKeyboardButton(text='\U0001F4B0', callback_data='wiki_raid'))
         msg = '\u2694\uFE0F Існує 4 типи боїв:\n\n\U0001F5E1 Дуелі - проводяться за викликом бота в інлайн режимі. ' \
@@ -30,7 +31,7 @@ def wiki_text(data):
               'іальними нагородами та класові локації з нагородою для певного класу.\n\n' \
               '\U0001F4B0 Рейди (/raid) - 5 русаків в своєму клані збираються проводити рейд на інший клан або локац' \
               'ію. Можна проводити раз в годину.'
-    if data.startswith('wiki_chances'):
+    elif data.startswith('wiki_chances'):
         markup.add(InlineKeyboardButton(text='\u2694\uFE0F', callback_data='wiki_duel'),
                    InlineKeyboardButton(text='\U0001F4B0', callback_data='wiki_raid'))
         msg = '\U0001F523 Шанси\n\nДуелі:\n' \
@@ -42,7 +43,7 @@ def wiki_text(data):
               '\U0001F464 Шизофренія - втричі зменшує інтелект та вдвічі - бойовий дух.\n' \
               '\U0001F44A Бойовий транс - збільшує силу на 20% та бойовий дух - на 80%. Кількість трансу не може ' \
               'бути більшою, ніж кількість інтелекту.'
-    if data.startswith('wiki_raid'):
+    elif data.startswith('wiki_raid'):
         markup.add(InlineKeyboardButton(text='\u2694\uFE0F', callback_data='wiki_duel'),
                    InlineKeyboardButton(text='\U0001F523', callback_data='wiki_chances'))
         msg = '\U0001F4B0 Рейди\n\nМожна проводити, починаючи з будь-якого рівня, але зарейдити можуть тільки, якщо ' \
@@ -59,7 +60,7 @@ def wiki_text(data):
               'Ставок швайнокарасів - ще секретніший рейдовий режим...\n\n' \
               'За будь-який рейд є 5% шанс випадіння \U0001F916 секретного коду.'
 
-    if data.startswith('wiki_clan'):
+    elif data.startswith('wiki_clan'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
@@ -74,7 +75,7 @@ def wiki_text(data):
               '\U0001F3E1 Гільдія - \U0001F4B5 +34% за роботу на шахтах Соледару.\n' \
               '\U0001F3D8 Угруповання - \U0001F4B5 шанс подвоїти грошову нагороду за перемогу в дуелях.\n\n' \
               'Далі доведеться вибрати один з чотирьох рівнів, які є відсиланням на політичний компас.'
-    if data.startswith('wiki_com'):
+    elif data.startswith('wiki_com'):
         markup.add(InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
@@ -93,7 +94,7 @@ def wiki_text(data):
               'Воєнкомат - можливість купити АК-47 та вушанку або безкоштовно отримати за охорону.\n' \
               'Гулаг - за покидання клану сила двох русаків зменшиться на 20%. За роботу чи охорону буде шанс ' \
               'отримати додаткове годування по 1% за кожну тисячу деревини, каменю, тканини і цегли.'
-    if data.startswith('wiki_coa'):
+    elif data.startswith('wiki_coa'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9 Асоціація', callback_data='wiki_aso'),
@@ -116,7 +117,7 @@ def wiki_text(data):
               'Ферма - годування русака лікує до 30 поранень. Можливість зберегти кавун ще на 1 годування.\n' \
               'Ядерний бункер - шизофренія не впливатиме негативно на міжчатові битви, рейди та охорону, а навпаки - ' \
               'додаватиме 5 інтелекту. Можливість купляти шапочки з фольги.'
-    if data.startswith('wiki_aso'):
+    elif data.startswith('wiki_aso'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001F530', callback_data='wiki_clan'),
@@ -138,7 +139,7 @@ def wiki_text(data):
               'момент (не треба чекати тиждень після вступу в попередній клан, а 3 години).\n' \
               'Офіс Червоного Хреста - можливість лікувати весь клан, та проводити перерозподіл багатств - за 500 ' \
               'гривень з скарбниці по 100 гривень 5 найбіднішим учасникам.'
-    if data.startswith('wiki_org'):
+    elif data.startswith('wiki_org'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),
                    InlineKeyboardButton(text='\U0001f7e6 Коаліція', callback_data='wiki_coa'))
         markup.add(InlineKeyboardButton(text='\U0001f7e9Асоціація', callback_data='wiki_aso'),
@@ -157,7 +158,7 @@ def wiki_text(data):
               'Торговий центр - можливість купити Цукор і квас для себе та Кавун базований для всього клану.\n' \
               'Невільничий ринок - можливість купувати російських немовлят. Нові русаки з`являтимуться з 500+ сили.'
 
-    if data.startswith('wiki_grow_feed'):
+    elif data.startswith('wiki_grow_feed'):
         markup.add(InlineKeyboardButton(text='\u2692', callback_data='wiki_grow_mine'),
                    InlineKeyboardButton(text='\U0001F349', callback_data='wiki_grow_support'),
                    InlineKeyboardButton(text='\U0001F919', callback_data='wiki_grow_class'))
@@ -167,7 +168,7 @@ def wiki_text(data):
               ' може зменшитись з шансом 20%, а якщо більше 4000 - 40%. Також є 20% шанс шо русак захворіє і нічо не ' \
               'зміниться.\nЗ шансом 30% годування збільшить \U0001F54A бойовий дух на 1000, а з шансом 5% - до ' \
               'максимуму(10000).\nМаксимальна кількість інтелекту - 20.'
-    if data.startswith('wiki_grow_mine'):
+    elif data.startswith('wiki_grow_mine'):
         markup.add(InlineKeyboardButton(text='\U0001F372', callback_data='wiki_grow_feed'),
                    InlineKeyboardButton(text='\U0001F349', callback_data='wiki_grow_support'),
                    InlineKeyboardButton(text='\U0001F919', callback_data='wiki_grow_class'))
@@ -176,7 +177,7 @@ def wiki_text(data):
               'отримати інтелект до 20% та зразу отримати 2 інтелекту. Якщо інтелект максимальний - може бути ' \
               'додатково видано 20 гривень. В суботу і неділю зарплата вдвічі більша. Також 20% шанс, що русак ' \
               'втече і нап`ється. 25% шанс забрати з собою одну сіль.'
-    if data.startswith('wiki_grow_support'):
+    elif data.startswith('wiki_grow_support'):
         markup.add(InlineKeyboardButton(text='\U0001F372', callback_data='wiki_grow_feed'),
                    InlineKeyboardButton(text='\u26CF', callback_data='wiki_grow_mine'),
                    InlineKeyboardButton(text='\U0001F919', callback_data='wiki_grow_class'))
@@ -188,7 +189,7 @@ def wiki_text(data):
               '\U0001F349 Кавун базований - збільшує силу за годування і гроші за зміну на 5. Зникає тільки ' \
               'тоді, коли сила за годування зменшиться.\n' \
               '\U0001F37A Квас - русак не втече зі зміни на соляних шахтах. Додає 5 бойового трансу.'
-    if data.startswith('wiki_grow_class'):
+    elif data.startswith('wiki_grow_class'):
         markup.add(InlineKeyboardButton(text='\U0001F372', callback_data='wiki_grow_feed'),
                    InlineKeyboardButton(text='\u2692', callback_data='wiki_grow_mine'),
                    InlineKeyboardButton(text='\U0001F349', callback_data='wiki_grow_support'))
@@ -204,7 +205,141 @@ def wiki_text(data):
               '\U0001F6AC\U0001F6AC Зек вдвічі збільшує бонус сили від утепленої будки.\n' \
               '\U0001F396 Офіцер може отримати інтелект в міжчатових битвах.'
 
-    if data.startswith('wiki_passport'):
+    elif data.startswith('wiki_weapons_0'):
+        markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class'))
+        markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
+                   InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
+        markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
+                   InlineKeyboardButton(text='\U0001F3A9 Шапка', callback_data='wiki_weapons_4'))
+        msg = '\U0001F9F3 Інвентар (/i) вміщує спорядження чотирьох типів - Зброя, Захист, Допомога та Шапка. ' \
+              'Зазвичай зброя використовується в дуелях при атаці, захист в дуелях, коли кидаєш бій, ' \
+              'а допомога і шапка - в певних випадках.\n\n' \
+              '\U0001F510 В інвентарі можна викинути непотрібне спорядження, для того, щоб купити або отримати нове ' \
+              'з успішних рейдів, оскільки в багатьох випадках воно не заміняється автоматично.'
+
+    elif data.startswith('wiki_weapons_class'):
+        markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
+        markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
+                   InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
+        markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
+                   InlineKeyboardButton(text='\U0001F3A9 Шапка', callback_data='wiki_weapons_4'))
+        msg = '\U0001F9F3 Список класового спорядження та додаткові ефекти від їхніх покращених версій ' \
+              '(отримуються тоді, коли міцність класового спорядження досягає десятикратного значення)\n\n' \
+              '\U0001F919 Травмат [Зброя, міцність=5] - зменшує силу ворога на бій на 50%.\n' \
+              '\u2B06\uFE0F Револьвер - також зменшує інтелект та бойовий дух ворога на бій на 50%.\n' \
+              '\U0001F9F0 Діамантове кайло [Зброя, міцність=25] - збільшує силу, інтелект і бойовий дух ' \
+              'на 20%.\n' \
+              '\u2B06\uFE0F Незеритове кайло - 66% шанс не зменшити міцність в дуелях.\n' \
+              '\U0001F52E Колода з кіоску [Зброя, міцність=3] - міняє твої характеристики з ворогом на бій.\n' \
+              '\u2B06\uFE0F Колода Таро - передає 5 своєї шизофренії ворогу.\n' \
+              '\U0001F5FF Сокира Перуна [Зброя, міцність=1] - при перемозі забирає весь бойовий дух ворога, ' \
+              'при поразці ворог забирає твій.\n' \
+              '\u2B06\uFE0F Рунічна сокира Перуна - при перемозі забирає весь бойовий транс ворога, ' \
+              'при поразці ворог забирає твій.\n' \
+              '\U0001fa96 АК-47 [Зброя, міцність=30] - після перемоги активує ефект горілки.\n' \
+              '\u2B06\uFE0F АКМ - +25% сили в міжчатових битвах.\n' \
+              '\U0001F46E Гумова палиця [Зброя, міцність=∞] - постійна зброя. В дуелі ігнорує бойовий дух двох ' \
+              'сторін. Якщо є поліцейський щит - ігнорує лише бойовий дух ворога.\n' \
+              '\U0001F46E Поліцейський щит [Захист, міцність=10] - зменшує силу ворога на 20% як і в захисті, ' \
+              'так і в атаці.\n' \
+              '\u2B06\uFE0F Важкий поліцейський щит - ігнорує РПГ та міни.\n' \
+              '\U0001F921 Прапор новоросії [Зброя, міцність=8] - додаткова перемога за перемогу в дуелі.\n' \
+              '\u2B06\uFE0F Прапор СРСР - +2 бойового трансу за перемогу в дуелі.\n' \
+              '\U0001F4DF Експлойт [Зброя, міцність=2] - шанс активувати здібність хакера - 99%.\n' \
+              '\u2B06\uFE0F Rootkit - Black Hat може отримати до 10 гривень.\n' \
+              '\u26D1 Медична пилка [Зброя, міцність=8] - якщо у ворога нема поранень - завдає 1, якщо ' \
+              'більше 4 - лікує 10 і забирає 10 здоров`я.\n' \
+              '\u2B06\uFE0F Ампутатор - зменшує міцність захисту ворога на 3 або лікує до 15 поранень.\n' \
+              '\U0001F6AC Скляна пляшка [Зброя, міцність=10] - зменшує інтелект ворогу на 10.\n' \
+              '\u2B06\uFE0F Кастет - завдає ворогу 1 поранення і шизофренію.\n' \
+              '\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових битвах ' \
+              'або рейдах на 25%.\n' \
+              '\u2B06\uFE0F Ракетне паливо - збільшує силу групи на 15% при розграбуванні гумконвоїв ' \
+              '(стакається).\n\U0001F396 Палаш [Зброя, міцність=15] - +50% сили проти русаків без клану.\n' \
+              '\u2B06\uFE0F Золотий палаш - додаткові +50% сили проти тих, хто не має погонів ' \
+              'російських генералів.'
+    elif data.startswith('wiki_weapons_1'):
+        markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class'))
+        markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'),
+                   InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
+        markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
+                   InlineKeyboardButton(text='\U0001F3A9 Шапка', callback_data='wiki_weapons_4'))
+        msg = '\U0001F5E1 Список зброї\n\n' \
+              '\u26AA Колючий дрин [міцність=1] - перед боєм онуляє ворогу бойовий дух, якщо його значення ' \
+              'від 300 до 1000, зменшує на 1000, якщо від 1000 до 2500 і зменшує на 20/30/40%, якщо бойовий ' \
+              'дух більше 2500). Можна купити в магазині.\n' \
+              '\u26AA Бита [міцність=3] - те саме, що і колючий дрин, але зі збільшеною міцністю. Доступний для ' \
+              'покупки в магазині Скінхеду чи Білому вождю.\n' \
+              '\U0001f535 БпЛА [міцність=1] - за кожен рівень майстерності (/skills) збільшує силу в масовій битві ' \
+              'на 50% та збільшує шанс не втратити зброю на 18%. Можна купити в мандрівного торговця або в Лізі.\n' \
+              '\U0001f7e3 Батіг [міцність=3] - збільшує силу в рейдах на 25%, або на 75%, якщо нема жінки. ' \
+              'Доступно для покупки в Асоціації.\n' \
+              '\U0001f7e1 РПГ-7 - [міцність=1] - віднімає ворогу бойовий дух, здоров`я і все спорядження, завдає 300 ' \
+              'поранень. Можна знайти в пакунках або купити в Ордені.'
+    elif data.startswith('wiki_weapons_2'):
+        markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class'))
+        markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
+                   InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
+        markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
+                   InlineKeyboardButton(text='\U0001F3A9 Шапка', callback_data='wiki_weapons_4'))
+        msg = '\U0001F6E1 Список захисного спорядження\n\n' \
+              '\u26AA Колючий щит [міцність=1] - перед боєм онуляє атакуючому ворогу бойовий дух, якщо його значення ' \
+              'від 300 до 1000, зменшує на 1000, якщо від 1000 до 2500 і зменшує на 20/30/40%, якщо бойовий ' \
+              'дух більше 2500). Можна купити в магазині.\n' \
+              '\u26AA Уламок бронетехніки [міцність=7] - збільшує силу на бій на 30%. Після зношення отримаєте ' \
+              '4 гривні. Можна знайти в пакунку або купити в мандрівного торговця.\n' \
+              '\U0001f535 Міни [міцність=3] - з шансом 33% завдає ворогу 5 поранень і зменшує міцність зброї на 5. ' \
+              'Можливість використати міни при захисті клану. Бронежилет захищає від мін. ' \
+              'Доступні для покупки в торговця та в Коаліції.\n' \
+              '\U0001f7e1 Бронежилет вагнерівця [міцність=50] - зменшує силу ворога на бій на 75% та захищає від' \
+              ' РПГ-7. Можна знайти в пакунках або купити в Ордені.'
+    elif data.startswith('wiki_weapons_3'):
+        markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class'))
+        markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
+                   InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
+        markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'),
+                   InlineKeyboardButton(text='\U0001F3A9 Шапка', callback_data='wiki_weapons_4'))
+        msg = '\U0001F9EA Список допоміжного спорядження\n\n' \
+              '\u26AA Аптечка [міцність=5] - збільшує здоров`я на 5 при купівлі і на 10 в дуелі. Якщо слот допомоги' \
+              ' зайнятий - додає 50 здоров`я. Можна купити в магазині.\n' \
+              '\u26AA Сокира [міцність=3] - дає можливість добути 1-10 деревини, поки не побудований клан. ' \
+              'Можна купити в Банді.\n' \
+              '\u26AA Кайло [міцність=3] - дає можливість добути 1-5 каміння, поки не побудований клан. ' \
+              'Можна купити в Банді.\n' \
+              '\u26AA Хліб справжній [міцність=1] - додає \U0001F54A +10000 при годуванні. ' \
+              'Якщо допоміжне спорядження вже є, додає \U0001F54A +3000. Можна купити в Гільдії.\n' \
+              '\U0001f535 Цукор [міцність=2] - збільшує силу за годування на 15 (до 3000) або' \
+              ' зменшує шанс зменшення сили на 15%. Додає 5 бойового трансу. Можна купити в мандрівного торговця, ' \
+              'отримати в рейдах, купити в Корпорації.\n' \
+              '\U0001f535 Квас [міцність=5] - русак не втече зі зміни. Додає 5 бойового трансу за роботу в шахті.' \
+              ' Можна купити в мандрівного торговця, отримати в рейдах, купити в Корпорації.\n' \
+              '\U0001f7e3 Мухомор королівський [міцність=1] - якщо у ворога більший інтелект, додає +1 інтелекту ' \
+              '(не діє проти фокусників). На бій зменшує свою силу на 50%.\n' \
+              '\U0001f7e1 Швайнокарась [міцність=3, максимальна_міцність=3] - може виконувати бажання русаків ' \
+              '(відпочивати, нажертись, напитись).'
+    elif data.startswith('wiki_weapons_4'):
+        markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class'))
+        markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
+                   InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
+        markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
+                   InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
+        msg = '\U0001F3A9 Список шапок\n\n' \
+              '\U0001f535 Вушанка [міцність=20] - збільшує ефективність бойового трансу на 2% за кожен рівень' \
+              ' алкоголізму (/skills). Можна купити в мандрівного торговця або в Союзі.\n' \
+              '\U0001f535 Кавун базований [міцність=∞] - збільшує силу за годування і гроші за зміну на 5. ' \
+              'Зникає тільки тоді, коли сила за годування зменшиться. Можна купити в мандрівного торговця, ' \
+              'отримати в рейдах, купити в Корпорації.\n' \
+              '\U0001f535 Кавуняча крінжа [міцність=1] - збільшує силу за годування і гроші за зміну на 5. ' \
+              'Можна отримати в Ордені, якщо зникає кавун.\n' \
+              '\U0001f7e3 Шапочка з фольги [міцність=10] - захищає від втрати бойового духу при жертвоприношеннях. ' \
+              'При купівлі в торговця чи в Ордені русак отримує 30 шизофренії, а при отриманні з пакунків - 10.\n' \
+              '\U0001f7e3 Тактичний шолом [міцність=40] - збільшує силу в дуелях і міжчатових битвах на 31%. ' \
+              'Можна купити в Коаліції.\n' \
+              '\U0001f7e1 Ярмулка [міцність=7, імунітет_до_РПГ] - надає доступ до кошерних квестів (вдвічі більша ' \
+              'нагорода, але і більша складність їх виконання). 100% шанс отримати сіль в соляних шахтах. ' \
+              'Міцність зменшується при взятті квестів. Можна знайти в пакунку або купити в магазині за погон.'
+
+    elif data.startswith('wiki_passport'):
         markup.add(InlineKeyboardButton(text='\U0001F4E6', callback_data='wiki_pack'),
                    InlineKeyboardButton(text='\u2B50', callback_data='wiki_achieve'))
         msg = '\U0001F4DC Паспорт\n\n' \
@@ -219,9 +354,10 @@ def wiki_text(data):
               '\u2B50 /achieve - подивитись досягнення (ачівки - фрази з українських пісень).\n\n' \
               '\U0001F947 Формула розрахунку рейтингу:\n' \
               'Рейтинг = сила + інтелект * 10 + перемоги + трофеї * 10 + вбивства * 14 + немовлята * 88\n\n' \
-              '\u26CF Промокоди - невелика нагорода, яку можна отримати один раз. Промокод, який зміцнює ' \
-              'спорядження:\n' + r.hget('promo_code', 'strength_promo_code').decode()
-    if data.startswith('wiki_pack'):
+              '\u26CF Промокоди - невелика нагорода, яку можна отримати один раз, активувавши командою ' \
+              '/promo_code <промокод>. Промокод, який зміцнює спорядження:\n' \
+              + r.hget('promo_code', 'strength_promo_code').decode()
+    elif data.startswith('wiki_pack'):
         markup.add(InlineKeyboardButton(text='\U0001F4DC', callback_data='wiki_passport'),
                    InlineKeyboardButton(text='\u2B50', callback_data='wiki_achieve'))
         msg = 'Предмети в пакунках і шанси випадіння:\n\n' \
@@ -241,7 +377,7 @@ def wiki_text(data):
               '\U0001f7e1 Швайнокарась - 0.225%\n' \
               '\U0001f7e1 Ярмулка - 0.225%\n' \
               '\U0001f7e1 Погон російського генерала - 0.1%'
-    if data.startswith('wiki_achieve'):
+    elif data.startswith('wiki_achieve'):
         markup.add(InlineKeyboardButton(text='\U0001F4DC', callback_data='wiki_passport'),
                    InlineKeyboardButton(text='\U0001F4E6', callback_data='wiki_pack'))
         msg = 'Досягнення і як їх отримати:\n\n' \
