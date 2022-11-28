@@ -5671,7 +5671,7 @@ async def handle_query(call):
                                                             text='У вас вже є цей баф.')
 
                     if call.data.startswith('clan_buff_3'):
-                        if int(r.hget(c, 'buff_2')) == 0:
+                        if int(r.hget(c, 'buff_3')) == 0:
                             if int(r.hget(c, 'codes')) >= 20 and int(r.hget(c, 'technics')) >= 100:
                                 r.hincrby(c, 'codes', -20)
                                 r.hincrby(c, 'technics', -100)
