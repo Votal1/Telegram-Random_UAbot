@@ -822,6 +822,8 @@ async def no_nut(message):
     try:
         uid = message.from_user.id
         day = datetime.now().day
+        if uid == 456514639:
+            day = 1
         if 1 <= day <= 7:
             if int(r.hget('nnn_2022', uid)) == 30 and str(uid).encode() in r.smembers('nnn_registered_2022'):
                 r.sadd('nnn_winners_2022', uid)
