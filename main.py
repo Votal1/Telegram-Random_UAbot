@@ -841,6 +841,8 @@ async def no_nut(message):
                 intellect(mind, uid)
                 if mind > 0:
                     mind = f' \U0001F9E0 +{mind}'
+                else:
+                    mind = ''
                 spirit(10000, uid, 0)
                 if r.hexists(uid, 'woman') and int(r.hget(uid, 'woman')) == 1:
                     r.hincrby(uid, 'childs', 5)
