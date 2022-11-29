@@ -852,8 +852,8 @@ async def no_nut(message):
                     wom = '\U0001F469\U0001F3FB +1'
                 name = names[int(r.hget(uid, 'name'))]
                 await message.reply(f'{name} успішно завершив челендж No Nut November!\n\U0001F4AA +{power}'
-                                    f'{mind} \U0001F54A +10000 {wom} ')
-            else:
+                                    f'{mind} \U0001F54A +10000 {wom}')
+            elif str(uid).encode() in r.smembers('nnn_registered_2022'):
                 r.srem('nnn_registered_2022', uid)
                 await message.reply(f'\U0001F534 Твій русак не впорався з цим важким челенджом...')
         elif str(uid).encode() in r.smembers('nnn_registered_2022'):
