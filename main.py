@@ -82,8 +82,7 @@ async def handle_links(message):
                         '@randomuanews - новини, патчноути, опитування\n\n'
                         '@borykva - осередок цебулізму\n'
                         '@ukrnastup - осередок сучасного українського націоналізму\n'
-                        '@golovkaothuya - крінж і шітпост, рекомендую\n@digital_anon - подкасти\n'
-                        '@archive_st - брендові стікери\n'
+                        '@gatilnia - гумор з однокласників\n'
                         '<a href="https://t.me/vota_l">@vota_l</a> - завдяки ньому ти натиснув цю кнопку',
                         parse_mode='HTML', disable_web_page_preview=True)
 
