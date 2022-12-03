@@ -66,7 +66,8 @@ def wiki_text(data):
 
     elif data.startswith('wiki_clan_description'):
         markup.add(InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'),
-                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'))
+                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'),
+                   InlineKeyboardButton(text='\U0001faac Бафи', callback_data='wiki_clan_buff'))
         msg = '\U0001F530 Клан - об`єднання русаків, яке з кожним рівнем додає більше бонусів.\n' \
               'Всі команди для керування кланом є у /commands.\n Творець клану стає лідером. Заступники можуть' \
               ' бути призначені лідером і мати майже такі самі можливості як лідер.\n\n' \
@@ -76,7 +77,8 @@ def wiki_text(data):
 
     elif data.startswith('wiki_clan_build'):
         markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
-                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'))
+                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'),
+                   InlineKeyboardButton(text='\U0001faac Бафи', callback_data='wiki_clan_buff'))
         msg = '\U0001F3D7 Список побудов клану, гільдії та угруповання\n\n' \
               '\U0001F3E0 Пилорама - можливість добувати \U0001F333 5-15 деревини від роботи.\n' \
               '\U0001F3E0 Шахта - можливість добувати \U0001faa8 2-10 каміння від роботи.\n' \
@@ -97,13 +99,14 @@ def wiki_text(data):
 
     elif data.startswith('wiki_clan_war'):
         markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
-                   InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'))
+                   InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'),
+                   InlineKeyboardButton(text='\U0001faac Бафи', callback_data='wiki_clan_buff'))
         msg = '[beta]\n\n\U0001f4ef Кланові війни - спосіб просунути клан в топ та отримати додаткові нагороди. ' \
               'Їхня суть - за 5 днів набрати більше очок ніж ворожий клан.\n/clan_war - зареєструватись на війни ' \
               '(тільки на вихідних). Проходитимуть вони протягом робочого тижня.\n\n' \
               '\U0001fa99 В міжчатовій битві за перемогу можна отримати від 1 до 5 очків проти ворожого та з ' \
               'шансом 10% проти будь-якого клану. За успішний рейд на ворожий клан можна отримати 5-10 очків. ' \
-              'Квестові очки видаються за квести або бафи (максимум 500) та сумуються до загальної кількості.\n\n' \
+              'Квестові очки видаються за квести або бафи (максимум 800) та сумуються до загальної кількості.\n\n' \
               '\U0001f7e1 Бафи додають певні бонуси у війнах. Чотири з них можна купити у /clan_shop. Перші три ' \
               'одинакові для всіх, четвертий може відрізнятись від рівня клану. П`ятий баф можна отримати з ' \
               'успішних рейдів на синагогу (три рази на війну).\n\n' \
@@ -114,6 +117,34 @@ def wiki_text(data):
               'Тір-3: \U0001F9C2 5\n' \
               'Тір-2: \U0001F9C2 10\n' \
               'Тір-1: \U0001F9C2 20 \U0001F916 5'
+
+    elif data.startswith('wiki_clan_buff'):
+        markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
+                   InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'),
+                   InlineKeyboardButton(text='\U0001f4ef Війни', callback_data='wiki_clan_war'))
+        msg = '\U0001faac Бафи - тимчасові бонуси, які діють протягом однієї кланової війни. Майже всі бафи можна ' \
+              'купити в /clan_shop.\nСписок бафів:\n\n' \
+              '\U0001f7e2 Додаткова нагорода за рейди на клани (залежить від його рівня та можливого вмісту ' \
+              'кланового магазину ворога).\n' \
+              '\U0001f7e0 Вдвічі більше очків отримується за рейд на ворожий клан. Вдвічі більше ' \
+              'пакунків за перемогу у війні.\n' \
+              '\U0001f534 Очки можна отримати з рейду на будь-який клан. В міжчатовій битві ' \
+              'проти ворожого клану - прибрано вплив рандому. Можливість бачити очки ворога.\n' \
+              '\U0001f7e3 За роботу на благо громади буде нараховано 1-3 квестових очків замість зарплати.\n\n' \
+              'Комуна:\n' \
+              '\U0001f7e3\U0001f7e3 +2 очка за звичайні квести.\n' \
+              '\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.\n' \
+              'Коаліція:\n' \
+              '\U0001f7e3\U0001f7e3 1% шанс непомітно отримати квестове очко за перемогу в дуелі.\n' \
+              '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n' \
+              'Асоціація:\n' \
+              '\U0001f7e3\U0001f7e3 +10 квестових очків за пограбування гумконвою.\n' \
+              '\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків за приєднання учасника в клан.\n' \
+              'Організація:' \
+              '\U0001f7e3\U0001f7e3 Шанс знайти 1-2 квестові очка в пакунку замість радіотехніки.\n' \
+              '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n\n' \
+              '\U0001f7e1 +1 очко за виконання кошерних квестів. +40 квестових очків за купівлю ресурсів за погон. ' \
+              '+100 очків. Щоб повністю отримати цей баф треба 3 рази провести успішний рейд на синагогу.'
 
     elif data.startswith('wiki_clan'):
         markup.add(InlineKeyboardButton(text='\U0001f7e5 Комуна', callback_data='wiki_com'),

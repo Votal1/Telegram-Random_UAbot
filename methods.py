@@ -92,8 +92,8 @@ def checkLeader(uid, cid):
 def q_points(uid, amount):
     if checkClan(uid) and int(r.hget('c' + r.hget(uid, 'clan').decode(), 'war')) == 1:
         qp = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points'))
-        if qp < 500:
-            points = 500 - qp
+        if qp < 800:
+            points = 800 - qp
             if points - amount <= 0:
                 amount = points
             r.hincrby('c' + r.hget(uid, 'clan').decode(), 'q-points', amount)
