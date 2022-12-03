@@ -668,7 +668,8 @@ async def ctop(sett, uid, text, cid):
                         place1 = str(place) + '. '
                         place += 1
                         if n == cid:
-                            result = f'\U0001F3C6 Рейтинг цього чату: \n{place1}{title}\n' #\U0001F3C5 {s_rating1[n]} {tier_emoji[tier]}'
+                            result = f'\U0001F3C6 Рейтинг цього чату: \n{place1}{title}\n' \
+                                     f'\U0001F3C5 {tier_emoji[tier]}'
                             break
                     return result
                 else:
