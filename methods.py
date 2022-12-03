@@ -617,9 +617,11 @@ async def ctop(sett, uid, text, cid):
                             tier = int(r.hget('c' + member.decode(), 'tier'))
                         else:
                             title = r.hget('war_battle' + member.decode(), 'title').decode()
+                            tier = 0
                     except:
                         title = r.hget('war_battle' + member.decode(), 'title').decode().\
                             replace('<', '.').replace('>', '.')
+                        tier = 0
                     if '@' in title:
                         continue
                     stats = int(r.hget(222, member))
@@ -655,17 +657,18 @@ async def ctop(sett, uid, text, cid):
                         tier = int(r.hget('c' + str(cid), 'tier'))
                     else:
                         title = r.hget('war_battle' + str(cid), 'title').decode()
+                        tier = 0
                 except:
                     title = r.hget('war_battle' + str(cid), 'title').decode(). \
                         replace('<', '.').replace('>', '.')
+                    tier = 0
 
                 if text.split(' ')[1] == '-iw' or text.split(' ')[1] == '-wi':
                     for n in s_rating1:
                         place1 = str(place) + '. '
                         place += 1
                         if n == cid:
-                            result = f'\U0001F3C6 Рейтинг цього чату: \n{place1}{title}\n' \
-                                     f'\U0001F3C5 {s_rating1[n]} {tier_emoji[tier]}'
+                            result = f'\U0001F3C6 Рейтинг цього чату: \n{place1}{title}\n' #\U0001F3C5 {s_rating1[n]} {tier_emoji[tier]}'
                             break
                     return result
                 else:
