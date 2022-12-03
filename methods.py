@@ -630,6 +630,13 @@ async def ctop(sett, uid, text, cid):
                             rating1.update({line: stats})
                         elif text.split(' ')[1] == '-iw' or text.split(' ')[1] == '-wi':
                             rating1.update({int(member): stats})
+                        elif text.split(' ')[1] == '-i':
+                            if tier in (3, 0):
+                                rating3.update({line: stats})
+                            elif tier == 2:
+                                rating2.update({line: stats})
+                            else:
+                                rating1.update({line: stats})
                         else:
                             raise Exception
                     except:
@@ -663,6 +670,29 @@ async def ctop(sett, uid, text, cid):
 
                 if text.split(' ')[1] == '-iw' or text.split(' ')[1] == '-wi':
                     for n in s_rating1:
+                        place1 = str(place) + '. '
+                        place += 1
+                        if n == cid:
+                            result = f'\U0001F3C6 Рейтинг цього чату по перемогах: \n{place1}{title}\n' \
+                                     f'\U0001F3C5 {int(r.hget(222, n))} {tier_emoji[tier]}'
+                            break
+                    return result
+                elif text.split(' ')[1] == '-i':
+                    for n in s_rating1:
+                        place1 = str(place) + '. '
+                        place += 1
+                        if n == cid:
+                            result = f'\U0001F3C6 Рейтинг цього чату по перемогах: \n{place1}{title}\n' \
+                                     f'\U0001F3C5 {int(r.hget(222, n))} {tier_emoji[tier]}'
+                            break
+                    for n in s_rating2:
+                        place1 = str(place) + '. '
+                        place += 1
+                        if n == cid:
+                            result = f'\U0001F3C6 Рейтинг цього чату по перемогах: \n{place1}{title}\n' \
+                                     f'\U0001F3C5 {int(r.hget(222, n))} {tier_emoji[tier]}'
+                            break
+                    for n in s_rating3:
                         place1 = str(place) + '. '
                         place += 1
                         if n == cid:
