@@ -5745,10 +5745,10 @@ async def handle_query(call):
                             if call.data.startswith('clan_buff_4_1_2'):
                                 if int(r.hget(c, 'codes')) >= 10:
                                     r.hincrby(c, 'codes', -10)
-                                    r.hset(c, 'wood', int(int(r.hget(c, 'wood')) * 0.75))
-                                    r.hset(c, 'stone', int(int(r.hget(c, 'stone')) * 0.75))
-                                    r.hset(c, 'cloth', int(int(r.hget(c, 'cloth')) * 0.75))
-                                    r.hset(c, 'brick', int(int(r.hget(c, 'brick')) * 0.75))
+                                    r.hset(c, 'wood', int(int(r.hget(c, 'wood')) * 0.8))
+                                    r.hset(c, 'stone', int(int(r.hget(c, 'stone')) * 0.8))
+                                    r.hset(c, 'cloth', int(int(r.hget(c, 'cloth')) * 0.8))
+                                    r.hset(c, 'brick', int(int(r.hget(c, 'brick')) * 0.8))
                                     r.hset(c, 'buff_4', 12, {'q-points': 0})
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.'
                                     await bot.send_message(call.message.chat.id, msg)
@@ -5769,7 +5769,7 @@ async def handle_query(call):
                             if call.data.startswith('clan_buff_4_2_2'):
                                 if int(r.hget(c, 'codes')) >= 10:
                                     r.hincrby(c, 'codes', -10)
-                                    r.hset(c, 'r_spirit', int(int(r.hget(c, 'r_spirit')) * 0.75))
+                                    r.hset(c, 'r_spirit', int(int(r.hget(c, 'r_spirit')) * 0.8))
                                     r.hset(c, 'buff_4', 22)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків' \
                                           ' за охорону території.'
@@ -5792,7 +5792,7 @@ async def handle_query(call):
                             if call.data.startswith('clan_buff_4_3_2'):
                                 if int(r.hget(c, 'codes')) >= 10:
                                     r.hincrby(c, 'codes', -10)
-                                    r.hset(c, 'technics', int(int(r.hget(c, 'technics')) * 0.75))
+                                    r.hset(c, 'technics', int(int(r.hget(c, 'technics')) * 0.8))
                                     r.hset(c, 'buff_4', 32)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків' \
                                           ' за приєднання учасника в клан.'
@@ -5815,7 +5815,7 @@ async def handle_query(call):
                             if call.data.startswith('clan_buff_4_4_2'):
                                 if int(r.hget(c, 'codes')) >= 10:
                                     r.hincrby(c, 'codes', -10)
-                                    r.hset(c, 'money', int(int(r.hget(c, 'money')) * 0.75))
+                                    r.hset(c, 'money', int(int(r.hget(c, 'money')) * 0.8))
                                     r.hset(c, 'buff_4', 42)
                                     q_points(call.from_user.id, 250)
                                     msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.'
