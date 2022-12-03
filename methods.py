@@ -595,7 +595,7 @@ async def itop(uid, cid, chat):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-async def ctop(sett, uid, text):
+async def ctop(sett, uid, text, cid):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
@@ -627,6 +627,8 @@ async def ctop(sett, uid, text):
                     try:
                         if text.split(' ')[1] == '-w':
                             rating1.update({line: stats})
+                        elif text.split(' ')[1] == '-iw' or text.split(' ')[1] == '-wi':
+                            rating1.update({int(member): stats})
                         else:
                             raise Exception
                     except:
@@ -643,6 +645,18 @@ async def ctop(sett, uid, text):
             s_rating3 = sorted(rating3, key=rating3.get, reverse=True)
             result = ''
             place = 1
+            try:
+                if text.split(' ')[1] == '-iw' or text.split(' ')[1] == '-wi':
+                    for n in s_rating1:
+                        place1 = str(place) + '. '
+                        place += 1
+                        if n == cid:
+                            result = '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1
+                            break
+                else:
+                    raise Exception
+            except:
+                pass
             for n in s_rating1:
                 place1 = str(place) + '. '
                 result += place1 + n

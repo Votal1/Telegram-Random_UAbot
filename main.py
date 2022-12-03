@@ -903,7 +903,10 @@ async def i_top(message):
 @dp.message_handler(commands=['ctop'])
 async def c_top(message):
     try:
-        msg = await ctop(222, message.from_user.id, message.text)
+        cid = message.chat.id
+        if message.chat.type == 'private':
+            cid = -1001211933154
+        msg = await ctop(222, message.from_user.id, message.text, cid)
         await message.reply(msg, parse_mode='HTML')
     except:
         pass
