@@ -1989,7 +1989,7 @@ async def clan_war(message):
                 msg = f'\U0001f4ef Триває війна з {title}\n\n' \
                       f'Ваш прогрес:\n' \
                       f'\U0001fa99 Очки: {int(r.hget(c, "points"))}\n' \
-                      f'\U0001fa99 Квестові очки: {int(r.hget(c, "q-points"))}/800'
+                      f'\U0001fa99 Квестові очки: {int(r.hget(c, "q-points"))}/500'
                 if int(r.hget(c, 'buff_3')) == 1:
                     points2 = int(r.hget('c' + r.hget(c, 'enemy').decode(), 'points'))
                     msg += f'\n\U0001fa99Очки ворога: {points2}'
