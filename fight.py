@@ -1553,9 +1553,6 @@ async def start_raid(cid):
         while int(enemy) == cid:
             enemy = r.srandmember('groupings')
 
-        if int(r.hget(c, 'buff_3')) == 1:
-            enemy = r.hget(c, 'enemy')
-
         c2 = 'c' + enemy.decode()
         res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick')
         if int(res[0]) < 1500 or int(res[1]) < 1000 or int(res[2]) < 500 or int(res[3]) < 300:
@@ -1636,14 +1633,14 @@ async def start_raid(cid):
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
 
-            if int(r.hget(c, 'war')) == 1 and int(r.hget(c, 'enemy')) == int(enemy) \
-                    and int(r.hget(c2, 'points')) >= 10:
-                ran = randint(5, 10)
-                if int(r.hget(c, 'buff_2')) == 1:
-                    ran *= 2
-                r.hincrby(c, 'points', ran)
-                r.hincrby(c2, 'points', -ran)
-                reward += '\n\U0001fa99 +' + str(ran)
+            if int(r.hget(c, 'war')) == 1 and int(r.hget(c2, 'points')) >= 10:
+                if int(r.hget(c, 'enemy')) == int(enemy) or int(r.hget(c, 'buff_3')) == 1:
+                    ran = randint(5, 10)
+                    if int(r.hget(c, 'buff_2')) == 1:
+                        ran *= 2
+                    r.hincrby(c, 'points', ran)
+                    r.hincrby(c2, 'points', -ran)
+                    reward += '\n\U0001fa99 +' + str(ran)
 
         elif win == ['b']:
             if int(r.hget(c2, 'mines')) > 0:

@@ -5700,8 +5700,8 @@ async def handle_query(call):
 
                     if call.data.startswith('clan_buff_3'):
                         if int(r.hget(c, 'buff_3')) == 0:
-                            if int(r.hget(c, 'codes')) >= 20 and int(r.hget(c, 'technics')) >= 100:
-                                r.hincrby(c, 'codes', -20)
+                            if int(r.hget(c, 'codes')) >= 12 and int(r.hget(c, 'technics')) >= 100:
+                                r.hincrby(c, 'codes', -12)
                                 r.hincrby(c, 'technics', -100)
                                 r.hset(c, 'buff_3', 1)
                                 await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f534 Рейд може '

@@ -259,9 +259,9 @@ def c_shop(c, page):
                 markup.add(InlineKeyboardButton(text='\U0001f7e0 - \U0001F4B5 10000',
                                                 callback_data='clan_buff_2'))
             if int(r.hget(c, 'buff_3')) == 0:
-                msg += '\U0001f534 Рейд може проводитись тільки на клан, з яким йде війна. В міжчатовій битві ' \
-                       'проти такого клану - прибрано вплив рандому. Можливість бачити очки ворога.\n'
-                markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 20 \U0001F4FB 100',
+                msg += '\U0001f534 Очки можна отримати з рейду на будь-який клан. В міжчатовій битві ' \
+                       'проти ворожого клану - прибрано вплив рандому. Можливість бачити очки ворога.\n'
+                markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 12 \U0001F4FB 100',
                                                 callback_data='clan_buff_3'))
 
             if int(r.hget(c, 'buff_4')) == 0 and int(r.hget(c, 'base')) >= 4:
