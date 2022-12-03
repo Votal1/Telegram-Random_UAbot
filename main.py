@@ -1824,6 +1824,7 @@ async def clan_war(message):
                             enemy = r.hget(ct, 'enemy').decode()
                             tier = int(r.hget(ct, 'tier'))
                             points1 = int(r.hget(ct, 'points'))
+                            q_points1 = int(r.hget(ct, 'q-points'))
                             points2 = int(r.hget('c' + enemy, 'points'))
                             if points1 > 0:
                                 if points2 == 0:
@@ -1833,11 +1834,19 @@ async def clan_war(message):
                                         r.hset(ct, 'tier', 2)
                                         r.sadd('tier2_clans', mem)
                                     elif tier == 2:
-                                        r.hset(ct, 'tier', 1)
-                                        r.srem('tier2_clans', mem)
-                                        r.sadd('tier1_clans', mem)
+                                        if q_points1 >= 800:
+                                            r.hset(ct, 'tier', 1)
+                                            r.srem('tier2_clans', mem)
+                                            r.sadd('tier1_clans', mem)
+                                        else:
+                                            r.sadd('tier2_clans', mem)
                                     elif tier == 1:
-                                        r.sadd('tier1_clans', mem)
+                                        if q_points1 >= 800:
+                                            r.sadd('tier1_clans', mem)
+                                        else:
+                                            r.hset(ct, 'tier', 2)
+                                            r.srem('tier1_clans', mem)
+                                            r.sadd('tier2_clans', mem)
                                 elif points1 / points2 <= 0.75:
                                     if tier == 2:
                                         r.hset(ct, 'tier', 3)
@@ -1850,7 +1859,12 @@ async def clan_war(message):
                                     if tier == 2:
                                         r.sadd('tier2_clans', mem)
                                     elif tier == 1:
-                                        r.sadd('tier1_clans', mem)
+                                        if q_points1 >= 800:
+                                            r.sadd('tier1_clans', mem)
+                                        else:
+                                            r.hset(ct, 'tier', 2)
+                                            r.srem('tier1_clans', mem)
+                                            r.sadd('tier2_clans', mem)
 
                             else:
                                 if tier == 2:
@@ -1868,6 +1882,7 @@ async def clan_war(message):
                     tier = int(r.hget(c, 'tier'))
                     c2 = f'c{r.hget(c, "enemy").decode()}'
                     points1 = int(r.hget(c, "points"))
+                    q_points1 = int(r.hget(c, "q-points"))
                     points2 = int(r.hget(c2, "points"))
                     packs = points1 // 15
                     salt, codes = 0, 0
@@ -1889,25 +1904,10 @@ async def clan_war(message):
                             packs *= 2
                     else:
                         msg += 'На війні немає переможців, є тільки ті, хто залишився в живих.'
+                    tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
+                    msg += f'\n\n{tier_emoji[tier]} Нагорода для Тір-{tier} клану:'
 
-                    if points1 != 0:
-                        if points2 != 0 and points1 / points2 >= 1.25:
-                            if tier == 2:
-                                msg += '\n Ви тепер Тір-2 клан'
-                            elif tier == 1:
-                                msg += '\n Ви тепер Тір-1 клан'
-                        elif points2 != 0 and points1 / points2 <= 0.75:
-                            if tier == 3:
-                                msg += '\n Ви тепер Тір-3 клан'
-                            elif tier == 2:
-                                msg += '\n Ви тепер Тір-2 клан'
-                    else:
-                        if tier == 3:
-                            msg += '\n Ви тепер Тір-3 клан'
-                        elif tier == 2:
-                            msg += '\n Ви тепер Тір-2 клан'
-
-                    msg += f'\n\n\U0001F4E6 +{packs}'
+                    msg += f'\n\U0001F4E6 +{packs}'
                     if salt > 0:
                         msg += f' \U0001F9C2 +{salt}'
                     if codes > 0:
@@ -5806,8 +5806,8 @@ async def handle_query(call):
                                     r.hincrby(c, 'technics', -50)
                                     r.hincrby(c, 'money', -10000)
                                     r.hset(c, 'buff_4', 41)
-                                    msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 Шанс знайти 1-2 квестові ' \
-                                          'очка в пакунку замість радіотехніки.'
+                                    msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 Шанс знайти квестове ' \
+                                          'очко в пакунку замість радіотехніки.'
                                     await bot.send_message(call.message.chat.id, msg)
                                 else:
                                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

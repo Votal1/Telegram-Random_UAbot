@@ -27,9 +27,8 @@ def open_pack(uid, cdata, edit):
                 if ran == [1]:
                     if checkClan(uid, base=2, building='new_post') and choice([0, 1]) == 1:
                         if int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 41:
-                            ran = randint(1, 2)
-                            msg = f'\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001fa99 +{ran}'
-                            q_points(uid, ran)
+                            msg = '\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001fa99 +1'
+                            q_points(uid, 1)
                         else:
                             msg = '\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +1'
                             r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', 1)
