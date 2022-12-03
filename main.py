@@ -1354,6 +1354,7 @@ async def crash(message):
         if message.from_user.id in sudoers or st.status == 'creator' or st.can_restrict_members is True:
             r.hdel('war_battle' + str(message.chat.id), 'start')
             r.srem('battles', message.chat.id)
+            r.srem('battles2', message.chat.id)
             for member in r.smembers('fighters_2' + str(message.chat.id)):
                 r.hdel(member, 'in_war')
                 r.srem('fighters_2' + str(message.chat.id), member)
@@ -3201,7 +3202,7 @@ async def handle_query(call):
         if str(call.from_user.id).encode() not in r.smembers('fighters_2' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and r.hexists(call.from_user.id, 'in_war') == 0 and \
                 call.message.message_id == int(r.hget('war_battle' + str(call.message.chat.id), 'start')):
-            allow, msg = True, ''
+            allow, msg, n = True, '', ''
             if r.hexists('c' + str(call.message.chat.id), 'war_allow'):
                 if int(r.hget('c' + str(call.message.chat.id), 'war_allow')) == 1:
                     if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)) and \
@@ -3213,6 +3214,8 @@ async def handle_query(call):
                     if str(call.from_user.id).encode() not in r.smembers('cl' + str(call.message.chat.id)):
                         allow = False
                         msg = 'Ти не в цьому клані, тому ти не зможеш зайти в битву.'
+                if int(r.hget('c' + str(call.message.chat.id), 'tier')) in (1, 2):
+                    n = '2'
             if allow:
                 r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
@@ -3220,9 +3223,8 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'w_ts', int(datetime.now().timestamp()))
                 r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2' + str(call.message.chat.id))
-                n = ''
                 try:
-                    if int(r.hget(222, call.message.chat.id)) > 100:
+                    if int(r.hget(222, call.message.chat.id)) > 250:
                         n = '2'
                 except:
                     pass
