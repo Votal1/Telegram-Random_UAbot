@@ -1889,7 +1889,7 @@ async def clan_war(message):
                     points1 = int(r.hget(c, "points"))
                     q_points1 = int(r.hget(c, "q-points"))
                     points2 = int(r.hget(c2, "points"))
-                    packs = points1 // 15
+                    packs = points1 // 10
                     salt, codes = 0, 0
                     msg = f'\U0001f4ef Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
                           f'\U0001fa99 Ваші очки: {points1}\n' \
