@@ -609,7 +609,6 @@ async def ctop(sett, uid, text, cid):
             tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
             for member in everyone:
                 try:
-                    tier = 3
                     try:
                         i = int(r.hget('c' + member.decode(), 'base'))
                         if i > 0:
@@ -634,7 +633,7 @@ async def ctop(sett, uid, text, cid):
                         else:
                             raise Exception
                     except:
-                        if tier == 3:
+                        if tier in (3, 0):
                             rating3.update({line: stats})
                         elif tier == 2:
                             rating2.update({line: stats})
@@ -649,7 +648,6 @@ async def ctop(sett, uid, text, cid):
             place = 1
             try:
 
-                tier = 3
                 try:
                     i = int(r.hget('c' + str(cid), 'base'))
                     if i > 0:
