@@ -646,12 +646,26 @@ async def ctop(sett, uid, text, cid):
             result = ''
             place = 1
             try:
+
+                tier = 3
+                try:
+                    i = int(r.hget('c' + str(cid), 'base'))
+                    if i > 0:
+                        title = '<i>' + prefix[i] + '</i> ' + r.hget('c' + str(cid), 'title').decode()
+                        tier = int(r.hget('c' + str(cid), 'tier'))
+                    else:
+                        title = r.hget('war_battle' + str(cid), 'title').decode()
+                except:
+                    title = r.hget('war_battle' + str(cid), 'title').decode(). \
+                        replace('<', '.').replace('>', '.')
+
                 if text.split(' ')[1] == '-iw' or text.split(' ')[1] == '-wi':
                     for n in s_rating1:
                         place1 = str(place) + '. '
                         place += 1
                         if n == cid:
-                            result = '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1
+                            result = f'\U0001F3C6 Рейтинг цього чату: \n{place1}{title}\n' \
+                                     f'\U0001F3C5 {s_rating1[n]} {tier_emoji[tier]}'
                             break
                     return result
                 else:
