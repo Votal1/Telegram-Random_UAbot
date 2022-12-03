@@ -1686,7 +1686,7 @@ async def clan(message):
                 elif base >= 2:
                     building, wins, num = '', '', 25
                     if r.hexists(222, cid) == 1:
-                        wins = '\nКількість перемог: ' + r.hget(222, cid).decode()
+                        wins = f'\nКількість перемог: {int(r.hget(222, cid))}\nТір-{int(r.hget(c, "tier"))} клан'
                     if base == 2:
                         building = '\U0001F3E0 Притулок\n\U0001F4B5 +6 \U0001F47E +1 за перемоги в міжчатових боях, ' \
                                    'якщо серед учасників всі з клану.\n'
@@ -1803,6 +1803,7 @@ async def clan_war(message):
     weekday = datetime.today().weekday()
     cid = message.chat.id
     c = f'c{cid}'
+    tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
 
     if str(message.from_user.id).encode() in r.smembers(f'cl{cid}'):
         if not r.hexists('clan_wars', 'x'):
@@ -1904,7 +1905,6 @@ async def clan_war(message):
                             packs *= 2
                     else:
                         msg += 'На війні немає переможців, є тільки ті, хто залишився в живих.'
-                    tier_emoji = ['', '\U0001F947', '\U0001F948', '\U0001F949']
                     msg += f'\n\n{tier_emoji[tier]} Нагорода для Тір-{tier} клану:'
 
                     msg += f'\n\U0001F4E6 +{packs}'
@@ -1989,6 +1989,30 @@ async def clan_war(message):
                 if int(r.hget(c, 'buff_3')) == 1:
                     points2 = int(r.hget('c' + r.hget(c, 'enemy').decode(), 'points'))
                     msg += f'\n\U0001fa99Очки ворога: {points2}'
+
+                buffs = r.hmget(c, 'buff_1', 'buff_2', 'buff_3', 'buff_4', 'buff_5',)
+                msg += '\n\n\U0001faac Бафи: ['
+                if int(buffs[0]) == 0:
+                    msg += '\u2B1C'
+                else:
+                    msg += '\U0001f7e2'
+                if int(buffs[1]) == 0:
+                    msg += '\u2B1C'
+                else:
+                    msg += '\U0001f7e0'
+                if int(buffs[2]) == 0:
+                    msg += '\u2B1C'
+                else:
+                    msg += '\U0001f534'
+                if int(buffs[3]) == 0:
+                    msg += '\u2B1C'
+                else:
+                    msg += '\U0001f7e3'
+                if int(buffs[4]) == 0:
+                    msg += '\u2B1C]'
+                else:
+                    msg += '\U0001f7e1]'
+
                 await bot.send_message(cid, msg)
             else:
                 await message.answer('\U0001f4ef Зареєструватись на війни кланів можна у вихідні')
@@ -3358,11 +3382,15 @@ async def handle_query(call):
         uid = call.from_user.id
         c = f'c{cid}'
         if checkLeader(uid, cid):
-            if weekday in (5, 6) and int(r.hget(c, 'tier')) == 3:
-                r.sadd('registered', cid)
-                await bot.edit_message_text('Ваш клан зареєстровано на війни кланів.\nСамі війни повинні'
-                                            ' відбудуться наступного тижня',
-                                            call.message.chat.id, call.message.message_id)
+            if weekday in (5, 6) and int(r.hget(c, 'tier')) == 3 and int(r.hget(c, 'base')) > 1:
+                if r.scard(f'cl{cid}') >= 5:
+                    r.sadd('registered', cid)
+                    await bot.edit_message_text('Ваш клан зареєстровано на війни кланів.\nСамі війни повинні'
+                                                ' відбудуться наступного тижня',
+                                                call.message.chat.id, call.message.message_id)
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Знайдіть хоча б 5 учасників в клан')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Реєстрація тільки у вихідні, і тільки для тір-3 кланів')
