@@ -1871,7 +1871,6 @@ async def clan_war(message):
                     points2 = int(r.hget(c2, "points"))
                     packs = points1 // 15
                     salt, codes = 0, 0
-                    r.hincrby(c, 'codes', codes)
                     msg = f'\U0001f4ef Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
                           f'\U0001fa99 Ваші очки: {points1}\n' \
                           f'\U0001fa99 Очки ворога: {points2}\n\n'
@@ -1916,6 +1915,7 @@ async def clan_war(message):
 
                     r.hdel(c, 'result')
 
+                    r.hincrby(c, 'codes', codes)
                     for mem in r.smembers(f'cl{cid}'):
                         r.hincrby(mem, 'salt', salt)
                         r.hincrby(mem, 'packs', packs)
