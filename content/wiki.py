@@ -103,7 +103,7 @@ def wiki_text(data):
         markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
                    InlineKeyboardButton(text='\U0001F3D7 Будівництво', callback_data='wiki_clan_build'),
                    InlineKeyboardButton(text='\U0001faac Бафи', callback_data='wiki_clan_buff'))
-        msg = '[beta]\n\n\U0001f4ef Кланові війни - спосіб просунути клан в топ та отримати додаткові нагороди. ' \
+        msg = '\U0001f4ef Кланові війни - спосіб просунути клан в топ та отримати додаткові нагороди. ' \
               'Їхня суть - за 5 днів набрати більше очок ніж ворожий клан.\n/clan_war - зареєструватись на війни ' \
               '(тільки на вихідних). Проходитимуть вони протягом робочого тижня.\n\n' \
               '\U0001fa99 В міжчатовій битві за перемогу можна отримати від 1 до 5 очків проти ворожого та з ' \
