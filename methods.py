@@ -632,11 +632,11 @@ async def ctop(sett, uid, text, cid):
                             rating1.update({int(member): stats})
                         elif text.split(' ')[1] == '-i':
                             if tier in (3, 0):
-                                rating3.update({line: stats})
+                                rating3.update({int(member): stats})
                             elif tier == 2:
-                                rating2.update({line: stats})
+                                rating2.update({int(member): stats})
                             else:
-                                rating1.update({line: stats})
+                                rating1.update({int(member): stats})
                         else:
                             raise Exception
                     except:
