@@ -653,6 +653,7 @@ async def ctop(sett, uid, text, cid):
                         if n == cid:
                             result = '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1
                             break
+                    return result
                 else:
                     raise Exception
             except:
