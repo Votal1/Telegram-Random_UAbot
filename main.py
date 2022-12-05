@@ -1939,23 +1939,23 @@ async def clan_war(message):
                 buffs = r.hmget(c, 'buff_1', 'buff_2', 'buff_3', 'buff_4', 'buff_5',)
                 msg += '\n\n\U0001faac Бафи: ['
                 if int(buffs[0]) == 0:
-                    msg += '\u2B1C'
+                    msg += '\u26AA'
                 else:
                     msg += '\U0001f7e2'
                 if int(buffs[1]) == 0:
-                    msg += '\u2B1C'
+                    msg += '\u26AA'
                 else:
                     msg += '\U0001f7e0'
                 if int(buffs[2]) == 0:
-                    msg += '\u2B1C'
+                    msg += '\u26AA'
                 else:
                     msg += '\U0001f534'
                 if int(buffs[3]) == 0:
-                    msg += '\u2B1C'
+                    msg += '\u26AA'
                 else:
                     msg += '\U0001f7e3'
                 if int(buffs[4]) == 0:
-                    msg += '\u2B1C]'
+                    msg += '\u26AA]'
                 else:
                     msg += '\U0001f7e1]'
 
@@ -5679,11 +5679,10 @@ async def handle_query(call):
                                 r.hincrby(c, 'codes', -12)
                                 r.hincrby(c, 'technics', -100)
                                 r.hset(c, 'buff_3', 1)
-                                await bot.send_message(call.message.chat.id, 'Отримано баф:\n\n\U0001f534 Рейд може '
-                                                                             'проводитись тільки на клан, з яким йде '
-                                                                             'війна. В міжчатовій битві проти такого '
-                                                                             'клану - прибрано вплив рандому. '
-                                                                             'Можливість бачити очки ворога.')
+                                msg = 'Отримано баф:\n\n\U0001f534 Очки можна отримати з рейду на будь-який клан. ' \
+                                      'В міжчатовій битві проти такого клану - прибрано вплив рандому. ' \
+                                      'Можливість бачити очки ворога.'
+                                await bot.send_message(call.message.chat.id, msg)
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Недостатньо ресурсів.')
