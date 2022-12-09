@@ -1781,14 +1781,14 @@ async def clan_war(message):
                                         r.hset(ct, 'tier', 2)
                                         r.sadd('tier2_clans', mem)
                                     elif tier == 2:
-                                        if q_points1 >= 800:
+                                        if q_points1 >= 500:
                                             r.hset(ct, 'tier', 1)
                                             r.srem('tier2_clans', mem)
                                             r.sadd('tier1_clans', mem)
                                         else:
                                             r.sadd('tier2_clans', mem)
                                     elif tier == 1:
-                                        if q_points1 >= 800:
+                                        if q_points1 >= 500:
                                             r.sadd('tier1_clans', mem)
                                         else:
                                             r.hset(ct, 'tier', 2)
@@ -1806,7 +1806,7 @@ async def clan_war(message):
                                     if tier == 2:
                                         r.sadd('tier2_clans', mem)
                                     elif tier == 1:
-                                        if q_points1 >= 800:
+                                        if q_points1 >= 500:
                                             r.sadd('tier1_clans', mem)
                                         else:
                                             r.hset(ct, 'tier', 2)
@@ -1829,7 +1829,6 @@ async def clan_war(message):
                     tier = int(r.hget(c, 'tier'))
                     c2 = f'c{r.hget(c, "enemy").decode()}'
                     points1 = int(r.hget(c, "points"))
-                    q_points1 = int(r.hget(c, "q-points"))
                     points2 = int(r.hget(c2, "points"))
                     packs = points1 // 10
                     salt, codes = 0, 0
