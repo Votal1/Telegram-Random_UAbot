@@ -5512,10 +5512,19 @@ async def handle_query(call):
         elif call.data.startswith('clan_heal'):
             c = 'c' + str(call.message.chat.id)
             if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
-                if int(r.hget(c, 'money')) >= 10:
+                if int(r.hget(c, 'money')) >= 30 and int(r.hget(c, 'r_spirit')) >= 1:
                     r.hincrby(c, 'money', -10)
+                    r.hincrby(c, 'r_spirit', -1)
+                    ran1 = randint(5, 10)
+                    ran2 = randint(5, 10)
                     for mem in r.smembers('cl' + str(call.message.chat.id)):
                         hp(100, mem)
+                        r.hincrby(mem, 'injure', -ran1)
+                        r.hincrby(mem, 'sch', -ran2)
+                        if int(r.hget(mem, 'injure')) < 0:
+                            r.hset(mem, 'injure', 0)
+                        if int(r.hget(mem, 'sch')) < 0:
+                            r.hset(mem, 'sch', 0)
                     await bot.send_message(call.message.chat.id, '\U0001fac0 Клан вилікувано.')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
