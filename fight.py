@@ -1956,7 +1956,7 @@ async def start_raid(cid):
 
     elif mode == [3]:
         s = int(r.hget(c, 'side'))
-        chance1 = int(chance1 * (1 + rocket * 0.7))
+        chance1 = int(chance1 * (1 + rocket * 0.07))
         chance2 = int(r.hget('convoy', 'power'))
         msg0 = f'{title} | Перехоплення гумконвою\n\n\U0001F4AA {chance1} | {chance2}'
         try:
