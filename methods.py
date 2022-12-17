@@ -532,7 +532,7 @@ async def top(sett, uid, text):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
-async def itop(uid, cid, chat):
+async def itop(uid, cid, chat, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
@@ -565,19 +565,34 @@ async def itop(uid, cid, chat):
                     if r.hget(uid, 'username').decode() == n:
                         result = '\U0001F3C6 Твоє місце в чатовому рейтингу: \n' + place1 + n + '\n'
                         break
-            everyone = r.smembers(111)
+            try:
+                if text.split(' ')[1] == '-d':
+                    everyone = r.smembers('premium_users')
+                else:
+                    raise Exception
+            except:
+                everyone = r.smembers(111)
             rating = {}
             for member in everyone:
                 try:
-                    stats = r.hmget(member, 'strength', 'intellect', 'wins', 'deaths', 'childs', 'trophy', 'username')
-                    s = int(stats[0])
-                    i = int(stats[1])
-                    w = int(stats[2])
-                    d = int(stats[3])
-                    c = int(stats[4])
-                    t = int(stats[5])
-                    line = stats[6].decode()
-                    rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
+                    try:
+                        if text.split(' ')[1] == '-d':
+                            stats = r.hmget(member, 'donate_amount', 'username')
+                            line = stats[1].decode()
+                            rate = int(stats[0])
+                        else:
+                            raise Exception
+                    except:
+                        stats = r.hmget(member, 'strength', 'intellect', 'wins',
+                                        'deaths', 'childs', 'trophy', 'username')
+                        s = int(stats[0])
+                        i = int(stats[1])
+                        w = int(stats[2])
+                        d = int(stats[3])
+                        c = int(stats[4])
+                        t = int(stats[5])
+                        line = stats[6].decode()
+                        rate = s + i * 10 + w + t * 10 + d * 14 + c * 88
                     rating.update({line: rate})
                 except:
                     continue
@@ -587,7 +602,13 @@ async def itop(uid, cid, chat):
                 place1 = str(place) + '. '
                 place += 1
                 if r.hget(uid, 'username').decode() == n:
-                    result += '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1 + n
+                    try:
+                        if text.split(' ')[1] == '-d':
+                            result += '\U0001F3C6 Твоє місце в рейтингу донатерів: \n' + place1 + n
+                        else:
+                            raise Exception
+                    except:
+                        result += '\U0001F3C6 Твоє місце в глобальному рейтингу: \n' + place1 + n
                     break
             return result
     except:

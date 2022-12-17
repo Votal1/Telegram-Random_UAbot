@@ -836,7 +836,7 @@ async def g_top(message):
 @dp.message_handler(commands=['itop'])
 async def i_top(message):
     try:
-        msg = await itop(message.from_user.id, message.chat.id, message.chat.type)
+        msg = await itop(message.from_user.id, message.chat.id, message.chat.type, message.text)
         await message.reply(msg)
     except:
         pass
