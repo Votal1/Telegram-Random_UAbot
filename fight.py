@@ -1540,6 +1540,10 @@ async def start_raid(cid):
             continue
     if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0:
         raid1, raid2, raid3 = 40, 40, 20
+    raid1 = raid1 - 10 * mar
+    if raid1 < 0:
+        raid1 = 0
+    raid2 = raid2 + 10 * mar
     mode = choices([1, 2, 3], [raid1, raid2, raid3])
 
     if chance1 >= 100000:
