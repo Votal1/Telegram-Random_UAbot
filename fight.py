@@ -77,22 +77,28 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             quest(uid2, 3, -1, 1)
             if c2 not in (6, 16, 26) and defense1 in (16, 17):
                 if weapon2 != 0:
-                    cop1 = choices([1, 0], weights=[20, 80])
+                    cop1 = choices([1, 0], weights=[10, 90])
                     if cop1 == [1]:
-                        r.hset(uid2, 'weapon', 0)
-                        r.hset(uid2, 's_weapon', 0)
-                        r.hincrby(uid1, 's_defense', 10)
+                        if int(r.hget(uid2, 's_weapon')) > 300:
+                            r.hincrby(uid2, 's_weapon', -300)
+                        else:
+                            r.hset(uid2, 'weapon', 0)
+                            r.hset(uid2, 's_weapon', 0)
+                        r.hincrby(uid1, 's_defense', 20)
                         cop += '\n\U0001F46E ' + names[name1] + \
                                ' вилучив у ворога зброю!\n\U0001F6E1 +10\n'
         if c2 == 26 and t == 1:
             quest(uid1, 3, -3, 1)
             if c1 not in (6, 16, 26) and defense2 in (16, 17):
                 if weapon1 != 0:
-                    cop2 = choices([1, 0], weights=[20, 80])
+                    cop2 = choices([1, 0], weights=[10, 90])
                     if cop2 == [1]:
-                        r.hset(uid1, 'defense', 0)
-                        r.hset(uid1, 's_defense', 0)
-                        r.hincrby(uid2, 's_defense', 10)
+                        if int(r.hget(uid2, 's_defense')) > 300:
+                            r.hincrby(uid2, 's_defense', -300)
+                        else:
+                            r.hset(uid2, 'defense', 0)
+                            r.hset(uid2, 's_defense', 0)
+                        r.hincrby(uid2, 's_defense', 20)
                         cop += '\n\U0001F46E ' + names[name2] + \
                                ' вилучив у ворога захисне спорядження!\n\U0001F6E1 +10\n'
 
