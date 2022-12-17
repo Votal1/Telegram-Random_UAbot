@@ -390,7 +390,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     support += '\n\n\U0001F6E1 ' + names[name2] + ' прийшов на бій під мухоморами. Він був' \
                                                                   ' обезсилений, але запам`ятав тактику ворога.'
                     damage_support(uid2)
-        if defense1 == 3 and defense2 != 2 and defense2 != 17 and t == 1:
+        if defense1 == 3 and t == 1:
             damage_defense(uid1, 3)
             if choice([1, 2, 3]) == 1:
                 defense = '\n\n\u2620\uFE0F ' + names[name2] + ' наступив на міну!'
@@ -1646,8 +1646,7 @@ async def start_raid(cid):
             if int(r.hget(c2, 'mines')) > 0:
                 ran = randint(1, 5)
                 for mem in r.smembers('fighters_3' + str(cid)):
-                    if int(r.hget(mem, 'defense')) != 2:
-                        r.hincrby(mem, 'injure', ran)
+                    r.hincrby(mem, 'injure', ran)
                 r.hincrby(c2, 'mines', -1)
                 reward += f'Русаки підірвались на міні...\n\U0001fa78 +{ran} \U0001fac0 -100'
             else:
