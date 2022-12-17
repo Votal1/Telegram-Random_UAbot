@@ -5458,12 +5458,12 @@ async def handle_query(call):
         elif call.data.startswith('clan_rpg'):
             c = 'c' + str(call.message.chat.id)
             if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
-                if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 250:
+                if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 100:
                     if int(r.hget(call.from_user.id, 'weapon')) == 0:
                         r.hset(call.from_user.id, 'weapon', 2)
                         r.hset(call.from_user.id, 's_weapon', 1)
                         r.hincrby(c, 'money', -500)
-                        r.hincrby(c, 'r_spirit', -250)
+                        r.hincrby(c, 'r_spirit', -100)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили РПГ-7.')
                     else:

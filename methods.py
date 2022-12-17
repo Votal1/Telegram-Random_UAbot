@@ -183,7 +183,7 @@ def c_shop(c, page):
         if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 РПГ-7 [Зброя, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
                    ' здоров`я і все спорядження).'
-            markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 250, \U0001F4B5 500',
+            markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 100, \U0001F4B5 500',
                                             callback_data='clan_rpg'))
         if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 Бронежилет вагнерівця [Захист, міцність=50] - зменшує силу ворога на бій на 75%' \
