@@ -5512,7 +5512,7 @@ async def handle_query(call):
         elif call.data.startswith('clan_heal'):
             c = 'c' + str(call.message.chat.id)
             if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
-                if int(r.hget(c, 'money')) >= 30 and int(r.hget(c, 'r_spirit')) >= 1:
+                if int(r.hget(c, 'money')) >= 10 and int(r.hget(c, 'r_spirit')) >= 1:
                     r.hincrby(c, 'money', -10)
                     r.hincrby(c, 'r_spirit', -1)
                     ran1 = randint(5, 10)

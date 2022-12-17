@@ -197,7 +197,7 @@ def c_shop(c, page):
                                             callback_data='clan_watermelon'))
         if int(r.hget(c, 'build6')) == 3:
             msg += '\n\U0001F489 Вилікувати весь клан\n(\U0001fac0 +100 \U0001fa78 -5-10 \U0001F464 -5-10).'
-            markup.add(InlineKeyboardButton(text='Лікування - \U0001F47E 1 \U0001F4B5 30',
+            markup.add(InlineKeyboardButton(text='Лікування - \U0001F47E 1 \U0001F4B5 10',
                                             callback_data='clan_heal'))
             msg += '\n\U0001F4B5 Перерозподіл багатств - 5 найбідніших учасників отримають по 100 гривень.'
             markup.add(InlineKeyboardButton(text='Перерозподіл - \U0001F47E 10, \U0001F4B5 500 ',
