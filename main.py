@@ -959,8 +959,8 @@ async def classes_3(message):
           'Товариш майор \U0001F46E\U0001F46E\U0001F46E - якщо є поліцейський щит - 20% шанс вилучити в ворога зброю' \
           ' при захисті і захист при атаці і збільшити міцність щита на 10 (не діє проти інших мусорів).\n\n' \
           'Агент ФСБ \U0001F921\U0001F921\U0001F921 - одноразова премія - 300 гривень. В бою проти ' \
-          'русака без класу є 5% шанс перетворити його в малороса. За це агент отримує 20 гривень. ' \
-          'Можливість на території ворожого клану вкрасти гроші командою clan.\n\n' \
+          'русака без класу є 5% шанс перетворити його в малороса. За це агент отримує 50 гривень, а русак ' \
+          '300 шизофренії. Можливість на території ворожого клану вкрасти до 50 гривень командою clan.\n\n' \
           'Black Hat \U0001F4DF\U0001F4DF\U0001F4DF - здібність хакера тепер додає по гривні за ' \
           'кожні 50 гривень на рахунку ворога (1-5 гривень).\n\n' \
           'Патологоанатом \u26D1\u26D1\u26D1 - якщо у ворога менше ніж 50 здоров`я - лікує ' \
@@ -1689,22 +1689,22 @@ async def clan(message):
                                          f"{r.scard('cl' + cid)} / {num}{wins}\n\n{building}{resources}",
                                          parse_mode='HTML')
             elif r.hexists(message.from_user.id, 'class') and int(r.hget(message.from_user.id, 'class')) == 27 and \
-                    int(r.hget(c, 'money')) >= 20:
+                    int(r.hget(c, 'money')) >= 50:
                 if int(r.hget(message.from_user.id, 'fsb')) != datetime.now().day:
                     r.hset(message.from_user.id, 'fsb', datetime.now().day)
                     ran = choice([2, 1, 1, 1, 0])
                     if ran == 2:
                         await bot.send_message(message.from_user.id, 'Агент втерся в довіру до керівництва і випросив '
-                                                                     'трохи грошей.\n\U0001F4B5 +20')
-                        r.hincrby(message.from_user.id, 'money', 20)
-                        r.hincrby(c, 'money', -20)
+                                                                     'трохи грошей.\n\U0001F4B5 +50')
+                        r.hincrby(message.from_user.id, 'money', 50)
+                        r.hincrby(c, 'money', -50)
                     elif ran == 1:
                         await bot.send_message(message.from_user.id, 'Агент непомітно забрав собі кілька гривень.'
-                                                                     '\n\U0001F4B5 +10')
-                        r.hincrby(message.from_user.id, 'money', 10)
-                        r.hincrby(c, 'money', -10)
+                                                                     '\n\U0001F4B5 +20')
+                        r.hincrby(message.from_user.id, 'money', 20)
+                        r.hincrby(c, 'money', -20)
                     else:
-                        await message.reply('Агент ФСБ хотів вкрасти гроші з кланової скрабниці, але його помітили...'
+                        await message.reply('Агент ФСБ хотів вкрасти гроші з кланової скарбниці, але його помітили...'
                                             '\n\U0001fac0 -100')
                         r.hset(message.from_user.id, 'hp', 0)
     elif message.chat.id == -1001211933154:

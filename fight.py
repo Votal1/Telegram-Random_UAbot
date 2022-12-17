@@ -102,8 +102,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hset(uid2, 'class', 7)
                 r.sadd('class-7', uid2)
                 r.hset(uid2, 'photo', choice(p7))
-                r.hincrby(uid1, 'money', 20)
-                fsb += '\n\U0001F921 ' + names[name1] + ' завербував ворога!\n\U0001F4B5 +20\n'
+                r.hincrby(uid1, 'money', 50)
+                r.hset(uid2, 'sch', 300)
+                fsb += '\n\U0001F921 ' + names[name1] + ' завербував ворога!\n\U0001F4B5 +50\n'
         if c2 == 27 and c1 == 0 and t == 1:
             fsb2 = choices([1, 0], weights=[5, 95])
             if fsb2 == [1]:
