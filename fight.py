@@ -1625,7 +1625,7 @@ async def start_raid(cid):
                 reward += 'Русаки пограбували місцеву крамницю!\n'
                 ran = randint(50, 100) * li[4]
                 reward += f'Кожен забрав по \U0001F4B5 {ran} гривень.'
-                r.hincrby(c2, 'money', -ran)
+                r.hincrby(c2, 'money', -ran * 5)
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hincrby(mem, 'money', ran)
             elif mode == [3]:
