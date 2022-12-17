@@ -175,12 +175,12 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if hp1 >= 90:
             if c1 in (34, 35, 36):
-                s1 = int(s1 * 1.3)
+                s1 = int(s1 * 1.5)
             else:
                 s1 = int(s1 * 1.1)
         if hp2 >= 90:
             if c2 in (34, 35, 36):
-                s2 = int(s2 * 1.3)
+                s2 = int(s2 * 1.5)
             else:
                 s2 = int(s2 * 1.1)
 
@@ -324,15 +324,18 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога кастетом по морді!'
             damage_weapon(uid2, c2)
         elif weapon2 in (21, 32):
+            damage_weapon(uid2, c2)
             if not checkClan(uid1):
-                s2 = int(s2 * 1.5)
-                damage_weapon(uid2, c2)
-                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці палаш!'
-            if weapon2 == 32 and int(r.hget(uid1, 'strap')) == 0 and c1 != 36:
-                s2 = int(s2 * 1.5)
+                s2 = int(s2 * 2)
+            else:
+                s2 = int(s2 * 1.25)
+            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці палаш!'
+            if weapon2 == 32:
+                if int(r.hget(uid1, 'strap')) == 0 and c1 != 36:
+                    s2 = int(s2 * 2)
+                else:
+                    s2 = int(s2 * 1.25)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
-                if checkClan(uid1):
-                    damage_weapon(uid2, c2)
 
         if weapon2 == 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
@@ -1234,7 +1237,7 @@ async def war_power(sett, cid):
                 if choices([1, 0], [2, 98]) == [1]:
                     intellect(1, member)
                 if gen1 == 1 and meat > 0:
-                    s = int(s + s * meat * 0.25)
+                    s = int(s + s * meat * 0.5)
             if meat > 0:
                 quest(member, 3, -3, 2)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
