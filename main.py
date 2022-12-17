@@ -5166,20 +5166,27 @@ async def handle_query(call):
         elif call.data.startswith('clan_mushroom'):
             if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
                 if int(r.hget(call.from_user.id, 'money')) >= 100:
-                    if int(r.hget(call.from_user.id, 'support')) == 0:
-                        if int(r.hget(call.from_user.id, 'intellect')) < 20:
-                            r.hset(call.from_user.id, 'support', 6)
-                            r.hset(call.from_user.id, 's_support', 1)
-                            r.hincrby(call.from_user.id, 'money', -100)
-                            quest(call.from_user.id, 3, 3, 4)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Ви успішно купили мухомор королівський.')
+                    mushroom = int(r.hget(call.from_user.id, 'mushrooms'))
+                    if int(r.hget(call.from_user.id, 'class')) in (18, 28):
+                        mushroom = 0
+                    if mushroom < 3:
+                        if int(r.hget(call.from_user.id, 'support')) == 0:
+                            if int(r.hget(call.from_user.id, 'intellect')) < 20:
+                                r.hset(call.from_user.id, 'support', 6)
+                                r.hset(call.from_user.id, 's_support', 1)
+                                r.hincrby(call.from_user.id, 'money', -100)
+                                quest(call.from_user.id, 3, 3, 4)
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='Ви успішно купили мухомор королівський.')
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='Ваш русак вже занадто розумний.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Ваш русак вже занадто розумний.')
+                                                            text='У вас вже є допоміжне спорядження.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='У вас вже є допоміжне спорядження.')
+                                                        text='Для вашого русака не передбачено більше трьох мухоморів')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо коштів на рахунку.')
