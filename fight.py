@@ -1966,6 +1966,7 @@ async def start_raid(cid):
             r.hdel(c, 'start')
             for member in r.smembers('fighters_3' + str(cid)):
                 r.srem('fighters_3' + str(cid), member)
+            await bot.send_message(cid, 'Ага, багоюзиш')
             return False
 
         s = int(r.hget(c, 'side'))
