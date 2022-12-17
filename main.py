@@ -2292,7 +2292,7 @@ async def build(message):
                             msg += '\nГулаг (\U0001F333 15000, \U0001faa8 10000, \U0001F9F6 5000, ' \
                                    '\U0001F9F1 3000, \U0001F4B5 10000, \U0001F4FB 300, \U0001F47E 300, \U0001F916 10)' \
                                    ' - якщо хтось покидає клан - його русаки втрачають по 20% сили. Шанс отримати ' \
-                                   'додаткове годування після відпрацювання зміни - 1% за кожну тисячу деревини, ' \
+                                   'додаткове годування після відпрацювання зміни - 3% за кожну тисячу деревини, ' \
                                    'каменю, тканини і цегли на складі.'
                     if int(r.hget(c, 'base')) == 10:
                         if int(r.hget(c, 'build5')) == 0:
@@ -2652,8 +2652,8 @@ async def work(message):
                                         r.hincrby(message.from_user.id, 'packs', 1)
                                         resources += ' \n\U0001F4B5 +5 \U0001F4E6 +1'
                         if int(r.hget(c, 'build6')) == 1:
-                            ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
-                                 int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))
+                            ch = 3 * (int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) +
+                                      int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick')))
                             if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
                                 r.hset(message.from_user.id, 'time', 0)
                                 resources += ' \U0001F372 +1'
@@ -2750,8 +2750,8 @@ async def guard(message):
                         q_points(message.from_user.id, 12)
                         msg += ' \U0001fa99 +12'
                 if int(r.hget(c, 'build6')) == 1:
-                    ch = int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) + \
-                         int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick'))
+                    ch = 3 * (int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) +
+                              int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick')))
                     if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
                         r.hset(message.from_user.id, 'time', 0)
                         msg += '\n\U0001F372 +1'
