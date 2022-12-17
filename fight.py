@@ -1456,7 +1456,7 @@ async def start_raid(cid):
     await sleep(1)
 
     if int(r.hget('convoy', 'day')) != datetime.now().day:
-        r.hset('convoy', 'power', 2000000)
+        r.hset('convoy', 'power', 5000000)
         r.hset('convoy', 'day', datetime.now().day)
 
     chance1, hack, mar, rocket, fish, jew = 0, 0, 0, 0, 0, 0
@@ -1621,11 +1621,9 @@ async def start_raid(cid):
                 reward += 'Русаки пограбували місцеву крамницю!\n'
                 ran = randint(50, 150) * li[4]
                 reward += '\U0001F4B5 +' + str(ran)
-                r.hincrby(c, 'money', ran)
                 r.hincrby(c2, 'money', -ran)
-                if int(r.hget(c, 'side')) == 3:
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        r.hincrby(mem, 'money', int(ran / 5))
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(mem, 'money', ran)
             elif mode == [3]:
                 reward += 'Русакам не вдалось знайти нічого цінного, тому вони насрали біля будинку лідера.\n'
                 ran = 10 * li[5]
@@ -1755,6 +1753,8 @@ async def start_raid(cid):
         elif jew >= 5 and int(r.hget(c, 'war')) == 1 and int(r.hget(c, 'buff_5')) < 3:
             location = 'Синагога'
             chance2 = int(chance1 * choice([0.5, 1, 2, 3]))
+            if s == 3:
+                chance2 = int(chance2 / 2)
         else:
             location = choice(locations)
             chance2 = int(chance1 * float(chances[locations.index(location)]))
@@ -1784,14 +1784,13 @@ async def start_raid(cid):
                     r.hincrby(c, 'points', 100)
             elif locations.index(location) == 0:
                 if hack >= 2:
-                    ran = randint(100, 500)
+                    ran = randint(30, 250)
                     if mar >= 1:
                         ran *= 2
                     reward += 'Хакери отримали доступ до рахунків монобанку!\n\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
-                    if s == 3:
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            r.hincrby(mem, 'money', int(ran / 5))
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'money', ran)
                 else:
                     reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
 
@@ -1844,14 +1843,13 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hset(mem, 'time', 0)
                 if mode2 == 1:
-                    ran = randint(100, 200)
+                    ran = randint(50, 100)
                     if mar >= 1:
                         ran *= 2
                     reward += '\n\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
-                    if s == 3:
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            r.hincrby(mem, 'money', int(ran / 5))
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'money', ran)
             elif locations.index(location) == 3:
                 reward += 'Русаки пограбували Сільпо\n'
                 mode = choice([1, 2, 3, 4])
@@ -1890,14 +1888,13 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hset(mem, 'time', 0)
                 if mode2 == 1:
-                    ran = randint(200, 400)
+                    ran = randint(100, 200)
                     if mar >= 1:
                         ran *= 2
                     reward += '\n\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
-                    if s == 3:
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            r.hincrby(mem, 'money', int(ran / 5))
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'money', ran)
             elif locations.index(location) == 4:
                 reward += 'Русаки пограбували Епіцентр\n'
                 base = int(r.hget(c, 'base'))
@@ -1950,7 +1947,7 @@ async def start_raid(cid):
         msg = 'Проведено рейд на ' + location + '!' + reward
         await bot.send_message(cid, msg)
     elif mode == [3]:
-        chance1 = int(chance1 * (1 + rocket * 0.15))
+        chance1 = int(chance1 * (1 + rocket * 0.7))
         chance2 = int(r.hget('convoy', 'power'))
         msg0 = f'{title} | Перехоплення гумконвою\n\n\U0001F4AA {chance1} | {chance2}'
         try:
@@ -1969,7 +1966,7 @@ async def start_raid(cid):
             packs += 5
         else:
             r.hincrby('convoy', 'power', -chance1)
-        reward = int(chance2 / 20000 - (diff / 20000))
+        reward = int(chance2 / 25000 - (diff / 25000))
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
