@@ -449,13 +449,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if c1 == 23:
             magic = int(r.hget(uid1, 'deaths')) * 5
-            if magic > 35:
-                magic = 35
+            if magic > 45:
+                magic = 45
             i1 = int(i1 * (1 + magic / 100))
         if c2 == 23:
             magic = int(r.hget(uid1, 'deaths')) * 3
-            if magic > 33:
-                magic = 33
+            if magic > 45:
+                magic = 45
             s2 = int(s2 * (1 + magic / 100))
 
         if c1 == 4 or c1 == 14 or c1 == 24:
