@@ -441,17 +441,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             s1, s2 = 10, 10
 
         if hach1 == 1:
-            s1 = int(s1 * 1.15)
+            s1 = int(s1 * 1.2)
             spirit(30, uid1, 0)
-        elif hach1 == 0:
-            if c1 == 1 or c1 == 11 or c1 == 21:
-                s1 = int(s1 * 0.85)
         if hach2 == 1:
-            s2 = int(s2 * 1.15)
+            s2 = int(s2 * 1.2)
             spirit(30, uid2, 0)
-        elif hach2 == 0:
-            if c2 == 1 or c2 == 11 or c2 == 21:
-                s2 = int(s2 * 0.85)
 
         if c1 == 23:
             magic = int(r.hget(uid1, 'deaths')) * 5
