@@ -118,7 +118,7 @@ def c_shop(c, page):
         elif int(r.hget(c, 'build1')) == 2:
             msg += '\n\U0001F3A9 Тактичний шолом [Шапка, міцність=40] - збільшує силу в дуелях і ' \
                    'міжчатових битвах на 31%.'
-            markup.add(InlineKeyboardButton(text='Тактичний шолом - 50 грн', callback_data='clan_helmet'))
+            markup.add(InlineKeyboardButton(text='Тактичний шолом - 40 грн', callback_data='clan_helmet'))
             msg += '\n\U0001F6A7 Міни [Захист, міцність=3] - з шансом 33% завдає ворогу 5 поранень і ' \
                    'зменшує міцність зброї на 5. Можливість використати міни при захисті клану.'
             markup.add(InlineKeyboardButton(text='Міни - 20 грн', callback_data='clan_bombs'))

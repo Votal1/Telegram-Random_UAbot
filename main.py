@@ -5107,11 +5107,11 @@ async def handle_query(call):
 
         elif call.data.startswith('clan_helmet'):
             if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
-                if int(r.hget(call.from_user.id, 'money')) >= 50:
+                if int(r.hget(call.from_user.id, 'money')) >= 40:
                     if int(r.hget(call.from_user.id, 'head')) == 0:
                         r.hset(call.from_user.id, 'head', 2)
                         r.hset(call.from_user.id, 's_head', 40)
-                        r.hincrby(call.from_user.id, 'money', -50)
+                        r.hincrby(call.from_user.id, 'money', -40)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Ви успішно купили тактичний шолом')
                     else:
