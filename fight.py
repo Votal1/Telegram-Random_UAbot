@@ -1956,6 +1956,18 @@ async def start_raid(cid):
         await bot.send_message(cid, msg)
 
     elif mode == [3]:
+
+        if datetime.now().hour == 0:
+            try:
+                await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
+            except:
+                pass
+            r.hset(c, 'raid_ts2', int(datetime.now().timestamp()))
+            r.hdel(c, 'start')
+            for member in r.smembers('fighters_3' + str(cid)):
+                r.srem('fighters_3' + str(cid), member)
+            return False
+
         s = int(r.hget(c, 'side'))
         chance1 = int(chance1 * (1 + rocket * 0.07))
         chance2 = int(r.hget('convoy', 'power'))
