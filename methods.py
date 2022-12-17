@@ -568,6 +568,8 @@ async def itop(uid, cid, chat, text):
             try:
                 if text.split(' ')[1] == '-d':
                     everyone = r.smembers('premium_users')
+                    if str(uid).encode() not in everyone:
+                        return 'Тебе нема в рейтингу донатерів.'
                 else:
                     raise Exception
             except:
