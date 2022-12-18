@@ -1,7 +1,7 @@
 from config import r
 from methods import checkClan
 from random import choices, choice
-from variables import default, chm, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12
+from variables import default, chm, girkin, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from content.quests import quest
 
@@ -77,14 +77,12 @@ def shop_msg(uid, mode):
                  '\U0001F531 Спорядження - 10 \U0001F9C2': 'salt_upgraded',
                  '\U0001F349 Кавун - 15 \U0001F9C2': 'salt_watermelon',
                  '\U0001F4FB\U0001F9F1\U0001F9F6 - 20 \U0001F9C2': 'salt_resources',
-                 '\U0001F304 Фото - 8 \U0001F9C2': 'salt_photo',
-                 '\U0001F309 Чмоня - 30 \U0001F9C2': 'salt_chm',
                  '\U0001F43D\U0001F41F Швайнокарась - 33 \U0001F9C2': 'salt_fish'}
         for key, value in items.items():
-            if value == 'cabin' and r.hexists(uid, 'cabin') and int(r.hget(uid, 'cabin')) == 1:
-                pass
-            else:
-                markup.add(InlineKeyboardButton(text=key, callback_data=value))
+            markup.add(InlineKeyboardButton(text=key, callback_data=value))
+        markup.add(InlineKeyboardButton(text='\U0001F304 - 8 \U0001F9C2', callback_data='salt_photo'),
+                   InlineKeyboardButton(text='\U0001F307 - 20 \U0001F9C2', callback_data='salt_chm'),
+                   InlineKeyboardButton(text='\U0001F309 - 30 \U0001F9C2', callback_data='salt_girkin'))
         markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),
                    InlineKeyboardButton(text='\U0001F31F', callback_data='switch2'))
         salt = int(r.hget(uid, 'salt'))
@@ -95,7 +93,8 @@ def shop_msg(uid, mode):
               f'на 5 та силу при годуванні на 5. Кавун буде конфісковано, якщо при годуванні зменшиться сила.\n' \
               f'\U0001F4FB 22 \U0001F9F1 55 \U0001F9F6 111 - ресурси для клану.\n' \
               f'\U0001F304 Фото - заміна фотки русака на одне випадкове з 10 стандартних.\n' \
-              f'\U0001F309 Чмоня - заміна фотки русака на одного з Чмонь, залежно від класу.\n' \
+              f'\U0001F307 Чмоня - заміна фотки русака на одного з Чмонь, залежно від класу.\n' \
+              f'\U0001F309 Гіркін - заміна фотки русака на одне з фото Гіркіна, залежно від класу.' \
               f'\U0001F43D\U0001F41F Швайнокарась [Допомога, міцність=3, максимальна_міцність=3] - ' \
               f'може виконувати бажання русаків (відпочивати, нажертись, напитись).'
 
@@ -254,9 +253,9 @@ def salt_shop(uid, cdata):
             return 'Недостатньо солі на рахунку.'
 
     elif cdata.startswith('salt_chm'):
-        if int(r.hget(uid, 'salt')) >= 30:
+        if int(r.hget(uid, 'salt')) >= 20:
             cl = int(r.hget(uid, 'class'))
-            r.hincrby(uid, 'salt', -30)
+            r.hincrby(uid, 'salt', -20)
             r.hincrby(uid, 'purchase', 1)
             if cl == 0:
                 r.hset(uid, 'photo', default[4])
@@ -284,6 +283,41 @@ def salt_shop(uid, cdata):
                 r.hset(uid, 'photo', chm[10])
             elif cl == 34 or cl == 35 or cl == 36:
                 r.hset(uid, 'photo', chm[11])
+            return 'Ви успішно змінили фото русаку'
+        else:
+            return 'Недостатньо солі на рахунку.'
+
+    elif cdata.startswith('salt_girkin'):
+        if int(r.hget(uid, 'salt')) >= 30:
+            cl = int(r.hget(uid, 'class'))
+            r.hincrby(uid, 'salt', -30)
+            r.hincrby(uid, 'purchase', 1)
+            if cl == 0:
+                r.hset(uid, 'photo', girkin[0])
+            elif cl == 1 or cl == 11 or cl == 21:
+                r.hset(uid, 'photo', girkin[1])
+            elif cl == 2 or cl == 12 or cl == 22:
+                r.hset(uid, 'photo', girkin[2])
+            elif cl == 3 or cl == 13 or cl == 23:
+                r.hset(uid, 'photo', girkin[3])
+            elif cl == 4 or cl == 14 or cl == 24:
+                r.hset(uid, 'photo', girkin[4])
+            elif cl == 5 or cl == 15 or cl == 25:
+                r.hset(uid, 'photo', girkin[5])
+            elif cl == 6 or cl == 16 or cl == 26:
+                r.hset(uid, 'photo', girkin[6])
+            elif cl == 7 or cl == 17 or cl == 27:
+                r.hset(uid, 'photo', girkin[7])
+            elif cl == 8 or cl == 18 or cl == 28:
+                r.hset(uid, 'photo', girkin[8])
+            elif cl == 9 or cl == 19 or cl == 29:
+                r.hset(uid, 'photo', girkin[9])
+            elif cl == 10 or cl == 20 or cl == 30:
+                r.hset(uid, 'photo', girkin[10])
+            elif cl == 31 or cl == 32 or cl == 33:
+                r.hset(uid, 'photo', girkin[11])
+            elif cl == 34 or cl == 35 or cl == 36:
+                r.hset(uid, 'photo', girkin[12])
             return 'Ви успішно змінили фото русаку'
         else:
             return 'Недостатньо солі на рахунку.'
