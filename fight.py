@@ -1861,7 +1861,6 @@ async def start_raid(cid):
                     if mar >= 1:
                         ran *= 2
                     reward += '\n\U0001F4B5 +' + str(ran)
-                    r.hincrby(c, 'money', ran)
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'money', ran)
             elif locations.index(location) == 3:
@@ -1906,7 +1905,6 @@ async def start_raid(cid):
                     if mar >= 1:
                         ran *= 2
                     reward += '\n\U0001F4B5 +' + str(ran)
-                    r.hincrby(c, 'money', ran)
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'money', ran)
             elif locations.index(location) == 4:
