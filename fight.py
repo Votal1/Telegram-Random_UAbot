@@ -800,7 +800,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 quest(uid2, 3, -1, 4)
             info += '\n\U0001fac0 ' + stats11[3].decode() + ' | ' + stats22[3].decode() + '(-1)' + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + '! ' + str(grn) +
-                           '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
+                           '\n\u2744\uFE0F Його русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
                                                                    ' стільки ж втрачає.' +
                            hach + worker + meat + cop + pag + fsb + hack)
             return info + win_info
@@ -938,7 +938,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 quest(uid1, 3, -1, 4)
             info += '\n\U0001fac0 ' + stats11[3].decode() + '(-1) | ' + stats22[3].decode() + m1 + m2
             win_info = str('\n\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + '! ' + str(grn) +
-                           '\nЙого русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
+                           '\n\u2744\uFE0F Його русак отримує +' + str(bonus) + ' бойового духу, а русак опонента'
                                                                    ' стільки ж втрачає.' +
                            hach + worker + meat + cop + pag + fsb + hack)
             return info + win_info

@@ -64,7 +64,7 @@ def prepare_to_fight(uid, fn, q):
                     '\n\U0001F4AA ' + str(s) +
                     ' \U0001F9E0 ' + str(i) +
                     ' \U0001F54A ' + str(bd) +
-                    '\n\n@Random_UAbot <- отримати русака')
+                    '\n\n\u2744\uFE0F @Random_UAbot <- отримати русака')
 
         return ' ' + fn + ' починає битву русаків!' + query + stats
     else:
