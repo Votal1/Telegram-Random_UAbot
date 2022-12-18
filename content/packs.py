@@ -2,7 +2,7 @@ from config import r
 from random import choice, choices, randint
 from methods import checkClan, q_points
 from variables import icons
-from parameters import vodka
+from parameters import vodka, increase_trance, hp, spirit
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from content.quests import quest
 
@@ -352,3 +352,109 @@ def open_pack(uid, cdata, edit):
             return False
 
     return False
+
+
+def open_gift(uid, cdata, edit, cid):
+    markup = InlineKeyboardMarkup()
+    msg = ''
+    if uid == int(cdata.split('_')[2]):
+        cl = int(r.hget(uid, 'class'))
+        if cdata.startswith('gift_unpack_'):
+            if int(r.hget(uid, 'packs_2023')) > 0:
+                r.hincrby(uid, 'packs_2023', -1)
+                r.hincrby(uid, 'opened', 1)
+                r.hincrby('all_opened', 'packs', 1)
+
+                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                              weights=[20, 18, 15, 10, 10, 10, 4, 4, 4, 2, 2, 1])
+                if ran == [1]:
+                    ran = randint(1, 5)
+                    if ran == 1:
+                        r.hincrby(uid, 'strength', 1)
+                        msg = '\u26AA В подарунку лежить одна Шоколапка.\n\U0001F4AA +1'
+                    elif ran == 2:
+                        r.hincrby(uid, 'injure', 1)
+                        msg = '\u26AA В подарунку лежить цукерка Рачки.\n\U0001fa78 +1'
+                    elif ran == 3:
+                        r.hincrby(uid, 'sch', 1)
+                        msg = '\u26AA В подарунку лежить Зоряне Сяйво.\n\U0001F464 +1'
+                    elif ran == 4:
+                        increase_trance(1, uid)
+                        msg = '\u26AA В подарунку лежить цукерка Бджілка.\n\U0001F44A +1'
+                    elif ran == 5:
+                        hp(1, uid)
+                        msg = '\u26AA В подарунку лежить м`ятний цукерок.\n\U0001fac0 +1'
+                elif ran == [2]:
+                    spirit(3000, uid, 0)
+                    msg = '\u26AA У цьому подарунку лежить торбинка мандаринів.\n\U0001F54A +3000'
+                elif ran == [3]:
+                    msg = '\u26AA Знайдено конверт, всередині якого...\n\U0001F4B5 50 гривень.'
+                    r.hincrby(uid, 'money', 50)
+                elif ran == [4]:
+                    msg = '\U0001f535 Знайдено: Рязанський цукор \U0001F92F\n\U0001F9EA +1'
+                    if int(r.hget(uid, 'support')) == 0:
+                        r.hset(uid, 'support', 7)
+                        r.hset(uid, 's_support', 1)
+                    elif int(r.hget(uid, 'support')) != 10:
+                        r.hincrby(uid, 's_support', 1)
+                elif ran == [5]:
+                    msg = '\U0001f535 Знайдено новорічну шапку.\n\U0001F3A9 +1'
+                    if int(r.hget(uid, 'head')) == 0:
+                        r.hset(uid, 'head', 6)
+                        r.hset(uid, 's_head', 1)
+                    elif int(r.hget(uid, 'head')) not in (3, 5):
+                        r.hincrby(uid, 's_head', 1)
+                elif ran == [6]:
+                    increase_trance(20, uid)
+                    vo = 0
+                    for v in range(20):
+                        vo += int(vodka(uid))
+                    msg = f'\U0001f535 Цей пакунок виявився ящиком Львівського Різдвяного!\n' \
+                          f'\U0001F44A +20 \u2622 +20 \U0001F54A +{vo}'
+                elif ran == [7]:
+                    msg = '\U0001f7e3 В цьому подарунку знаходиться повне відро олів`є\n\U0001F957 +1'
+                    r.hset(uid, 'time', 0)
+                elif ran == [8]:
+                    ran = randint(1, 5)
+                    r.hincrby(uid, 'salt', ran)
+                    msg = f'\U0001f7e3 В цьому подарунку знаходиться кілька банок солоної карамелі\n\U0001F9C2 +{ran}'
+                elif ran == [9]:
+                    msg = '\U0001f7e3 Знайдено зимову куртку, а в ній заначку...\n\U0001F4B5 500 гривень.'
+                    r.hincrby(uid, 'money', 500)
+                elif ran == [10]:
+                    try:
+                        for mem in r.smembers(cid):
+                            spirit(5000, mem, 0)
+                    except:
+                        spirit(5000, uid, 0)
+                    msg = '\U0001f7e1 Після відкриття цього подарунка сталася бавовна...\n' \
+                          '\U0001F54A +5000 всім в чаті'
+                elif ran == [11]:
+                    if int(r.hget(uid, 'weapon')) == 6:
+                        r.hincrby(uid, 's_weapon', 10)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти посох', callback_data=f'gift_stick_{uid}'))
+                    msg = '\U0001f7e1 Посох Діда Мороза [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
+                          'подарунок в дуелі.'
+                elif ran == [12]:
+                    msg = '\U0001f7e1 На передодні Різдва на Донбасі стається справжнє диво, святкове як зимова ' \
+                          'ніч веселе як коляда!\n\U0001F31F +1'
+                    r.hincrby(uid, 'strap', 1)
+            else:
+                msg = 'Недостатньо подарунків.'
+
+            return msg, markup
+
+        elif cdata.startswith('gift_stick_'):
+            if int(r.hget(uid, 'weapon')) == 6:
+                r.hincrby(uid, 's_weapon', 10)
+            else:
+                r.hset(uid, 'weapon', 6)
+                r.hset(uid, 's_weapon', 10)
+            return edit, None
+
+        else:
+            return False
+
+    return False
+

@@ -17,10 +17,10 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, create_clan, clan_set, invite, buy_tools, invent0
+    battle_button_4, invent, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, invent0
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack
+from content.packs import open_pack, open_gift
 from content.quests import quests, quest
 from content.wiki import wiki_text
 
@@ -1437,6 +1437,16 @@ async def pack(message):
                                     '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
     else:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+
+
+@dp.message_handler(commands=['gift'])
+async def pack(message):
+    if r.hexists(message.from_user.id, 'name'):
+        if r.hexists(message.from_user.id, 'packs_2023'):
+            packs = int(r.hget(message.from_user.id, 'packs_2023'))
+            if packs != 0:
+                await message.reply('\U0001F381 Донбаські подарунки: ' + str(packs) + '\n\nВідкрити?',
+                                    reply_markup=gift_unpack(message.from_user.id))
 
 
 @dp.message_handler(commands=['skills'])
@@ -4876,26 +4886,6 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Пізно пришвидшувати будівництво')
 
-    elif call.data.startswith('strap_to_salt'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hincrby(call.from_user.id, 'salt', 6)
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили 6 солі')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо погонів на рахунку')
-
-    elif call.data.startswith('sal_to_strap'):
-        if int(r.hget(call.from_user.id, 'salt')) >= 66:
-            r.hincrby(call.from_user.id, 'strap', 1)
-            r.hincrby(call.from_user.id, 'salt', -66)
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно обміняли сіль на погон')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо солі на рахунку')
-
     elif call.data.startswith('zero_time'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
@@ -4991,6 +4981,22 @@ async def handle_query(call):
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
                 msg = open_pack(call.from_user.id, call.data, call.message.text)
+                if msg:
+                    await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
+                                                reply_markup=msg[1])
+        except:
+            pass
+
+    elif call.data.startswith('gift_'):
+        try:
+            if r.hexists('pack_ts', call.from_user.id) == 0:
+                r.hset('pack_ts', call.from_user.id, 0)
+            timestamp = int(datetime.now().timestamp())
+            if not call.data.startswith('gift_unpack') and timestamp - int(r.hget('pack_ts', call.from_user.id)) < 2:
+                pass
+            else:
+                r.hset('pack_ts', call.from_user.id, timestamp)
+                msg = open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                 if msg:
                     await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                 reply_markup=msg[1])

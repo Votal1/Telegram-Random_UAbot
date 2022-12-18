@@ -66,6 +66,14 @@ def unpack(uid):
     return markup
 
 
+def gift_unpack(uid):
+    markup = InlineKeyboardMarkup()
+    items = {'Так': f'gift_unpack_{uid}'}
+    for key, value in items.items():
+        markup.add(InlineKeyboardButton(text=key, callback_data=value))
+    return markup
+
+
 def create_clan():
     markup = InlineKeyboardMarkup()
     items = {'\U0001F4B5 250': 'create_hrn', '\U0001F31F 1': 'create_strap'}
