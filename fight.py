@@ -182,12 +182,12 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if hp1 >= 90:
             if c1 in (34, 35, 36):
-                s1 = int(s1 * 1.5)
+                s1 = int(s1 * 1.4)
             else:
                 s1 = int(s1 * 1.1)
         if hp2 >= 90:
             if c2 in (34, 35, 36):
-                s2 = int(s2 * 1.5)
+                s2 = int(s2 * 1.4)
             else:
                 s2 = int(s2 * 1.1)
 
