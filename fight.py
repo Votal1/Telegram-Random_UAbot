@@ -618,9 +618,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         elif not mal1 and chance22 > 95:
             win = choices(['1', '2'], weights=[5, 95])
         elif mal2 and chance11 > 80:
-            win = choices(['1', '2'], weights=[80, 20])
+            if int(r.hget(uid2, 'sch')) > 0:
+                win = choices(['1', '2'], weights=[75, 25])
+            else:
+                win = choices(['1', '2'], weights=[80, 20])
         elif mal1 and chance22 > 80:
-            win = choices(['1', '2'], weights=[20, 80])
+            if int(r.hget(uid1, 'sch')) > 0:
+                win = choices(['1', '2'], weights=[25, 75])
+            else:
+                win = choices(['1', '2'], weights=[20, 80])
         else:
             win = choices(['1', '2'], weights=[chance1, chance2])
 
