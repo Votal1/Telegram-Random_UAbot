@@ -103,7 +103,7 @@ premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', '
            'https://ibb.co/n8d9fyv', 'https://ibb.co/NK7tzW6', 'https://ibb.co/RQtY0fb']
 
 premium2 = ['https://ibb.co/2d74PBj', 'https://ibb.co/Y09fjgM', 'https://ibb.co/YPxXKsc', 'https://ibb.co/pRpBhTp',
-            'https://ibb.co/WsnGJdM', 'https://ibb.co/0BnbTm4', 'https://ibb.co/wcJ0B62', 'https://ibb.co/SnjZdMH',
+            'https://ibb.co/Y7jDQDr', 'https://ibb.co/0BnbTm4', 'https://ibb.co/wcJ0B62', 'https://ibb.co/SnjZdMH',
             'https://ibb.co/tXnJcKc', 'https://ibb.co/2NJYsSQ', 'https://ibb.co/qRbSnJy', 'https://ibb.co/1vHr3hm']
 
 premium3 = ['https://ibb.co/FmrkDC3', 'https://ibb.co/jhf5RSW', 'https://ibb.co/VHy87KH', 'https://ibb.co/t4MsDt4',
