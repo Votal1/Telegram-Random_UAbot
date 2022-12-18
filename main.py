@@ -1080,12 +1080,15 @@ async def promo_code(message):
             if msg.encode() in r.smembers('promo_codes'):
                 if msg.startswith('soledar_n') and uid not in r.smembers('first_code'):
                     r.sadd('first_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'packs', 10)
+
+                    r.hincrby(message.from_user.id, 'packs_2023', 10)
+
+                    r.hincrby(message.from_user.id, 'packs', 20)
                     r.hincrby(message.from_user.id, 'money', 30)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     r.hincrby('all_vodka', 'vodka', 50)
                     await message.reply('\u26CF Соледарський промокод активовано!'
-                                        '\n\U0001F4E6 +10 \U0001F4B5 +30 \u2622 +50')
+                                        '\n\U0001F4E6 +20 \U0001F4B5 +30 \u2622 +50\n\U0001F381 +10')
                 elif msg.startswith('an') and uid not in r.smembers('second_code'):
                     msg = '\u26CF Хакерський промокод активовано!\n\U0001F4E6 +10 \u2622 +50 \U0001F4B5 +100'
                     r.sadd('second_code', message.from_user.id)
