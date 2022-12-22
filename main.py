@@ -1178,6 +1178,15 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     r.hincrby('all_vodka', 'vodka', 50)
                     await message.reply(msg)
+                elif msg.startswith('100') and uid not in r.smembers('tenth_code'):
+                    msg = '\u26CF Промокод ста тисяч активовано!\n\U0001F381 +10 \u2620\uFE0F +10 \U0001F4AA +100'
+                    r.sadd('tenth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'deaths', 10)
+                    r.hincrby(message.from_user.id, 'packs_2023', 10)
+                    r.hincrby(message.from_user.id, 'strength', 100)
+                    if r.hexists(message.from_user.id, 'strength2'):
+                        r.hincrby(message.from_user.id, 'strength2', 100)
+                    await message.reply(msg)
                 '''
                 if msg.startswith('pa') and uid not in r.smembers('eighth_code') \
                         and uid in r.smembers('premium_users'):
