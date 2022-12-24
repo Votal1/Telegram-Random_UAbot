@@ -3347,6 +3347,9 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ти не адміністратор.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='В тебе є свій клан.')
 
     elif call.data.startswith('enter_war'):
         weekday = datetime.today().weekday()
