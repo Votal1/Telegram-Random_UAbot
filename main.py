@@ -4902,7 +4902,7 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Пізно пришвидшувати будівництво')
 
-    elif call.data.startswith('zero_time'):
+    elif call.data.startswith('zero_time') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
             r.hset(call.from_user.id, 'clan_ts', 0)
