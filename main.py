@@ -4993,6 +4993,8 @@ async def handle_query(call):
                 pass
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
+                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                            call.message.message_id, reply_markup=None)
                 msg = open_pack(call.from_user.id, call.data, call.message.text)
                 if msg:
                     await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
@@ -5002,13 +5004,13 @@ async def handle_query(call):
 
     elif call.data.startswith('gift_'):
         try:
-            if r.hexists('pack_ts', call.from_user.id) == 0:
-                r.hset('pack_ts', call.from_user.id, 0)
+            if r.hexists('gift_ts', call.from_user.id) == 0:
+                r.hset('gift_ts', call.from_user.id, 0)
             timestamp = int(datetime.now().timestamp())
-            if not call.data.startswith('gift_unpack') and timestamp - int(r.hget('pack_ts', call.from_user.id)) < 2:
+            if not call.data.startswith('gift_unpack') and timestamp - int(r.hget('gift_ts', call.from_user.id)) < 2:
                 pass
             else:
-                r.hset('pack_ts', call.from_user.id, timestamp)
+                r.hset('gift_ts', call.from_user.id, timestamp)
                 msg = open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                 if msg:
                     await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
