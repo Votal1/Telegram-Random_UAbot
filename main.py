@@ -4993,12 +4993,15 @@ async def handle_query(call):
                 pass
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
-                await bot.edit_message_text(call.message.text, call.message.chat.id,
-                                            call.message.message_id, reply_markup=None)
-                msg = open_pack(call.from_user.id, call.data, call.message.text)
-                if msg:
-                    await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
-                                                reply_markup=msg[1])
+                if call.data.startswith('pack_unpack'):
+                    msg = open_pack(call.from_user.id, call.data, call.message.text)
+                    if msg:
+                        await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
+                                                    reply_markup=msg[1])
+                else:
+                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                call.message.message_id, reply_markup=None)
+                    open_pack(call.from_user.id, call.data, call.message.text)
         except:
             pass
 
