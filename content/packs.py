@@ -136,7 +136,7 @@ def open_pack(uid, cdata, edit):
                 elif ran == [9]:
                     if int(r.hget(uid, 'intellect')) < 20:
                         if int(r.hget(uid, 'support')) != 6:
-                            markup.add(InlineKeyboardButton(text='Взяти мухохор', callback_data=f'pack_mushroom_{uid}'))
+                            markup.add(InlineKeyboardButton(text='Взяти мухомор', callback_data=f'pack_mushroom_{uid}'))
                         elif int(r.hget(uid, 'support')) == 6:
                             r.hincrby(uid, 's_support', 1)
                         msg = '\U0001f7e3 Знайдено: \U0001F344 Мухомор королівський [Допомога, міцність=1] ' \
