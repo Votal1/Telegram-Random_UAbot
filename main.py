@@ -4998,7 +4998,7 @@ async def handle_query(call):
                     if msg:
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
-                else:
+                elif call.from_user.id == int(call.data.split('_')[2]):
                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                 call.message.message_id, reply_markup=None)
                     open_pack(call.from_user.id, call.data, call.message.text)
@@ -5019,7 +5019,7 @@ async def handle_query(call):
                     if msg:
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
-                else:
+                elif call.from_user.id == int(call.data.split('_')[2]):
                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                 call.message.message_id, reply_markup=None)
                     open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
