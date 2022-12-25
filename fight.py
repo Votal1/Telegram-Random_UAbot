@@ -344,7 +344,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     s2 = int(s2 * 1.25)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
-        elif weapon2 == 6:
+
+        if weapon2 == 6:
             weapon = '\n\n\U0001F381 ' + names[name1] + ' отримав подарунок від свого суперника...'
             r.hincrby(uid1, 'packs_2023', 1)
             damage_weapon(uid2, c2)
