@@ -93,11 +93,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if weapon1 != 0:
                     cop2 = choices([1, 0], weights=[10, 90])
                     if cop2 == [1]:
-                        if int(r.hget(uid2, 's_defense')) > 300:
-                            r.hincrby(uid2, 's_defense', -300)
+                        if int(r.hget(uid1, 's_defense')) > 300:
+                            r.hincrby(uid1, 's_defense', -300)
                         else:
-                            r.hset(uid2, 'defense', 0)
-                            r.hset(uid2, 's_defense', 0)
+                            r.hset(uid1, 'defense', 0)
+                            r.hset(uid1, 's_defense', 0)
                         r.hincrby(uid2, 's_defense', 20)
                         cop += '\n\U0001F46E ' + names[name2] + \
                                ' вилучив у ворога захисне спорядження!\n\U0001F6E1 +10\n'
