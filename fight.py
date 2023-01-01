@@ -86,7 +86,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             r.hset(uid2, 's_weapon', 0)
                         r.hincrby(uid1, 's_defense', 20)
                         cop += '\n\U0001F46E ' + names[name1] + \
-                               ' вилучив у ворога зброю!\n\U0001F6E1 +10\n'
+                               ' вилучив у ворога зброю!\n\U0001F6E1 +20\n'
         if c2 == 26 and t == 1:
             quest(uid1, 3, -3, 1)
             if c1 not in (6, 16, 26) and defense2 in (16, 17):
@@ -100,7 +100,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             r.hset(uid1, 's_defense', 0)
                         r.hincrby(uid2, 's_defense', 20)
                         cop += '\n\U0001F46E ' + names[name2] + \
-                               ' вилучив у ворога захисне спорядження!\n\U0001F6E1 +10\n'
+                               ' вилучив у ворога захисне спорядження!\n\U0001F6E1 +20\n'
 
         if c1 == 27 and c2 == 0 and t == 1:
             fsb1 = choices([1, 0], weights=[5, 95])
