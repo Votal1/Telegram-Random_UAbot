@@ -750,6 +750,7 @@ async def passport(message):
             except:
                 pass
         wins = f'\U0001F3C6 Кількість перемог: {stats[0].decode()}\n\U0001F3C5 Кількість трофеїв: {stats[1].decode()}'
+        deaths = f'\n\u2620\uFE0F Вбито русаків: {stats[2].decode()}\n\U0001F476 З`їдено немовлят: {stats[3].decode()}'
         try:
             if message.text.endswith(' -all'):
                 wins = f'\U0001F3C6 Кількість перемог за всі сезони: ' \
@@ -758,12 +759,18 @@ async def passport(message):
                        f'{int(stats[1]) + int(r.hget(message.from_user.id, "trophy_all"))}'
         except:
             pass
+        try:
+            if message.text.endswith(' -all'):
+                deaths = f'\n\n\u2620\uFE0F Вбито русаків за всі сезони: ' \
+                       f'{int(stats[2]) + int(r.hget(message.from_user.id, "deaths_all"))}\n' \
+                       f'\U0001F476 З`їдено немовлят за всі сезони: ' \
+                       f'{int(stats[3]) + int(r.hget(message.from_user.id, "childs_all"))}'
+        except:
+            pass
         clan1 = ''
         if checkClan(message.from_user.id):
             clan1 = '\n\U0001F3E0 Клан: ' + r.hget('c' + stats[6].decode(), 'title').decode()
-        msg = f'\U0001F4DC {message.from_user.first_name}\n\n{wins}' \
-              f'\n\u2620\uFE0F Вбито русаків: {stats[2].decode()}' \
-              f'\n\U0001F476 З`їдено немовлят: {stats[3].decode()}' \
+        msg = f'\U0001F4DC {message.from_user.first_name}\n\n{wins}{deaths}' \
               f'\n\u2622 Випито горілки: {stats[4].decode()}' \
               f'\n\U0001F4E6 Відкрито пакунків: {stats[5].decode()}{clan1}' \
               f'\n\u26CF Скіли: {skill}%' \
