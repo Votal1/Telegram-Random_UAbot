@@ -1973,7 +1973,6 @@ async def start_raid(cid):
             await bot.send_message(cid, 'Ага, багоюзиш')
             return False
 
-        s = int(r.hget(c, 'side'))
         chance1 = int(chance1 * (1 + rocket * 0.07))
         chance2 = int(r.hget('convoy', 'power'))
         msg0 = f'{title} | Перехоплення гумконвою\n\n\U0001F4AA {chance1} | {chance2}'
@@ -1993,10 +1992,7 @@ async def start_raid(cid):
             packs += 5
         else:
             r.hincrby('convoy', 'power', -chance1)
-        if s == 3:
-            reward = int(chance2 / 15000 - (diff / 15000))
-        else:
-            reward = int(chance2 / 25000 - (diff / 25000))
+        reward = int(chance2 / 25000 - (diff / 25000))
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
