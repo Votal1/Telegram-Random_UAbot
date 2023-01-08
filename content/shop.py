@@ -13,7 +13,7 @@ def shop_msg(uid, mode):
         markup.add(InlineKeyboardButton(text='\u2622 1 - \U0001F4B5 2', callback_data='vodka'),
                    InlineKeyboardButton(text='\u2622 5 - \U0001F4B5 12', callback_data='5_vodka'),
                    InlineKeyboardButton(text='\u2622 20 - \U0001F4B5 50', callback_data='20_vodka'))
-        items = {'\U0001F5E1 Колючий дрин - 4 грн': 'weapon',
+        items = {'\U0001F5E1 Колючий дрин - \U0001F4B5 4': 'weapon',
                  '\U0001F6E1 Колючий щит - \U0001F4B5 5': 'defense',
                  '\U0001F9EA Аптечка - \U0001F4B5 5': 'aid_kit',
                  '\U0001F4B3 Трофейний паспорт - \U0001F4B5 10': 'passport',
