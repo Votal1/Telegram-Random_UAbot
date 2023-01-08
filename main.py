@@ -4167,7 +4167,7 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо коштів на рахунку')
 
-    elif call.data.startswith('20_vodka'):
+    elif call.data.startswith('5_vodka'):
         if int(r.hget(call.from_user.id, 'money')) >= 12:
             r.hincrby(call.from_user.id, 'money', -12)
             quest(call.from_user.id, 1, 2)
