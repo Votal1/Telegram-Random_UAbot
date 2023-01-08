@@ -245,39 +245,6 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 pass
             else:
                 damage_weapon(uid2, c2)
-        elif weapon2 in (13, 24):
-            if c2 == 13 or c2 == 23:
-                if i1 > i2:
-                    it = i2
-                    i2 = i1
-                    i1 = it
-                if s1 > s2:
-                    st = s2
-                    s2 = s1
-                    s1 = st
-                if bd1 > bd2:
-                    bt = bd2
-                    bd2 = bd1
-                    bd1 = bt
-            else:
-                st = s2
-                it = i2
-                bt = bd2
-                s2 = s1
-                s1 = st
-                i2 = i1
-                i1 = it
-                bd2 = bd1
-                bd1 = bt
-            if weapon2 == 24:
-                sh = int(r.hget(uid2, 'sch'))
-                if sh > 5:
-                    sh = 5
-                r.hincrby(uid1, 'sch', sh)
-                r.hincrby(uid2, 'sch', -sh)
-                quest(uid1, 3, -2, 3)
-            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' поміняв характеристики місцями!'
-            damage_weapon(uid2, c2)
         elif weapon2 in (15, 26) and c2 in (5, 15, 25):
             s2 = int(s2 * 1.75)
             ak = 'АКМ' if weapon2 == 26 else 'АК-47'
@@ -606,6 +573,40 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     bd1 = int(bd1 * 0.6)
                 else:
                     bd1 = int(bd1 * 0.8)
+
+        if weapon2 in (13, 24):
+            if c2 == 13 or c2 == 23:
+                if i1 > i2:
+                    it = i2
+                    i2 = i1
+                    i1 = it
+                if s1 > s2:
+                    st = s2
+                    s2 = s1
+                    s1 = st
+                if bd1 > bd2:
+                    bt = bd2
+                    bd2 = bd1
+                    bd1 = bt
+            else:
+                st = s2
+                it = i2
+                bt = bd2
+                s2 = s1
+                s1 = st
+                i2 = i1
+                i1 = it
+                bd2 = bd1
+                bd1 = bt
+            if weapon2 == 24:
+                sh = int(r.hget(uid2, 'sch'))
+                if sh > 5:
+                    sh = 5
+                r.hincrby(uid1, 'sch', sh)
+                r.hincrby(uid2, 'sch', -sh)
+                quest(uid1, 3, -2, 3)
+            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' поміняв характеристики місцями!'
+            damage_weapon(uid2, c2)
 
         mal1, mal2 = False, False
         if c1 == 7 or c1 == 17 or c1 == 27:
