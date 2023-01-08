@@ -110,51 +110,52 @@ def c_shop(c, page):
               '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
               '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
         price = 4 if int(r.hget(c, 'side')) == 1 else 10
-        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - {price} грн', callback_data='clan_ration'))
+        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - \U0001F4B5 {price}', callback_data='clan_ration'))
         if int(r.hget(c, 'build1')) == 1:
             msg += '\n\U0001F6E1 Уламок бронетехніки [Захист, міцність=7] - збільшує силу на бій на 30%, або' \
                    ' збільшує міцність захисту на 7. Після зношення повертаються 4 гривні.'
-            markup.add(InlineKeyboardButton(text='Уламок бронетехніки - 15 грн', callback_data='clan_fragment'))
+            markup.add(InlineKeyboardButton(text='Уламок бронетехніки - \U0001F4B5 15', callback_data='clan_fragment'))
         elif int(r.hget(c, 'build1')) == 2:
             msg += '\n\U0001F3A9 Тактичний шолом [Шапка, міцність=40] - збільшує силу в дуелях і ' \
                    'міжчатових битвах на 31%.'
-            markup.add(InlineKeyboardButton(text='Тактичний шолом - 40 грн', callback_data='clan_helmet'))
+            markup.add(InlineKeyboardButton(text='Тактичний шолом - \U0001F4B5 40', callback_data='clan_helmet'))
             msg += '\n\U0001F6A7 Міни [Захист, міцність=3] - з шансом 33% завдає ворогу 5 поранень і ' \
                    'зменшує міцність зброї на 5. Можливість використати міни при захисті клану.'
-            markup.add(InlineKeyboardButton(text='Міни - 20 грн', callback_data='clan_bombs'))
+            markup.add(InlineKeyboardButton(text='Міни - \U0001F4B5 20', callback_data='clan_bombs'))
         elif int(r.hget(c, 'build1')) == 3:
             msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
                    'якщо нема жінки.'
-            markup.add(InlineKeyboardButton(text='Батіг - 60 грн', callback_data='clan_lash'))
+            markup.add(InlineKeyboardButton(text='Батіг - \U0001F4B5 60', callback_data='clan_lash'))
         elif int(r.hget(c, 'build1')) == 4:
             msg += '\n\U0001F344 Мухомор королівський [Допомога, міцність=1] - якщо у ворога більший інтелект, додає ' \
                    '+1 інтелекту (не діє проти фокусників). На бій зменшує свою силу на 50%. ' \
                    'Максимальна кількість покупок на русака - 3.'
-            markup.add(InlineKeyboardButton(text='Мухомор королівський - 100 грн', callback_data='clan_mushroom'))
+            markup.add(InlineKeyboardButton(text='Мухомор королівський - \U0001F4B5 100',
+                                            callback_data='clan_mushroom'))
         if int(r.hget(c, 'build3')) == 4:
             msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
                    'битвах або рейдах на 25% (тільки для таксистів).'
-            markup.add(InlineKeyboardButton(text='Дизель - 20 грн', callback_data='clan_diesel'))
+            markup.add(InlineKeyboardButton(text='Дизель - \U0001F4B5 20', callback_data='clan_diesel'))
         if int(r.hget(c, 'build5')) == 1:
             msg += '\n\U0001F5E1 АК-47 [Зброя, міцність=30] - після перемоги активує ефект горілки.'
-            markup.add(InlineKeyboardButton(text='АК-47 - 15 грн', callback_data='clan_ak'))
+            markup.add(InlineKeyboardButton(text='АК-47 - \U0001F4B5 15', callback_data='clan_ak'))
             msg += '\n\u2744\uFE0F Вушанка [Шапка, міцність=20] - збільшує ефективність бойового трансу на 2% за' \
                    ' кожен рівень алкоголізму.'
-            markup.add(InlineKeyboardButton(text='Вушанка - 20 грн', callback_data='clan_ear'))
+            markup.add(InlineKeyboardButton(text='Вушанка - \U0001F4B5 20', callback_data='clan_ear'))
         elif int(r.hget(c, 'build5')) == 4:
             msg += '\n\U0001F9EA Цукор [Допомога, міцність=1] - збільшує силу при годуванні на 15 (до 3000 сили) або' \
                    ' зменшує шанс зменшити силу на 15% і додає 5 бойового трансу.'
-            markup.add(InlineKeyboardButton(text='Цукор - 55 грн', callback_data='clan_sugar'))
+            markup.add(InlineKeyboardButton(text='Цукор - \U0001F4B5 55', callback_data='clan_sugar'))
             msg += '\n\U0001F37A Квас [Допомога, міцність=5] - русак не втече зі зміни. Додає 5 бойового трансу ' \
                    'за роботу в шахті.'
-            markup.add(InlineKeyboardButton(text='Квас - 15 грн', callback_data='clan_kvs'))
+            markup.add(InlineKeyboardButton(text='Квас - \U0001F4B5 15', callback_data='clan_kvs'))
         if int(r.hget(c, 'build6')) == 2:
             msg += '\n\U0001F464 Шапочка з фольги [Шапка, міцність=10] - захищає від втрати бойового духу при ' \
                    'жертвоприношеннях, при купівлі русак отримує 30 шизофренії.'
-            markup.add(InlineKeyboardButton(text='Шапочка з фольги - 50 грн', callback_data='clan_foil'))
+            markup.add(InlineKeyboardButton(text='Шапочка з фольги - \U0001F4B5 50', callback_data='clan_foil'))
         elif int(r.hget(c, 'build6')) == 4:
             msg += '\n\U0001F476 Російське немовля - збільшує рейтинг на 88.'
-            markup.add(InlineKeyboardButton(text='Російське немовля - 100 грн', callback_data='clan_children'))
+            markup.add(InlineKeyboardButton(text='Російське немовля - \U0001F4B5 100', callback_data='clan_children'))
 
         if int(r.hget(c, 'base')) == 11:
             msg += '\n\u2708\uFE0F БпЛА [Зброя, міцність=1] - за кожен рівень майстерності збільшує силу в ' \
