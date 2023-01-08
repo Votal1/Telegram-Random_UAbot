@@ -73,6 +73,12 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     worker += '\n\U0001F9F0 ' + names[name2] + ' отримує від начальника талон на їжу.\n'
                     r.hset(uid2, 'worker', datetime.now().day)
                     r.hset(uid2, 'time', 0)
+
+        if weapon2 == 4:
+            weapon1, defense1 = 0, 0
+            damage_weapon(uid2, c2)
+            weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' обеззброїв ворога битою!'
+
         if c1 == 26 and t == 1:
             quest(uid2, 3, -1, 1)
             if c2 not in (6, 16, 26) and defense1 in (16, 17):
