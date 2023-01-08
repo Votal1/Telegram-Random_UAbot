@@ -4148,15 +4148,48 @@ async def handle_query(call):
             for v in range(20):
                 vo += int(vodka(call.from_user.id))
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text=f'Ви успішно купили ящик горілки "Козаки"\n\U0001F54A + {vo}')
+                                            text=f'Ви успішно купили ящик горілки "Козаки"\n\U0001F54A +{vo}')
         else:
             cl = int(r.hget(call.from_user.id, 'class'))
             if cl == 17 or cl == 27:
-                if int(r.hget(call.from_user.id, 'wins')) >= 2:
-                    r.hincrby(call.from_user.id, 'wins', -2)
+                if int(r.hget(call.from_user.id, 'wins')) >= 50:
+                    r.hincrby(call.from_user.id, 'wins', -50)
+                    vo = 0
+                    for v in range(20):
+                        vo += int(vodka(call.from_user.id))
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                    text='Ви успішно купили горілку "Козаки" за перемоги'
-                                                         '\n\U0001F54A + ' + vodka(call.from_user.id))
+                                                    text=f'Ви успішно купили ящик горілки "Козаки" за перемоги'
+                                                         f'\n\U0001F54A +{vo}')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо коштів на рахунку')
+
+    elif call.data.startswith('20_vodka'):
+        if int(r.hget(call.from_user.id, 'money')) >= 12:
+            r.hincrby(call.from_user.id, 'money', -12)
+            quest(call.from_user.id, 1, 2)
+            quest(call.from_user.id, 3, -1, 1)
+            if int(r.hget(call.from_user.id, 'spirit')) == 10000:
+                quest(call.from_user.id, 3, 3, 2)
+            vo = 0
+            for v in range(5):
+                vo += int(vodka(call.from_user.id))
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text=f'Ви успішно купили упаковку горілки "Козаки"\n\U0001F54A +{vo}')
+        else:
+            cl = int(r.hget(call.from_user.id, 'class'))
+            if cl == 17 or cl == 27:
+                if int(r.hget(call.from_user.id, 'wins')) >= 12:
+                    r.hincrby(call.from_user.id, 'wins', -12)
+                    vo = 0
+                    for v in range(5):
+                        vo += int(vodka(call.from_user.id))
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text=f'Ви успішно купили упаковку горілки "Козаки" за перемоги'
+                                                         f'\n\U0001F54A +{vo}')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо коштів на рахунку')
@@ -4172,7 +4205,7 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'spirit')) == 10000:
                 quest(call.from_user.id, 3, 3, 2)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили горілку "Козаки"\n\U0001F54A + ' +
+                                            text='Ви успішно купили горілку "Козаки"\n\U0001F54A +' +
                                                  vodka(call.from_user.id))
         else:
             cl = int(r.hget(call.from_user.id, 'class'))
@@ -4181,7 +4214,7 @@ async def handle_query(call):
                     r.hincrby(call.from_user.id, 'wins', -2)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили горілку "Козаки" за перемоги'
-                                                         '\n\U0001F54A + ' + vodka(call.from_user.id))
+                                                         '\n\U0001F54A +' + vodka(call.from_user.id))
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо коштів на рахунку')

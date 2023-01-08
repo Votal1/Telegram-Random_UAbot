@@ -11,11 +11,15 @@ def shop_msg(uid, mode):
     msg = ''
     if mode == 1:
         markup.add(InlineKeyboardButton(text='\u2622 1 - \U0001F4B5 2', callback_data='vodka'),
+                   InlineKeyboardButton(text='\u2622 5 - \U0001F4B5 12', callback_data='5_vodka'),
                    InlineKeyboardButton(text='\u2622 20 - \U0001F4B5 50', callback_data='20_vodka'))
         items = {'\U0001F5E1 Колючий дрин - 4 грн': 'weapon',
-                 '\U0001F6E1 Колючий щит - 5 грн': 'defense', '\U0001F9EA Аптечка - 5 грн': 'aid_kit',
-                 '\U0001F4B3 Трофейний паспорт - 10 грн': 'passport', '\U0001F3DA Утеплена будка - 30 грн': 'cabin',
-                 '\U0001F469\U0001F3FB Жінка - 150 грн': 'woman', '\U0001F6AC Тютюн та люлька - 1 жінка': 'pipe'}
+                 '\U0001F6E1 Колючий щит - \U0001F4B5 5': 'defense',
+                 '\U0001F9EA Аптечка - \U0001F4B5 5': 'aid_kit',
+                 '\U0001F4B3 Трофейний паспорт - \U0001F4B5 10': 'passport',
+                 '\U0001F3DA Утеплена будка - \U0001F4B5 30': 'cabin',
+                 '\U0001F469\U0001F3FB Жінка - \U0001F4B5 150': 'woman',
+                 '\U0001F6AC Тютюн та люлька - \U0001F469\U0001F3FB 1': 'pipe'}
         for key, value in items.items():
             if value == 'cabin' and r.hexists(uid, 'cabin') and int(r.hget(uid, 'cabin')) == 1:
                 pass
