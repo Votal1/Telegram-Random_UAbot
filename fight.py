@@ -147,18 +147,6 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid2, 'sch', 5)
                 quest(uid2, 3, -2, 3)
 
-        if weapon2 == 4 and int(r.hget(uid1, 'spirit')) >= 300:
-            if int(r.hget(uid1, 'spirit')) <= 1000:
-                r.hset(uid1, 'spirit', 0)
-            elif 1000 < int(r.hget(uid1, 'spirit')) < 2500:
-                r.hincrby(uid1, 'spirit', -1000)
-            else:
-                chance = choice([2.5, 3.333, 5])
-                r.hincrby(uid1, 'spirit', -int(int(r.hget(uid1, 'spirit')) / chance))
-            damage_weapon(uid2, c2)
-            weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' прийшов на бій з битою, опонента це' \
-                                                                  ' неабияк злякало!'
-
         if defense1 == 1 and int(r.hget(uid2, 'spirit')) >= 300:
             if int(r.hget(uid2, 'spirit')) <= 1000:
                 r.hset(uid2, 'spirit', 0)
