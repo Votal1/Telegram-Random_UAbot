@@ -75,9 +75,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid2, 'time', 0)
 
         if weapon2 == 4:
-            weapon1, defense1 = 0, 0
-            damage_weapon(uid2, c2)
-            weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' обеззброїв ворога битою!'
+            if weapon1 > 0 or defense1 > 0:
+                weapon1, defense1 = 0, 0
+                damage_weapon(uid2, c2)
+                weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' обеззброїв ворога битою!'
 
         if c1 == 26 and t == 1:
             quest(uid2, 3, -1, 1)
