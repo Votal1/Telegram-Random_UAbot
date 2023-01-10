@@ -1154,7 +1154,8 @@ async def war(cid, location, big_battle):
     if location in ('Штурм Горлівки', 'Штурм ДАП', 'Розгром командного пункту'):
         end = ' завершено.'
     await bot.delete_message(m.chat.id, m.message_id)
-    await bot.send_message(cid, location + end + winner + reward + class_reward, parse_mode='HTML')
+    await bot.send_message(cid, location + end + winner + reward + class_reward,
+                           parse_mode='HTML', disable_web_page_preview=True)
 
 
 async def war_power(sett, cid):
@@ -1396,8 +1397,8 @@ async def great_war(cid1, cid2, a, b):
     r.srem('started_battles', cid1)
     r.srem('started_battles', cid2)
 
-    await bot.send_message(cid1, msg)
-    await bot.send_message(cid2, msg)
+    await bot.send_message(cid1, msg, disable_web_page_preview=True)
+    await bot.send_message(cid2, msg, disable_web_page_preview=True)
 
 
 async def guard_power(mid):
@@ -1582,8 +1583,8 @@ async def start_raid(cid):
         chance2 = int(r.hget(c2, 'power'))
         msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
-            await bot.send_message(cid, msg0)
-            await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0)
+            await bot.send_message(cid, msg0, disable_web_page_preview=True)
+            await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0, disable_web_page_preview=True)
         except:
             pass
         win = choices(['a', 'b'], weights=[chance1, chance2])
@@ -1752,8 +1753,8 @@ async def start_raid(cid):
             r.hincrby(c, 'codes', 1)
             msg += '\n\U0001F916 +1'
 
-        await bot.send_message(cid, msg)
-        await bot.send_message(int(enemy), msg2)
+        await bot.send_message(cid, msg, disable_web_page_preview=True)
+        await bot.send_message(int(enemy), msg2, disable_web_page_preview=True)
 
     elif mode == [2]:
         locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївський роднічок']
@@ -1774,7 +1775,7 @@ async def start_raid(cid):
             chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
-            await bot.send_message(cid, msg0)
+            await bot.send_message(cid, msg0, disable_web_page_preview=True)
         except:
             pass
         win = choices(['a', 'b'], weights=[chance1, chance2])
@@ -1957,7 +1958,7 @@ async def start_raid(cid):
             reward += '\n\U0001F916 +1'
         await sleep(10)
         msg = 'Проведено рейд на ' + location + '!' + reward
-        await bot.send_message(cid, msg)
+        await bot.send_message(cid, msg, disable_web_page_preview=True)
 
     elif mode == [3]:
 
@@ -2017,7 +2018,7 @@ async def start_raid(cid):
             msg += '\n\U0001F916 +1'
 
         await sleep(10)
-        await bot.send_message(cid, msg)
+        await bot.send_message(cid, msg, disable_web_page_preview=True)
         if diff == 0:
             for mem in r.smembers('followers'):
                 try:

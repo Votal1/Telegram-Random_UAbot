@@ -1235,7 +1235,7 @@ async def battle(message):
                 try:
                     await bot.delete_message(message.chat.id, message.message_id)
                     a = await bot.send_message(message.chat.id, '\u2694 Починається битва...\n\n',
-                                               reply_markup=battle_button())
+                                               reply_markup=battle_button(), disable_web_page_preview=True)
                     r.hset('battle' + str(message.chat.id), 'start', a.message_id)
                     r.hset('battle' + str(message.chat.id), 'starter', message.from_user.id)
                     try:
@@ -1278,7 +1278,7 @@ async def war_battle(message):
                 pass
             emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
             a = await bot.send_message(message.chat.id, emoji + ' Починається міжчатова битва...\n\n',
-                                       reply_markup=battle_button_3())
+                                       reply_markup=battle_button_3(), disable_web_page_preview=True)
             r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
             r.hset('war_battle' + str(message.chat.id), 'title', message.chat.title)
             r.hset('war_battle' + str(message.chat.id), 'starter', message.from_user.id)
@@ -2856,7 +2856,7 @@ async def raid(message):
                             except:
                                 pass
                             a = await bot.send_message(message.chat.id, '\U0001F4B0 Починається рейд...\n\n',
-                                                       reply_markup=battle_button_4())
+                                                       reply_markup=battle_button_4(), disable_web_page_preview=True)
                             r.hset(c, 'start', a.message_id)
                             r.hset(c, 'starter', message.from_user.id)
                             try:
@@ -3235,8 +3235,8 @@ async def handle_query(call):
                               r.hget(b[3], 'firstname').decode() + \
                               '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + \
                               r.hget(b[4], 'firstname').decode()
-                        await bot.send_message(int(call.message.chat.id), msg)
-                        await bot.send_message(int(enemy), msg)
+                        await bot.send_message(int(call.message.chat.id), msg, disable_web_page_preview=True)
+                        await bot.send_message(int(enemy), msg, disable_web_page_preview=True)
                         await great_war(call.message.chat.id, int(enemy), a, b)
                         try:
                             await bot.unpin_chat_message(chat_id=call.message.chat.id,
