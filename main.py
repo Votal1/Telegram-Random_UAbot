@@ -6229,11 +6229,11 @@ async def inline_echo(inline_query):
             title='Бій русаків',
             input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
                                                                                inline_query.from_user.first_name,
-                                                                               inline_query.query))),
+                                                                               inline_query.query)),
+                                                          disable_web_page_preview=True),
             reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
-            description='надери комусь дупу\nнапиши & щоб відкрити інші режими',
-            hide_url=True)
+            description='надери комусь дупу\nнапиши & щоб відкрити інші режими')
         r2 = InlineQueryResultArticle(
             id='2',
             title='Скільки задонатиш на ЗСУ?',
