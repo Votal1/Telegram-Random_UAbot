@@ -663,7 +663,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     info += '\n\U0001F3C6 ' + str(un1) + ' перемагає ' + str(un2) + ' в турнірному бою!'
                 else:
                     info += '\n\U0001F3C6 ' + str(un2) + ' перемагає ' + str(un1) + ' в турнірному бою!'
-            await bot.edit_message_text(text=info, inline_message_id=mid)
+            await bot.edit_message_text(text=info, inline_message_id=mid, disable_web_page_preview=True)
             await sleep(3)
             continue
 

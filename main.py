@@ -3041,7 +3041,8 @@ async def handle_query(call):
                                 un2 = call.from_user.first_name
                                 fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
                                 await bot.edit_message_text(text=fi,
-                                                            inline_message_id=call.inline_message_id)
+                                                            inline_message_id=call.inline_message_id,
+                                                            disable_web_page_preview=True)
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Твій русак не підходить по силі для цього бою.')
@@ -3054,14 +3055,14 @@ async def handle_query(call):
                                 await bot.edit_message_text(
                                     text=f'\u26D1 {call.from_user.first_name} відправив свого русака надати медичну '
                                          f'допомогу пораненому.\n\U0001fac0 +20 \U0001F4B5 +{money}',
-                                    inline_message_id=call.inline_message_id)
+                                    inline_message_id=call.inline_message_id, disable_web_page_preview=True)
                                 hp(20, uid1)
                                 r.hincrby(call.from_user.id, 'money', money)
                             elif int(r.hget(call.from_user.id, 'class')) == 23:
                                 await bot.edit_message_text(
                                     text='\U0001F52E ' + ' Некромант проводить дивні ритуали над напівживим русаком...'
                                                          '\n\U0001fac0 +10 \U0001F44A +5',
-                                    inline_message_id=call.inline_message_id)
+                                    inline_message_id=call.inline_message_id, disable_web_page_preview=True)
                                 hp(10, uid1)
                                 increase_trance(5, call.from_user.id)
                             else:
@@ -3102,7 +3103,8 @@ async def handle_query(call):
                             q = cdata[2].split()
                             if q[1][1:].lower() == call.from_user.username.lower():
                                 fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
-                                await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id)
+                                await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
+                                                            disable_web_page_preview=True)
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Цей бій не для тебе.')
@@ -3114,7 +3116,8 @@ async def handle_query(call):
                     uid2 = call.from_user.id
                     un2 = call.from_user.first_name
                     fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
-                    await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id)
+                    await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
+                                                disable_web_page_preview=True)
 
     elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
@@ -6338,7 +6341,8 @@ async def default_query(inline_query):
             title='Пошук суперника по силі',
             input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
                                                                                inline_query.from_user.first_name,
-                                                                               inline_query.query))),
+                                                                               inline_query.query)),
+                                                          disable_web_page_preview=True),
             reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
             description='введи різницю сили (мінімум 1)')
@@ -6347,7 +6351,8 @@ async def default_query(inline_query):
             title='Особисте запрошення',
             input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
                                                                                inline_query.from_user.first_name,
-                                                                               'pr' + inline_query.query))),
+                                                                               'pr' + inline_query.query)),
+                                                          disable_web_page_preview=True),
             reply_markup=markup2.add(InlineKeyboardButton(text='Атакувати!', callback_data=call1)),
             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
             description='введи @username')
@@ -6356,7 +6361,8 @@ async def default_query(inline_query):
             title='Турнірний режим',
             input_message_content=InputTextMessageContent(str(prepare_to_fight(inline_query.from_user.id,
                                                                                inline_query.from_user.first_name,
-                                                                               'tr' + inline_query.query))),
+                                                                               'tr' + inline_query.query)),
+                                                          disable_web_page_preview=True),
             reply_markup=markup3.add(InlineKeyboardButton(text='Атакувати!', callback_data=call2)),
             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
             description='Режим Best of 5. Можна ввести @username. Без нагород.')
