@@ -777,7 +777,7 @@ async def passport(message):
               f'\n\u2B50 Досягнення: {int(ac * 100 / 32)}%'
         if message.from_user.id == 1897184980:
             msg += '\n\U0001F468\U0001F3FB\u200D\u2708\uFE0F Фашист року'
-        await message.reply(msg)
+        await message.reply(msg, disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['woman'])
@@ -6226,7 +6226,8 @@ async def inline_echo(inline_query):
                                                                                inline_query.query))),
             reply_markup=markup.add(InlineKeyboardButton(text='Атакувати!', callback_data=call)),
             thumb_url='https://i.ibb.co/0nFNwSH/rusak.png',
-            description='надери комусь дупу\nнапиши & щоб відкрити інші режими')
+            description='надери комусь дупу\nнапиши & щоб відкрити інші режими',
+            hide_url=True)
         r2 = InlineQueryResultArticle(
             id='2',
             title='Скільки задонатиш на ЗСУ?',
