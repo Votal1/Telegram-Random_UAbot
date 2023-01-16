@@ -5978,7 +5978,7 @@ async def echo(message):
 
         elif message.text == 'N':
             await message.answer('I')
-        '''
+
         elif message.text.lower() in ('тривога', '/alert'):
             with open('pic.png', 'wb') as handle:
                 response = requests.get('https://alerts.com.ua/map.png', stream=True)
@@ -5995,7 +5995,7 @@ async def echo(message):
             await bot.send_sticker(message.chat.id,
                                    open("pic.webp", "rb"),
                                    reply_to_message_id=message.message_id)
-        '''
+
 
         if message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
