@@ -1719,7 +1719,7 @@ async def start_raid(cid):
                 else:
                     msg += '\n\U0001F5E1 +3'
                     for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'weapon')) in (0, 1, 4):
+                        if int(r.hget(mem, 'weapon')) in (0, 1):
                             r.hset(mem, 'weapon', 3)
                             r.hset(mem, 's_weapon', 3)
                         elif int(r.hget(mem, 'weapon')) == 3:
