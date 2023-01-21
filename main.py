@@ -2936,13 +2936,10 @@ async def wiki(message):
 @dp.callback_query_handler(lambda call: True)
 async def handle_query(call):
     if call.data.startswith('getrusak') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        try:
-            if r.hexists(call.from_user.id, 'name') == 1:
-                await bot.edit_message_text(text='\U0001F98D У тебе вже є русак!',
-                                            chat_id=call.message.chat.id, message_id=call.message.message_id)
-            else:
-                raise Exception
-        except:
+        if r.hexists(call.from_user.id, 'name') == 1:
+            await bot.edit_message_text(text='\U0001F98D У тебе вже є русак!',
+                                        chat_id=call.message.chat.id, message_id=call.message.message_id)
+        else:
             cid = call.from_user.id
             n, s, i = get_rusak()
             if checkClan(cid, building='build6', level=4):
