@@ -70,7 +70,7 @@ def drop_item(cdata, uid):
     if cdata.startswith('drop_open'):
         msg, markup = show_inventory(uid, full=True)
         return msg, markup, True, False
-    '''
+
     elif cdata.startswith('drop_w'):
         if int(r.hget(uid, 'weapon')) != 0:
             if int(r.hget(uid, 'weapon')) == 16:
@@ -125,4 +125,3 @@ def drop_item(cdata, uid):
         else:
             answer = 'В твого русака нема шапки'
             return False, False, False, answer
-    '''
