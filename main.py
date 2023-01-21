@@ -13,11 +13,12 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, show_inventory, auto_clan_settings, q_points
+    wood, stone, cloth, brick, auto_clan_settings, q_points
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, invent, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, invent0
+    battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools
+from content.inventory import show_inventory, drop_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, open_gift
@@ -1432,7 +1433,8 @@ async def achievements(message):
 @dp.message_handler(commands=['i'])
 async def inventory(message):
     if r.hexists(message.from_user.id, 'name'):
-        await message.reply(show_inventory(message.from_user.id), reply_markup=invent0())
+        msg, markup = show_inventory(message.from_user.id)
+        await message.reply(msg, reply_markup=markup)
     else:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
@@ -4985,67 +4987,13 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
-    elif call.data.startswith('drop_open') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id, call.message.message_id,
-                                    reply_markup=invent(int(r.hget(call.from_user.id, 'weapon')),
-                                                        int(r.hget(call.from_user.id, 'defense')),
-                                                        int(r.hget(call.from_user.id, 'support')),
-                                                        int(r.hget(call.from_user.id, 'head'))))
+    elif call.data.startswith('drop_') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        msg, markup, edit, answer = drop_item(call.data, call.from_user.id)
 
-    elif call.data.startswith('drop_w') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        if int(r.hget(call.from_user.id, 'weapon')) != 0:
-            if int(r.hget(call.from_user.id, 'weapon')) == 16:
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Зброю мусора неможливо викинути')
-            else:
-                r.hset(call.from_user.id, 'weapon', 0)
-                r.hset(call.from_user.id, 's_weapon', 0)
-                cl = int(r.hget(call.from_user.id, 'class'))
-                if cl == 6 or cl == 16 or cl == 26:
-                    r.hset(call.from_user.id, 'weapon', 16)
-                await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
-                                            call.message.message_id, reply_markup=invent0())
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Русак викинув зброю')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='В твого русака нема зброї')
-
-    elif call.data.startswith('drop_d') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        if int(r.hget(call.from_user.id, 'defense')) != 0:
-            r.hset(call.from_user.id, 'defense', 0)
-            r.hset(call.from_user.id, 's_defense', 0)
-            await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
-                                        call.message.message_id, reply_markup=invent0())
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Русак викинув захисне спорядження')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='В твого русака нема захисного спорядження')
-
-    elif call.data.startswith('drop_s') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        if int(r.hget(call.from_user.id, 'support')) != 0:
-            r.hset(call.from_user.id, 'support', 0)
-            r.hset(call.from_user.id, 's_support', 0)
-            await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
-                                        call.message.message_id, reply_markup=invent0())
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Русак викинув допоміжне спорядження')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='В твого русака нема допоміжного спорядження')
-
-    elif call.data.startswith('drop_h') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        if int(r.hget(call.from_user.id, 'head')) != 0:
-            r.hset(call.from_user.id, 'head', 0)
-            r.hset(call.from_user.id, 's_head', 0)
-            await bot.edit_message_text(show_inventory(call.from_user.id), call.message.chat.id,
-                                        call.message.message_id, reply_markup=invent0())
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Русак викинув шапку')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='В твого русака нема шапки')
+        if edit:
+            await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+        if answer:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=answer)
 
     elif call.data.startswith('buy_pack') and call.from_user.id == call.message.reply_to_message.from_user.id:
         n = int(call.data.split('_')[2])
