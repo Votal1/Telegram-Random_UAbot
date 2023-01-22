@@ -104,7 +104,8 @@ def show_backpack(uid):
 
     inv = r.hmget(uid, 'backpack_1', 'backpack_1_s', 'backpack_1_type',
                   'backpack_2', 'backpack_2_s', 'backpack_2_type', 'extra_slot')
-    b1, b1s, b1t, b2, b2s, b2t = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), int(inv[4]), inv[5].decode()
+    b1, b1s, b1t, b2, b2s, b2t, extra_sloth = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), \
+                                              int(inv[4]), inv[5].decode(), int(inv[6])
 
     if not b1 and not b2:
         msg += '[Порожньо]'
@@ -119,8 +120,8 @@ def show_backpack(uid):
         elif b1t == 'head':
             msg += f'\U0001F3A9 Шапка: {heads[b1]}\nМіцність: {b1s}'
 
-        if not b2:
-            markup = ''
+        if not b2 and extra_sloth:
+            markup = put_in_backpack(w, d, s, h)
         else:
             if b2t == 'weapon':
                 msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}'
