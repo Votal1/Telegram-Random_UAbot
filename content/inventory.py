@@ -103,7 +103,7 @@ def show_backpack(uid):
     w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
 
     inv = r.hmget(uid, 'backpack_1', 'backpack_1_s', 'backpack_1_type',
-                  'backpack_2', 'backpack_2_s', 'backpack_3_type', 'extra_slot')
+                  'backpack_2', 'backpack_2_s', 'backpack_2_type', 'extra_slot')
     b1, b1s, b1t, b2, b2s, b2t = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), int(inv[4]), inv[5].decode()
 
     if not b1 and not b2:
