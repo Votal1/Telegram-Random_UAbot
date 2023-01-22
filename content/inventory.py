@@ -111,25 +111,25 @@ def show_backpack(uid):
         markup = put_in_backpack(w, d, s, h)
     else:
         if b1t == 'weapon':
-            msg += f'\U0001F5E1 Зброя: {weapons[b1]}{b1s}\n'
+            msg += f'\U0001F5E1 Зброя: {weapons[b1]}\nМіцність: {b1s}'
         elif b1t == 'defense':
-            msg += f'\U0001F6E1 Захист: {defenses[b1]}{b1s}\n'
+            msg += f'\U0001F6E1 Захист: {defenses[b1]}\nМіцність: {b1s}'
         elif b1t == 'support':
-            msg += f'\U0001F9EA Допомога: {supports[b1]}{b1s}\n'
+            msg += f'\U0001F9EA Допомога: {supports[b1]}\nМіцність: {b1s}'
         elif b1t == 'head':
-            msg += f'\U0001F3A9 Шапка: {heads[b1]}{b1s}\n'
+            msg += f'\U0001F3A9 Шапка: {heads[b1]}\nМіцність: {b1s}'
 
         if not b2:
             markup = ''
         else:
             if b2t == 'weapon':
-                msg += f'\U0001F5E1 Зброя: {weapons[b2]}{b2s}\n'
+                msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}'
             elif b2t == 'defense':
-                msg += f'\U0001F6E1 Захист: {defenses[b2]}{b2s}\n'
+                msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}'
             elif b2t == 'support':
-                msg += f'\U0001F9EA Допомога: {supports[b2]}{b2s}\n'
+                msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}'
             elif b2t == 'head':
-                msg += f'\U0001F3A9 Шапка: {heads[b2]}{b2s}\n'
+                msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}'
             markup = ''
 
     return msg, markup
