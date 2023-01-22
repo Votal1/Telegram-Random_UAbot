@@ -124,22 +124,22 @@ def show_backpack(uid):
             item1 = heads[b1]
             msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
 
+        if b2t == 'weapon':
+            item2 = weapons[b2]
+            msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}\n'
+        elif b2t == 'defense':
+            item2 = defenses[b2]
+            msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}\n'
+        elif b2t == 'support':
+            item2 = supports[b2]
+            msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
+        elif b2t == 'head':
+            item2 = heads[b2]
+            msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
+
         if not b1 or not b2:
             if extra_sloth:
                 markup = put_in_backpack(markup, w, d, s, h)
-        else:
-            if b2t == 'weapon':
-                item2 = weapons[b2]
-                msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}\n'
-            elif b2t == 'defense':
-                item2 = defenses[b2]
-                msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}\n'
-            elif b2t == 'support':
-                item2 = supports[b2]
-                msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
-            elif b2t == 'head':
-                item2 = heads[b2]
-                msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
 
         markup = take_from_backpack(markup, item1, item2)
 
