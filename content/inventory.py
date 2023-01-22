@@ -122,6 +122,8 @@ def show_backpack(uid):
             msg += f'\U0001F9EA Допомога: {item1}\nМіцність: {b1s}\n'
         elif b1t == 'head':
             item1 = heads[b1]
+            if b1 == 3:
+                b1s = '∞'
             msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
 
         if b2t == 'weapon':
@@ -135,6 +137,8 @@ def show_backpack(uid):
             msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
         elif b2t == 'head':
             item2 = heads[b2]
+            if b2 == 3:
+                b2s = '∞'
             msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
 
         if not b1 or not b2:
@@ -213,7 +217,7 @@ def change_item(cdata, uid):
                  'support': (2, 9),
                  'head': ()}
     if cdata.startswith('backpack_open'):
-        if uid == 456514639:
+        if uid in [456514639, 634799543, 379620096]:
 
             if not r.hexists(uid, 'backpack_1'):
                 r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
