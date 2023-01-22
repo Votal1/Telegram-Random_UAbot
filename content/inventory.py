@@ -224,12 +224,13 @@ def change_item(cdata, uid):
             else:
                 slot = 0
         else:
-            slot = 0
+            slot = 1
 
         if item != 0:
             if slot:
                 if item not in forbidden[item_type]:
-                    r.hset(uid, item_type, 0, {f's_{item_type}': 0, 'backpack_1': item, 'backpack_1_s': s_item})
+                    r.hset(uid, item_type, 0, {f's_{item_type}': 0, f'backpack_{slot}': item,
+                                               f'backpack_{slot}_s': s_item})
                     msg, markup = show_inventory(uid)
                     answer = 'Русак поклав спорядження в рюкзак'
                     return msg, markup, True, answer
