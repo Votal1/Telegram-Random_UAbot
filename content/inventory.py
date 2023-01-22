@@ -124,7 +124,7 @@ def show_backpack(uid):
             item1 = heads[b1]
             msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
 
-        if not b2:
+        if not b1 or not b2:
             if extra_sloth:
                 markup = put_in_backpack(markup, w, d, s, h)
         else:
