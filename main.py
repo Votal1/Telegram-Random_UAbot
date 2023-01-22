@@ -18,7 +18,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools
-from content.inventory import show_inventory, drop_item
+from content.inventory import show_inventory, drop_item, change_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, open_gift
@@ -4989,6 +4989,14 @@ async def handle_query(call):
 
     elif call.data.startswith('drop_') and call.from_user.id == call.message.reply_to_message.from_user.id:
         msg, markup, edit, answer = drop_item(call.data, call.from_user.id)
+
+        if edit:
+            await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+        if answer:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=answer)
+
+    elif call.data.startswith('backpack_') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        msg, markup, edit, answer = change_item(call.data, call.from_user.id)
 
         if edit:
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
