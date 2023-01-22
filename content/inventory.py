@@ -29,8 +29,7 @@ def invent0():
     return markup
 
 
-def put_in_backpack(w, d, s, h):
-    markup = InlineKeyboardMarkup()
+def put_in_backpack(markup, w, d, s, h):
     if w > 0 and d > 0:
         markup.add(InlineKeyboardButton(text='Покласти зброю', callback_data='backpack_put_in_weapon'),
                    InlineKeyboardButton(text='Покласти захист', callback_data='backpack_put_in_defense'))
@@ -48,13 +47,11 @@ def put_in_backpack(w, d, s, h):
     return markup
 
 
-def take_from_backpack(two_slots=False):
-    markup = InlineKeyboardMarkup()
-    if two_slots:
-        markup.add(InlineKeyboardButton(text='Взяти перше спорядження', callback_data='backpack_take_first'),
-                   InlineKeyboardButton(text='Взяти друге спорядження', callback_data='backpack_take_second'))
-    else:
-        markup.add(InlineKeyboardButton(text='Взяти спорядження', callback_data='backpack_take_first'))
+def take_from_backpack(markup, item1=False, item2=False):
+    if item1:
+        markup.add(InlineKeyboardButton(text=f'Взяти {item1}', callback_data='backpack_take_first'))
+    elif item2:
+        markup.add(InlineKeyboardButton(text=f'Взяти {item2}', callback_data='backpack_take_second'))
     return markup
 
 
@@ -98,6 +95,7 @@ def show_inventory(uid, full=False):
 
 def show_backpack(uid):
     msg = '\U0001F392 Рюкзак:\n\n'
+    markup = InlineKeyboardMarkup()
 
     inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
     w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
@@ -109,29 +107,41 @@ def show_backpack(uid):
 
     if not b1 and not b2:
         msg += '[Порожньо]'
-        markup = put_in_backpack(w, d, s, h)
+        markup = put_in_backpack(markup, w, d, s, h)
     else:
-        if b1t == 'weapon':
-            msg += f'\U0001F5E1 Зброя: {weapons[b1]}\nМіцність: {b1s}\n'
-        elif b1t == 'defense':
-            msg += f'\U0001F6E1 Захист: {defenses[b1]}\nМіцність: {b1s}\n'
-        elif b1t == 'support':
-            msg += f'\U0001F9EA Допомога: {supports[b1]}\nМіцність: {b1s}\n'
-        elif b1t == 'head':
-            msg += f'\U0001F3A9 Шапка: {heads[b1]}\nМіцність: {b1s}\n'
+        item1, item2 = False, False
 
-        if not b2 and extra_sloth:
-            markup = put_in_backpack(w, d, s, h)
+        if b1t == 'weapon':
+            item1 = weapons[b1]
+            msg += f'\U0001F5E1 Зброя: {item1}\nМіцність: {b1s}\n'
+        elif b1t == 'defense':
+            item1 = defenses[b1]
+            msg += f'\U0001F6E1 Захист: {item1}\nМіцність: {b1s}\n'
+        elif b1t == 'support':
+            item1 = supports[b1]
+            msg += f'\U0001F9EA Допомога: {item1}\nМіцність: {b1s}\n'
+        elif b1t == 'head':
+            item1 = heads[b1]
+            msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
+
+        if not b2:
+            if extra_sloth:
+                markup = put_in_backpack(markup, w, d, s, h)
         else:
             if b2t == 'weapon':
+                item2 = weapons[b2]
                 msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}\n'
             elif b2t == 'defense':
+                item2 = defenses[b2]
                 msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}\n'
             elif b2t == 'support':
+                item2 = supports[b2]
                 msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
             elif b2t == 'head':
+                item2 = heads[b2]
                 msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
-            markup = ''
+
+        markup = take_from_backpack(markup, item1, item2)
 
     return msg, markup
 
