@@ -237,7 +237,7 @@ def change_item(cdata, uid):
         else:
             slot = 1
 
-        if item != 0:
+        if item:
             if slot:
                 if item not in forbidden[item_type]:
                     r.hset(uid, item_type, 0, {f's_{item_type}': 0, f'backpack_{slot}': item,
@@ -253,4 +253,34 @@ def change_item(cdata, uid):
                 return False, False, False, answer
         else:
             answer = 'В твого русака нема цього спорядження'
+            return False, False, False, answer
+
+    elif cdata.startswith('backpack_take_'):
+        place = cdata.split('_')[2]
+        slot = 0
+        if place == 'first':
+            slot = 1
+        elif place == 'second':
+            slot = 2
+
+        inv = r.hmget(uid, f'backpack_{slot}', f'backpack_{slot}_s', f'backpack_{slot}_type')
+        b, bs, item_type = int(inv[0]), int(inv[1]), inv[2].decode()
+
+        inv = r.hmget(uid, item_type, f's_{item_type}')
+        item, s_item = int(inv[0]), int(inv[1])
+
+        if b:
+            if item not in forbidden[item_type]:
+                r.hset(uid, item_type, b, {f's_{item_type}': bs, f'backpack_{slot}': item,
+                                           f'backpack_{slot}_s': s_item})
+                if not item:
+                    r.hset(uid, f'backpack_{slot}_type', 'empty')
+                msg, markup = show_inventory(uid)
+                answer = 'Русак дістав спорядження з рюкзака'
+                return msg, markup, True, answer
+            else:
+                answer = 'Класове спорядження неможливо покласти в рюкзак'
+                return False, False, False, answer
+        else:
+            answer = 'В рюкзаку нема цього спорядження'
             return False, False, False, answer
