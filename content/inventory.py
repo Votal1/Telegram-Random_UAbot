@@ -104,33 +104,33 @@ def show_backpack(uid):
 
     inv = r.hmget(uid, 'backpack_1', 'backpack_1_s', 'backpack_1_type',
                   'backpack_2', 'backpack_2_s', 'backpack_2_type', 'extra_slot')
-    b1, b1s, b1t, b2, b2s, b2t, extra_sloth = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), \
-                                              int(inv[4]), inv[5].decode(), int(inv[6])
+    b1, b1s, b1t, b2, b2s, b2t = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), int(inv[4]), inv[5].decode()
+    extra_sloth = int(inv[6])
 
     if not b1 and not b2:
         msg += '[Порожньо]'
         markup = put_in_backpack(w, d, s, h)
     else:
         if b1t == 'weapon':
-            msg += f'\U0001F5E1 Зброя: {weapons[b1]}\nМіцність: {b1s}'
+            msg += f'\U0001F5E1 Зброя: {weapons[b1]}\nМіцність: {b1s}\n'
         elif b1t == 'defense':
-            msg += f'\U0001F6E1 Захист: {defenses[b1]}\nМіцність: {b1s}'
+            msg += f'\U0001F6E1 Захист: {defenses[b1]}\nМіцність: {b1s}\n'
         elif b1t == 'support':
-            msg += f'\U0001F9EA Допомога: {supports[b1]}\nМіцність: {b1s}'
+            msg += f'\U0001F9EA Допомога: {supports[b1]}\nМіцність: {b1s}\n'
         elif b1t == 'head':
-            msg += f'\U0001F3A9 Шапка: {heads[b1]}\nМіцність: {b1s}'
+            msg += f'\U0001F3A9 Шапка: {heads[b1]}\nМіцність: {b1s}\n'
 
         if not b2 and extra_sloth:
             markup = put_in_backpack(w, d, s, h)
         else:
             if b2t == 'weapon':
-                msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}'
+                msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}\n'
             elif b2t == 'defense':
-                msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}'
+                msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}\n'
             elif b2t == 'support':
-                msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}'
+                msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
             elif b2t == 'head':
-                msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}'
+                msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
             markup = ''
 
     return msg, markup
