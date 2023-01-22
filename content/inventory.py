@@ -49,9 +49,9 @@ def put_in_backpack(markup, w, d, s, h):
 
 def take_from_backpack(markup, item1=False, item2=False):
     if item1:
-        markup.add(InlineKeyboardButton(text=f'Взяти {item1}', callback_data='backpack_take_first'))
-    elif item2:
-        markup.add(InlineKeyboardButton(text=f'Взяти {item2}', callback_data='backpack_take_second'))
+        markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}', callback_data='backpack_take_first'))
+    if item2:
+        markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item2}', callback_data='backpack_take_second'))
     return markup
 
 
