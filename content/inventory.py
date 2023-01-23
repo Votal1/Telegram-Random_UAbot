@@ -217,17 +217,12 @@ def change_item(cdata, uid):
                  'support': (2, 9),
                  'head': ()}
     if cdata.startswith('backpack_open'):
-        if uid in [456514639, 634799543, 379620096, 1290022349, 312085379, 372080020, 781672558]:
+        if not r.hexists(uid, 'backpack_1'):
+            r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
+                                          'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
 
-            if not r.hexists(uid, 'backpack_1'):
-                r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
-                                              'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
-
-            msg, markup = show_backpack(uid)
-            return msg, markup, True, False
-        else:
-            answer = 'Ого, кнопка!'
-            return False, False, False, answer
+        msg, markup = show_backpack(uid)
+        return msg, markup, True, False
 
     elif cdata.startswith('backpack_put_in'):
         item_type = cdata.split('_')[3]

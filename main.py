@@ -4977,6 +4977,26 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Пізно пришвидшувати будівництво')
 
+    elif call.data.startswith('expand_backpack'):
+        uid = call.from_user.id
+
+        if not r.hexists(uid, 'backpack_1'):
+            r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
+                                          'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
+
+        if not int(r.hget(uid, 'extra_slot')):
+            if int(r.hget(uid, 'strap')) >= 5:
+                r.hincrby(uid, 'strap', -5)
+                r.hset(uid, 'extra_slot', 1)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви успішно купили тактичний рюкзак!')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Недостатньо погонів на рахунку')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='У вас вже є тактичний рюкзак')
+
     elif call.data.startswith('zero_time') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
