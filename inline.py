@@ -287,7 +287,7 @@ def gender():
                'Легкий тактичний позадорожній бронеавтомобіль HMMWV', 'Багатоцільовий гелікоптер МСБ-2',
                'Трактор NewHolland T7HD', 'Трактор CLAAS AXION 960 TT', 'Трактор Fendt 942 Vario ProfiPlus Gen6',
                'Трактор JohnDeere 6250R', 'Трактор Massey Ferguson5400', 'Трактор Case IH 125',
-               'Трактор Deutz-Fahr 6165', 'Трактор Claas Xerion 5000']
+               'Трактор Deutz-Fahr 6165', 'Трактор Claas Xerion 5000', 'Буксирована артилерійська система 2Б16 Нона-К']
     ran = choice(emoji) + ' Я по гендеру... \n\n' + choice(genders)
     return ran
 
