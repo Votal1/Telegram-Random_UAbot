@@ -54,8 +54,6 @@ def shop_msg(uid, mode):
                    InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
                    InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium4'))
         for key, value in items.items():
-            markup.add(InlineKeyboardButton(text=key, callback_data=value))
-        for key, value in items.items():
             if value == 'fast_cellar' and int(r.hget(uid, 's3')) <= 2:
                 pass
             elif value == 'expand_backpack' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) > 0:
