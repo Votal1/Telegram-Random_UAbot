@@ -244,7 +244,7 @@ def change_item(cdata, uid):
         if item:
             if slot:
                 cl = int(r.hget(uid, 'class'))
-                if item not in forbidden[item_type] or allow_class_item(cl, item):
+                if item not in forbidden[item_type] or allow_class_item(cl, item, item_type):
                     r.hset(uid, item_type, 0, {f's_{item_type}': 0, f'backpack_{slot}': item,
                                                f'backpack_{slot}_s': s_item, f'backpack_{slot}_type': item_type})
                     msg, markup = show_inventory(uid)
@@ -296,7 +296,7 @@ def change_item(cdata, uid):
             return False, False, False, answer
 
 
-def allow_class_item(cl, item):
+def allow_class_item(cl, item, item_type='empty'):
     if cl in (1, 11, 21) and item in (11, 22):
         return True
     elif cl in (2, 12, 22) and item in (12, 23):
@@ -308,7 +308,10 @@ def allow_class_item(cl, item):
     elif cl in (5, 15, 25) and item in (15, 26):
         return True
     elif cl in (6, 16, 26) and item in (16, 17):
-        return True
+        if item_type == 'weapon':
+            return False
+        else:
+            return True
     elif cl in (7, 17, 27) and item in (17, 28):
         return True
     elif cl in (8, 18, 28) and item in (18, 29):
