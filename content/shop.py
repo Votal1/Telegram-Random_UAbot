@@ -42,19 +42,19 @@ def shop_msg(uid, mode):
               f'на 5000, а кількість вбитих русаків збільшиться на 5).'
 
     elif mode == 2:
-        items = {'\U0001F943 Настоянка глоду - \U0001F31F 1 погон': 'hawthorn',
-                 '\u2697\uFE0F Копіум - \U0001F31F 1 погон': 'copium',
-                 '\U0001F4E6 40 пакунків - \U0001F31F 1 погон': '40_packs',
-                 '\u2721\uFE0F Ярмулка - \U0001F31F 1 погон': 'jew',
-                 '\U0001F9FE Ресурси - \U0001F31F 2 погони': 'buy_resources',
-                 '\U0001F393 Курс перекваліфікації - \U0001F31F 3 погони': 'course',
-                 '\U0001F3E0 Велике будівництво - \U0001F31F 3 погони': 'fast_cellar',
-                 '\U0001F392 Тактичний рюкзак - \U0001F31F 5 погонів': 'expand_backpack'}
+        items = {'\U0001F943 Настоянка глоду - \U0001F31F 1': 'hawthorn',
+                 '\u2697\uFE0F Копіум - \U0001F31F 1': 'copium',
+                 '\U0001F4E6 40 пакунків - \U0001F31F 1': '40_packs',
+                 '\u2721\uFE0F Ярмулка - \U0001F31F 1': 'jew',
+                 '\U0001F9FE Ресурси - \U0001F31F 2': 'buy_resources',
+                 '\U0001F393 Курс перекваліфікації - \U0001F31F 3': 'course',
+                 '\U0001F3E0 Велике будівництво - \U0001F31F 3': 'fast_cellar',
+                 '\U0001F392 Тактичний рюкзак - \U0001F31F 5': 'expand_backpack'}
         markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
                    InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
                    InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium4'))
         for key, value in items.items():
-            if value == 'fast_cellar' and int(r.hget(uid, 's3')) <= 2:
+            if value == 'fast_cellar' and int(r.hget(uid, 's3')) > 2:
                 pass
             elif value == 'expand_backpack' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) > 0:
                 pass
