@@ -3,6 +3,13 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from variables import weapons, defenses, supports, heads
 
 
+def invent_start():
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'),
+               InlineKeyboardButton(text='\U0001F392', callback_data='backpack_open'))
+    return markup
+
+
 def invent(w, d, s, h):
     markup = InlineKeyboardMarkup()
     if w > 0 and d > 0:
@@ -23,28 +30,29 @@ def invent(w, d, s, h):
     return markup
 
 
-def invent0():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'),
-               InlineKeyboardButton(text='\U0001F392', callback_data='backpack_open'))
-    return markup
-
-
 def put_in_backpack(markup, w, d, s, h):
     if w > 0 and d > 0:
-        markup.add(InlineKeyboardButton(text='Покласти зброю', callback_data='backpack_put_in_weapon'),
-                   InlineKeyboardButton(text='Покласти захист', callback_data='backpack_put_in_defense'))
+        markup.add(InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {weapons[w]}',
+                                        callback_data='backpack_put_in_weapon'),
+                   InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {defenses[d]}',
+                                        callback_data='backpack_put_in_defense'))
     elif w > 0:
-        markup.add(InlineKeyboardButton(text='Покласти зброю', callback_data='backpack_put_in_weapon'))
+        markup.add(InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {weapons[w]}',
+                                        callback_data='backpack_put_in_weapon'))
     elif d > 0:
-        markup.add(InlineKeyboardButton(text='Покласти захист', callback_data='backpack_put_in_defense'))
+        markup.add(InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {defenses[d]}',
+                                        callback_data='backpack_put_in_defense'))
     if s > 0 and h > 0:
-        markup.add(InlineKeyboardButton(text='Покласти допомогу', callback_data='backpack_put_in_support'),
-                   InlineKeyboardButton(text='Покласти шапку', callback_data='backpack_put_in_head'))
+        markup.add(InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {supports[s]}',
+                                        callback_data='backpack_put_in_support'),
+                   InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {heads[h]}',
+                                        callback_data='backpack_put_in_head'))
     elif s > 0:
-        markup.add(InlineKeyboardButton(text='Покласти допомогу', callback_data='backpack_put_in_support'))
+        markup.add(InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {supports[s]}',
+                                        callback_data='backpack_put_in_support'))
     elif h > 0:
-        markup.add(InlineKeyboardButton(text='Покласти шапку', callback_data='backpack_put_in_head'))
+        markup.add(InlineKeyboardButton(text=f'\u27A1\uFE0F\U0001F392 {heads[h]}',
+                                        callback_data='backpack_put_in_head'))
     return markup
 
 
@@ -89,7 +97,7 @@ def show_inventory(uid, full=False):
     if full:
         markup = invent(w, d, s, h)
     else:
-        markup = invent0()
+        markup = invent_start()
 
     return msg, markup
 
