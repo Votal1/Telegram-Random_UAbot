@@ -19,6 +19,7 @@ def invent(w, d, s, h):
         markup.add(InlineKeyboardButton(text='Викинути допомогу', callback_data='drop_s'))
     elif h > 0:
         markup.add(InlineKeyboardButton(text='Викинути шапку', callback_data='drop_h'))
+    markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
     return markup
 
 
@@ -146,6 +147,7 @@ def show_backpack(uid):
                 markup = put_in_backpack(markup, w, d, s, h)
 
         markup = take_from_backpack(markup, item1, item2)
+        markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
 
     return msg, markup
 
@@ -222,6 +224,10 @@ def change_item(cdata, uid):
                                           'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
 
         msg, markup = show_backpack(uid)
+        return msg, markup, True, False
+
+    elif cdata.startswith('backpack_return'):
+        msg, markup = show_inventory(uid)
         return msg, markup, True, False
 
     elif cdata.startswith('backpack_put_in'):
