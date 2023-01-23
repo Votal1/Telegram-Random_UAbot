@@ -217,7 +217,7 @@ def change_item(cdata, uid):
                  'support': (2, 9),
                  'head': ()}
     if cdata.startswith('backpack_open'):
-        if uid in [456514639, 634799543, 379620096]:
+        if uid in [456514639, 634799543, 379620096, 1290022349, 312085379]:
 
             if not r.hexists(uid, 'backpack_1'):
                 r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
