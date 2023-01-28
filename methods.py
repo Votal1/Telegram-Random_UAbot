@@ -3,6 +3,7 @@ from config import r, bot
 from variables import names, icons, weapons, defenses, supports, heads
 from datetime import datetime
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from locales.messages import messages
 
 
 def get_rusak():
@@ -752,3 +753,13 @@ async def ctop(sett, uid, text, cid):
 
     except:
         return 'Недостатньо інформації для створення рейтингу.'
+
+
+def get_message(uid, key, language_code=False):
+    if not language_code:
+        if r.hexists(uid, 'language'):
+            language_code = r.hget(uid, 'language').decode()
+        else:
+            language_code = 'uk'
+
+    return messages.get(language_code, 'uk').get(key)

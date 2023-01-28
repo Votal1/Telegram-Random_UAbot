@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, auto_clan_settings, q_points
+    wood, stone, cloth, brick, auto_clan_settings, q_points, get_message
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
@@ -63,8 +63,12 @@ async def gruz200(message):
 @dp.message_handler(commands=['start'])
 async def send_welcome(message):
     if message.chat.type == 'private':
-        await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
-                            '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
+        if message.from_user.id not in sudoers:
+            await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
+                                '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
+        else:
+            msg = get_message(message.from_user.id, 'start', language_code=message.from_user.language_code)
+            await message.reply(msg, disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['help'])
