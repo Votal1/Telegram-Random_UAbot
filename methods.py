@@ -758,7 +758,7 @@ async def ctop(sett, uid, text, cid):
 def get_message(uid, key, language_code=False):
     if not language_code:
         if r.hexists(uid, 'language'):
-            language_code = r.hget(uid, 'language').decode()
+            language_code = r.hget(uid, 'language_code').decode()
         else:
             language_code = 'uk'
 

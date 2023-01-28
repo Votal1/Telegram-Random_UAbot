@@ -17,7 +17,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools
+    battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
 from content.inventory import show_inventory, drop_item, change_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
@@ -63,12 +63,18 @@ async def gruz200(message):
 @dp.message_handler(commands=['start'])
 async def send_welcome(message):
     if message.chat.type == 'private':
-        if message.from_user.id not in sudoers:
+        uid = message.from_user.id
+        if uid not in sudoers:
             await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
                                 '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
         else:
+            if not r.hexists(uid, 'language_code'):
+                if message.from_user.language_code in ('uk', 'en'):
+                    r.hset(uid, 'language_code', message.from_user.language_code)
+                else:
+                    r.hset(uid, 'language_code', 'uk')
             msg = get_message(message.from_user.id, 'start', language_code=message.from_user.language_code)
-            await message.reply(msg, disable_web_page_preview=True)
+            await message.reply(msg, disable_web_page_preview=True, reply_markup=choose_lang())
 
 
 @dp.message_handler(commands=['help'])
@@ -3319,6 +3325,14 @@ async def handle_query(call):
     elif call.data.startswith('captcha_false') and \
             call.from_user.id == call.message.reply_to_message.new_chat_members[0].id:
         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Неправильна відповідь.')
+
+    elif call.data.startswith('choose_lang'):
+        if call.data.startswith('choose_lang_uk'):
+            r.hset(call.from_user.id, 'language_code', 'uk')
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Вибрано українську мову.')
+        if call.data.startswith('choose_lang_en'):
+            r.hset(call.from_user.id, 'language_code', 'en')
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='English is selected.')
 
     elif call.data.startswith('create_'):
         if r.hexists('c' + str(call.message.chat.id), 'base') == 0:
