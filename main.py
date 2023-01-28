@@ -3038,7 +3038,7 @@ async def handle_query(call):
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
         if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
-            pass
+            await call.answer()
         else:
             r.hset(uid1, 'timestamp', timestamp)
             try:
@@ -3054,6 +3054,7 @@ async def handle_query(call):
                                 await bot.edit_message_text(text=fi,
                                                             inline_message_id=call.inline_message_id,
                                                             disable_web_page_preview=True)
+                                await call.answer()
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Твій русак не підходить по силі для цього бою.')
@@ -3069,6 +3070,7 @@ async def handle_query(call):
                                     inline_message_id=call.inline_message_id, disable_web_page_preview=True)
                                 hp(20, uid1)
                                 r.hincrby(call.from_user.id, 'money', money)
+                                await call.answer()
                             elif int(r.hget(call.from_user.id, 'class')) == 23:
                                 await bot.edit_message_text(
                                     text='\U0001F52E ' + ' Некромант проводить дивні ритуали над напівживим русаком...'
@@ -3076,6 +3078,7 @@ async def handle_query(call):
                                     inline_message_id=call.inline_message_id, disable_web_page_preview=True)
                                 hp(10, uid1)
                                 increase_trance(5, call.from_user.id)
+                                await call.answer()
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='\U0001fac0 Зараз цей русак не може битись.')
@@ -3084,7 +3087,7 @@ async def handle_query(call):
                                                         text='\U0001fac0 Русак лежить весь в крові.\nВін не може '
                                                              'битись поки не поїсть, або не полікується.')
                 elif r.hexists(uid1, 'name') == 0:
-                    pass
+                    await call.answer()
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ти хочеш атакувати свого русака, але розумієш, що він зараз '
@@ -3097,7 +3100,7 @@ async def handle_query(call):
                         if r.hexists(uid1, 't_ts') == 0:
                             r.hset(uid1, 't_ts', 0)
                         if timestamp - float(r.hget(uid1, 't_ts')) < 15:
-                            pass
+                            await call.answer()
                         else:
                             r.hset(uid1, 't_ts', timestamp)
                             try:
@@ -3109,6 +3112,7 @@ async def handle_query(call):
                                                                     show_alert=True, text='Цей бій не для тебе.')
                             except:
                                 await fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
+                                await call.answer()
                     elif cdata[1] == 'pr':
                         try:
                             q = cdata[2].split()
@@ -3116,6 +3120,7 @@ async def handle_query(call):
                                 fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
                                 await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
                                                             disable_web_page_preview=True)
+                                await call.answer()
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                                 text='Цей бій не для тебе.')
@@ -3129,6 +3134,7 @@ async def handle_query(call):
                     fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
                     await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
                                                 disable_web_page_preview=True)
+                    await call.answer()
 
     elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
