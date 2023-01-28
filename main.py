@@ -68,12 +68,14 @@ async def send_welcome(message):
             await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
                                 '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
         else:
+            language_code = message.from_user.language_code
             if not r.hexists(uid, 'language_code'):
-                if message.from_user.language_code in ('uk', 'en'):
-                    r.hset(uid, 'language_code', message.from_user.language_code)
-                else:
-                    r.hset(uid, 'language_code', 'uk')
-            msg = get_message(message.from_user.id, 'start', language_code=message.from_user.language_code)
+                if language_code not in ('uk', 'en'):
+                    language_code = 'uk'
+                r.hset(uid, 'language_code', language_code)
+            else:
+                language_code = r.hget(uid, 'language_code').decode()
+            msg = get_message(message.from_user.id, 'start', language_code=language_code)
             await message.reply(msg, disable_web_page_preview=True, reply_markup=choose_lang())
 
 

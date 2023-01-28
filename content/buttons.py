@@ -3,9 +3,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 def choose_lang():
     markup = InlineKeyboardMarkup()
-    items = {'\U0001F1FA\U0001F1E6': 'choose_lang_uk', '\U0001F1EC\U0001F1E7': 'choose_lang_en'}
-    for key, value in items.items():
-        markup.add(InlineKeyboardButton(text=key, callback_data=value))
+    markup.add(InlineKeyboardButton(text='\U0001F1FA\U0001F1E6', callback_data='choose_lang_uk'),
+               InlineKeyboardButton(text='\U0001F1EC\U0001F1E7', callback_data='choose_lang_en'))
     return markup
 
 
