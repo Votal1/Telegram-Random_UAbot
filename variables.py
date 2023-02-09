@@ -121,10 +121,11 @@ chm = ['https://i.ibb.co/mtbTnYj/hach.png', 'https://i.ibb.co/sjdgcjX/worker.png
        'https://i.ibb.co/FV5jD39/medic.png', 'https://i.ibb.co/Th7dTtD/gopnik.png',
        'https://i.ibb.co/hWbT3hq/taxyst.png', 'https://i.ibb.co/Sd6yGKz/general.png']
 
-girkin = ['https://ibb.co/JdWG0Dd',
-          'https://ibb.co/9WL5bQn', 'https://i.ibb.co/BnYB9Hc/2.jpg', 'https://ibb.co/N656bD1', 'https://ibb.co/C0Vhcmy',
-          'https://ibb.co/zJfYZxD', 'https://ibb.co/yBSJw4n', 'https://ibb.co/VvmnLmF', 'https://ibb.co/MNBqRcx',
-          'https://ibb.co/g7ZYVvj', 'https://ibb.co/3fvqGCj', 'https://ibb.co/pf8TPvY', 'https://ibb.co/RHvDRwC']
+girkin = ['https://i.ibb.co/thwvkVh/image.png',
+          'https://i.ibb.co/VTZ4gfV/1.jpg', 'https://i.ibb.co/BnYB9Hc/2.jpg', 'https://i.ibb.co/27x7HV8/3.jpg',
+          'https://i.ibb.co/F78grm1/4.jpg', 'https://i.ibb.co/6BsxFwL/5.png', 'https://i.ibb.co/2YNBDZ7/6.jpg',
+          'https://i.ibb.co/Zhm4fmQ/7.jpg', 'https://i.ibb.co/s3WLFKd/8.jpg', 'https://i.ibb.co/Qcv0d8b/9.jpg',
+          'https://i.ibb.co/B4GxdCQ/10.png', 'https://i.ibb.co/jy2Y5vn/11.jpg', 'https://i.ibb.co/PCm6qH5/12.jpg']
 
 default = ['https://ibb.co/PjxxLJr', 'https://ibb.co/mBLYqhC', 'https://ibb.co/vZ2R3fX', 'https://ibb.co/2SJjpqv',
            'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https://ibb.co/C7jCTRJ',
