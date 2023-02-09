@@ -115,7 +115,7 @@ chm = ['https://ibb.co/hHL9Gn6', 'https://ibb.co/2q1FRqp', 'https://ibb.co/Y0L76
        'https://ibb.co/QdP1KQZ', 'https://ibb.co/zfBD5ZW', 'https://ibb.co/wWV253v', 'https://ibb.co/KL5hS9J']
 
 girkin = ['https://ibb.co/JdWG0Dd',
-          'https://ibb.co/9WL5bQn', 'https://ibb.co/SfZBzD5', 'https://ibb.co/N656bD1', 'https://ibb.co/C0Vhcmy',
+          'https://ibb.co/9WL5bQn', 'https://i.ibb.co/BnYB9Hc/2.jpg', 'https://ibb.co/N656bD1', 'https://ibb.co/C0Vhcmy',
           'https://ibb.co/zJfYZxD', 'https://ibb.co/yBSJw4n', 'https://ibb.co/VvmnLmF', 'https://ibb.co/MNBqRcx',
           'https://ibb.co/g7ZYVvj', 'https://ibb.co/3fvqGCj', 'https://ibb.co/pf8TPvY', 'https://ibb.co/RHvDRwC']
 
