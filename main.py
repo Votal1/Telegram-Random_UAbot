@@ -4206,7 +4206,6 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'money')) >= 12:
             r.hincrby(call.from_user.id, 'money', -12)
             quest(call.from_user.id, 1, 2)
-            quest(call.from_user.id, 3, -1, 1)
             if int(r.hget(call.from_user.id, 'spirit')) == 10000:
                 quest(call.from_user.id, 3, 3, 2)
             vo = 0
@@ -4236,7 +4235,6 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'money')) >= 2:
             r.hincrby(call.from_user.id, 'money', -2)
             quest(call.from_user.id, 1, 2)
-            quest(call.from_user.id, 3, -1, 1)
             if int(r.hget(call.from_user.id, 'spirit')) == 10000:
                 quest(call.from_user.id, 3, 3, 2)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
