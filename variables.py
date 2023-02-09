@@ -94,7 +94,7 @@ p11 = ['https://ibb.co/5WPhmSn', 'https://ibb.co/Zfz7Nft', 'https://ibb.co/XF5Md
        'https://ibb.co/DkxNyz0', 'https://ibb.co/fQbHYMK']
 
 p12 = ['https://i.ibb.co/Chv6rhW/1.png', 'https://ibb.co/0KqbjVz', 'https://ibb.co/swD4ZDn', 'https://ibb.co/HnBZqDB',
-       'https://ibb.co/G2M15Pz', 'https://ibb.co/rxPcDsv', 'https://ibb.co/DWNzTnL', 'https://ibb.co/4P0vkJj',
+       'https://ibb.co/G2M15Pz', 'https://ibb.co/rxPcDsv', 'https://ibb.co/DWNzTnL', 'https://i.ibb.co/ZWb49Nh/8.png',
        'https://ibb.co/PhzrB52', 'https://ibb.co/YfDzRY6']
 
 premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', 'https://i.ibb.co/zmYDNrn/3.png',
