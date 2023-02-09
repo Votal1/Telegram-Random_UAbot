@@ -104,9 +104,10 @@ premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', '
            'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png', 'https://i.ibb.co/Gdf7NP0/9m.png',
            'https://i.ibb.co/jZ0mGY2/10.png', 'https://i.ibb.co/ZxNGCc6/11.png', 'https://i.ibb.co/8PGN5qs/12.png']
 
-premium2 = ['https://ibb.co/2d74PBj', 'https://ibb.co/Y09fjgM', 'https://ibb.co/YPxXKsc', 'https://ibb.co/pRpBhTp',
-            'https://ibb.co/Y7jDQDr', 'https://ibb.co/0BnbTm4', 'https://ibb.co/wcJ0B62', 'https://ibb.co/SnjZdMH',
-            'https://ibb.co/tXnJcKc', 'https://ibb.co/2NJYsSQ', 'https://ibb.co/qRbSnJy', 'https://ibb.co/1vHr3hm']
+premium2 = ['https://i.ibb.co/5LWHvV5/1.png', 'https://i.ibb.co/J3LrkZ4/2.png', 'https://i.ibb.co/17kMpWr/3.png',
+            'https://i.ibb.co/tx5TL65/4.png', 'https://i.ibb.co/GvPspsh/5.png', 'https://i.ibb.co/cbyn0kf/6.png',
+            'https://i.ibb.co/9Zw8cYd/7.png', 'https://i.ibb.co/85CQdfG/8.png', 'https://i.ibb.co/4dCVMtM/9.png',
+            'https://i.ibb.co/vY9vQhG/10.png', 'https://i.ibb.co/nDhG0Pg/11.png', 'https://i.ibb.co/gjsSGHR/12.png']
 
 premium3 = ['https://ibb.co/FmrkDC3', 'https://ibb.co/jhf5RSW', 'https://ibb.co/VHy87KH', 'https://ibb.co/t4MsDt4',
             'https://ibb.co/H2mHyqm', 'https://ibb.co/SNcXSbv', 'https://ibb.co/qYjnTJX', 'https://ibb.co/Hp2Wzrk',
