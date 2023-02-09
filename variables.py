@@ -102,7 +102,7 @@ p12 = ['https://i.ibb.co/Chv6rhW/1.png', 'https://i.ibb.co/1MZWfJ4/2.png', 'http
 premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', 'https://i.ibb.co/zmYDNrn/3.png',
            'https://i.ibb.co/QDHLRPp/4.png', 'https://i.ibb.co/GntBLKG/5.png', 'https://i.ibb.co/b1jN3GC/6.png',
            'https://i.ibb.co/QmfJRPP/7.png', 'https://i.ibb.co/9H5Wxfj/8.png', 'https://i.ibb.co/Gdf7NP0/9m.png',
-           'https://ibb.co/n8d9fyv', 'https://ibb.co/NK7tzW6', 'https://ibb.co/RQtY0fb']
+           'https://i.ibb.co/jZ0mGY2/10.png', 'https://i.ibb.co/ZxNGCc6/11.png', 'https://i.ibb.co/8PGN5qs/12.png']
 
 premium2 = ['https://ibb.co/2d74PBj', 'https://ibb.co/Y09fjgM', 'https://ibb.co/YPxXKsc', 'https://ibb.co/pRpBhTp',
             'https://ibb.co/Y7jDQDr', 'https://ibb.co/0BnbTm4', 'https://ibb.co/wcJ0B62', 'https://ibb.co/SnjZdMH',
