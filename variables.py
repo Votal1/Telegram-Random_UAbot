@@ -94,9 +94,10 @@ p11 = ['https://i.ibb.co/N6M25Jm/1.png', 'https://i.ibb.co/7StLbS8/2.png', 'http
        'https://i.ibb.co/b2kMQF6/7.png', 'https://i.ibb.co/bRFN3J2/8.png', 'https://i.ibb.co/q9tzf7T/9.png',
        'https://i.ibb.co/Fn9zb6f/10.png']
 
-p12 = ['https://i.ibb.co/Chv6rhW/1.png', 'https://ibb.co/0KqbjVz', 'https://ibb.co/swD4ZDn', 'https://ibb.co/HnBZqDB',
-       'https://ibb.co/G2M15Pz', 'https://ibb.co/rxPcDsv', 'https://ibb.co/DWNzTnL', 'https://i.ibb.co/ZWb49Nh/8.png',
-       'https://ibb.co/PhzrB52', 'https://ibb.co/YfDzRY6']
+p12 = ['https://i.ibb.co/Chv6rhW/1.png', 'https://i.ibb.co/1MZWfJ4/2.png', 'https://i.ibb.co/MVjHmjr/3.png',
+       'https://i.ibb.co/NZtRK6t/4.png', 'https://i.ibb.co/hWdnm83/5.png', 'https://i.ibb.co/QPBCydX/6.png',
+       'https://i.ibb.co/6w2rL5N/7.png', 'https://i.ibb.co/ZWb49Nh/8.png', 'https://i.ibb.co/d2JfnQN/9.png',
+       'https://i.ibb.co/VMH7jrd/10.png']
 
 premium = ['https://i.ibb.co/8D5kNzV/1.png', 'https://i.ibb.co/31jXXxQ/2.png', 'https://i.ibb.co/zmYDNrn/3.png',
            'https://i.ibb.co/QDHLRPp/4.png', 'https://i.ibb.co/GntBLKG/5.png', 'https://i.ibb.co/b1jN3GC/6.png',
