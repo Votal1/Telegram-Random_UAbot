@@ -127,6 +127,8 @@ girkin = ['https://i.ibb.co/thwvkVh/image.png',
           'https://i.ibb.co/Zhm4fmQ/7.jpg', 'https://i.ibb.co/s3WLFKd/8.jpg', 'https://i.ibb.co/Qcv0d8b/9.jpg',
           'https://i.ibb.co/B4GxdCQ/10.png', 'https://i.ibb.co/jy2Y5vn/11.jpg', 'https://i.ibb.co/PCm6qH5/12.jpg']
 
-default = ['https://ibb.co/PjxxLJr', 'https://ibb.co/mBLYqhC', 'https://ibb.co/vZ2R3fX', 'https://ibb.co/2SJjpqv',
-           'https://ibb.co/5M4vLjt', 'https://ibb.co/JmqBr4k', 'https://ibb.co/tZMkXTJ', 'https://ibb.co/C7jCTRJ',
-           'https://ibb.co/KK1WSyK', 'https://ibb.co/mFRGb0D']
+default2 = ['https://i.ibb.co/SyNNjH6/1.jpg', 'https://i.ibb.co/TTVn8PB/rusnya2.jpg',
+            'https://i.ibb.co/SRqGtHf/rusnya3.jpg', 'https://i.ibb.co/W0CcRnk/rusnya4.jpg',
+            'https://i.ibb.co/ngmfj1Z/rusnya5.jpg', 'https://i.ibb.co/vVhwLGz/rusnya6.jpg',
+            'https://i.ibb.co/mvC18Vc/rusnya7.jpg', 'https://i.ibb.co/J7Y6MDx/rusnya8.jpg',
+            'https://i.ibb.co/FHPzC7H/rusnya9.jpg', 'https://i.ibb.co/zHmrQFn/rusnya10.jpg']
