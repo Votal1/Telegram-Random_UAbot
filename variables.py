@@ -114,9 +114,12 @@ premium3 = ['https://i.ibb.co/n6GqLtm/1.jpg', 'https://i.ibb.co/H742djx/2.jpg', 
             'https://i.ibb.co/QvQcyDz/7.jpg', 'https://i.ibb.co/dJcd2Qz/8.jpg', 'https://i.ibb.co/M8D8F9f/9.jpg',
             'https://i.ibb.co/Vt6gLsZ/10.jpg', 'https://i.ibb.co/2df1bVZ/11.jpg', 'https://i.ibb.co/5jXnnFD/12.jpg']
 
-chm = ['https://ibb.co/hHL9Gn6', 'https://ibb.co/2q1FRqp', 'https://ibb.co/Y0L764f', 'https://ibb.co/rdjfSxy',
-       'https://ibb.co/sRzV5Zs', 'https://ibb.co/Ykbs77S', 'https://ibb.co/dQcFyKw', 'https://ibb.co/cXvjbkD',
-       'https://ibb.co/QdP1KQZ', 'https://ibb.co/zfBD5ZW', 'https://ibb.co/wWV253v', 'https://ibb.co/KL5hS9J']
+chm = ['https://i.ibb.co/mtbTnYj/hach.png', 'https://i.ibb.co/sjdgcjX/worker.png',
+       'https://i.ibb.co/HhHD0LG/focus.png', 'https://i.ibb.co/9ZD3LbY/pagan.png',
+       'https://i.ibb.co/QQtK84Y/meat.png', 'https://i.ibb.co/ts3rMM6/cop.png',
+       'https://i.ibb.co/0fXT3JR/maloros.png', 'https://i.ibb.co/Xk4qyjS/hacker.png',
+       'https://i.ibb.co/FV5jD39/medic.png', 'https://i.ibb.co/Th7dTtD/gopnik.png',
+       'https://i.ibb.co/hWbT3hq/taxyst.png', 'https://i.ibb.co/Sd6yGKz/general.png']
 
 girkin = ['https://ibb.co/JdWG0Dd',
           'https://ibb.co/9WL5bQn', 'https://i.ibb.co/BnYB9Hc/2.jpg', 'https://ibb.co/N656bD1', 'https://ibb.co/C0Vhcmy',
