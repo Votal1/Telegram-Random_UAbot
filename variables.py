@@ -84,10 +84,10 @@ p9 = ['https://i.ibb.co/SvsNgFd/1.png', 'https://i.ibb.co/BjhBvdx/2.png', 'https
       'https://i.ibb.co/5vyTNzv/7.png', 'https://i.ibb.co/LtMLhrN/8.png', 'https://i.ibb.co/8jk78sT/9.png',
       'https://i.ibb.co/C1NxKbM/10.png']
 
-p10 = ['https://ibb.co/SR9FdXL', 'https://ibb.co/RhFTYTD', 'https://ibb.co/zGHv8fX',
-       'https://ibb.co/CQVZLmy', 'https://ibb.co/yPgB57x', 'https://ibb.co/dkGnCxB',
-       'https://ibb.co/BqHR2z7', 'https://ibb.co/87LkG89', 'https://i.ibb.co/thKDRcP/9.png',
-       'https://ibb.co/H2J75Kx']
+p10 = ['https://i.ibb.co/MM3FGDX/1.jpg', 'https://i.ibb.co/YDCBPBL/2.jpg', 'https://i.ibb.co/2gY48Kv/3.png',
+       'https://i.ibb.co/M7P4dZH/4.png', 'https://i.ibb.co/B3TKjFY/5.png', 'https://i.ibb.co/ygWLv70/6.jpg',
+       'https://i.ibb.co/LnDfdkq/7.png', 'https://i.ibb.co/crSqRTQ/8.png', 'https://i.ibb.co/thKDRcP/9.png',
+       'https://i.ibb.co/FWP6Rh0/10.jpg']
 
 p11 = ['https://ibb.co/5WPhmSn', 'https://ibb.co/Zfz7Nft', 'https://ibb.co/XF5Mdt0', 'https://ibb.co/jGhcdZd',
        'https://ibb.co/n1Yvrb7', 'https://ibb.co/ZTGP7TS', 'https://ibb.co/QC43pkJ', 'https://ibb.co/tPzYhXx',
