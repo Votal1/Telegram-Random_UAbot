@@ -48,7 +48,7 @@ def shop_msg(uid, mode):
                  '\u2721\uFE0F Ярмулка - \U0001F31F 1': 'jew',
                  '\U0001F9FE Ресурси - \U0001F31F 2': 'buy_resources',
                  '\U0001F393 Курс перекваліфікації - \U0001F31F 3': 'course',
-                 '\U0001F3E0 Велике будівництво - \U0001F31F 3': 'fast_cellar',
+                 '\U0001F3E0 Велике будівництво - \U0001F31F 1': 'fast_cellar',
                  '\U0001F392 Тактичний рюкзак - \U0001F31F 5': 'expand_backpack'}
         markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
                    InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
