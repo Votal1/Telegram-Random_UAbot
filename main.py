@@ -4979,8 +4979,8 @@ async def handle_query(call):
 
     elif call.data.startswith('fast_cellar'):
         if int(r.hget(call.from_user.id, 's3')) <= 2:
-            if int(r.hget(call.from_user.id, 'strap')) >= 1:
-                r.hincrby(call.from_user.id, 'strap', -1)
+            if int(r.hget(call.from_user.id, 'strap')) >= 3:
+                r.hincrby(call.from_user.id, 'strap', -3)
                 r.hset(call.from_user.id, 's3', 5)
                 r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
                        {'strength2': randint(100, 150),
