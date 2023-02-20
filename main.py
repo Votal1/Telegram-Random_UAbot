@@ -3615,7 +3615,7 @@ async def handle_query(call):
                 call.from_user.id in sudoers:
             msg = ''
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
-                if int(r.hget(mem, 'clan_time')) == datetime.now().day:
+                if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:
                     msg += '\U0001f7e9 '
                 else:
                     msg += '\U0001f7e5 '
