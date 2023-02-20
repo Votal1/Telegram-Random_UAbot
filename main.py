@@ -3619,7 +3619,10 @@ async def handle_query(call):
                     msg += '\U0001f7e9 '
                 else:
                     msg += '\U0001f7e5 '
-                name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
+                if r.hexists(mem, 'firstname'):
+                    name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
+                else:
+                    name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Отримати список з user id', callback_data='get_id_members'))
@@ -3635,7 +3638,10 @@ async def handle_query(call):
                     msg += '\U0001f7e9 '
                 else:
                     msg += '\U0001f7e5 '
-                name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
+                if r.hexists(mem, 'firstname'):
+                    name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
+                else:
+                    name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> {mem.decode()}\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
     elif call.data.startswith('build'):
