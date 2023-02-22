@@ -783,7 +783,8 @@ async def passport(message):
             pass
         clan1 = ''
         if checkClan(message.from_user.id):
-            clan1 = '\n\U0001F3E0 Клан: ' + r.hget('c' + stats[6].decode(), 'title').decode()
+            clan0 = msg_fmt(f'c{stats[6].decode()}', 'title')
+            clan1 = f'\n\U0001F3E0 Клан: {clan0}'
         msg = f'\U0001F4DC {message.from_user.first_name}\n\n{wins}{deaths}' \
               f'\n\u2622 Випито горілки: {stats[4].decode()}' \
               f'\n\U0001F4E6 Відкрито пакунків: {stats[5].decode()}{clan1}' \
