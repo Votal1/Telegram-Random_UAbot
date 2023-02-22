@@ -755,6 +755,11 @@ async def ctop(sett, uid, text, cid):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
+def msg_fmt(key, value):
+    msg = r.hget(key, value).decode()
+    return msg.replace('<', ' ').replace('>', ' ').replace('@', ' ')
+
+
 def get_message(uid, key, language_code=False):
     if not language_code:
         if r.hexists(uid, 'language'):

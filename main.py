@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, auto_clan_settings, q_points, get_message
+    wood, stone, cloth, brick, auto_clan_settings, q_points, get_message, msg_fmt
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
@@ -1667,7 +1667,7 @@ async def clan(message):
         else:
             if str(message.from_user.id).encode() in r.smembers('cl' + cid) or message.from_user.id in sudoers:
                 base = int(r.hget(c, 'base'))
-                title = r.hget(c, 'title').decode().replace('<', '.').replace('>', '.')
+                title = r.hget(c, 'title').decode()
                 leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode().replace('<', '.').replace('>', '.')
                 if r.scard('cl2' + cid) == 1:
                     leader += f"\nЗаступник: {r.hget(r.srandmember('cl2' + cid), 'firstname').decode()}"
@@ -1980,7 +1980,8 @@ async def clan_war(message):
                     await bot.send_message(int(enemy), f'\U0001f4ef Кланові війни починаються!\n\n'
                                                        f'Ваш противник:\n{r.hget(c, "title").decode()}')
             elif int(r.hget(c, 'war')) == 1:
-                title = r.hget("c" + r.hget(c, "enemy").decode(), "title").decode()
+                enemy = r.hget(c, 'enemy').decode()
+                title = msg_fmt(f'c{enemy}', 'title')
                 msg = f'\U0001f4ef Триває війна з {title}\n\n' \
                       f'Ваш прогрес:\n' \
                       f'\U0001fa99 Очки: {int(r.hget(c, "points"))}\n' \
