@@ -6001,6 +6001,7 @@ async def echo(message):
             await bot.send_sticker(message.chat.id,
                                    open("pic.webp", "rb"),
                                    reply_to_message_id=message.message_id)
+            r.hincrby('logs', 'alert_count', 1)
 
 
         if message.chat.type == 'private':
