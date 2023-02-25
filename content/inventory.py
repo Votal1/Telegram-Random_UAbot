@@ -297,7 +297,7 @@ def change_item(cdata, uid):
                     answer = 'Це спорядження неможливо взяти з рюкзака'
                     return False, False, False, answer
             else:
-                answer = 'Ваше спорядження неможливо покласти в рюкзак'
+                answer = 'Це спорядження неможливо взяти з рюкзака, бо ваше неможливо покласти'
                 return False, False, False, answer
         else:
             answer = 'В рюкзаку нема цього спорядження'
