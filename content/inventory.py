@@ -284,8 +284,8 @@ def change_item(cdata, uid):
         if b:
             inv = r.hmget(uid, item_type, f's_{item_type}', 'class')
             item, s_item, cl = int(inv[0]), int(inv[1]), int(inv[2])
-            if item not in forbidden[item_type] or allow_class_item(cl, item):
-                if b not in forbidden[item_type] or allow_class_item(cl, b):
+            if item not in forbidden[item_type] or allow_class_item(cl, item, item_type):
+                if b not in forbidden[item_type] or allow_class_item(cl, b, item_type):
                     r.hset(uid, item_type, b, {f's_{item_type}': bs, f'backpack_{slot}': item,
                                                f'backpack_{slot}_s': s_item})
                     if not item:
