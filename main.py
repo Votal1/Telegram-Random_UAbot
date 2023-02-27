@@ -315,8 +315,8 @@ async def my_rusak(message):
         else:
             await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
     except Exception as e:
-        await bot.send_message(456514639, f'{e}\n{mid}\n{r.hget(mid, "photo").decode()}')
-        await message.reply('soledar_2222_bot_20000')
+        pass
+        # await bot.send_message(456514639, f'{e}\n{mid}\n{r.hget(mid, "photo").decode()}')
 
 
 @dp.message_handler(commands=['feed'])
