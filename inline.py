@@ -6,7 +6,7 @@ from parameters import injure, schizophrenia, trance
 
 def prepare_to_fight(uid, fn, q):
     if r.hexists(uid, 'name') == 0:
-        return '\U0001F3DA В тебе немає русака.\n\n@Random_UAbot <- отримати русака'
+        return '\U0001F3DA В тебе немає русака.\n\n@RandomUA_bot <- отримати русака'
     elif int(r.hget(uid, 'hp')) > 0:
         stats = r.hmget(uid, 'name', 'class', 'strength', 'intellect', 'spirit')
         r.hset(uid, 'firstname', fn)
@@ -64,7 +64,7 @@ def prepare_to_fight(uid, fn, q):
                     '\n\U0001F4AA ' + str(s) +
                     ' \U0001F9E0 ' + str(i) +
                     ' \U0001F54A ' + str(bd) +
-                    '\n\n\u2744\uFE0F @Random_UAbot <- отримати русака')
+                    '\n\n\u2744\uFE0F @RandomUA_bot <- отримати русака')
 
         return ' ' + fn + ' починає битву русаків!' + query + stats
     else:

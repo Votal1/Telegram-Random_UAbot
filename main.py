@@ -82,7 +82,7 @@ async def send_welcome(message):
 
 @dp.message_handler(commands=['help'])
 async def get_help(message):
-    await message.reply('Щоб почати дуель русаків зайди в який-небудь чат, напиши @Random_UAbot, а далі думаю все '
+    await message.reply('Щоб почати дуель русаків зайди в який-небудь чат, напиши @RandomUA_bot, а далі думаю все '
                         'зрозумієш.\n\nЩоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n'
                         '/wiki - вся інфа по грі\n'
                         '@randomuanews - новини', disable_web_page_preview=True)
