@@ -756,13 +756,13 @@ async def ctop(sett, uid, text, cid):
 
 
 def anti_clicker(uid):
-    day = datetime.now().day
+    ts = datetime.now().timestamp()
 
-    if not r.hexists(uid, 'restriction') or day != int(r.hget(uid, 'restriction_day')):
-        r.hset(uid, 'restriction', 0, {'restriction_day': day})
+    if not r.hexists(uid, 'restriction_ts') or ts - int(r.hget(uid, 'restriction_ts')) > 86400:
+        r.hset(uid, 'restriction', 0, {'restriction_ts': ts})
 
     r.hincrby(uid, 'restriction')
-    if int(r.hget(uid, 'restriction')) > 1000:
+    if int(r.hget(uid, 'restriction')) > 100:
         return False
     else:
         return True
