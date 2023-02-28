@@ -762,7 +762,7 @@ def anti_clicker(uid):
         r.hset(uid, 'restriction', 0, {'restriction_ts': ts})
 
     r.hincrby(uid, 'restriction')
-    if int(r.hget(uid, 'restriction')) > 1000:
+    if int(r.hget(uid, 'restriction')) > 100:
         return False
     else:
         return True
