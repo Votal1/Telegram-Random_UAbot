@@ -755,6 +755,19 @@ async def ctop(sett, uid, text, cid):
         return 'Недостатньо інформації для створення рейтингу.'
 
 
+def anti_clicker(uid):
+    day = datetime.now().day
+
+    if not r.hexists(uid, 'restriction') or day != int(r.hget(uid, 'restriction_day')):
+        r.hset(uid, 'restriction', 0, {'restriction_day': day})
+
+    r.hincrby(uid, 'restriction')
+    if int(r.hget(uid, 'restriction')) > 1000:
+        return False
+    else:
+        return True
+
+
 def msg_fmt(key, value):
     msg = r.hget(key, value).decode()
     return msg.replace('<', ' ').replace('>', ' ').replace('@', ' ')
