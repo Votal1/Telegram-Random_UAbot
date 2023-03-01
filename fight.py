@@ -684,7 +684,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
-            if c2 in (3, 13, 23) and checkClan(uid2, building='build3', level=3):
+            if c2 in (3, 13, 23) and checkClan(uid2, building='build3', level=3) and can_earn2:
                 steal = choices([0, 1], weights=[80, 20])[0]
             else:
                 steal = 0
@@ -814,7 +814,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 bonus = randint(20, 60)
                 m_bonus = choices([0, 1, 2, 3], weights=[50, 44, 5, 1])
-            if c1 in (3, 13, 23) and checkClan(uid1, building='build3', level=3):
+            if c1 in (3, 13, 23) and checkClan(uid1, building='build3', level=3) and can_earn1:
                 steal = choices([0, 1], weights=[80, 20])[0]
             else:
                 steal = 0
