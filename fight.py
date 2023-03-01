@@ -870,7 +870,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з рунічною сокирою Перуна. Коли ворог ' \
                                                            'програв, його бойовий дух влився у русака...'
 
-            elif weapon2 in (17, 28):
+            elif weapon2 in (17, 28) and can_earn2:
                 r.hincrby(uid2, 'wins', 1)
                 if weapon2 == 17:
                     fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор новоросії.' \
