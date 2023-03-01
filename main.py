@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, auto_clan_settings, q_points, get_message, msg_fmt
+    wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
@@ -3069,13 +3069,17 @@ async def handle_query(call):
                                                                 text='Твій русак не підходить по силі для цього бою.')
                         else:
                             if int(r.hget(uid2, 'class')) == 29:
-                                if int(r.hget(uid2, 'support')) == 1 and checkClan(uid2, building='build2', level=4):
-                                    money = 10
-                                else:
-                                    money = 5
+                                msg, money = '', 0
+                                if anti_clicker(uid2):
+                                    if int(r.hget(uid2, 'support')) == 1 and \
+                                            checkClan(uid2, building='build2', level=4):
+                                        money = 10
+                                    else:
+                                        money = 5
+                                    msg = f'\U0001F4B5 +{money}'
                                 await bot.edit_message_text(
                                     text=f'\u26D1 {call.from_user.first_name} відправив свого русака надати медичну '
-                                         f'допомогу пораненому.\n\U0001fac0 +20 \U0001F4B5 +{money}',
+                                         f'допомогу пораненому.\n\U0001fac0 +20 {msg}',
                                     inline_message_id=call.inline_message_id, disable_web_page_preview=True)
                                 hp(20, uid1)
                                 r.hincrby(call.from_user.id, 'money', money)
