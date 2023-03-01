@@ -2921,6 +2921,44 @@ async def raid(message):
         pass
 
 
+@dp.message_handler(commands=['status'])
+async def status(message):
+    uid = message.from_user.id
+    day = datetime.now().day
+    msg = ''
+
+    if r.hexists(uid, 'time') and int(r.hget(uid, 'time')) == day:
+        msg += '\U0001f7e9 /feed\n'
+    else:
+        msg += '\U0001f7e5 /feed\n'
+
+    if int(r.hget(uid, 'time1')) == day:
+        msg += '\U0001f7e9 /mine\n'
+    else:
+        msg += '\U0001f7e5 /mine\n'
+
+    if r.hexists(uid, 'time4'):
+        if int(r.hget(uid, 'time4')) == day and int(r.hget(uid, 'woman')) > 0:
+            msg += '\U0001f7e9 /woman\n'
+        elif int(r.hget(uid, 'woman')) == 0:
+            msg += '\U0001f7e5 /woman\n'
+
+    if r.hexists(uid, 'clan_time') and checkClan(uid):
+        if int(r.hget(uid, 'clan_time')) == day:
+            msg += '\U0001f7e9 /work\n'
+        else:
+            msg += '\U0001f7e5 /work\n'
+
+    if r.hexists(uid, 'qt'):
+        q = r.hmget(uid, 'qt', 'q1', 'q2', 'q3')
+        if int(q[0]) == day and int(q[1]) == 0 and int(q[2]) == 0 and int(q[3]) == 0:
+            msg += '\U0001f7e9 /quest\n'
+        else:
+            msg += '\U0001f7e5 /quest\n'
+
+    await message.reply(msg)
+
+
 @dp.message_handler(commands=['commands'])
 async def commands(message):
     markup = InlineKeyboardMarkup()
