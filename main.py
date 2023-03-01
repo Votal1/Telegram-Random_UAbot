@@ -2985,7 +2985,7 @@ async def status(message):
 
     if r.hexists(uid, 'restriction'):
         ts = datetime.fromtimestamp(int(r.hget(uid, 'restriction_ts')))
-        msg += f'\nДуелі: {int(r.hget(uid, "restriction"))}/1000\nОновлення ліміту:\n'
+        msg += f'\n\u231B Дуелі: {int(r.hget(uid, "restriction"))}/1000\nОновлення ліміту:\n'
         msg += ts.strftime('%H:%M %d.%m.%Y')
 
     await message.reply(msg)
