@@ -2927,17 +2927,35 @@ async def status(message):
     day = datetime.now().day
     msg = ''
 
-    if r.hexists(uid, 'time') and int(r.hget(uid, 'time')) == day:
-        msg += '\U0001f7e9 /feed\n'
-    elif r.hexists(uid, 'time22') and int(r.hget(uid, 'time22')) == day:
-        msg += '\U0001f7e8 /feed\n'
+    if r.hexists(uid, 'time'):
+        if int(r.hget(uid, 'time')) == day:
+            if r.hexists(uid, 'time22') and int(r.hget(uid, 'time22')) == day:
+                msg += '\U0001f7e9 /feed\n'
+            elif r.hexists(uid, 'time22') and int(r.hget(uid, 'time22')) != day:
+                msg += '\U0001f7e8 /feed\n'
+        if int(r.hget(uid, 'time')) != day:
+            if r.hexists(uid, 'time22') and int(r.hget(uid, 'time22')) == day:
+                msg += '\U0001f7e8 /feed\n'
+            elif r.hexists(uid, 'time22') and int(r.hget(uid, 'time22')) != day:
+                msg += '\U0001f7e5 /feed\n'
+        else:
+            msg += '\U0001f7e5 /feed\n'
     else:
         msg += '\U0001f7e5 /feed\n'
 
-    if int(r.hget(uid, 'time1')) == day:
-        msg += '\U0001f7e9 /mine\n'
-    elif r.hexists(uid, 'time23') and int(r.hget(uid, 'time23')) == day:
-        msg += '\U0001f7e8 /mine\n'
+    if r.hexists(uid, 'time1'):
+        if int(r.hget(uid, 'time1')) == day:
+            if r.hexists(uid, 'time23') and int(r.hget(uid, 'time23')) == day:
+                msg += '\U0001f7e9 /mine\n'
+            elif r.hexists(uid, 'time23') and int(r.hget(uid, 'time23')) != day:
+                msg += '\U0001f7e8 /mine\n'
+        if int(r.hget(uid, 'time1')) != day:
+            if r.hexists(uid, 'time23') and int(r.hget(uid, 'time22')) == day:
+                msg += '\U0001f7e8 /mine\n'
+            elif r.hexists(uid, 'time23') and int(r.hget(uid, 'time23')) != day:
+                msg += '\U0001f7e5 /mine\n'
+        else:
+            msg += '\U0001f7e5 /mine\n'
     else:
         msg += '\U0001f7e5 /mine\n'
 
