@@ -2930,14 +2930,14 @@ async def status(message):
     if r.hexists(uid, 'time') and int(r.hget(uid, 'time')) == day:
         msg += '\U0001f7e9 /feed\n'
     elif r.hexists(uid, 'time22') and int(r.hget(uid, 'time22')) == day:
-        msg += '\uD83D\uDFE8 /feed\n'
+        msg += '\U0001f7e8 /feed\n'
     else:
         msg += '\U0001f7e5 /feed\n'
 
     if int(r.hget(uid, 'time1')) == day:
         msg += '\U0001f7e9 /mine\n'
     elif r.hexists(uid, 'time23') and int(r.hget(uid, 'time23')) == day:
-        msg += '\uD83D\uDFE8 /mine\n'
+        msg += '\U0001f7e8 /mine\n'
     else:
         msg += '\U0001f7e5 /mine\n'
 
@@ -2959,7 +2959,7 @@ async def status(message):
             if int(q[1]) == 0 and int(q[2]) == 0 and int(q[3]) == 0:
                 msg += '\U0001f7e9 /quest\n'
             elif int(q[1]) == 0 or int(q[2]) == 0 or int(q[3]) == 0:
-                msg += '\uD83D\uDFE8 /quest\n'
+                msg += '\U0001f7e8 /quest\n'
             else:
                 msg += '\U0001f7e5 /quest\n'
         else:
