@@ -13,7 +13,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
+    wood, stone, cloth, brick, auto_clan_settings, q_points, get_message, msg_fmt
 
 
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
@@ -3047,7 +3047,7 @@ async def handle_query(call):
         timestamp = datetime.now().timestamp()
         if r.hexists(uid1, 'timestamp') == 0:
             r.hset(uid1, 'timestamp', 0)
-        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5 or not anti_clicker(uid2):
+        if timestamp - float(r.hget(uid1, 'timestamp')) < 0.5:
             pass
         else:
             r.hset(uid1, 'timestamp', timestamp)
@@ -6236,8 +6236,6 @@ async def inline_echo(inline_query):
     try:
         markup = InlineKeyboardMarkup()
         call = 'fight' + str(inline_query.from_user.id)
-        if not anti_clicker(inline_query.from_user.id):
-            raise Exception
         r1 = InlineQueryResultArticle(
             id='1',
             title='Бій русаків',
@@ -6347,8 +6345,6 @@ async def default_query(inline_query):
         call = 'fight' + str(inline_query.from_user.id) + ',' + str(inline_query.query)
         call1 = 'fight' + str(inline_query.from_user.id) + ',' + 'pr,' + str(inline_query.query)
         call2 = 'fight' + str(inline_query.from_user.id) + ',' + 'tr,' + str(inline_query.query)
-        if not anti_clicker(inline_query.from_user.id):
-            raise Exception
         r1 = InlineQueryResultArticle(
             id='1',
             title='Пошук суперника по силі',

@@ -6,12 +6,14 @@ from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
 from variables import names, icons, p7
-from methods import checkClan, wood, stone, cloth, brick, q_points
+from methods import checkClan, wood, stone, cloth, brick, q_points, anti_clicker
 from content.quests import quest
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
     info, wins1, wins2 = '', 0, 0
+    can_earn1 = anti_clicker(uid1)
+    can_earn2 = anti_clicker(uid2)
     for loop in range(t):
         if loop / 2 != 0 and t == 5:
             uid = uid1
@@ -491,7 +493,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if hp2 < 50:
                 hp(5, uid2)
                 m1 = '\n\u26D1 ' + names[name1] + ' підлатав ворога.'
-                if c1 == 29:
+                if c1 == 29 and can_earn1:
                     money = 0
                     if int(r.hget(uid2, 'injure')) > 0:
                         money += 1
@@ -525,7 +527,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     hp(5, uid1)
                     m2 = '\n\u26D1 ' + names[name2] + ' підлатав ворога.'
-                    if c2 == 29:
+                    if c2 == 29 and can_earn2:
                         money = 0
                         if int(r.hget(uid1, 'injure')) > 0:
                             money += 1
@@ -691,7 +693,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     m_bonus[0] += 2
                 elif int(r.hget(uid1, 'money')) < 200 and checkClan(uid1, building='build3', level=1):
                     m_bonus[0] += 2
-            if m_bonus[0] > 0:
+            if m_bonus[0] > 0 and can_earn1:
                 if checkClan(uid1, base=4):
                     if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
                         m_bonus = [m_bonus[0] * 2]
@@ -720,7 +722,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника млином!\n\U0001F54A +' + \
                                     str(ran) + '\n'
                             spirit(ran, uid1, 0)
-                        elif trick == [3]:
+                        elif trick == [3] and can_earn1:
                             hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника прогином!\n\U0001F4B5 +2\n'
                             r.hincrby(uid1, 'money', 2)
 
@@ -743,7 +745,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
             spirit(bonus, uid1, c1)
             spirit(-bonus, uid2, 0)
-            r.hincrby(uid1, 'wins', 1)
+            if can_earn1:
+                r.hincrby(uid1, 'wins', 1)
             quest(uid1, 1, 1)
             quest(uid1, 1, -1)
             r.hincrby('win_rate', f'win-{c1}', 1)
@@ -762,13 +765,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             hack = ''
             if c2 == 8 or c2 == 18 or c2 == 28:
                 hack1 = choices([0, 1], weights=[82, 18])
-                if weapon2 in (18, 29):
+                if weapon2 in (18, 29) and can_earn2:
                     hack1 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name2] + ' використав експлойт...'
                     if hack1 == [0]:
                         hack += '\n' + r.hget('promo_code', 'hacker_promo_code').decode()
                     damage_weapon(uid2, c2)
-                if hack1 == [1]:
+                if hack1 == [1] and can_earn2:
                     spirit(bonus * 2, uid2, 0)
                     spirit(-bonus, uid1, 0)
                     money = 1
@@ -820,7 +823,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     m_bonus[0] += 2
                 elif int(r.hget(uid2, 'money')) < 200 and checkClan(uid2, building='build3', level=1):
                     m_bonus[0] += 2
-            if m_bonus[0] > 0:
+            if m_bonus[0] > 0 and can_earn2:
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
                         m_bonus = [m_bonus[0] * 2]
@@ -849,7 +852,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника млином!\n\U0001F54A +' + \
                                     str(ran) + '\n'
                             spirit(ran, uid2, 0)
-                        elif trick == [3]:
+                        elif trick == [3] and can_earn2:
                             hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника прогином!\n\U0001F4B5 +2\n'
                             r.hincrby(uid2, 'money', 2)
 
@@ -880,7 +883,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
-            r.hincrby(uid2, 'wins', 1)
+            if can_earn2:
+                r.hincrby(uid2, 'wins', 1)
             quest(uid2, 1, 1)
             quest(uid2, 1, -1)
             r.hincrby('win_rate', f'win-{c2}', 1)
@@ -899,13 +903,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             hack = ''
             if c1 == 8 or c1 == 18 or c1 == 28:
                 hack2 = choices([0, 1], weights=[82, 18])
-                if weapon1 in (18, 29):
+                if weapon1 in (18, 29) and can_earn1:
                     hack2 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name1] + ' використав експлойт...'
                     if hack2 == [0]:
                         hack += '\n' + r.hget('promo_code', 'hacker_promo_code').decode()
                     damage_weapon(uid1, c1)
-                if hack2 == [1]:
+                if hack2 == [1] and can_earn1:
                     spirit(bonus * 2, uid1, 0)
                     spirit(-bonus, uid2, 0)
                     money = 1
