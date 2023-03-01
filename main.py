@@ -2983,6 +2983,11 @@ async def status(message):
         else:
             msg += '\U0001f7e5 /quest\n'
 
+    if r.hexists(uid, 'restriction'):
+        ts = datetime.fromtimestamp(r.hget(uid, 'restriction_ts'))
+        msg += f'\nДуелі: {int(r.hget(uid, "restriction"))}/1000\nОновлення ліміту:\n' \
+               f'{ts.hour}:{ts.minute} {ts.day}.{ts.month}.{ts.year}'
+
     await message.reply(msg)
 
 
