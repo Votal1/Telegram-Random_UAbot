@@ -2986,7 +2986,6 @@ async def status(message):
     if r.hexists(uid, 'restriction'):
         ts1 = int(r.hget(uid, 'restriction_ts')) + 86400
         ts = datetime.fromtimestamp(ts1)
-        duels = int(r.hget(uid, "restriction"))
 
         if ts1 > int(datetime.now().timestamp()):
             msg += f'\n\u231B Дуелі: {int(r.hget(uid, "restriction"))}/1000'
