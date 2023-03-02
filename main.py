@@ -2959,7 +2959,7 @@ async def status(message):
     else:
         msg += '\U0001f7e5 /mine\n'
 
-    if r.hexists(uid, 'time4') and int(r.hget(uid, 'woman')) > 0:
+    if r.hexists(uid, 'time4') and r.hexists(uid, 'woman') and int(r.hget(uid, 'woman')) > 0:
         if int(r.hget(uid, 'time4')) == day:
             msg += '\U0001f7e9 /woman\n'
         else:
