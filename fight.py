@@ -1471,8 +1471,7 @@ async def start_raid(cid):
     await sleep(1)
 
     if int(r.hget('convoy', 'day')) != datetime.now().day:
-        r.hset('convoy', 'power', 5000000)
-        r.hset('convoy', 'day', datetime.now().day)
+        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day, 'hour': randint(8, 12)})
 
     chance1, hack, mar, rocket, fish, jew = 0, 0, 0, 0, 0, 0
     raid1, raid2, raid3 = 50, 50, 0
@@ -1509,7 +1508,7 @@ async def start_raid(cid):
                     mar += 1
             if cl in (8, 18, 28):
                 hack += 1
-            if cl == 33 and int(r.hget('convoy', 'power')) > 0:
+            if cl == 33 and int(r.hget('convoy', 'power')) > 0 and datetime.now().hour >= int(r.hget('convoy', 'hour')):
                 raid1 -= 10
                 raid2 -= 10
                 raid3 += 20
@@ -1553,7 +1552,8 @@ async def start_raid(cid):
             quest(member, 2, 1)
         except:
             continue
-    if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0:
+    if int(r.hget(c, 'base')) == 11 and raid3 == 0 and int(r.hget('convoy', 'power')) > 0 \
+            and datetime.now().hour >= int(r.hget('convoy', 'hour')):
         raid1, raid2, raid3 = 40, 40, 20
     raid1 = raid1 - 10 * mar
     if raid1 < 0:
