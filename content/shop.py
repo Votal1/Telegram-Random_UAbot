@@ -123,13 +123,13 @@ def salt_shop(uid, cdata):
                 r.hincrby(uid, 'purchase', 1)
                 st = int(r.hget(uid, 'strength'))
                 s4 = int(r.hget(uid, 's4'))
-                if st < 2000:
+                if st < 3000:
                     up = 30
-                elif st < 3000:
-                    up = 20
                 elif st < 4000:
-                    up = 10
+                    up = 20
                 elif st < 5000:
+                    up = 10
+                elif st < 8000:
                     up = 5
                 else:
                     up = 3
