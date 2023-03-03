@@ -322,114 +322,113 @@ async def my_rusak(message):
 @dp.message_handler(commands=['feed'])
 async def feed(message):
     try:
+        uid = message.from_user.id
         try:
-            r.hset(message.from_user.id, 'username', message.from_user.username)
+            r.hset(uid, 'username', message.from_user.username)
             if message.chat.type != 'private':
-                r.sadd(message.chat.id, message.from_user.id)
-                r.sadd(111, message.from_user.id)
+                r.sadd(message.chat.id, uid)
+                r.sadd(111, uid)
             if message.chat.type == 'supergroup':
                 r.hset('f' + str(message.chat.id), 'title', message.chat.title)
         except:
             pass
-        if not datetime.now().day == int(r.hget(message.from_user.id, 'time')):
-            r.hset(message.from_user.id, 'time', datetime.now().day)
-            quest(message.from_user.id, 3, 2, 2)
-            r.hset(message.from_user.id, 'hp', 100)
-            if checkClan(message.from_user.id, building='build5', level=2) and\
-                    int(r.hget(message.from_user.id, 'injure')) > 0:
-                r.hincrby(message.from_user.id, 'injure', -30)
-                if int(r.hget(message.from_user.id, 'injure')) < 0:
-                    r.hset(message.from_user.id, 'injure', 0)
-            stats = r.hmget(message.from_user.id, 'strength', 'intellect')
+        if not datetime.now().day == int(r.hget(uid, 'time')):
+            r.hset(uid, 'time', datetime.now().day)
+            quest(uid, 3, 2, 2)
+            r.hset(uid, 'hp', 100)
+            if checkClan(uid, building='build5', level=2) and\
+                    int(r.hget(uid, 'injure')) > 0:
+                r.hincrby(uid, 'injure', -30)
+                if int(r.hget(uid, 'injure')) < 0:
+                    r.hset(uid, 'injure', 0)
+            stats = r.hmget(uid, 'strength', 'intellect')
             fr = feed_rusak(int(stats[1]))
-            r.hincrby(message.from_user.id, 'eat', 1)
+            r.hincrby(uid, 'eat', 1)
             success = fr[0]
-            cl = int(r.hget(message.from_user.id, 'class'))
-            if cl in (2, 12, 22) or int(r.hget(message.from_user.id, 'support')) == 10:
+            cl = int(r.hget(uid, 'class'))
+            if cl in (2, 12, 22) or int(r.hget(uid, 'support')) == 10:
                 success = 1
             if success == 1:
-                try:
-                    if int(r.hget(message.from_user.id, 'cabin')) == 1 and int(stats[0]) <= 2000:
-                        ran = fr[1] + 15
-                        if cl == 20 or cl == 30:
-                            ran += 15
-                    else:
-                        ran = fr[1]
-                except:
+                if r.hexists(uid, 'cabin') and int(r.hget(uid, 'cabin')) == 1 and int(stats[0]) <= 5000:
+                    ran = fr[1] + 15
+                    if cl == 20 or cl == 30:
+                        ran += 15
+                else:
                     ran = fr[1]
-                if ran <= 10 and int(r.hget(message.from_user.id, 's5')) >= 5:
+                if ran <= 10 and int(r.hget(uid, 's5')) >= 5:
                     ran = 10
-                r.hincrby(message.from_user.id, 'strength', ran)
                 bd = fr[3]
-                if int(r.hget(message.from_user.id, 'support')) == 5:
+                if int(r.hget(uid, 'support')) == 5:
                     bd = 2
-                    damage_support(message.from_user.id)
+                    damage_support(uid)
                 emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                 word = 'зросла'
-                h = int(r.hget(message.from_user.id, 'head'))
-                ran2 = 5 if h in (3, 5) else 0
+                h = int(r.hget(uid, 'head'))
+                ran += 5 if h in (3, 5) else 0
                 if h == 5:
-                    r.hset(message.from_user.id, 'head', 0, {'s_head': 0})
-                ran += ran2
-                r.hincrby(message.from_user.id, 'strength', ran2)
-                if int(stats[0]) > 3000:
-                    if int(stats[0]) > 4000:
-                        if int(r.hget(message.from_user.id, 'support')) == 7:
+                    r.hset(uid, 'head', 0, {'s_head': 0})
+
+                if int(stats[0]) > 5000:
+                    if int(stats[0]) > 8000:
+                        if int(r.hget(uid, 'support')) == 7:
                             decrease = choices([1, 0], [75, 25])
-                            damage_support(message.from_user.id)
-                            increase_trance(5, message.from_user.id)
+                            damage_support(uid)
+                            increase_trance(5, uid)
                         else:
                             decrease = choices([1, 0], [60, 40])
                     else:
-                        if int(r.hget(message.from_user.id, 'support')) == 7:
+                        if int(r.hget(uid, 'support')) == 7:
                             decrease = choices([1, 0], [95, 5])
-                            damage_support(message.from_user.id)
-                            increase_trance(5, message.from_user.id)
+                            damage_support(uid)
+                            increase_trance(5, uid)
                         else:
                             decrease = choices([1, 0], [80, 20])
                     if decrease == [0]:
                         word = 'зменшилась'
-                        r.hincrby(message.from_user.id, 'strength', -2 * ran)
-                        if int(r.hget(message.from_user.id, 'head')) == 3:
-                            if checkClan(message.from_user.id, building='build5', level=2):
-                                r.hset(message.from_user.id, 'head', 5, {'s_head': 1})
+                        ran = -ran
+                        if int(r.hget(uid, 'head')) == 3:
+                            if checkClan(uid, building='build5', level=2):
+                                r.hset(uid, 'head', 5, {'s_head': 1})
                             else:
-                                r.hset(message.from_user.id, 'head', 0, {'s_head': 0})
+                                r.hset(uid, 'head', 0, {'s_head': 0})
                 else:
-                    if int(r.hget(message.from_user.id, 'support')) == 7:
+                    if int(r.hget(uid, 'support')) == 7:
                         ran += 15
-                        r.hincrby(message.from_user.id, 'strength', 15)
-                        damage_support(message.from_user.id)
-                        increase_trance(5, message.from_user.id)
-                msg = f"{emoji} Твій {names[int(r.hget(message.from_user.id, 'name'))]} смачно поїв.\n\n" \
-                      f"Сила {word} на {ran}.\n"
+                        r.hincrby(uid, 'strength', 15)
+                        damage_support(uid)
+                        increase_trance(5, uid)
+
+                r.hincrby(uid, 'strength', ran)
+                ran = abs(ran)
+
+                msg = f"{emoji} Твій {names[int(r.hget(uid, 'name'))]} смачно поїв.\n\nСила {word} на {ran}.\n"
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
-                    intellect(1, message.from_user.id)
+                    intellect(1, uid)
                 if bd == 2:
                     msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 10000.'
-                    spirit(10000, message.from_user.id, 0)
+                    spirit(10000, uid, 0)
                     await message.reply_photo('https://i.ibb.co/bK2LrSD/feed.jpg', caption=msg)
                 else:
                     if bd == 1:
                         msg += 'Русак сьогодні в гарному настрої. Бойовий дух збільшився на 1000.'
-                        spirit(1000, message.from_user.id, 0)
+                        spirit(1000, uid, 0)
 
                     if word == 'зросла':
-                        if int(r.hget(message.from_user.id, 'support')) == 10 and choices([1, 0], [2, 8]) == [1]:
-                            if int(r.hget(message.from_user.id, 'injure')) > 0 \
-                                    or int(r.hget(message.from_user.id, 'sch')) > 0 \
-                                    or int(r.hget(message.from_user.id, 'mushrooms')) > 0:
-                                damage_support(message.from_user.id)
-                                r.hset(message.from_user.id, 'injure', 0)
-                                r.hset(message.from_user.id, 'sch', 0)
-                                r.hset(message.from_user.id, 'mushrooms', 0)
+                        if int(r.hget(uid, 'support')) == 10 and choices([1, 0], [2, 8]) == [1]:
+                            if int(r.hget(uid, 'injure')) > 0 \
+                                    or int(r.hget(uid, 'sch')) > 0 \
+                                    or int(r.hget(uid, 'mushrooms')) > 0:
+                                damage_support(uid)
+                                r.hset(uid, 'injure', 0)
+                                r.hset(uid, 'sch', 0)
+                                r.hset(uid, 'mushrooms', 0)
                                 msg += '\n\n\U0001F43D\U0001F41F Швайнокарась зняв з русака негативні ефекти.'
 
                     await message.reply(msg)
             else:
                 await message.reply('\U0001F9A0 Твій русак сьогодні захворів. Сили від їжі не прибавилось.')
-        elif datetime.now().day == int(r.hget(message.from_user.id, 'time')):
+        elif datetime.now().day == int(r.hget(uid, 'time')):
             await message.reply('Твій русак сьогодні їв, хватить з нього')
     except:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
