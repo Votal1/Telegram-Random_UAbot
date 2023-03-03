@@ -680,10 +680,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bonus = randint(1, 20)
             elif s11 / s22 < 0.5:
                 bonus = randint(60, 120)
-                m_bonus = choices([2, 3, 5], weights=[50, 48, 2])
+                m_bonus = choices([2, 3, 5], weights=[50, 40, 10])
             else:
                 bonus = randint(20, 60)
-                m_bonus = choices([0, 2, 3, 5], weights=[50, 44, 5, 1])
+                m_bonus = choices([0, 2, 3, 5], weights=[50, 40, 8, 2])
             if c2 in (3, 13, 23) and checkClan(uid2, building='build3', level=3) and can_earn2:
                 steal = choices([0, 1], weights=[80, 20])[0]
             else:
@@ -810,10 +810,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 bonus = randint(1, 20)
             elif s22 / s11 < 0.5:
                 bonus = randint(60, 120)
-                m_bonus = choices([2, 3, 5], weights=[50, 48, 2])
+                m_bonus = choices([2, 3, 5], weights=[50, 40, 10])
             else:
                 bonus = randint(20, 60)
-                m_bonus = choices([0, 2, 3, 5], weights=[50, 44, 5, 1])
+                m_bonus = choices([0, 2, 3, 5], weights=[50, 40, 8, 2])
             if c1 in (3, 13, 23) and checkClan(uid1, building='build3', level=3) and can_earn1:
                 steal = choices([0, 1], weights=[80, 20])[0]
             else:
