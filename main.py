@@ -1213,7 +1213,7 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'salt', 15)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     r.hincrby(message.from_user.id, 'packs', packs)
-                    msg = f'\u26CF Промокод живого бота активовано!\n\U0001F9C2 +5 \u2622 +50 \U0001F4E6 +{packs}'
+                    msg = f'\u26CF Промокод живого бота активовано!\n\U0001F9C2 +15 \u2622 +50 \U0001F4E6 +{packs}'
                     await message.reply(msg)
 
                 '''
