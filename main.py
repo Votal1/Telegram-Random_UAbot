@@ -1053,8 +1053,7 @@ async def donate(message):
         markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
         msg = 'Якщо хтось хоче підтримати автора, то можне задонатити і отримати\n\U0001F31F погон російського ' \
               'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону - 30 грн.\n' \
-              '\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.' \
-              '\n\n\u2744\uFE0F\u2744\uFE0F\u2744\uFE0F'
+              '\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.'
         await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True)
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
