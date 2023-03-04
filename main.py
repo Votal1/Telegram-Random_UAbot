@@ -33,7 +33,7 @@ import requests
 import logging
 import sentry_sdk
 
-sentry_sdk.init(environ.get('SENTRY'))
+sentry_sdk.init(environ.get('SENTRY'), sample_rate=0.1)
 logging.basicConfig(level=logging.INFO)
 
 
