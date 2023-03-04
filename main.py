@@ -2997,14 +2997,14 @@ async def status(message):
             msg += '\U0001f7e5 /quest\n'
 
     if r.hexists(uid, 'restriction'):
-        ts1 = int(r.hget(uid, 'restriction_ts')) + 86400
+        ts1 = int(r.hget(uid, 'restriction_ts')) + 604800
         ts = datetime.fromtimestamp(ts1)
 
         if ts1 > int(datetime.now().timestamp()):
-            msg += f'\n\u231B Дуелі: {int(r.hget(uid, "restriction"))}/1000'
+            msg += f'\n\u231B Дуелі: {int(r.hget(uid, "restriction"))}/10000'
             msg += f'\nОновлення ліміту:\n{ts.strftime("%H:%M %d.%m.%Y")}'
         else:
-            msg += '\n\u231B Дуелі: 0/1000'
+            msg += '\n\u231B Дуелі: 0/10000'
 
     await message.reply(msg)
 
