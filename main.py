@@ -5037,7 +5037,7 @@ async def handle_query(call):
             else:
                 r.hincrby(call.from_user.id, 'sch', -300)
 
-            if int(r.hget(call.from_user.id, 'strength')) < 4000:
+            if int(r.hget(call.from_user.id, 'strength')) < 5000:
                 r.hset(call.from_user.id, 'time', 0)
 
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -5050,7 +5050,7 @@ async def handle_query(call):
         if int(r.hget(call.from_user.id, 'strength')) < 1000 and int(r.hget(call.from_user.id, 'intellect')) < 5:
             if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name') == 1:
                 r.hincrby(call.from_user.id, 'strap', -1)
-                r.hincrby(call.from_user.id, 'strength', 400)
+                r.hincrby(call.from_user.id, 'strength', 1000)
                 r.hincrby(call.from_user.id, 'intellect', 4)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили настоянку глоду')
