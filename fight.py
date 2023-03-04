@@ -1471,7 +1471,7 @@ async def start_raid(cid):
     await sleep(1)
 
     if int(r.hget('convoy', 'day')) != datetime.now().day:
-        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day, 'hour': randint(8, 12)})
+        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day, 'hour': randint(8, 12), 'first': 1})
 
     chance1, hack, mar, rocket, fish, jew = 0, 0, 0, 0, 0, 0
     raid1, raid2, raid3 = 50, 50, 0
@@ -1966,18 +1966,6 @@ async def start_raid(cid):
 
     elif mode == [3]:
 
-        if datetime.now().hour == 0:
-            try:
-                await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
-            except:
-                pass
-            r.hset(c, 'raid_ts2', int(datetime.now().timestamp()))
-            r.hdel(c, 'start')
-            for member in r.smembers('fighters_3' + str(cid)):
-                r.srem('fighters_3' + str(cid), member)
-            await bot.send_message(cid, 'Ага, багоюзиш')
-            return False
-
         s = int(r.hget(c, 'side'))
         chance1 = int(chance1 * (1 + rocket * 0.07))
         chance2 = int(r.hget('convoy', 'power'))
@@ -2023,7 +2011,12 @@ async def start_raid(cid):
 
         await sleep(10)
         await bot.send_message(cid, msg, disable_web_page_preview=True)
-        if diff == 0:
+        if diff == 0 or int(r.hget('convoy', 'first')) == 1:
+            if diff == 0:
+                msg = '\U0001F69B Гумконвой розграбовано.'
+            if int(r.hget('convoy', 'first')) == 1:
+                msg = '\U0001F69B Гумконвой прибув.'
+                r.hset('convoy', 'first', 0)
             for mem in r.smembers('followers'):
                 try:
                     c3 = 'c' + mem.decode()
@@ -2035,7 +2028,7 @@ async def start_raid(cid):
                             r.hset(c3, 'notification', 0)
                             r.srem('followers', mem)
                             continue
-                    await bot.send_message(int(mem), '\U0001F69B Гумконвой розграбовано.')
+                    await bot.send_message(int(mem), msg)
                 except:
                     pass
     try:

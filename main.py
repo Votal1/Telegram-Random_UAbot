@@ -2827,7 +2827,8 @@ async def guard(message):
                         msg += '\n\U0001F372 +1'
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
                     if int(r.hget('convoy', 'day')) != datetime.now().day:
-                        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day, 'hour': randint(8, 12)})
+                        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
+                                                            'hour': randint(8, 12), 'first': 1})
                     r.hincrby('convoy', 'power', 500000)
                     for mem in r.smembers('followers'):
                         try:
