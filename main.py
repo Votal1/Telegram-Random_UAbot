@@ -77,7 +77,7 @@ async def send_welcome(message):
                 language_code = r.hget(uid, 'language_code').decode()
             msg = get_message(message.from_user.id, 'start', language_code=language_code)
             await message.reply(msg, disable_web_page_preview=True, reply_markup=choose_lang())
-        r.sadd('everyone_2', uid)
+        r.sadd('everyone_3', uid)
 
 
 @dp.message_handler(commands=['help'])
