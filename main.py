@@ -394,7 +394,6 @@ async def feed(message):
                 else:
                     if int(r.hget(uid, 'support')) == 7:
                         ran += 15
-                        r.hincrby(uid, 'strength', 15)
                         damage_support(uid)
                         increase_trance(5, uid)
 
