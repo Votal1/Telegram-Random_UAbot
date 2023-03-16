@@ -55,8 +55,7 @@ async def gruz200(message):
               f'\n\U0001F681 Гелікоптери: {d[6].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
         await message.reply(title + msg)
-    except Exception as e:
-        print(e)
+    except:
         await message.reply('minusrus.com', disable_web_page_preview=True)
 
 
