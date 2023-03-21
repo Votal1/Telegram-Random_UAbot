@@ -1756,9 +1756,11 @@ async def start_raid(cid):
         if choices([1, 0], [5, 95]) == [1]:
             r.hincrby(c, 'codes', 1)
             msg += '\n\U0001F916 +1'
-
-        await bot.send_message(cid, msg, disable_web_page_preview=True)
-        await bot.send_message(int(enemy), msg2, disable_web_page_preview=True)
+        try:
+            await bot.send_message(cid, msg, disable_web_page_preview=True)
+            await bot.send_message(int(enemy), msg2, disable_web_page_preview=True)
+        except:
+            pass
 
     elif mode == [2]:
         locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївський роднічок']
