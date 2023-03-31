@@ -3721,7 +3721,7 @@ async def handle_query(call):
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
             markup = InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton(text='Отримати список з user id', callback_data='get_id_members'))
+            markup.add(InlineKeyboardButton(text='Отримати список з id та силою', callback_data='get_id_members'))
             await bot.send_message(call.message.chat.id, msg, parse_mode='HTML', reply_markup=markup)
 
     elif call.data.startswith('get_id_members'):
@@ -3739,6 +3739,13 @@ async def handle_query(call):
                 else:
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> {mem.decode()}\n'
+                if r.hexists(mem, 'strength'):
+                    strength = int(r.hget(mem, 'strength'))
+                    msg += f'\U0001F4AA {strength}'
+                    if r.hexists(mem, 'strength2'):
+                        strength2 = int(r.hget(mem, 'strength2'))
+                        msg += f' \U0001F4AA {strength2}'
+                msg += '\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
     elif call.data.startswith('build'):
         if call.data.startswith('build_sawmill') and call.from_user.id == call.message.reply_to_message.from_user.id:
