@@ -248,7 +248,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid2, c2)
             ran = choices([1, 2], weights=[99, 1])
-            if ran == [2] and defense1 != 2:
+            if ran == [2] and defense1 != 2 and t == 1:
                 weapon = weapon + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                   'і отримав важкі поранення.'
                 r.hset(uid2, 'spirit', 0, {'hp': 0, 'defense': 0, 'weapon': 0})
@@ -338,7 +338,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid1, c1)
             ran = choices([1, 2], weights=[99, 1])
-            if ran == [2] and defense2 != 2:
+            if ran == [2] and defense2 != 2 and t == 1:
                 defense = defense + '\n\u2620\uFE0F Але він не врятував русака, який випадково вистрелив в себе ' \
                                     'і отримав важкі поранення.'
                 r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'weapon': 0})
