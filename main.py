@@ -341,6 +341,7 @@ async def feed(message):
                 if int(r.hget(uid, 'injure')) < 0:
                     r.hset(uid, 'injure', 0)
             stats = r.hmget(uid, 'strength', 'intellect')
+            r_name = names[int(r.hget(uid, 'name'))]
             fr = feed_rusak(int(stats[1]))
             r.hincrby(uid, 'eat', 1)
             success = fr[0]
@@ -399,7 +400,7 @@ async def feed(message):
                 r.hincrby(uid, 'strength', ran)
                 ran = abs(ran)
 
-                msg = f"{emoji} Твій {names[int(r.hget(uid, 'name'))]} смачно поїв.\n\nСила {word} на {ran}.\n"
+                msg = f"{emoji} Твій {r_name} смачно поїв.\n\nСила {word} на {ran}.\n"
                 if fr[2] == 1:
                     msg += 'Інтелект збільшився на 1.\n'
                     intellect(1, uid)
@@ -425,7 +426,7 @@ async def feed(message):
 
                     await message.reply(msg)
             else:
-                await message.reply('\U0001F9A0 Твій русак сьогодні захворів. Сили від їжі не прибавилось.')
+                await message.reply(f'\U0001F9A0 Твій {r_name} сьогодні захворів. Сили від їжі не прибавилось.')
         elif datetime.now().day == int(r.hget(uid, 'time')):
             await message.reply('Твій русак сьогодні їв, хватить з нього')
     except:
@@ -441,6 +442,7 @@ async def mine(message):
             if not datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
                 head = int(r.hget(message.from_user.id, 'head'))
                 ms = mine_salt(int(r.hget(message.from_user.id, 's2')), head, datetime.today().weekday())
+                r_name = names[int(r.hget(message.from_user.id, 'name'))]
                 r.hset(message.from_user.id, 'time1', datetime.now().day)
                 quest(message.from_user.id, 1, 4)
                 if message.text.startswith('/minecraft'):
@@ -462,9 +464,8 @@ async def mine(message):
                     if checkClan(message.from_user.id, base=3):
                         money = int(money * 1.34)
                     r.hincrby(message.from_user.id, 'money', money)
-                    msg = '\u26CF Твій ' + names[int(r.hget(message.from_user.id, 'name'))] + \
-                          ' успішно відпрацював зміну на соляній шахті.\n\n\U0001F4B5 ' \
-                          'Зароблено гривень: ' + str(money) + '.'
+                    msg = f'\u26CF Твій {r_name} успішно відпрацював зміну на соляній шахті.\n\n' \
+                          f'\U0001F4B5 Зароблено гривень: {money}.'
                     if ms[2] == 1:
                         msg += '\nРусак сьогодні працював з новітніми технологіями.\n'
                         if int(r.hget(message.from_user.id, 'intellect')) < 20:
@@ -482,7 +483,8 @@ async def mine(message):
                     if support == 10:
                         fish = choices([1, 0], [2, 8])[0]
                     if cl in (2, 12, 22) and fish == 0:
-                        msg = '\U0001F37A Твій роботяга втік з-під нагляду. Його знайшли п`яним біля шахти.\n\u2622 +5'
+                        msg = f'\U0001F37A Твій роботяга {r_name} втік з-під нагляду. ' \
+                              f'Його знайшли п`яним біля шахти.\n\u2622 +5'
                         if cl == 12 or cl == 22:
                             msg = msg + ' \U0001F4B5 +8'
                             r.hincrby(message.from_user.id, 'money', 8)
@@ -491,14 +493,14 @@ async def mine(message):
                         await message.reply(msg)
                     elif fish == 1:
                         damage_support(message.from_user.id)
-                        await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля '
-                                            'шахти разом з швайнокарасем.\n\u2622 +100 \U0001F4B5 +100')
+                        await message.reply(f'\U0001F37A Твій {r_name} втік з-під нагляду. Його знайшли п`яним біля '
+                                            f'шахти разом з швайнокарасем.\n\u2622 +100 \U0001F4B5 +100')
                         r.hincrby(message.from_user.id, 'money', 100)
                         r.hincrby(message.from_user.id, 'vodka', 100)
                         r.hincrby('all_vodka', 'vodka', 100)
                     else:
-                        await message.reply('\U0001F37A Твій русак втік з-під нагляду. Його знайшли п`яним біля шахти'
-                                            '.\n\u2622 +1')
+                        await message.reply(f'\U0001F37A Твій {r_name} втік з-під нагляду. '
+                                            f'Його знайшли п`яним біля шахти.\n\u2622 +1')
                         r.hincrby(message.from_user.id, 'vodka', 1)
                         r.hincrby('all_vodka', 'vodka', 1)
                         if int(r.hget(message.from_user.id, 'class')) == 18 or \
