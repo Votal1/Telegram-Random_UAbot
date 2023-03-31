@@ -434,7 +434,7 @@ def open_gift(uid, cdata, edit, cid):
                         r.hincrby(uid, 's_weapon', 10)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти посох', callback_data=f'gift_stick_{uid}'))
-                    msg = '\U0001f7e1 Посох Діда Мороза [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
+                    msg = '\U0001f7e1 Скринька Пандори [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
                           'подарунок в дуелі.'
                 elif ran == [12]:
                     msg = '\U0001f7e1 На передодні Різдва на Донбасі стається справжнє диво, святкове як зимова ' \
