@@ -1804,11 +1804,11 @@ async def start_raid(cid):
                     reward += '\n\n\U0001fa99 +100'
                     r.hincrby(c, 'points', 100)
             elif locations.index(location) == 0:
-                if hack >= 2:
+                if hack >= 1:
                     ran = randint(30, 250)
                     if mar >= 1:
                         ran *= 2
-                    reward += 'Хакери отримали доступ до рахунків монобанку!\n\U0001F4B5 +' + str(ran)
+                    reward += 'Хакер отримав доступ до рахунків монобанку!\n\U0001F4B5 +' + str(ran)
                     r.hincrby(c, 'money', ran)
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'money', ran)
