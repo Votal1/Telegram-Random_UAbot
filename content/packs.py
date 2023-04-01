@@ -433,7 +433,8 @@ def open_gift(uid, cdata, edit, cid):
                     if int(r.hget(uid, 'weapon')) == 6:
                         r.hincrby(uid, 's_weapon', 10)
                     else:
-                        markup.add(InlineKeyboardButton(text='Взяти посох', callback_data=f'gift_stick_{uid}'))
+                        markup.add(InlineKeyboardButton(text='Взяти скриньку Пандори',
+                                                        callback_data=f'gift_stick_{uid}'))
                     msg = '\U0001f7e1 Скринька Пандори [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
                           'подарунок в дуелі.'
                 elif ran == [12]:
