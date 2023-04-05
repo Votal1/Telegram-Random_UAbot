@@ -647,8 +647,13 @@ async def sacrifice(message):
                 and r.hexists(message.from_user.id, 'strength') == 1 \
                 and int(r.hget(message.from_user.id, 'strength')) != 0:
             markup = InlineKeyboardMarkup()
-            await message.reply('\U0001F52A Вбити свого русака?\n\nУ всіх русаків в цьому чаті зменшиться '
-                                'бойовий дух на 10%.',
+            cl = int(r.hget(message.from_user.id, 'class'))
+            if cl in (7, 17, 27):
+                percent = 90
+            else:
+                percent = 10
+            await message.reply(f'\U0001F52A Вбити свого русака?\n\nУ всіх русаків в цьому чаті зменшиться '
+                                f'бойовий дух на {percent}%.',
                                 reply_markup=markup.add(InlineKeyboardButton(text='Принести в жертву русака',
                                                                              callback_data='sacrifice')))
         else:
@@ -4101,7 +4106,7 @@ async def handle_query(call):
                     i1 = int(r.hget(mem, 'spirit'))
                     i = int(i1 / 10)
                     r.hincrby(mem, 'spirit', -i)
-                    if cl == 7 or cl == 17 or cl == 27:
+                    if cl in (7, 17, 27):
                         mush = int(r.hget(mem, 'mushrooms'))
                         if mush > 0:
                             r.hset(mem, 'mushrooms', 0)
