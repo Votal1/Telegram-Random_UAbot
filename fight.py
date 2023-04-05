@@ -1239,7 +1239,7 @@ async def war_power(sett, cid):
 
             if int(stats[7]) == 24:
                 pag = 1
-            elif int(stats[7]) in (5, 15, 15) and checkClan(member, building='build4', level=2):
+            elif int(stats[7]) in (5, 15, 25) and checkClan(member, building='build4', level=2):
                 s = int(s * 1.2)
             elif int(stats[7]) in (7, 17, 27) and checkClan(member, building='build3', level=3):
                 mal += 1
