@@ -2009,7 +2009,7 @@ async def clan_war(message):
                       f'\U0001fa99 Квестові очки: {int(r.hget(c, "q-points"))}/500'
                 if int(r.hget(c, 'buff_3')) == 1:
                     points2 = int(r.hget('c' + r.hget(c, 'enemy').decode(), 'points'))
-                    msg += f'\n\U0001fa99Очки ворога: {points2}'
+                    msg += f'\n\U0001fa99 Очки ворога: {points2}'
 
                 buffs = r.hmget(c, 'buff_1', 'buff_2', 'buff_3', 'buff_4', 'buff_5',)
                 msg += '\n\n\U0001faac Бафи: ['
