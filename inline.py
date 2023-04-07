@@ -1,7 +1,8 @@
 from random import randint, choice, uniform, randrange, sample
 from config import r
-from variables import names, icons
+from variables import icons
 from parameters import injure, schizophrenia, trance
+from constants.names import names
 
 
 def prepare_to_fight(uid, fn, q):

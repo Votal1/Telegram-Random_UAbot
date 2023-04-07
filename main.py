@@ -6,7 +6,7 @@ from aiogram.utils.executor import start_webhook
 from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
-from variables import names, icons, class_name, sudoers, \
+from variables import icons, class_name, sudoers, \
     p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
@@ -16,6 +16,7 @@ from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, co
     wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
 
 
+from constants.names import names
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
 from content.inventory import show_inventory, drop_item, change_item
@@ -3059,7 +3060,7 @@ async def handle_query(call):
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
         else:
             cid = call.from_user.id
-            n, s, i = get_rusak()
+            n, s, i = choice(list(names)), randint(100, 150), choices([1, 2], weights=[4, 1])[0]
             if checkClan(cid, building='build6', level=4):
                 s += 400
             r.hset(cid, 'name', n, {'strength': s, 'intellect': i, 'spirit': 0, 'class': 0, 'weapon': 0, 's_weapon': 0,
@@ -4229,9 +4230,9 @@ async def handle_query(call):
                                                 text='Ви розширили місце в підвалі для додаткового русака.')
                 await bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
                                                              'Змінити бойового русака можна командою /swap.')
-                r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
+                r.hset(call.from_user.id, 'name2', choice(list(names)),
                        {'strength2': randint(100, 150),
-                        'intellect2': int(choice(['1', '1', '1', '1', '2'])),
+                        'intellect2': choices([1, 2], weights=[4, 1])[0],
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': choice(default), 'injure2': 0, 'hp2': 100,
                         'support2': 0, 's_support2': 0, 'sch2': 0, 'buff2': 0, 'head2': 0, 's_head2': 0})
@@ -4424,7 +4425,7 @@ async def handle_query(call):
 
     elif call.data.startswith('passport'):
         if int(r.hget(call.from_user.id, 'money')) >= 10 and r.hexists(call.from_user.id, 'name'):
-            ran = randint(0, len(names) - 1)
+            ran = choice(list(names))
             r.hincrby(call.from_user.id, 'money', -10)
             r.hset(call.from_user.id, 'name', ran)
             if r.hexists(call.from_user.id, 'ac3') == 0:
@@ -5096,9 +5097,9 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'strap')) >= 3:
                 r.hincrby(call.from_user.id, 'strap', -3)
                 r.hset(call.from_user.id, 's3', 5)
-                r.hset(call.from_user.id, 'name2', randint(0, len(names) - 1),
+                r.hset(call.from_user.id, 'name2', choice(list(names)),
                        {'strength2': randint(100, 150),
-                        'intellect2': int(choice(['1', '1', '1', '1', '2'])),
+                        'intellect2': choices([1, 2], weights=[4, 1])[0],
                         'spirit2': 0, 'weapon2': 0, 's_weapon2': 0, 'defense2': 0, 's_defense2': 0,
                         'mushrooms2': 0, 'class2': 0, 'photo2': choice(default), 'injure2': 0, 'hp2': 100,
                         'support2': 0, 's_support2': 0, 'sch2': 0, 'buff2': 0, 'head2': 0, 's_head2': 0})

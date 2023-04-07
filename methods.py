@@ -1,17 +1,10 @@
 from random import randint, choice
 from config import r, bot
-from variables import names, icons
+from variables import icons
 from datetime import datetime
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from constants.equipment import weapons, defenses, supports, heads
 from locales.messages import messages
-
-
-def get_rusak():
-    name = randint(0, len(names) - 1)
-    strength = randint(100, 150)
-    mind = int(choice(['1', '1', '1', '1', '2']))
-    return name, strength, mind
 
 
 def feed_rusak(intel):

@@ -5,8 +5,9 @@ from asyncio import sleep
 from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
-from variables import names, icons, p7
+from variables import icons, p7
 from methods import checkClan, wood, stone, cloth, brick, q_points, anti_clicker
+from constants.names import names
 from content.quests import quest
 
 
