@@ -12,7 +12,7 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
-from methods import get_rusak, feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
+from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
 
 
