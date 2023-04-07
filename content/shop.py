@@ -1,8 +1,8 @@
 from config import r
 from methods import checkClan
 from random import choices, choice
-from variables import default, chm, girkin, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from constants.photos import default, chmonya, girkin, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12
 from content.quests import quest
 
 
@@ -67,7 +67,7 @@ def shop_msg(uid, mode):
               f'\U0001F4F8 Заміна фото русака (ціна 1 погон):\n\U0001F304 Класове преміум фото 1 (Кадиров, Обеме, ' \
               f'Горшок, Тесак, Захарченко, Дерек Шовін, Янукович, Petya, Джонні Сінс, Чікатіло, Раян Гослінг, ' \
               f'Шойгу).\n\U0001F307 Класове преміум фото 2 (Хасбулла, Стаханов, Мавроді, Просвірін, Стрємоусов, ' \
-              f'Шварцнеггер, Медведчук в пікселі, Дуров, Доктор Попов, Дядя Мопс, Каневський, Герасімов).\n' \
+              f'Шварценеггер, Медведчук в пікселі, Дуров, Доктор Попов, Дядя Мопс, Каневський, Герасімов).\n' \
               f'\U0001F309 Класове преміум фото 3 (Тамаев Асхаб, Калашніков, Кашпіровський, Роберт Райт, Джамбо,' \
               f' Поліцейський з Рубльовки, Олег Царьов, Сноуден, Охлобистін, Ржавий, Лапенко, Жуков).' \
               f'\n\n\U0001F3CB\uFE0F\u200D\u2642\uFE0F Прокачка русака або клану:\n\U0001F943 Настоянка глоду ' \
@@ -272,31 +272,31 @@ def salt_shop(uid, cdata):
             r.hincrby(uid, 'salt', -20)
             r.hincrby(uid, 'purchase', 1)
             if cl == 0:
-                r.hset(uid, 'photo', default[4])
+                r.hset(uid, 'photo', chmonya[0])
             elif cl == 1 or cl == 11 or cl == 21:
-                r.hset(uid, 'photo', chm[0])
+                r.hset(uid, 'photo', chmonya[1])
             elif cl == 2 or cl == 12 or cl == 22:
-                r.hset(uid, 'photo', chm[1])
+                r.hset(uid, 'photo', chmonya[2])
             elif cl == 3 or cl == 13 or cl == 23:
-                r.hset(uid, 'photo', chm[2])
+                r.hset(uid, 'photo', chmonya[3])
             elif cl == 4 or cl == 14 or cl == 24:
-                r.hset(uid, 'photo', chm[3])
+                r.hset(uid, 'photo', chmonya[4])
             elif cl == 5 or cl == 15 or cl == 25:
-                r.hset(uid, 'photo', chm[4])
+                r.hset(uid, 'photo', chmonya[5])
             elif cl == 6 or cl == 16 or cl == 26:
-                r.hset(uid, 'photo', chm[5])
+                r.hset(uid, 'photo', chmonya[6])
             elif cl == 7 or cl == 17 or cl == 27:
-                r.hset(uid, 'photo', chm[6])
+                r.hset(uid, 'photo', chmonya[7])
             elif cl == 8 or cl == 18 or cl == 28:
-                r.hset(uid, 'photo', chm[7])
+                r.hset(uid, 'photo', chmonya[8])
             elif cl == 9 or cl == 19 or cl == 29:
-                r.hset(uid, 'photo', chm[8])
+                r.hset(uid, 'photo', chmonya[9])
             elif cl == 10 or cl == 20 or cl == 30:
-                r.hset(uid, 'photo', chm[9])
+                r.hset(uid, 'photo', chmonya[10])
             elif cl == 31 or cl == 32 or cl == 33:
-                r.hset(uid, 'photo', chm[10])
+                r.hset(uid, 'photo', chmonya[11])
             elif cl == 34 or cl == 35 or cl == 36:
-                r.hset(uid, 'photo', chm[11])
+                r.hset(uid, 'photo', chmonya[12])
             return 'Ви успішно змінили фото русаку'
         else:
             return 'Недостатньо солі на рахунку.'

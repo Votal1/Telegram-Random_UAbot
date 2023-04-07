@@ -6,8 +6,7 @@ from aiogram.utils.executor import start_webhook
 from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
-from variables import icons, class_name, sudoers, \
-    p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
+from variables import icons, class_name, sudoers
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
@@ -17,6 +16,7 @@ from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, 
 
 
 from constants.names import names
+from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
 from content.inventory import show_inventory, drop_item, change_item
