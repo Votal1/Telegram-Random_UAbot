@@ -1,9 +1,9 @@
 from config import r
 from random import choice, choices, randint
 from methods import checkClan, q_points
-from variables import icons
 from parameters import vodka, increase_trance, hp, spirit
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from constants.classes import icons
 from content.quests import quest
 
 

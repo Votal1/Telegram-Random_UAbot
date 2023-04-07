@@ -1,7 +1,7 @@
 from random import randint, choice, uniform, randrange, sample
 from config import r
-from variables import icons
 from parameters import injure, schizophrenia, trance
+from constants.classes import icons
 from constants.names import names
 
 

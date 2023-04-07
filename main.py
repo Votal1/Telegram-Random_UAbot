@@ -6,7 +6,6 @@ from aiogram.utils.executor import start_webhook
 from asyncio import sleep
 
 from config import r, TOKEN, bot, dp
-from variables import icons, class_name, sudoers
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
 from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
@@ -16,6 +15,7 @@ from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, 
 
 
 from constants.names import names
+from constants.classes import class_name, icons
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
@@ -64,7 +64,7 @@ async def gruz200(message):
 async def send_welcome(message):
     if message.chat.type == 'private':
         uid = message.from_user.id
-        if uid not in sudoers:
+        if str(uid).encode() not in r.smembers('sudoers'):
             await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
                                 '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
         else:
@@ -1358,7 +1358,8 @@ async def war_battle(message):
 async def crash(message):
     try:
         st = await bot.get_chat_member(message.chat.id, message.from_user.id)
-        if message.from_user.id in sudoers or st.status == 'creator' or st.can_restrict_members is True:
+        if str(message.from_user.id).encode() in r.smembers('sudoers') \
+                or st.status == 'creator' or st.can_restrict_members is True:
             r.hdel('war_battle' + str(message.chat.id), 'start')
             r.srem('battles', message.chat.id)
             r.srem('battles2', message.chat.id)
@@ -1687,7 +1688,8 @@ async def clan(message):
                                 ' 250 гривень або \U0001F31F 1 погон російського генерала і стати лідером.',
                                 reply_markup=create_clan())
         else:
-            if str(message.from_user.id).encode() in r.smembers('cl' + cid) or message.from_user.id in sudoers:
+            if str(message.from_user.id).encode() in r.smembers('cl' + cid) \
+                    or str(message.from_user.id).encode() in r.smembers('sudoers'):
                 base = int(r.hget(c, 'base'))
                 title = r.hget(c, 'title').decode()
                 leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode().replace('<', '.').replace('>', '.')
@@ -2054,11 +2056,11 @@ async def upgrade(message):
                 for admin in admins2:
                     admins.append(admin.user.id)
                 if int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and int(r.hget(c, 'money')) >= 120 \
-                        and message.from_user.id not in sudoers and message.from_user.id not in admins:
+                        and message.from_user.id not in admins:
                     await message.answer('\U0001F3D7 Достатньо ресурсів для покращення, кличте адмінів.')
                 elif int(r.hget(c, 'wood')) >= 100 and int(r.hget(c, 'stone')) >= 20 and \
                         int(r.hget(c, 'money')) >= 120:
-                    if message.from_user.id in admins or message.from_user.id in sudoers:
+                    if message.from_user.id in admins:
                         r.hincrby(c, 'money', -120)
                         r.hincrby(c, 'wood', -100)
                         r.hincrby(c, 'stone', -20)
@@ -2448,7 +2450,7 @@ async def clan_settings(message):
             except:
                 pass
         if checkLeader(message.from_user.id, int(r.hget(message.from_user.id, 'clan'))) or \
-                message.from_user.id in sudoers:
+                str(message.from_user.id).encode() in r.smembers('sudoers'):
             await bot.send_message(message.from_user.id, auto_clan_settings(c), reply_markup=clan_set())
     except:
         pass
@@ -2472,7 +2474,7 @@ async def join(message):
             diff = int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts'))
             if diff > ts:
                 if r.scard('cl' + str(message.chat.id)) < num:
-                    if int(r.hget(c, 'allow')) == 0 or message.from_user.id in sudoers:
+                    if int(r.hget(c, 'allow')) == 0 or str(message.from_user.id).encode() in r.smembers('sudoers'):
                         r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp())})
                         if r.hexists(message.from_user.id, 'clan_time') == 0:
                             r.hset(message.from_user.id, 'clan_time', 0)
@@ -3452,7 +3454,7 @@ async def handle_query(call):
                 admins2 = await bot.get_chat_administrators(call.message.chat.id)
                 for admin in admins2:
                     admins.append(admin.user.id)
-                if call.from_user.id in admins or call.from_user.id in sudoers:
+                if call.from_user.id in admins:
                     money = 0
                     if call.data == 'create_hrn':
                         if int(r.hget(call.from_user.id, 'money')) >= 250:
@@ -3533,7 +3535,8 @@ async def handle_query(call):
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
                 r.scard('cl' + str(call.message.chat.id)) < num:
-            if int(datetime.now().timestamp()) - int(r.hget(uid, 'clan_ts')) > ts or uid in sudoers:
+            if int(datetime.now().timestamp()) - int(r.hget(uid, 'clan_ts')) > ts \
+                    or str(uid).encode() in r.smembers('sudoers'):
                 r.hset(uid, 'clan', call.message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
                                                            'firstname': call.from_user.first_name})
                 if r.hexists(uid, 'clan_time') == 0:
@@ -3714,7 +3717,7 @@ async def handle_query(call):
     elif call.data.startswith('get_members'):
         uid = call.from_user.id
         if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
-                call.from_user.id in sudoers:
+                str(call.from_user.id).encode() in r.smembers('sudoers'):
             msg = ''
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
                 if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:
@@ -3733,7 +3736,7 @@ async def handle_query(call):
     elif call.data.startswith('get_id_members'):
         uid = call.from_user.id
         if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
-                call.from_user.id in sudoers:
+                str(call.from_user.id).encode() in r.smembers('sudoers'):
             msg = ''
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
                 if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:

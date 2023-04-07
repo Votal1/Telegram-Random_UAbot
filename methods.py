@@ -1,8 +1,8 @@
 from random import randint, choice
 from config import r, bot
-from variables import icons
 from datetime import datetime
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from constants.classes import icons
 from constants.equipment import weapons, defenses, supports, heads
 from locales.messages import messages
 
