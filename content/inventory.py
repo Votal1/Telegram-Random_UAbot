@@ -1,6 +1,6 @@
 from config import r
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from variables import weapons, defenses, supports, heads
+from constants.equipment import weapons, defenses, supports, heads
 
 
 def invent_start():
