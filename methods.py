@@ -271,7 +271,8 @@ def c_shop(c, page):
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F9F1 300 \U0001F9F6 600 '
                                                          '\U0001faa8 1500 \U0001F333 3000',
                                                     callback_data='clan_buff_4_1_1'))
-                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.\n'
+                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 25% шанс отримати 3 квестові очки ' \
+                           'за перемогу в масовій битві.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 '
                                                          '\U0001F9F1\U0001F9F6\U0001faa8\U0001F333 20%',
                                                     callback_data='clan_buff_4_1_2'))

@@ -5965,8 +5965,9 @@ async def handle_query(call):
                                     r.hset(c, 'stone', int(int(r.hget(c, 'stone')) * 0.8))
                                     r.hset(c, 'cloth', int(int(r.hget(c, 'cloth')) * 0.8))
                                     r.hset(c, 'brick', int(int(r.hget(c, 'brick')) * 0.8))
-                                    r.hset(c, 'buff_4', 12, {'q-points': 0})
-                                    msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 Онулення квестових очків.'
+                                    r.hset(c, 'buff_4', 12)
+                                    msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 ' \
+                                          '25% шанс отримати 3 квестові очки за перемогу в масовій битві.'
                                     await bot.send_message(call.message.chat.id, msg)
                                 else:
                                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

@@ -1065,7 +1065,12 @@ async def war(cid, location, big_battle):
             r.hincrby(member, 'injure', n)
             quest(member, 1, -6)
     else:
-        reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10\n'
+        reward = '\n\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +10'
+        if randint(1, 4) == 4:
+            if checkClan(win) and int(r.hget('c' + r.hget(win, 'clan').decode(), 'buff_4')) == 12:
+                q_points(win, 3)
+                reward += ' \U0001fa99 +3'
+        reward += '\n'
         r.hincrby(win, 'trophy', 1)
         r.hincrby('all_trophy', 'trophy', 1)
         r.hincrby(win, 'wins', 1)
