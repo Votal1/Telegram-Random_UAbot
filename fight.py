@@ -268,24 +268,33 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' атакує, прикрившись поліцейським щитом.'
             damage_defense(uid2, 16)
         elif weapon2 in (19, 30):
-            if int(r.hget(uid1, 'injure')) == 0:
+            db = r.hmget(uid1, 'injure', 'sch')
+            injure1, sch1 = int(db[0]), int(db[1])
+            if injure1 == 0:
                 r.hincrby(uid1, 'injure', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
                 if weapon2 == 30:
                     r.hincrby(uid1, 's_defense', -3)
                     if int(r.hget(uid1, 's_defense')) <= 0:
                         r.hset(uid1, 's_defense', 0, {'defense': 0})
-            elif int(r.hget(uid1, 'injure')) >= 4:
+            elif injure1 >= 4 or sch1 >= 4:
                 inj = 10
                 if weapon2 == 30:
                     inj = 15
-                r.hincrby(uid1, 'injure', -inj)
-                if int(r.hget(uid1, 'injure')) < 0:
-                    r.hset(uid1, 'injure', 0)
+                if injure1 >= sch1:
+                    stat = 'injure'
+                    weapon = f'\n\n\U0001F5E1 {names[name2]} припинив ворогу кровотечу.\n' \
+                             f'\U0001fa78 -{inj} \U0001fac0 -10'
+                else:
+                    stat = 'sch'
+                    weapon = f'\n\n\U0001F5E1 {names[name2]} заглушив ворогу голоси в голові.\n' \
+                             f'\U0001F464 -{inj} \U0001fac0 -10'
+                r.hincrby(uid1, stat, -inj)
+                if int(r.hget(uid1, stat)) < 0:
+                    r.hset(uid1, stat, 0)
                 hp(-10, uid1)
                 if int(r.hget(uid1, 'hp')) == 0:
                     quest(uid1, 3, -1, 4)
-                weapon = f'\n\n\U0001F5E1 {names[name2]} припинив ворогу кровотечу.\n\U0001fa78 -{inj} \U0001fac0 -10'
             damage_weapon(uid2, c2)
         elif weapon2 in (20, 31):
             i1 = i1 - 10
