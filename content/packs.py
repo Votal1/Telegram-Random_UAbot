@@ -177,10 +177,7 @@ def open_pack(uid, cdata, edit):
                           'гранату до нього [Зброя, міцність=1] - завдає ворогу важке поранення (віднімає бойовий ' \
                           'дух, здоров`я і все спорядження, на 300 боїв бойовий дух впаде вдвічі а сила втричі).'
                 elif ran == [14]:
-                    if int(r.hget(uid, 'support')) == 10:
-                        r.hset(uid, 's_support', 3)
-                    else:
-                        markup.add(InlineKeyboardButton(text='Взяти Швайнокарася', callback_data=f'pack_fish_{uid}'))
+                    markup.add(InlineKeyboardButton(text='Взяти Швайнокарася', callback_data=f'pack_fish_{uid}'))
                     msg = '\U0001f7e1 Швайнокарась [Допомога, міцність=3, максимальна_міцність=3] - ' \
                           'може виконувати бажання русаків (відпочивати, нажертись, напитись).'
                 elif ran == [15]:
