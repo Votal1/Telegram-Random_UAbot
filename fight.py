@@ -1310,14 +1310,6 @@ async def great_war(cid1, cid2, a, b):
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
 
-    if r.hexists('c' + str(cid1), 'enemy'):
-        if int(r.hget('c' + str(cid1), 'enemy')) == cid2:
-            if int(r.hget('c' + str(cid1), 'buff_3')) == 1 or int(r.hget('c' + str(cid2), 'buff_3')) == 1:
-                if chance1 > chance2:
-                    win = ['a']
-                elif chance1 < chance2:
-                    win = ['b']
-
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward = '3'
     money = 3
@@ -1663,7 +1655,7 @@ async def start_raid(cid):
                 r.hincrby(c, 'r_spirit', ran)
                 r.hincrby(c2, 'r_spirit', -ran)
 
-            if int(r.hget(c, 'war')) == 1 and int(r.hget(c2, 'points')) >= 10:
+            if int(r.hget(c, 'war')) == 1 and int(r.hget(c2, 'war')) == 1 and int(r.hget(c2, 'points')) >= 20:
                 if int(r.hget(c, 'enemy')) == int(enemy) or int(r.hget(c, 'buff_3')) == 1:
                     ran = randint(5, 10)
                     if int(r.hget(c, 'buff_2')) == 1:
