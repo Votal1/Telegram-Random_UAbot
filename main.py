@@ -3748,7 +3748,7 @@ async def handle_query(call):
                     name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
                 else:
                     name = '?'
-                msg += f'<a href="tg://user?id={int(mem)}">{name}</a> {mem.decode()}\n'
+                msg += f'<a href="tg://user?id={int(mem)}">{name}</a> <code>{mem.decode()}</code>\n'
                 if r.hexists(mem, 'strength'):
                     strength = int(r.hget(mem, 'strength'))
                     msg += f'\U0001F4AA {strength}'
