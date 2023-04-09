@@ -957,11 +957,11 @@ async def classes_2(message):
           ' один - збільшує свою силу на 50% за кожне гарматне м`ясо та зменшує бойовий дух ворогам на 5%.\n\n\n' \
           'Щоб подивитись третій рівень класів натисни /class_3\n' \
           'Якщо твій русак вже набрав 12 інтелекту і вибрав клас, можеш ' \
-          'покращити клас, написавши сюди "Покращити русака".'
+          'покращити клас, написавши сюди "<code>Покращити русака</code>".'
     try:
         await bot.send_message(message.from_user.id, msg)
         if message.chat.type != 'private':
-            await message.reply('Надіслано в пп.')
+            await message.reply('Надіслано в пп.', parse_mode='HTML')
     except:
         pass
 
