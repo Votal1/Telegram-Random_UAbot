@@ -15,7 +15,7 @@ from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, 
 
 
 from constants.names import names
-from constants.classes import class_name, icons
+from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
@@ -3756,12 +3756,11 @@ async def handle_query(call):
                 else:
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> <code>{mem.decode()}</code>\n'
-                if r.hexists(mem, 'strength'):
-                    strength = int(r.hget(mem, 'strength'))
-                    msg += f'\U0001F4AA {strength}'
-                    if r.hexists(mem, 'strength2'):
-                        strength2 = int(r.hget(mem, 'strength2'))
-                        msg += f' \U0001F4AA {strength2}'
+                stats = r.hmget(mem, 'strength', 'strength2', 'class', 'class2')
+                if stats[0]:
+                    msg += f'{icons_simple[stats[2]]} \U0001F4AA {stats[0]}'
+                    if stats[1]:
+                        msg += f' {icons_simple[stats[3]]} \U0001F4AA {stats[1]}'
                 msg += '\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
     elif call.data.startswith('build'):
