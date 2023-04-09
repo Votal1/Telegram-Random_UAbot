@@ -170,8 +170,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             hp(10, uid2)
             damage_support(uid2)
 
-        stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp', 'injure')
-        stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp', 'injure')
+        stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp', 'injure', 'sch')
+        stats22 = r.hmget(uid2, 'strength', 'intellect', 'spirit', 'hp', 'injure', 'sch')
         s1, s2 = int(stats11[0]), int(stats22[0])
         s11 = s1
         s22 = s2
@@ -179,6 +179,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         bd1, bd2 = int(stats11[2]), int(stats22[2])
         hp1, hp2 = int(stats11[3]), int(stats22[3])
         in1, in2 = int(stats11[4]), int(stats22[4])
+        sc1, sc2 = int(stats11[5]), int(stats22[5])
 
         if hp1 >= 90:
             if c1 in (34, 35, 36):
@@ -199,10 +200,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s2, bd2 = injure(uid2, s2, bd2, True)
             s22 = s2
             inj2 = '\U0001fa78 '
-        if int(r.hget(uid1, 'sch')) > 0:
+        if sc1 > 0:
             i1, bd1 = schizophrenia(uid1, i1, bd1, True)
             inj1 += '\U0001F464 '
-        if int(r.hget(uid2, 'sch')) > 0:
+        if sc2 > 0:
             i2, bd2 = schizophrenia(uid2, i2, bd2, True)
             inj2 += '\U0001F464 '
         if int(r.hget(uid1, 'buff')) > 0:
@@ -533,7 +534,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
             if hp1 < 50:
-                if weapon2 in (19, 30) and in1 < 4:
+                if weapon2 in (19, 30) and in1 < 4 and sc1 < 4:
                     pass
                 else:
                     hp(5, uid1)
