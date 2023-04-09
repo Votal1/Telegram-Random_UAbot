@@ -246,7 +246,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             else:
                 damage_weapon(uid2, c2)
         elif weapon2 in (15, 26) and c2 in (5, 15, 25):
-            s2 = int(s2 * 1.75)
+            s2 = int(s2 * 1.5)
             ak = 'АКМ' if weapon2 == 26 else 'АК-47'
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid2, c2)
@@ -343,7 +343,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 quest(uid1, 3, -1, 4)
 
         elif weapon1 in (15, 26) and c1 in (5, 15, 25):
-            s1 = int(s1 * 1.75)
+            s1 = int(s1 * 1.5)
             ak = 'АКМ' if weapon1 == 26 else 'АК-47'
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid1, c1)
