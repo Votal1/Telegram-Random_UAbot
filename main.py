@@ -2919,10 +2919,11 @@ async def raid(message):
                         except:
                             pass
                     else:
-                        t = int((cooldown - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60)
-                        msg = f'Рейди можна проводити один раз в годину.\nЗалишилось {t}хв.'
-                        if t == 0:
-                            msg = f'Рейди можна проводити один раз в годину.\nЗалишилось менше хвилини.'
+                        seconds = cooldown - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))
+                        minutes = int(seconds / 60)
+                        msg = f'Рейди можна проводити один раз в годину.\nЗалишилось {minutes}хв.'
+                        if minutes == 0:
+                            msg = f'Рейди можна проводити один раз в годину.\nЗалишилось {seconds}с.'
                         await message.reply(msg)
             else:
                 try:
