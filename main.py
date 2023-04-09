@@ -3220,7 +3220,7 @@ async def handle_query(call):
                             r.hset(uid1, 't_ts', timestamp)
                             try:
                                 q = cdata[2].split()
-                                if q[1][1:].lower() == call.from_user.username.lower():
+                                if call.from_user.username and q[1][1:].lower() == call.from_user.username.lower():
                                     await fight(uid1, uid2, un1, un2, 5, call.inline_message_id)
                                 else:
                                     await bot.answer_callback_query(callback_query_id=call.id,
@@ -3230,7 +3230,7 @@ async def handle_query(call):
                     elif cdata[1] == 'pr':
                         try:
                             q = cdata[2].split()
-                            if q[1][1:].lower() == call.from_user.username.lower():
+                            if call.from_user.username and q[1][1:].lower() == call.from_user.username.lower():
                                 fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
                                 await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
                                                             disable_web_page_preview=True)
