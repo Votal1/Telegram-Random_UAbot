@@ -269,7 +269,7 @@ def wiki_text(data):
     elif data.startswith('wiki_grow_class'):
         markup.add(InlineKeyboardButton(text='\U0001F372 Розвиток', callback_data='wiki_grow_feed'),
                    InlineKeyboardButton(text='\U0001F9C2 Сіль', callback_data='wiki_grow_mine'))
-        msg = 'Розвинувши інтелект до певного рівня, можна вибрати клас (/class). Вплив класів на розвиток:\n' \
+        msg = 'Розвинувши інтелект до певного рівня, можна вибрати клас (/class). Вплив класів на розвиток:\n\n' \
               '\U0001F919\U0001F919\U0001F919 Гроза Кавказу кожен день може збільшувати силу на 10 та один раз - ' \
               'на 200.\n\U0001F9F0 Роботяга не хворіє, але вдвічі більше п`є.\n' \
               '\U0001F9F0\U0001F9F0 - Почесний алкаш швидше качає вміння.\n' \
