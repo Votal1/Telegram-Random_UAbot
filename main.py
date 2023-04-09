@@ -3758,9 +3758,9 @@ async def handle_query(call):
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> <code>{mem.decode()}</code>\n'
                 stats = r.hmget(mem, 'strength', 'strength2', 'class', 'class2')
                 if stats[0]:
-                    msg += f'{icons_simple[stats[2]]} \U0001F4AA {stats[0]}'
+                    msg += f'{icons_simple[int(stats[2])]} \U0001F4AA {int(stats[0])}'
                     if stats[1]:
-                        msg += f' {icons_simple[stats[3]]} \U0001F4AA {stats[1]}'
+                        msg += f' {icons_simple[int(stats[3])]} \U0001F4AA {int(stats[1])}'
                 msg += '\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
     elif call.data.startswith('build'):
