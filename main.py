@@ -2896,7 +2896,12 @@ async def raid(message):
                     r.hset(c, 'raid_ts2', 0)
                 if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts')) > 5:
                     r.hset(c, 'raid_ts', int(datetime.now().timestamp()))
-                    if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts2')) > 3600:
+                    if int(r.hget(c, 'buff_3')) == 1:
+                        cooldown = 2700
+                    else:
+                        cooldown = 3600
+
+                    if int(datetime.now().timestamp()) - int(r.hget(c, 'raid_ts2')) > cooldown:
                         try:
                             try:
                                 await bot.delete_message(message.chat.id, message.message_id)
@@ -2914,7 +2919,7 @@ async def raid(message):
                         except:
                             pass
                     else:
-                        t = int((3600 - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60)
+                        t = int((cooldown - int(datetime.now().timestamp()) + int(r.hget(c, 'raid_ts2'))) / 60)
                         msg = f'Рейди можна проводити один раз в годину.\nЗалишилось {t}хв.'
                         if t == 0:
                             msg = f'Рейди можна проводити один раз в годину.\nЗалишилось менше хвилини.'
@@ -5922,9 +5927,8 @@ async def handle_query(call):
                                 r.hincrby(c, 'codes', -12)
                                 r.hincrby(c, 'technics', -100)
                                 r.hset(c, 'buff_3', 1)
-                                msg = 'Отримано баф:\n\n\U0001f534 Очки можна отримати з рейду на будь-який клан. ' \
-                                      'В міжчатовій битві проти такого клану - прибрано вплив рандому. ' \
-                                      'Можливість бачити очки ворога.'
+                                msg = 'Отримано баф:\n\n\U0001f534 Очки можна отримати з рейду на будь-який' \
+                                      ' клан та рейдити раз в 45 хвилин. Можливість бачити очки ворога.'
                                 await bot.send_message(call.message.chat.id, msg)
                             else:
                                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
