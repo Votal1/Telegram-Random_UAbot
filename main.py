@@ -959,9 +959,9 @@ async def classes_2(message):
           'Якщо твій русак вже набрав 12 інтелекту і вибрав клас, можеш ' \
           'покращити клас, написавши сюди "<code>Покращити русака</code>".'
     try:
-        await bot.send_message(message.from_user.id, msg)
+        await bot.send_message(message.from_user.id, msg, parse_mode='HTML')
         if message.chat.type != 'private':
-            await message.reply('Надіслано в пп.', parse_mode='HTML')
+            await message.reply('Надіслано в пп.')
     except:
         pass
 
