@@ -915,9 +915,9 @@ async def classes(message):
           'інтелект на 1 у міжчатовій битві.\n\n\n'\
           'Щоб подивитись другий рівень класів натисни /class_2\n' \
           'Якщо твій русак вже набрав 5 інтелекту, можеш вибрати один з цих класів (один раз на ' \
-          'одного русака), написавши сюди "Обираю клас " і назву класу.'
+          'одного русака), написавши сюди "<code>Обираю клас </code>" і назву класу.'
     try:
-        await bot.send_message(message.from_user.id, msg)
+        await bot.send_message(message.from_user.id, msg, parse_mode='HTML')
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
     except:
@@ -1007,9 +1007,9 @@ async def classes_3(message):
           'охороні - збільшує силу гумконвою на 500000. Організація - збільшує грошову нагороду у міжчатових ' \
           'битвах до 9.\n\n\n' \
           'Якщо твій русак вже набрав 20 інтелекту і покращив клас, можеш ще раз ' \
-          'покращити клас, написавши сюди "Вдосконалити русака".'
+          'покращити клас, написавши сюди "<code>Вдосконалити русака</code>".'
     try:
-        await bot.send_message(message.from_user.id, msg)
+        await bot.send_message(message.from_user.id, msg, parse_mode='HTML')
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
     except:
