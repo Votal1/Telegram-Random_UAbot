@@ -119,6 +119,7 @@ def open_pack(uid, cdata, edit):
                     else:
                         r.hincrby(uid, 'money', 10)
                         msg += '\U0001F4B5 +10'
+                        quest(uid, 3, 1, 4)
                 elif ran == [6]:
                     msg = '\U0001f535 Знайдено: \U0001F4B5 50 гривень.'
                     r.hincrby(uid, 'money', 50)
