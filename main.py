@@ -5266,6 +5266,9 @@ async def handle_query(call):
                                                     reply_markup=msg[1])
                 elif call.from_user.id == int(call.data.split('_')[2]):
                     if check_slot(call.from_user.id, call.data):
+                        msg = call.message.text
+                        if msg.endswith('#loot'):
+                            msg = msg[:-5]
                         await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                     call.message.message_id, reply_markup=None)
                         open_pack(call.from_user.id, call.data, call.message.text)
