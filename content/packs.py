@@ -58,7 +58,7 @@ def open_pack(uid, cdata, edit):
                         r.hincrby(uid, 's_weapon', 30)
                         if int(r.hget(uid, 's_weapon')) >= 300:
                             r.hset(uid, 'weapon', 26)
-                    elif cl in (6, 16, 26) and int(r.hget(uid, 'defense')) in (16, 27):
+                    elif cl in (6, 16, 26) and int(r.hget(uid, 'defense')) in (16, 17):
                         r.hincrby(uid, 's_defense', 10)
                         if int(r.hget(uid, 's_defense')) >= 100:
                             r.hset(uid, 'defense', 17)
