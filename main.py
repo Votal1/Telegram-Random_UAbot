@@ -4340,7 +4340,11 @@ async def handle_query(call):
             if q1 != 0 or q2 != 0 or q3 != 0:
                 if int(r.hget(call.from_user.id, 'money')) >= 50:
                     r.hincrby(call.from_user.id, 'money', -50)
-                    re_roll(call.from_user.id, q1, q2, q3)
+                    if q1 or q2 or q3 < 0:
+                        jew = True
+                    else:
+                        jew = False
+                    re_roll(call.from_user.id, q1, q2, q3, jew)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='У вас тепер нові квести')
                 else:

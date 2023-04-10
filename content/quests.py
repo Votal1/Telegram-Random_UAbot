@@ -50,9 +50,8 @@ q34p = ['', '\u26D1 Зменшити здоров`я до 0 в дуелях', '\
 q34pt = [0, 1, 1, 1]
 
 
-def re_roll(uid, change1, change2, change3):
-    head = int(r.hget(uid, 'head'))
-    if head != 6:
+def re_roll(uid, change1, change2, change3, jew):
+    if not jew:
         if change1:
             ran1 = randint(1, len(q1) - 1)
             while int(r.hget(uid, 'time1')) == datetime.now().day and ran1 == 4:
