@@ -1285,6 +1285,49 @@ async def war_power(sett, cid):
     return chance, clan5, mal, gen1, gen2
 
 
+def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
+    reward = '3'
+    if cid1 == -1001211933154:
+        money = randint(4, 15)
+        reward = str(money)
+    msg += r.hget('war_battle' + str(cid1), 'title').decode()
+    try:
+        if int(r.hget('c' + str(cid1), 'side')) == 2:
+            r_spirit += 2
+            if general > 0:
+                r_spirit += 1
+                if int(r.hget('c' + str(cid1), 'build3')) == 2:
+                    r_spirit += 1
+        if int(r.hget('c' + str(cid1), 'side')) == 4:
+            if general > 0:
+                money += 4
+    except:
+        pass
+    if clan == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
+        money += 4
+        reward = f'{money} \U0001F47E +{r_spirit}'
+    for n in members:
+        r.hincrby(n, 'trophy', 1)
+        r.hincrby(n, 'wins', 1)
+        r.hincrby(n, 'money', money)
+        quest(n, 3, 1, 2)
+    r.hincrby('all_trophy', 'trophy', 5)
+    r.hincrby(222, cid1, 1)
+    if clan >= 5:
+        for n in members:
+            quest(n, 2, 2)
+        if int(r.hget('c' + str(cid1), 'base')) > 1:
+            r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
+            if int(r.hget('c' + str(cid1), 'side')) == 4:
+                r.hincrby('c' + str(cid1), 'money', money)
+        if int(r.hget('c' + str(cid1), 'war')) == 1:
+            if int(r.hget('c' + str(cid1), 'enemy')) == cid2 or randint(1, 10) == 1:
+                ran = randint(1, 5)
+                r.hincrby('c' + str(cid1), 'points', ran)
+                reward += f' \U0001fa99 +{ran}'
+    return reward
+
+
 async def great_war(cid1, cid2, a, b):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
@@ -1314,87 +1357,11 @@ async def great_war(cid1, cid2, a, b):
     win = choices(['a', 'b'], weights=[chance1, chance2])
 
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
-    reward = '3'
-    money = 4
-    r_spirit = 1
+    reward, money, r_spirit = '', 4, 1
     if win == ['a']:
-        if cid1 == -1001211933154:
-            money = randint(4, 15)
-            reward = str(money)
-        msg += r.hget('war_battle' + str(cid1), 'title').decode()
-        try:
-            if int(r.hget('c' + str(cid1), 'side')) == 2:
-                r_spirit += 2
-                if gen12 > 0:
-                    r_spirit += 1
-                    if int(r.hget('c' + str(cid1), 'build3')) == 2:
-                        r_spirit += 1
-            if int(r.hget('c' + str(cid1), 'side')) == 4:
-                if gen12 > 0:
-                    money += 4
-        except:
-            pass
-        if clan1 == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
-            money += 4
-            reward = f'{money} \U0001F47E +{r_spirit}'
-        for n in a:
-            r.hincrby(n, 'trophy', 1)
-            r.hincrby(n, 'wins', 1)
-            r.hincrby(n, 'money', money)
-            quest(n, 3, 1, 2)
-        r.hincrby('all_trophy', 'trophy', 5)
-        r.hincrby(222, cid1, 1)
-        if clan1 >= 5:
-            for n in a:
-                quest(n, 2, 2)
-            if int(r.hget('c' + str(cid1), 'base')) > 1:
-                r.hincrby('c' + str(cid1), 'r_spirit', r_spirit)
-                if int(r.hget('c' + str(cid1), 'side')) == 4:
-                    r.hincrby('c' + str(cid1), 'money', money)
-            if int(r.hget('c' + str(cid1), 'war')) == 1:
-                if int(r.hget('c' + str(cid1), 'enemy')) == cid2 or randint(1, 10) == 1:
-                    ran = randint(1, 5)
-                    r.hincrby('c' + str(cid1), 'points', ran)
-                    reward += f' \U0001fa99 +{ran}'
+        reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a)
     elif win == ['b']:
-        if cid2 == -1001211933154:
-            money = randint(4, 15)
-            reward = str(money)
-        msg += r.hget('war_battle' + str(cid2), 'title').decode()
-        try:
-            if int(r.hget('c' + str(cid2), 'side')) == 2:
-                r_spirit += 2
-                if gen22 > 0:
-                    r_spirit += 1
-                    if int(r.hget('c' + str(cid2), 'build3')) == 2:
-                        r_spirit += 1
-            if int(r.hget('c' + str(cid2), 'side')) == 4:
-                if gen22 > 0:
-                    money += 4
-        except:
-            pass
-        if clan2 == 5 and int(r.hget('c' + str(cid2), 'base')) > 1:
-            money += 4
-            reward = f'{money} \U0001F47E +{r_spirit}'
-        for n in b:
-            r.hincrby(n, 'trophy', 1)
-            r.hincrby(n, 'wins', 1)
-            r.hincrby(n, 'money', money)
-            quest(n, 3, 1, 2)
-        r.hincrby('all_trophy', 'trophy', 5)
-        r.hincrby(222, cid2, 1)
-        if clan2 >= 5:
-            for n in b:
-                quest(n, 2, 2)
-            if int(r.hget('c' + str(cid2), 'base')) > 1:
-                r.hincrby('c' + str(cid2), 'r_spirit', r_spirit)
-                if int(r.hget('c' + str(cid2), 'side')) == 4:
-                    r.hincrby('c' + str(cid2), 'money', money)
-            if int(r.hget('c' + str(cid2), 'war')) == 1:
-                if int(r.hget('c' + str(cid2), 'enemy')) == cid1 or randint(1, 10) == 1:
-                    ran = randint(1, 5)
-                    r.hincrby('c' + str(cid2), 'points', ran)
-                    reward += f' \U0001fa99 +{ran}'
+        reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     msg1 = msg2 = msg
     if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:
