@@ -22,7 +22,7 @@ from content.buttons import battle_button, battle_button_2, battle_button_3, \
 from content.inventory import show_inventory, drop_item, change_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack, open_gift
+from content.packs import open_pack, check_slot, open_gift
 from content.quests import quests, quest
 from content.wiki import wiki_text
 
@@ -5201,9 +5201,14 @@ async def handle_query(call):
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
                 elif call.from_user.id == int(call.data.split('_')[2]):
-                    await bot.edit_message_text(call.message.text, call.message.chat.id,
-                                                call.message.message_id, reply_markup=None)
-                    open_pack(call.from_user.id, call.data, call.message.text)
+                    if check_slot(call.from_user.id, call.data):
+                        await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                    call.message.message_id, reply_markup=None)
+                        open_pack(call.from_user.id, call.data, call.message.text)
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Неможливо взяти спорядження, '
+                                                             'оскільки у вас вже є одне такого типу')
         except:
             pass
 

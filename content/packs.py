@@ -351,6 +351,31 @@ def open_pack(uid, cdata, edit):
     return False
 
 
+def check_slot(uid, cdata):
+    stats = r.hmget(uid, 'class', 'weapon', 'defense', 'support', 'head')
+    cl, w, d, s, h = int(stats[0]), int(stats[1]), int(stats[2]), int(stats[3]), int(stats[4]),
+    if cdata.startswith('pack_class_'):
+        if cl in (6, 16, 26):
+            if w == 0:
+                return True
+        if cl in (31, 32, 33):
+            if s == 0:
+                return True
+    elif cdata.startswith('pack_rpg_'):
+        if w in (0, 16):
+            return True
+    elif cdata.startswith('pack_armor_'):
+        if d == 0:
+            return True
+    elif cdata.startswith('pack_mushroom_') or cdata.startswith('pack_fish_'):
+        if s == 0:
+            return True
+    elif cdata.startswith('pack_foil_') or cdata.startswith('pack_jew_'):
+        if h == 0:
+            return True
+    return False
+
+
 def open_gift(uid, cdata, edit, cid):
     markup = InlineKeyboardMarkup()
     msg = ''
