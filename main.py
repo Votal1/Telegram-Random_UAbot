@@ -5269,7 +5269,7 @@ async def handle_query(call):
                         msg = call.message.text
                         if msg.endswith('#loot'):
                             msg = msg[:-5]
-                        await bot.edit_message_text(call.message.text, call.message.chat.id,
+                        await bot.edit_message_text(msg, call.message.chat.id,
                                                     call.message.message_id, reply_markup=None)
                         open_pack(call.from_user.id, call.data, call.message.text)
                     else:

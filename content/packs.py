@@ -37,7 +37,7 @@ def open_pack(uid, cdata, edit):
                         msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                 elif ran == [2]:
                     msg = '\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку (класове спорядження)! ' \
-                          + icons_simple[cl] + '\n\n#loot'
+                          + icons_simple[cl] + '\n#loot'
                     if cl in (1, 11, 21) and int(r.hget(uid, 'weapon')) in (11, 22):
                         r.hincrby(uid, 's_weapon', 5)
                         if int(r.hget(uid, 's_weapon')) >= 50:
@@ -144,7 +144,7 @@ def open_pack(uid, cdata, edit):
                               '- якщо в дуелі у ворога більший інтелект, додає +1 інтелекту.'
                         if int(r.hget(uid, 'support')) != 6:
                             markup.add(InlineKeyboardButton(text='Взяти мухомор', callback_data=f'pack_mushroom_{uid}'))
-                            msg += '\n\n#loot'
+                            msg += '\n#loot'
                         elif int(r.hget(uid, 'support')) == 6:
                             r.hincrby(uid, 's_support', 1)
                     else:
@@ -157,7 +157,7 @@ def open_pack(uid, cdata, edit):
                         r.hincrby(uid, 's_head', 20)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти шапочку', callback_data=f'pack_foil_{uid}'))
-                        msg += '\n\n#loot'
+                        msg += '\n#loot'
                 elif ran == [11]:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     msg = '\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої бараболі і ' \
@@ -175,7 +175,7 @@ def open_pack(uid, cdata, edit):
                         r.hincrby(uid, 's_defense', 50)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти бронежилет', callback_data=f'pack_armor_{uid}'))
-                        msg += '\n\n#loot'
+                        msg += '\n#loot'
 
                 elif ran == [13]:
                     msg = '\U0001f7e1 В цьому пакунку знайдено 40-мм ручний протитанковий гранатомет РПГ-7 і одну ' \
@@ -185,12 +185,12 @@ def open_pack(uid, cdata, edit):
                         r.hincrby(uid, 's_weapon', 1)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти РПГ-7', callback_data=f'pack_rpg_{uid}'))
-                        msg += '\n\n#loot'
+                        msg += '\n#loot'
 
                 elif ran == [14]:
                     markup.add(InlineKeyboardButton(text='Взяти Швайнокарася', callback_data=f'pack_fish_{uid}'))
                     msg = '\U0001f7e1 Швайнокарась [Допомога, міцність=3, максимальна_міцність=3] - ' \
-                          'може виконувати бажання русаків (відпочивати, нажертись, напитись).\n\n#loot'
+                          'може виконувати бажання русаків (відпочивати, нажертись, напитись).\n#loot'
                 elif ran == [15]:
                     msg = '\U0001f7e1 Ярмулка [Шапка, міцність=7, невразлива_до_РПГ] - надає доступ до кошерних ' \
                           'квестів (вдвічі більша нагорода, але і більша складність їх виконання). 100% шанс ' \
@@ -199,7 +199,7 @@ def open_pack(uid, cdata, edit):
                         r.hincrby(uid, 's_head', 7)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти ярмулку', callback_data=f'pack_jew_{uid}'))
-                        msg += '\n\n#loot'
+                        msg += '\n#loot'
                 elif ran == [16]:
                     msg = '\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.\n' \
                           '\U0001F31F +1'
