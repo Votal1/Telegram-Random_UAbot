@@ -1286,7 +1286,7 @@ async def war_power(sett, cid):
 
 
 def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
-    reward = '3'
+    reward = '4'
     if cid1 == -1001211933154:
         money = randint(4, 15)
         reward = str(money)
@@ -1325,7 +1325,7 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
                 ran = randint(1, 5)
                 r.hincrby('c' + str(cid1), 'points', ran)
                 reward += f' \U0001fa99 +{ran}'
-    return reward
+    return msg, reward
 
 
 async def great_war(cid1, cid2, a, b):
@@ -1359,9 +1359,9 @@ async def great_war(cid1, cid2, a, b):
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward, money, r_spirit = '', 4, 1
     if win == ['a']:
-        reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a)
+        msg, reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a)
     elif win == ['b']:
-        reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b)
+        msg, reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     msg1 = msg2 = msg
     if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:
