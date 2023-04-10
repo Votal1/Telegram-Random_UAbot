@@ -3773,7 +3773,6 @@ async def handle_query(call):
                 else:
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> <code>{mem.decode()}</code>\n'
-                stats = r.hmget(mem, 'strength', 'strength2', 'class', 'class2')
 
                 quests = 0
                 if stats[6] and int(stats[6]) == today:
