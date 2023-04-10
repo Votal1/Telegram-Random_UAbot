@@ -281,8 +281,7 @@ def c_shop(c, page):
                                                     callback_data=cdata('clan_buff_4_1_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 25% шанс отримати 3 квестові очки ' \
                            'за перемогу в масовій битві.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 '
-                                                         '\U0001F9F1\U0001F9F6\U0001faa8\U0001F333 20%',
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10',
                                                     callback_data=cdata('clan_buff_4_1_2', c)))
 
                 elif int(r.hget(c, 'side')) == 2:
@@ -290,8 +289,7 @@ def c_shop(c, page):
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F47E 180',
                                                     callback_data=cdata('clan_buff_4_2_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
-                                                         '\U0001F916 10 \U0001F47E 20%',
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10',
                                                     callback_data=cdata('clan_buff_4_2_2', c)))
 
                 elif int(r.hget(c, 'side')) == 3:
@@ -299,8 +297,7 @@ def c_shop(c, page):
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 120 \U0001F4B5 2500',
                                                     callback_data=cdata('clan_buff_4_3_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків за приєднання учасника в клан.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
-                                                         '\U0001F916 10 \U0001F4FB 20%',
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10',
                                                     callback_data=cdata('clan_buff_4_3_2', c)))
 
                 elif int(r.hget(c, 'side')) == 4:
@@ -308,8 +305,7 @@ def c_shop(c, page):
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 50 \U0001F4B5 10000',
                                                     callback_data=cdata('clan_buff_4_4_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n'
-                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
-                                                         '\U0001F916 10 \U0001F4B5 20%',
+                    markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10',
                                                     callback_data=cdata('clan_buff_4_4_2', c)))
 
         else:
