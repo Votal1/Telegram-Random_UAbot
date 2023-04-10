@@ -1266,6 +1266,11 @@ async def war_power(sett, cid):
                     intellect(1, member)
                 if gen1 == 1 and meat > 0:
                     s = int(s + s * meat * 0.5)
+                if r.hget('c' + str(cid), 'side') and int(r.hget('c' + str(cid), 'side')) == 1:
+                    codes = int(r.hget('c' + str(cid), 'codes'))
+                    if codes > 50:
+                        codes = 0
+                    s = int(s + s * codes * 0.01)
             if meat > 0:
                 quest(member, 3, -3, 2)
             chance += s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head)
@@ -1292,7 +1297,13 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
         reward = str(money)
     msg += r.hget('war_battle' + str(cid1), 'title').decode()
     try:
-        if int(r.hget('c' + str(cid1), 'side')) == 2:
+        if int(r.hget('c' + str(cid1), 'side')) == 1:
+            if general > 0:
+                if randint(0, 1):
+                    money += 2
+                else:
+                    r_spirit += 2
+        elif int(r.hget('c' + str(cid1), 'side')) == 2:
             r_spirit += 2
             if general > 0:
                 if choices([0, 1], weights=[85, 15])[0] == 1 and r.hget(222, cid1):
@@ -1305,7 +1316,7 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
                         packs = 1
                 if int(r.hget('c' + str(cid1), 'build3')) == 2:
                     r_spirit += 1
-        if int(r.hget('c' + str(cid1), 'side')) == 4:
+        elif int(r.hget('c' + str(cid1), 'side')) == 4:
             if general > 0:
                 millions = int(r.hget('c' + str(cid1), 'money')) // 1000000
                 money += 4 + millions
