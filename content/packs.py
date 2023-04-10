@@ -37,7 +37,7 @@ def open_pack(uid, cdata, edit):
                         msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                 elif ran == [2]:
                     msg = '\u26AA В цьому пакунку лежить якраз те, що потрібно твоєму русаку (класове спорядження)! ' \
-                          + icons_simple[cl] + '\n#loot'
+                          + icons_simple[cl]
                     if cl in (1, 11, 21) and int(r.hget(uid, 'weapon')) in (11, 22):
                         r.hincrby(uid, 's_weapon', 5)
                         if int(r.hget(uid, 's_weapon')) >= 50:
@@ -88,6 +88,7 @@ def open_pack(uid, cdata, edit):
                             r.hset(uid, 'weapon', 32)
                     elif cl > 0:
                         markup.add(InlineKeyboardButton(text='Взяти спорядження', callback_data=f'pack_class_{uid}'))
+                        msg += '\n#loot'
                     else:
                         msg = '\u26AA В цьому пакунку лежать дивні речі, якими русак не вміє користуватись...'
                 elif ran == [3]:
