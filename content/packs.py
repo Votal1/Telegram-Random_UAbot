@@ -107,14 +107,18 @@ def open_pack(uid, cdata, edit):
                     r.hincrby(uid, 'money', 4)
                     quest(uid, 3, 1, 4)
                 elif ran == [5]:
-                    msg = '\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n\U0001F6E1 +7'
+                    msg = '\u26AA Знайдено: \U0001F6E1 Уламок бронетехніки.\n'
                     quest(uid, 3, 3, 1)
-                    if int(r.hget(uid, 'defense')) == 0 or int(r.hget(uid, 'defense')) == 1 or \
-                            int(r.hget(uid, 'defense')) == 3:
+                    if int(r.hget(uid, 'defense')) == 0:
                         r.hset(uid, 'defense', 9)
                         r.hset(uid, 's_defense', 7)
-                    else:
+                        msg += '\U0001F6E1 7'
+                    elif int(r.hget(uid, 'defense')) not in (1, 3):
                         r.hincrby(uid, 's_defense', 7)
+                        msg += '\U0001F6E1 +7'
+                    else:
+                        r.hincrby(uid, 'money', 10)
+                        msg += '\U0001F4B5 +10'
                 elif ran == [6]:
                     msg = '\U0001f535 Знайдено: \U0001F4B5 50 гривень.'
                     r.hincrby(uid, 'money', 50)
