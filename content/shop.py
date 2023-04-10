@@ -236,32 +236,61 @@ def salt_shop(uid, cdata):
             cl = int(r.hget(uid, 'class'))
             r.hincrby(uid, 'salt', -8)
             r.hincrby(uid, 'purchase', 1)
+            current_photo = r.hget(uid, 'photo').decode()
+            ran = ''
             if cl == 0:
-                r.hset(uid, 'photo', choice(default))
+                ran = choice(default)
+                while ran == current_photo:
+                    ran = choice(default)
             elif cl == 1 or cl == 11 or cl == 21:
-                r.hset(uid, 'photo', choice(p1))
+                ran = choice(p1)
+                while ran == current_photo:
+                    ran = choice(p1)
             elif cl == 2 or cl == 12 or cl == 22:
-                r.hset(uid, 'photo', choice(p2))
+                ran = choice(p2)
+                while ran == current_photo:
+                    ran = choice(p2)
             elif cl == 3 or cl == 13 or cl == 23:
-                r.hset(uid, 'photo', choice(p3))
+                ran = choice(p3)
+                while ran == current_photo:
+                    ran = choice(p3)
             elif cl == 4 or cl == 14 or cl == 24:
-                r.hset(uid, 'photo', choice(p4))
+                ran = choice(p4)
+                while ran == current_photo:
+                    ran = choice(p4)
             elif cl == 5 or cl == 15 or cl == 25:
-                r.hset(uid, 'photo', choice(p5))
+                ran = choice(p5)
+                while ran == current_photo:
+                    ran = choice(p5)
             elif cl == 6 or cl == 16 or cl == 26:
-                r.hset(uid, 'photo', choice(p6))
+                ran = choice(p6)
+                while ran == current_photo:
+                    ran = choice(p6)
             elif cl == 7 or cl == 17 or cl == 27:
-                r.hset(uid, 'photo', choice(p7))
+                ran = choice(p7)
+                while ran == current_photo:
+                    ran = choice(p7)
             elif cl == 8 or cl == 18 or cl == 28:
-                r.hset(uid, 'photo', choice(p8))
+                ran = choice(p8)
+                while ran == current_photo:
+                    ran = choice(p8)
             elif cl == 9 or cl == 19 or cl == 29:
-                r.hset(uid, 'photo', choice(p9))
+                ran = choice(p9)
+                while ran == current_photo:
+                    ran = choice(p9)
             elif cl == 10 or cl == 20 or cl == 30:
-                r.hset(uid, 'photo', choice(p10))
+                ran = choice(p10)
+                while ran == current_photo:
+                    ran = choice(p10)
             elif cl == 31 or cl == 32 or cl == 33:
-                r.hset(uid, 'photo', choice(p11))
+                ran = choice(p11)
+                while ran == current_photo:
+                    ran = choice(p11)
             elif cl == 34 or cl == 35 or cl == 36:
-                r.hset(uid, 'photo', choice(p12))
+                ran = choice(p12)
+                while ran == current_photo:
+                    ran = choice(p12)
+            r.hset(uid, 'photo', ran)
             return 'Ви успішно змінили фото русаку'
         else:
             return 'Недостатньо солі на рахунку.'

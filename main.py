@@ -4495,7 +4495,10 @@ async def handle_query(call):
 
     elif call.data.startswith('passport'):
         if int(r.hget(call.from_user.id, 'money')) >= 10 and r.hexists(call.from_user.id, 'name'):
+            current_name = int(r.hget(call.from_user.id, 'name'))
             ran = choice(list(names))
+            while ran == current_name:
+                ran = choice(list(names))
             r.hincrby(call.from_user.id, 'money', -10)
             r.hset(call.from_user.id, 'name', ran)
             if r.hexists(call.from_user.id, 'ac3') == 0:
