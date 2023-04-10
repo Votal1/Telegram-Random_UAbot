@@ -1666,7 +1666,7 @@ async def swap(message):
                     r.hset(message.from_user.id, 'time1', b2)
                     r.hset(message.from_user.id, 'time23', a2)
 
-                await message.reply(f'{icons_simple[int(a[9])]} Бойового русака змінено на {names_case[int(a[0])]}.')
+                await message.reply(f'{icons_simple[int(b[9])]} Бойового русака змінено на {names_case[int(b[0])]}.')
             else:
                 await message.reply('\U0001F3DA Візьми русака, щоб змінити його на другого'
                                     '.\n\nРусака можна отримати, сходивши на \n/donbass')
