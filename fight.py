@@ -1300,7 +1300,8 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
                     r_spirit += 1
         if int(r.hget('c' + str(cid1), 'side')) == 4:
             if general > 0:
-                money += 4
+                millions = int(r.hget('c' + str(cid1), 'money')) // 1000000
+                money += 4 + millions
     except:
         pass
     if clan == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
