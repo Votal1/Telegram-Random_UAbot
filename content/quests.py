@@ -136,7 +136,7 @@ def re_roll(uid, change1, change2, change3):
                 elif side == 4:
                     ran1 = randint(1, len(q34p) - 1)
                     while ran1 == change3:
-                        ran1 = randint(1, len(q33p) - 1)
+                        ran1 = randint(1, len(q34p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q34pt[ran1]})
 
 
