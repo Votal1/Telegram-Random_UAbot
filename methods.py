@@ -95,6 +95,10 @@ def q_points(uid, amount):
             r.hincrby('c' + r.hget(uid, 'clan').decode(), 'points', amount)
 
 
+def cdata(text, c):
+    return f'{text}_{c[1:]}'
+
+
 def c_shop(c, page):
     msg = ''
     markup = InlineKeyboardMarkup()
@@ -105,103 +109,107 @@ def c_shop(c, page):
               '\U0001F35E Хліб справжній - [Допомога, міцність=1] - спрацьовує при годуванні і додає ' \
               '\U0001F54A +10000. Якщо допоміжне спорядження вже є, додає \U0001F54A +3000.'
         price = 4 if int(r.hget(c, 'side')) == 1 else 10
-        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - \U0001F4B5 {price}', callback_data='clan_ration'))
+        markup.add(InlineKeyboardButton(text=f'Совєцкій пайок - \U0001F4B5 {price}',
+                                        callback_data=cdata('clan_ration', c)))
         if int(r.hget(c, 'build1')) == 1:
             msg += '\n\U0001F6E1 Уламок бронетехніки [Захист, міцність=7] - збільшує силу на бій на 30%, або' \
                    ' збільшує міцність захисту на 7. Після зношення повертаються 4 гривні.'
-            markup.add(InlineKeyboardButton(text='Уламок бронетехніки - \U0001F4B5 15', callback_data='clan_fragment'))
+            markup.add(InlineKeyboardButton(text='Уламок бронетехніки - \U0001F4B5 15',
+                                            callback_data=cdata('clan_fragment', c)))
         elif int(r.hget(c, 'build1')) == 2:
             msg += '\n\U0001F3A9 Тактичний шолом [Шапка, міцність=40] - збільшує силу в дуелях і ' \
                    'міжчатових битвах на 31%.'
-            markup.add(InlineKeyboardButton(text='Тактичний шолом - \U0001F4B5 40', callback_data='clan_helmet'))
+            markup.add(InlineKeyboardButton(text='Тактичний шолом - \U0001F4B5 40', callback_data=cdata('clan_helmet', c)))
             msg += '\n\U0001F6A7 Міни [Захист, міцність=3] - з шансом 33% завдає ворогу 5 поранень і ' \
                    'зменшує міцність зброї на 5. Можливість використати міни при захисті клану.'
-            markup.add(InlineKeyboardButton(text='Міни - \U0001F4B5 20', callback_data='clan_bombs'))
+            markup.add(InlineKeyboardButton(text='Міни - \U0001F4B5 20', callback_data=cdata('clan_bombs', c)))
         elif int(r.hget(c, 'build1')) == 3:
             msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
                    'якщо нема жінки.'
-            markup.add(InlineKeyboardButton(text='Батіг - \U0001F4B5 60', callback_data='clan_lash'))
+            markup.add(InlineKeyboardButton(text='Батіг - \U0001F4B5 60', callback_data=cdata('clan_lash', c)))
         elif int(r.hget(c, 'build1')) == 4:
             msg += '\n\U0001F344 Мухомор королівський [Допомога, міцність=1] - якщо у ворога більший інтелект, додає ' \
                    '+1 інтелекту (не діє проти фокусників). На бій зменшує свою силу на 50%. ' \
                    'Максимальна кількість покупок на русака - 3.'
             markup.add(InlineKeyboardButton(text='Мухомор королівський - \U0001F4B5 100',
-                                            callback_data='clan_mushroom'))
+                                            callback_data=cdata('clan_mushroom', c)))
         if int(r.hget(c, 'build3')) == 4:
             msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
                    'битвах або рейдах на 25% (тільки для таксистів).'
-            markup.add(InlineKeyboardButton(text='Дизель - \U0001F4B5 20', callback_data='clan_diesel'))
+            markup.add(InlineKeyboardButton(text='Дизель - \U0001F4B5 20', callback_data=cdata('clan_diesel', c)))
         if int(r.hget(c, 'build5')) == 1:
             msg += '\n\U0001F5E1 АК-47 [Зброя, міцність=30] - після перемоги активує ефект горілки.'
-            markup.add(InlineKeyboardButton(text='АК-47 - \U0001F4B5 15', callback_data='clan_ak'))
+            markup.add(InlineKeyboardButton(text='АК-47 - \U0001F4B5 15', callback_data=cdata('clan_ak', c)))
             msg += '\n\u2744\uFE0F Вушанка [Шапка, міцність=20] - збільшує ефективність бойового трансу на 2% за' \
                    ' кожен рівень алкоголізму.'
-            markup.add(InlineKeyboardButton(text='Вушанка - \U0001F4B5 20', callback_data='clan_ear'))
+            markup.add(InlineKeyboardButton(text='Вушанка - \U0001F4B5 20', callback_data=cdata('clan_ear', c)))
         elif int(r.hget(c, 'build5')) == 4:
             msg += '\n\U0001F9EA Цукор [Допомога, міцність=1] - збільшує силу при годуванні на 15 (до 5000 сили) або' \
                    ' зменшує шанс зменшити силу на 15% і додає 5 бойового трансу.'
-            markup.add(InlineKeyboardButton(text='Цукор - \U0001F4B5 55', callback_data='clan_sugar'))
+            markup.add(InlineKeyboardButton(text='Цукор - \U0001F4B5 55', callback_data=cdata('clan_sugar', c)))
             msg += '\n\U0001F37A Квас [Допомога, міцність=5] - русак не втече зі зміни. Додає 5 бойового трансу ' \
                    'за роботу в шахті.'
-            markup.add(InlineKeyboardButton(text='Квас - \U0001F4B5 15', callback_data='clan_kvs'))
+            markup.add(InlineKeyboardButton(text='Квас - \U0001F4B5 15', callback_data=cdata('clan_kvs', c)))
         if int(r.hget(c, 'build6')) == 2:
             msg += '\n\U0001F464 Шапочка з фольги [Шапка, міцність=10] - захищає від втрати бойового духу при ' \
                    'жертвоприношеннях, при купівлі русак отримує 30 шизофренії.'
-            markup.add(InlineKeyboardButton(text='Шапочка з фольги - \U0001F4B5 50', callback_data='clan_foil'))
+            markup.add(InlineKeyboardButton(text='Шапочка з фольги - \U0001F4B5 50',
+                                            callback_data=cdata('clan_foil', c)))
         elif int(r.hget(c, 'build6')) == 4:
             msg += '\n\U0001F476 Російське немовля - збільшує рейтинг на 88.'
-            markup.add(InlineKeyboardButton(text='Російське немовля - \U0001F4B5 100', callback_data='clan_children'))
+            markup.add(InlineKeyboardButton(text='Російське немовля - \U0001F4B5 100',
+                                            callback_data=cdata('clan_children', c)))
 
         if int(r.hget(c, 'base')) == 11:
             msg += '\n\u2708\uFE0F БпЛА [Зброя, міцність=1] - за кожен рівень майстерності збільшує силу в ' \
                    'масовій битві на 50% та збільшує шанс не втратити зброю на 18%.'
             markup.add(InlineKeyboardButton(text='БпЛА - \U0001F4B5 50',
-                                            callback_data='clan_uav'))
+                                            callback_data=cdata('clan_uav', c)))
 
-        markup.add(InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
-                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'),
-                   InlineKeyboardButton(text='\U0001faac', callback_data='clan_shop_4'))
+        markup.add(InlineKeyboardButton(text='\U0001F451', callback_data=cdata('clan_shop_2', c)),
+                   InlineKeyboardButton(text='\U0001F69B', callback_data=cdata('clan_shop_3', c)),
+                   InlineKeyboardButton(text='\U0001faac', callback_data=cdata('clan_shop_4', c)))
 
     if page == 2:
         msg = '\U0001F451 Товари для лідера і заступників:'
         if int(r.hget(c, 'monument')) == 1:
             msg += '\n\n\U0001F47E Потратити 10 руского духу на 5 \U0001F44A для кожного учасника клану.'
             markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
-                                            callback_data='clan_monument'))
+                                            callback_data=cdata('clan_monument', c)))
         if int(r.hget(c, 'base')) == 9:
             msg += '\n\U0001F5E1\U0001F6E1 Колючий комплект - закупити всьому клану дрин і щит.'
             markup.add(InlineKeyboardButton(text='Колючий комплект - \U0001F333 200, \U0001faa8 100',
-                                            callback_data='clan_spike'))
+                                            callback_data=cdata('clan_spike', c)))
         if int(r.hget(c, 'base')) == 9:
             msg += '\n\u2622 Купити тим, хто відпрацював зміну по 10 горілки.'
             markup.add(InlineKeyboardButton(text='Горілка - \U0001F4B5 300',
-                                            callback_data='clan_vodka'))
+                                            callback_data=cdata('clan_vodka', c)))
         if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 РПГ-7 [Зброя, міцність=1] - завдає ворогу 300 поранень (віднімає бойовий дух,' \
                    ' здоров`я і все спорядження).'
             markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 100, \U0001F4B5 500',
-                                            callback_data='clan_rpg'))
+                                            callback_data=cdata('clan_rpg', c)))
         if int(r.hget(c, 'base')) == 10:
             msg += '\n\U0001f7e1 Бронежилет вагнерівця [Захист, міцність=50] - зменшує силу ворога на бій на 75%' \
                    ' та частково захищає від РПГ-7.'
             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 500',
-                                            callback_data='clan_armor'))
+                                            callback_data=cdata('clan_armor', c)))
         if int(r.hget(c, 'build5')) == 4:
             msg += '\n\U0001F349 Закупити всьому клану Кавун базований [Шапка, міцність=∞] - збільшує зарплату за ' \
                    'роботу на соляній шахті на 5 та силу при годуванні на 5. ' \
                    'Кавун буде конфісковано, якщо при годуванні зменшиться сила.'
             markup.add(InlineKeyboardButton(text='Кавун - \U0001F47E 50, \U0001F4B5 200',
-                                            callback_data='clan_watermelon'))
+                                            callback_data=cdata('clan_watermelon', c)))
         if int(r.hget(c, 'build6')) == 3:
             msg += '\n\U0001F489 Вилікувати весь клан\n(\U0001fac0 +100 \U0001fa78 -5-10 \U0001F464 -5-10).'
             markup.add(InlineKeyboardButton(text='Лікування - \U0001F47E 1 \U0001F4B5 10',
-                                            callback_data='clan_heal'))
+                                            callback_data=cdata('clan_heal', c)))
             msg += '\n\U0001F4B5 Перерозподіл багатств - 5 найбідніших учасників отримають по 100 гривень.'
             markup.add(InlineKeyboardButton(text='Перерозподіл - \U0001F47E 10, \U0001F4B5 500 ',
-                                            callback_data='clan_money'))
-        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
-                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'),
-                   InlineKeyboardButton(text='\U0001faac', callback_data='clan_shop_4'))
+                                            callback_data=cdata('clan_money', c)))
+        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data=cdata('clan_shop_1', c)),
+                   InlineKeyboardButton(text='\U0001F69B', callback_data=cdata('clan_shop_3', c)),
+                   InlineKeyboardButton(text='\U0001faac', callback_data=cdata('clan_shop_4', c)))
 
     if page == 3:
         w, s, cl, b = r.hmget('resources', 'wood', 'stone', 'cloth', 'brick')
@@ -209,37 +217,37 @@ def c_shop(c, page):
               f"\U0001faa8 Камінь: {int(s)}\n\U0001F9F6 Тканина: {int(cl)}\n\U0001F9F1 Цегла: {int(b)}"
         if int(r.hget(c, 'wood')) >= 7500:
             markup.add(InlineKeyboardButton(text='Продати деревину - \U0001F333 1500 -> \U0001F4B5 500',
-                                            callback_data='clan_sell_wood'))
+                                            callback_data=cdata('clan_sell_wood', c)))
         elif int(w) >= 1500:
             markup.add(InlineKeyboardButton(text='Купити деревину - \U0001F4B5 2000 -> \U0001F333 1500',
-                                            callback_data='clan_buy_wood'))
+                                            callback_data=cdata('clan_buy_wood', c)))
         if int(r.hget(c, 'stone')) >= 5000:
             markup.add(InlineKeyboardButton(text='Продати камінь - \U0001faa8 1000 -> \U0001F4B5 500',
-                                            callback_data='clan_sell_stone'))
+                                            callback_data=cdata('clan_sell_stone', c)))
         elif int(s) >= 1000:
             markup.add(InlineKeyboardButton(text='Купити камінь - \U0001F4B5 2000 -> \U0001faa8 1000',
-                                            callback_data='clan_buy_stone'))
+                                            callback_data=cdata('clan_buy_stone', c)))
         if int(r.hget(c, 'cloth')) >= 2500:
             markup.add(InlineKeyboardButton(text='Продати тканину - \U0001F9F6 500 -> \U0001F4B5 500',
-                                            callback_data='clan_sell_cloth'))
+                                            callback_data=cdata('clan_sell_cloth', c)))
         elif int(cl) >= 500:
             markup.add(InlineKeyboardButton(text='Купити тканину - \U0001F4B5 2000 -> \U0001F9F6 500',
-                                            callback_data='clan_buy_cloth'))
+                                            callback_data=cdata('clan_buy_cloth', c)))
         if int(r.hget(c, 'brick')) >= 1500:
             markup.add(InlineKeyboardButton(text='Продати цеглу - \U0001F9F1 300 -> \U0001F4B5 500',
-                                            callback_data='clan_sell_brick'))
+                                            callback_data=cdata('clan_sell_brick', c)))
         elif int(b) >= 300:
             markup.add(InlineKeyboardButton(text='Купити цеглу - \U0001F4B5 2000 -> \U0001F9F1 300',
-                                            callback_data='clan_buy_brick'))
+                                            callback_data=cdata('clan_buy_brick', c)))
         if int(r.hget(c, 'technics')) >= 50:
             markup.add(InlineKeyboardButton(text='Продати радіотехніку - \U0001F4FB 50 -> \U0001F4B5 500',
-                                            callback_data='clan_sell_radio'))
+                                            callback_data=cdata('clan_sell_radio', c)))
         if int(r.hget(c, 'codes')) >= 1:
             markup.add(InlineKeyboardButton(text='Продати код - \U0001F916 1 -> \U0001F4B5 500, \U0001F47E '
-                                                 '50', callback_data='clan_sell_code'))
-        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
-                   InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
-                   InlineKeyboardButton(text='\U0001faac', callback_data='clan_shop_4'))
+                                                 '50', callback_data=cdata('clan_sell_code', c)))
+        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data=cdata('clan_shop_1', c)),
+                   InlineKeyboardButton(text='\U0001F451', callback_data=cdata('clan_shop_2', c)),
+                   InlineKeyboardButton(text='\U0001faac', callback_data=cdata('clan_shop_4', c)))
 
     if page == 4:
         msg = f"\U0001faac Магазин бафів\n\n"
@@ -248,68 +256,68 @@ def c_shop(c, page):
                 msg += '\U0001f7e2 Додаткова нагорода за рейди на клани (залежить від його рівня).\n'
                 markup.add(InlineKeyboardButton(text='\U0001f7e2 - \U0001F47E 100 \U0001F9F6 200 '
                                                      '\U0001faa8 1000 \U0001F333 2000',
-                                                callback_data='clan_buff_1'))
+                                                callback_data=cdata('clan_buff_1', c)))
             if int(r.hget(c, 'buff_2')) == 0:
                 msg += '\U0001f7e0 Вдвічі більше очків отримується за рейд на ворожий клан. ' \
                        'Вдвічі більше пакунків за перемогу у війні.\n'
                 markup.add(InlineKeyboardButton(text='\U0001f7e0 - \U0001F4B5 10000',
-                                                callback_data='clan_buff_2'))
+                                                callback_data=cdata('clan_buff_2', c)))
             if int(r.hget(c, 'buff_3')) == 0:
                 msg += '\U0001f534 Очки можна отримати з рейду на будь-який клан та рейдити раз в 45 хвилин.' \
                        ' Можливість бачити очки ворога.\n'
                 markup.add(InlineKeyboardButton(text='\U0001f534 - \U0001F916 12 \U0001F4FB 100',
-                                                callback_data='clan_buff_3'))
+                                                callback_data=cdata('clan_buff_3', c)))
 
             if int(r.hget(c, 'buff_4')) == 0 and int(r.hget(c, 'base')) >= 4:
                 msg += '\nОберіть один з наступних бафів:\n' \
                        '\U0001f7e3 За роботу на благо громади буде нараховано 1-3 квестових очків замість зарплати.\n'
                 markup.add(InlineKeyboardButton(text='\U0001f7e3 - \U0001F9F6 200 \U0001F9F1 200',
-                                                callback_data='clan_buff_4_0'))
+                                                callback_data=cdata('clan_buff_4_0', c)))
 
                 if int(r.hget(c, 'side')) == 1:
                     msg += '\U0001f7e3\U0001f7e3 +2 очка за звичайні квести.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F9F1 300 \U0001F9F6 600 '
                                                          '\U0001faa8 1500 \U0001F333 3000',
-                                                    callback_data='clan_buff_4_1_1'))
+                                                    callback_data=cdata('clan_buff_4_1_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 25% шанс отримати 3 квестові очки ' \
                            'за перемогу в масовій битві.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10 '
                                                          '\U0001F9F1\U0001F9F6\U0001faa8\U0001F333 20%',
-                                                    callback_data='clan_buff_4_1_2'))
+                                                    callback_data=cdata('clan_buff_4_1_2', c)))
 
                 elif int(r.hget(c, 'side')) == 2:
                     msg += '\U0001f7e3\U0001f7e3 1% шанс непомітно отримати квестове очко за перемогу в дуелі.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F47E 180',
-                                                    callback_data='clan_buff_4_2_1'))
+                                                    callback_data=cdata('clan_buff_4_2_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
                                                          '\U0001F916 10 \U0001F47E 20%',
-                                                    callback_data='clan_buff_4_2_2'))
+                                                    callback_data=cdata('clan_buff_4_2_2', c)))
 
                 elif int(r.hget(c, 'side')) == 3:
                     msg += '\U0001f7e3\U0001f7e3 +10 квестових очків за пограбування гумконвою.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 120 \U0001F4B5 2500',
-                                                    callback_data='clan_buff_4_3_1'))
+                                                    callback_data=cdata('clan_buff_4_3_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків за приєднання учасника в клан.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
                                                          '\U0001F916 10 \U0001F4FB 20%',
-                                                    callback_data='clan_buff_4_3_2'))
+                                                    callback_data=cdata('clan_buff_4_3_2', c)))
 
                 elif int(r.hget(c, 'side')) == 4:
                     msg += '\U0001f7e3\U0001f7e3 Шанс знайти квестове очко в пакунку замість радіотехніки.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 50 \U0001F4B5 10000',
-                                                    callback_data='clan_buff_4_4_1'))
+                                                    callback_data=cdata('clan_buff_4_4_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +250 квестових очків.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - '
                                                          '\U0001F916 10 \U0001F4B5 20%',
-                                                    callback_data='clan_buff_4_4_2'))
+                                                    callback_data=cdata('clan_buff_4_4_2', c)))
 
         else:
             msg += 'Вступіть в кланові війни, щоб купляти бафи\n/clan_war'
 
-        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data='clan_shop_1'),
-                   InlineKeyboardButton(text='\U0001F451', callback_data='clan_shop_2'),
-                   InlineKeyboardButton(text='\U0001F69B', callback_data='clan_shop_3'))
+        markup.add(InlineKeyboardButton(text='\U0001F3EC', callback_data=cdata('clan_shop_1', c)),
+                   InlineKeyboardButton(text='\U0001F451', callback_data=cdata('clan_shop_2', c)),
+                   InlineKeyboardButton(text='\U0001F69B', callback_data=cdata('clan_shop_3', c)))
 
     return msg, markup
 
