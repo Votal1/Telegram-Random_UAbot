@@ -103,7 +103,7 @@ def re_roll(uid, change1, change2, change3):
     else:
         if change1:
             ran1 = randint(1, len(q1p) - 1)
-            while ran1 == change1:
+            while ran1 == -change1:
                 ran1 = randint(1, len(q1p) - 1)
             r.hset(uid, 'q1', -ran1, {'q1t': q1pt[ran1]})
 
@@ -111,7 +111,7 @@ def re_roll(uid, change1, change2, change3):
 
             if change2:
                 ran2 = randint(1, len(q2p) - 1)
-                while ran2 == change2:
+                while ran2 == -change2:
                     ran2 = randint(1, len(q2p) - 1)
                 r.hset(uid, 'q2', -ran2, {'q2t': q2pt[ran2]})
 
@@ -120,22 +120,22 @@ def re_roll(uid, change1, change2, change3):
             if change3:
                 if side == 1:
                     ran1 = randint(1, len(q31p) - 1)
-                    while ran1 == change3:
+                    while ran1 == -change3:
                         ran1 = randint(1, len(q31p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q31pt[ran1]})
                 elif side == 2:
                     ran1 = randint(1, len(q32p) - 1)
-                    while ran1 == change3:
+                    while ran1 == -change3:
                         ran1 = randint(1, len(q32p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q32pt[ran1]})
                 elif side == 3:
                     ran1 = randint(1, len(q33p) - 1)
-                    while ran1 == change3:
+                    while ran1 == -change3:
                         ran1 = randint(1, len(q33p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q33pt[ran1]})
                 elif side == 4:
                     ran1 = randint(1, len(q34p) - 1)
-                    while ran1 == change3:
+                    while ran1 == -change3:
                         ran1 = randint(1, len(q34p) - 1)
                     r.hset(uid, 'q3', -ran1, {'q3t': q34pt[ran1]})
 
