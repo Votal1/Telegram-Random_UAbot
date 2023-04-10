@@ -1397,9 +1397,9 @@ async def great_war(cid1, cid2, a, b):
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     msg1 = msg2 = msg
     if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:
-        msg1 += '\n\n/battle'
+        msg1 += '\n\n/war'
     if not r.hexists(f'c{cid2}', 'hints') or int(r.hget(f'c{cid2}', 'hints')) == 0:
-        msg2 += '\n\n/battle'
+        msg2 += '\n\n/war'
 
     await sleep(10)
 
