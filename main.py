@@ -3009,14 +3009,12 @@ async def status(message):
                 msg += '\U0001f7e9 /quest\n'
             elif int(q[1]) == 0 or int(q[2]) == 0 or int(q[3]) == 0:
                 msg += '\U0001f7e8 /quest\n'
-                if str(uid).encode() in r.smembers('sudoers'):
-                    markup.add(InlineKeyboardButton(text='\U0001F4F0 Змінити квести - \U0001F4B5 50',
-                                                    callback_data='re-roll'))
+                markup.add(InlineKeyboardButton(text='\U0001F4F0 Змінити квести - \U0001F4B5 50',
+                                                callback_data='re-roll'))
             else:
                 msg += '\U0001f7e5 /quest\n'
-                if str(uid).encode() in r.smembers('sudoers'):
-                    markup.add(InlineKeyboardButton(text='\U0001F4F0 Змінити квести - \U0001F4B5 50',
-                                                    callback_data='re-roll'))
+                markup.add(InlineKeyboardButton(text='\U0001F4F0 Змінити квести - \U0001F4B5 50',
+                                                callback_data='re-roll'))
         else:
             msg += '\U0001f7e5 /quest\n'
 
