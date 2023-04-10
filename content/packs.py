@@ -361,6 +361,9 @@ def check_slot(uid, cdata):
         if cl in (31, 32, 33):
             if s == 0:
                 return True
+        else:
+            if w == 0:
+                return True
     elif cdata.startswith('pack_rpg_'):
         if w in (0, 16):
             return True

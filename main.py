@@ -5201,14 +5201,14 @@ async def handle_query(call):
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
                 elif call.from_user.id == int(call.data.split('_')[2]):
-                    if check_slot(call.from_user.id, call.data):
-                        await bot.edit_message_text(call.message.text, call.message.chat.id,
-                                                    call.message.message_id, reply_markup=None)
-                        open_pack(call.from_user.id, call.data, call.message.text)
-                    else:
-                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Неможливо взяти спорядження, '
-                                                             'оскільки у вас вже є одне такого типу')
+                    #if check_slot(call.from_user.id, call.data):
+                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                call.message.message_id, reply_markup=None)
+                    open_pack(call.from_user.id, call.data, call.message.text)
+                    #else:
+                     #   await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                      #                                  text='Неможливо взяти спорядження, '
+                       #                                      'оскільки у вас вже є одне такого типу')
         except:
             pass
 
