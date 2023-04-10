@@ -3774,15 +3774,15 @@ async def handle_query(call):
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> <code>{mem.decode()}</code>\n'
 
-                quests = 0
+                quests_done = 0
                 if stats[6] and int(stats[6]) == today:
                     if int(stats[7]) == 0:
-                        quests += 1
+                        quests_done += 1
                     if int(stats[8]) == 0:
-                        quests += 1
+                        quests_done += 1
                     if int(stats[9]) == 0:
-                        quests += 1
-                msg += f'\U0001F4F0 {quests}/3'
+                        quests_done += 1
+                msg += f'\U0001F4F0 {quests_done}/3'
 
                 if stats[0]:
                     msg += f'{icons_simple[int(stats[2])]} \U0001F4AA {int(stats[0])}'
