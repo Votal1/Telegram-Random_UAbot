@@ -356,25 +356,31 @@ def check_slot(uid, cdata):
     cl, w, d, s, h = int(stats[0]), int(stats[1]), int(stats[2]), int(stats[3]), int(stats[4]),
     if cdata.startswith('pack_class_'):
         if cl in (6, 16, 26):
-            if w == 0:
+            if d in (0, 16, 17):
                 return True
-        if cl in (31, 32, 33):
-            if s == 0:
+        elif cl in (31, 32, 33):
+            if s in (0, 2, 9):
                 return True
         else:
-            if w == 0:
+            if w == 0 or 10 < w < 33:
                 return True
     elif cdata.startswith('pack_rpg_'):
-        if w in (0, 16):
+        if w in (0, 2, 16):
             return True
     elif cdata.startswith('pack_armor_'):
-        if d == 0:
+        if d in (0, 2):
             return True
-    elif cdata.startswith('pack_mushroom_') or cdata.startswith('pack_fish_'):
-        if s == 0:
+    elif cdata.startswith('pack_mushroom_'):
+        if s in (0, 6):
             return True
-    elif cdata.startswith('pack_foil_') or cdata.startswith('pack_jew_'):
-        if h == 0:
+    elif cdata.startswith('pack_fish_'):
+        if s in (0, 10):
+            return True
+    elif cdata.startswith('pack_foil_'):
+        if h in (0, 1):
+            return True
+    elif cdata.startswith('pack_jew_'):
+        if h in (0, 6):
             return True
     return False
 
