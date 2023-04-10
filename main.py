@@ -2737,9 +2737,6 @@ async def work(message):
                             if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
                                 r.hset(message.from_user.id, 'time', 0)
                                 resources += ' \U0001F372 +1'
-                        if cl == 36 and side == 1 and choices([1, 0], [20, 80]) == [1]:
-                            resources += '\n\U0001F916 +1'
-                            r.hincrby(c, 'codes', 1)
                             
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
