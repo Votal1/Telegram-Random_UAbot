@@ -3758,21 +3758,38 @@ async def handle_query(call):
         if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
                 str(call.from_user.id).encode() in r.smembers('sudoers'):
             msg = ''
+            today = datetime.now().day
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
-                if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:
+
+                stats = r.hmget(mem, 'strength', 'strength2', 'class', 'class2',
+                                'clan_time', 'firstname', 'qt', 'q1', 'q2', 'q3')
+
+                if stats[4] and int(stats[4]) == today:
                     msg += '\U0001f7e9 '
                 else:
                     msg += '\U0001f7e5 '
-                if r.hexists(mem, 'firstname'):
-                    name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
+                if stats[5]:
+                    name = stats[5].decode().replace('<', '.').replace('>', '.')
                 else:
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a> <code>{mem.decode()}</code>\n'
                 stats = r.hmget(mem, 'strength', 'strength2', 'class', 'class2')
+
+                quests = 0
+                if stats[6] and int(stats[6]) == today:
+                    if int(stats[7]) == 0:
+                        quests += 1
+                    if int(stats[8]) == 0:
+                        quests += 1
+                    if int(stats[9]) == 0:
+                        quests += 1
+                msg += f'\U0001F4F0 {quests}/3'
+
                 if stats[0]:
                     msg += f'{icons_simple[int(stats[2])]} \U0001F4AA {int(stats[0])}'
                     if stats[1]:
                         msg += f' {icons_simple[int(stats[3])]} \U0001F4AA {int(stats[1])}'
+
                 msg += '\n'
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, parse_mode='HTML')
     elif call.data.startswith('build'):
