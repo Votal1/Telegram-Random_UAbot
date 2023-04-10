@@ -1066,7 +1066,6 @@ async def war(cid, location, big_battle):
             if checkClan(win) and int(r.hget('c' + r.hget(win, 'clan').decode(), 'buff_4')) == 12:
                 q_points(win, 3)
                 reward += ' \U0001fa99 +3'
-        reward += '\n'
         r.hincrby(win, 'trophy', 1)
         r.hincrby('all_trophy', 'trophy', 1)
         r.hincrby(win, 'wins', 1)
@@ -1162,6 +1161,8 @@ async def war(cid, location, big_battle):
         # winners = r.srandmember('fighters' + str(cid), 3)
         for member in r.smembers('fighters' + str(cid)):
             r.hincrby(member, 'packs_2023')
+    if class_reward:
+        class_reward = '\n' + class_reward
 
     await sleep(10)
     r.hdel('battle' + str(cid), 'start')
