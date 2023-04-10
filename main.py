@@ -5340,16 +5340,16 @@ async def handle_query(call):
             if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                 if call.data.startswith('clan_shop_1'):
                     msg, markup = c_shop('c' + cid, 1)
-                    await bot.edit_message_text(msg, call.chat.id, call.message.message_id, reply_markup=markup)
+                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif call.data.startswith('clan_shop_2'):
                     msg, markup = c_shop('c' + cid, 2)
-                    await bot.edit_message_text(msg, call.chat.id, call.message.message_id, reply_markup=markup)
+                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif call.data.startswith('clan_shop_3'):
                     msg, markup = c_shop('c' + cid, 3)
-                    await bot.edit_message_text(msg, call.chat.id, call.message.message_id, reply_markup=markup)
+                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif call.data.startswith('clan_shop_4'):
                     msg, markup = c_shop('c' + cid, 4)
-                    await bot.edit_message_text(msg, call.chat.id, call.message.message_id, reply_markup=markup)
+                    await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
 
                 elif call.data.startswith('clan_fragment'):
                     if int(r.hget(call.from_user.id, 'money')) >= 15:
