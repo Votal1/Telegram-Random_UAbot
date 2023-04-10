@@ -3030,7 +3030,7 @@ async def status(message):
         else:
             msg += '\n\u231B Дуелі: 0/10000'
 
-    await message.reply(msg)
+    await message.reply(msg, reply_markup=markup)
 
 
 @dp.message_handler(commands=['commands'])
