@@ -50,22 +50,94 @@ q34p = ['', '\u26D1 Зменшити здоров`я до 0 в дуелях', '\
 q34pt = [0, 1, 1, 1]
 
 
-def re_roll(uid, change=0):
+def re_roll(uid, change1, change2, change3):
     head = int(r.hget(uid, 'head'))
     if head != 6:
-        ran1 = change
-        while ran1 == change:
+        if change1:
             ran1 = randint(1, len(q1) - 1)
             while int(r.hget(uid, 'time1')) == datetime.now().day and ran1 == 4:
                 ran1 = randint(1, len(q1) - 1)
-        r.hset(uid, 'q1', ran1, {'q1t': q1t[ran1]})
+            while ran1 == change1:
+                ran1 = randint(1, len(q1) - 1)
+                while int(r.hget(uid, 'time1')) == datetime.now().day and ran1 == 4:
+                    ran1 = randint(1, len(q1) - 1)
+            r.hset(uid, 'q1', ran1, {'q1t': q1t[ran1]})
+
+        if checkClan(uid, building='wall'):
+
+            if change2:
+                ran2 = randint(1, len(q2) - 1)
+                while ran2 == change2:
+                    ran2 = randint(1, len(q2) - 1)
+                r.hset(uid, 'q2', ran2, {'q2t': q2t[ran2]})
+
+            if change3:
+                side = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'side'))
+                if side == 1:
+                    ran1 = randint(1, len(q31) - 1)
+                    while int(r.hget(uid, 'clan_time')) == datetime.now().day and ran1 == 1:
+                        ran1 = randint(1, len(q31) - 1)
+                    while ran1 == change3:
+                        ran1 = randint(1, len(q31) - 1)
+                    r.hset(uid, 'q3', ran1, {'q3t': q31t[ran1]})
+                elif side == 2:
+                    ran1 = randint(1, len(q32) - 1)
+                    while int(r.hget(uid, 'time')) == datetime.now().day and ran1 == 2:
+                        ran1 = randint(1, len(q32) - 1)
+                    while ran1 == change3:
+                        ran1 = randint(1, len(q32) - 1)
+                    r.hset(uid, 'q3', ran1, {'q3t': q32t[ran1]})
+                elif side == 3:
+                    ran1 = randint(1, len(q33) - 1)
+                    while ran1 == change3:
+                        ran1 = randint(1, len(q33) - 1)
+                    r.hset(uid, 'q3', ran1, {'q3t': q33t[ran1]})
+                elif side == 4:
+                    ran1 = randint(1, len(q34) - 1)
+                    while int(r.hget(uid, 'salt')) < 5 and ran1 == 2:
+                        ran1 = randint(1, len(q34) - 1)
+                    while ran1 == change3:
+                        ran1 = randint(1, len(q34) - 1)
+                    r.hset(uid, 'q3', ran1, {'q3t': q34t[ran1]})
+
     else:
-        if not change:
-            damage_head(uid)
-        ran1 = change
-        while ran1 == change:
+        if change1:
             ran1 = randint(1, len(q1p) - 1)
-        r.hset(uid, 'q1', -ran1, {'q1t': q1pt[ran1]})
+            while ran1 == change1:
+                ran1 = randint(1, len(q1p) - 1)
+            r.hset(uid, 'q1', -ran1, {'q1t': q1pt[ran1]})
+
+        if checkClan(uid, building='wall'):
+
+            if change2:
+                ran2 = randint(1, len(q2p) - 1)
+                while ran2 == change2:
+                    ran2 = randint(1, len(q2p) - 1)
+                r.hset(uid, 'q2', -ran2, {'q2t': q2pt[ran2]})
+
+            side = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'side'))
+
+            if change3:
+                if side == 1:
+                    ran1 = randint(1, len(q31p) - 1)
+                    while ran1 == change1:
+                        ran1 = randint(1, len(q31p) - 1)
+                    r.hset(uid, 'q3', -ran1, {'q3t': q31pt[ran1]})
+                elif side == 2:
+                    ran1 = randint(1, len(q32p) - 1)
+                    while ran1 == change1:
+                        ran1 = randint(1, len(q32p) - 1)
+                    r.hset(uid, 'q3', -ran1, {'q3t': q32pt[ran1]})
+                elif side == 3:
+                    ran1 = randint(1, len(q33p) - 1)
+                    while ran1 == change1:
+                        ran1 = randint(1, len(q33p) - 1)
+                    r.hset(uid, 'q3', -ran1, {'q3t': q33pt[ran1]})
+                elif side == 4:
+                    ran1 = randint(1, len(q34p) - 1)
+                    while ran1 == change1:
+                        ran1 = randint(1, len(q33p) - 1)
+                    r.hset(uid, 'q3', -ran1, {'q3t': q34pt[ran1]})
 
 
 def quests(uid):
