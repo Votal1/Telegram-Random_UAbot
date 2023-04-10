@@ -2432,9 +2432,10 @@ async def build(message):
 @dp.message_handler(commands=['clan_shop'])
 async def clan_shop(message):
     try:
-        if str(message.from_user.id).encode() in r.smembers('cl' + str(message.chat.id)):
-            c = 'c' + str(message.chat.id)
-            if int(r.hget(c, 'shop')) == 1:
+        uid = message.from_user.id
+        if str(uid).encode() in r.smembers('cl' + str(message.chat.id)) or message.chat.type == 'private':
+            if checkClan(uid, building='shop'):
+                c = 'c' + str(int(r.hget(message.from_user.id, 'clan')))
                 msg, markup = c_shop(c, 1)
                 await message.answer(msg, reply_markup=markup)
     except:
@@ -5338,45 +5339,41 @@ async def handle_query(call):
             cid = call.data.split('_')[-1]
             if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                 if call.data.startswith('clan_shop_1'):
-                    msg, markup = c_shop('c' + str(call.message.chat.id), 1)
+                    msg, markup = c_shop('c' + cid, 1)
                     await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif call.data.startswith('clan_shop_2'):
-                    msg, markup = c_shop('c' + str(call.message.chat.id), 2)
+                    msg, markup = c_shop('c' + cid, 2)
                     await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif call.data.startswith('clan_shop_3'):
-                    msg, markup = c_shop('c' + str(call.message.chat.id), 3)
+                    msg, markup = c_shop('c' + cid, 3)
                     await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
                 elif call.data.startswith('clan_shop_4'):
-                    msg, markup = c_shop('c' + str(call.message.chat.id), 4)
+                    msg, markup = c_shop('c' + cid, 4)
                     await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
 
                 elif call.data.startswith('clan_fragment'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
-                        if int(r.hget(call.from_user.id, 'money')) >= 15:
-                            quest(call.from_user.id, 3, 3, 1)
-                            if int(r.hget(call.from_user.id, 'defense')) == 0 or int(r.hget(call.from_user.id, 'defense')) == 1:
-                                r.hset(call.from_user.id, 'defense', 9)
-                                r.hset(call.from_user.id, 's_defense', 7)
-                                r.hincrby(call.from_user.id, 'money', -15)
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='Ви успішно купили уламок бронетехніки')
-                            elif int(r.hget(call.from_user.id, 's_defense')) < 50:
-                                r.hincrby(call.from_user.id, 's_defense', 7)
-                                r.hincrby(call.from_user.id, 'money', -15)
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='Ви успішно купили уламок бронетехніки')
-                            else:
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='Ваша броня вже достатньо міцна')
+                    if int(r.hget(call.from_user.id, 'money')) >= 15:
+                        quest(call.from_user.id, 3, 3, 1)
+                        if int(r.hget(call.from_user.id, 'defense')) == 0 or int(r.hget(call.from_user.id, 'defense')) == 1:
+                            r.hset(call.from_user.id, 'defense', 9)
+                            r.hset(call.from_user.id, 's_defense', 7)
+                            r.hincrby(call.from_user.id, 'money', -15)
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='Ви успішно купили уламок бронетехніки')
+                        elif int(r.hget(call.from_user.id, 's_defense')) < 50:
+                            r.hincrby(call.from_user.id, 's_defense', 7)
+                            r.hincrby(call.from_user.id, 'money', -15)
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='Ви успішно купили уламок бронетехніки')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо коштів на рахунку.')
+                                                            text='Ваша броня вже достатньо міцна')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Клановий магазин тільки для учасників клану.')
+                                                        text='Недостатньо коштів на рахунку.')
 
                 elif call.data.startswith('clan_helmet'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 40:
                             if int(r.hget(call.from_user.id, 'head')) == 0:
                                 r.hset(call.from_user.id, 'head', 2)
@@ -5395,7 +5392,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_bombs'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 20:
                             if int(r.hget(call.from_user.id, 'defense')) == 0:
                                 r.hset(call.from_user.id, 'defense', 3)
@@ -5414,7 +5411,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_lash'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 60:
                             if int(r.hget(call.from_user.id, 'weapon')) == 0:
                                 r.hset(call.from_user.id, 'weapon', 3)
@@ -5434,7 +5431,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_mushroom'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 100:
                             mushroom = int(r.hget(call.from_user.id, 'mushrooms'))
                             if int(r.hget(call.from_user.id, 'class')) in (18, 28):
@@ -5465,7 +5462,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_diesel'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'class')) in (31, 32, 33):
                             if int(r.hget(call.from_user.id, 'money')) >= 20:
                                 if int(r.hget(call.from_user.id, 'support')) == 0:
@@ -5489,7 +5486,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_ak'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 15:
                             if int(r.hget(call.from_user.id, 'weapon')) == 0:
                                 r.hset(call.from_user.id, 'weapon', 15)
@@ -5508,7 +5505,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_ear'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 20:
                             if int(r.hget(call.from_user.id, 'head')) == 0:
                                 r.hset(call.from_user.id, 'head', 4)
@@ -5528,7 +5525,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_sugar'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 55:
                             if int(r.hget(call.from_user.id, 'support')) == 0:
                                 r.hset(call.from_user.id, 'support', 7)
@@ -5548,7 +5545,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_kvs'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 15:
                             if int(r.hget(call.from_user.id, 'support')) == 0:
                                 r.hset(call.from_user.id, 'support', 8)
@@ -5568,7 +5565,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_foil'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 50:
                             if int(r.hget(call.from_user.id, 'head')) == 0:
                                 r.hset(call.from_user.id, 'head', 1)
@@ -5588,7 +5585,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_children'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 100:
                             r.hincrby(call.from_user.id, 'money', -100)
                             r.hincrby(call.from_user.id, 'childs', 1)
@@ -5604,7 +5601,7 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_uav'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
                         if int(r.hget(call.from_user.id, 'money')) >= 50:
                             if int(r.hget(call.from_user.id, 'weapon')) == 0:
                                 r.hset(call.from_user.id, 'weapon', 5)
@@ -5623,8 +5620,8 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_ration'):
-                    if str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
-                        price = 4 if int(r.hget('c' + str(call.message.chat.id), 'side')) == 1 else 10
+                    if str(call.from_user.id).encode() in r.smembers('cl' + cid):
+                        price = 4 if int(r.hget('c' + cid, 'side')) == 1 else 10
                         if int(r.hget(call.from_user.id, 'money')) >= price:
                             r.hincrby(call.from_user.id, 'money', -price)
                             ran = randint(1, 3)
@@ -5665,12 +5662,12 @@ async def handle_query(call):
                                                         text='Клановий магазин тільки для учасників клану.')
 
                 elif call.data.startswith('clan_monument'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'r_spirit')) >= 10:
                             r.hincrby(c, 'r_spirit', -10)
                             s = 1 if int(r.hget(c, 'side')) == 2 else 0
-                            for mem in r.smembers('cl' + str(call.message.chat.id)):
+                            for mem in r.smembers('cl' + cid):
                                 try:
                                     quest(mem, 2, -2)
                                     increase_trance(5, mem)
@@ -5687,12 +5684,12 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_spike'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 100:
                             r.hincrby(c, 'wood', -200)
                             r.hincrby(c, 'stone', -100)
-                            for mem in r.smembers('cl' + str(call.message.chat.id)):
+                            for mem in r.smembers('cl' + cid):
                                 if int(r.hget(mem, 'weapon')) == 0:
                                     r.hset(mem, 'weapon', 1)
                                     r.hset(mem, 's_weapon', 1)
@@ -5708,11 +5705,11 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_vodka'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 300:
                             r.hincrby(c, 'money', -300)
-                            for mem in r.smembers('cl' + str(call.message.chat.id)):
+                            for mem in r.smembers('cl' + cid):
                                 if int(r.hget(mem, 'clan_time')) == datetime.now().day:
                                     r.hincrby(mem, 'vodka', 9)
                                     r.hincrby('all_vodka', 'vodka', 9)
@@ -5726,7 +5723,7 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_rpg'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 100:
                             if int(r.hget(call.from_user.id, 'weapon')) == 0:
@@ -5747,7 +5744,7 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер.')
 
                 elif call.data.startswith('clan_armor'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 50:
                             if int(r.hget(call.from_user.id, 'defense')) == 0:
@@ -5768,12 +5765,12 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_watermelon'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 200 and int(r.hget(c, 'r_spirit')) >= 50:
                             r.hincrby(c, 'money', -200)
                             r.hincrby(c, 'r_spirit', -50)
-                            for mem in r.smembers('cl' + str(call.message.chat.id)):
+                            for mem in r.smembers('cl' + cid):
                                 if int(r.hget(mem, 'head')) == 0:
                                     r.hset(mem, 'head', 3)
                                     r.hset(mem, 's_head', 1)
@@ -5787,14 +5784,14 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_heal'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 10 and int(r.hget(c, 'r_spirit')) >= 1:
                             r.hincrby(c, 'money', -10)
                             r.hincrby(c, 'r_spirit', -1)
                             ran1 = randint(5, 10)
                             ran2 = randint(5, 10)
-                            for mem in r.smembers('cl' + str(call.message.chat.id)):
+                            for mem in r.smembers('cl' + cid):
                                 hp(100, mem)
                                 r.hincrby(mem, 'injure', -ran1)
                                 r.hincrby(mem, 'sch', -ran2)
@@ -5811,13 +5808,13 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_money'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 10:
                             r.hincrby(c, 'money', -500)
                             r.hincrby(c, 'r_spirit', -10)
                             rating = {}
-                            for mem in r.smembers('cl' + str(call.message.chat.id)):
+                            for mem in r.smembers('cl' + cid):
                                 rating.update({mem: int(r.hget(mem, 'money'))})
                             s_rating = sorted(rating, key=rating.get, reverse=False)
                             n = 0
@@ -5835,7 +5832,7 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_sell_'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if call.data.startswith('clan_sell_wood') and int(r.hget(c, 'wood')) >= 7500:
                             r.hincrby(c, 'money', 500)
@@ -5882,7 +5879,7 @@ async def handle_query(call):
                                                         text='Це може зробити тільки лідер чи заступник.')
 
                 elif call.data.startswith('clan_buy_'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'money')) >= 2000:
                             if call.data.startswith('clan_buy_wood') and int(r.hget('resources', 'wood')) >= 1500:
@@ -5921,7 +5918,7 @@ async def handle_query(call):
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Це може зробити тільки лідер чи заступник.')
                 elif call.data.startswith('clan_buff'):
-                    c = 'c' + str(call.message.chat.id)
+                    c = 'c' + cid
                     if checkClan(call.from_user.id) and checkLeader(call.from_user.id, call.message.chat.id):
                         if int(r.hget(c, 'war')) == 1:
                             if call.data.startswith('clan_buff_1'):
