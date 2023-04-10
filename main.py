@@ -3722,6 +3722,18 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Сповіщення змінено.')
 
+    elif call.data.startswith('hints'):
+        c = int(r.hget(call.from_user.id, 'clan'))
+        if checkClan(call.from_user.id) and checkLeader(call.from_user.id, c):
+            if int(r.hget('c' + str(c), 'hints')) == 0:
+                r.hset('c' + str(c), 'hints', 1)
+            else:
+                r.hset('c' + str(c), 'hints', 0)
+            await bot.edit_message_text(auto_clan_settings('c' + str(c)), call.message.chat.id,
+                                        call.message.message_id, reply_markup=clan_set())
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Налаштування підказок змінені.')
+
     elif call.data.startswith('get_members'):
         uid = call.from_user.id
         if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
