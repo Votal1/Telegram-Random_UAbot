@@ -280,7 +280,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 inj = 10
                 if weapon2 == 30:
                     inj = 15
-                if injure1 >= sch1:
+                if injure1 >= 4:
                     stat = 'injure'
                     weapon = f'\n\n\U0001F5E1 {names[name2]} припинив ворогу кровотечу.\n' \
                              f'\U0001fa78 -{inj} \U0001fac0 -10'
