@@ -14,7 +14,7 @@ from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, 
     wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
 
 
-from constants.names import names
+from constants.names import names, names_case
 from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
@@ -1665,7 +1665,8 @@ async def swap(message):
                     r.hset(message.from_user.id, 'time22', a1)
                     r.hset(message.from_user.id, 'time1', b2)
                     r.hset(message.from_user.id, 'time23', a2)
-                await message.reply('Бойового русака змінено.')
+
+                await message.reply(f'{icons_simple[int(a[9])]} Бойового русака змінено на {names_case[int(a[0])]}.')
             else:
                 await message.reply('\U0001F3DA Візьми русака, щоб змінити його на другого'
                                     '.\n\nРусака можна отримати, сходивши на \n/donbass')
