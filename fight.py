@@ -1286,7 +1286,7 @@ async def war_power(sett, cid):
 
 
 def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
-    reward = '4'
+    reward, packs = '4', 0
     if cid1 == -1001211933154:
         money = randint(4, 15)
         reward = str(money)
@@ -1295,7 +1295,14 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
         if int(r.hget('c' + str(cid1), 'side')) == 2:
             r_spirit += 2
             if general > 0:
-                r_spirit += 1
+                if choices([0, 1], weights=[85, 15])[0] == 1 and r.hget(222, cid1):
+                    packs = int(r.hget(222, cid1)) // 1000
+                    if packs >= 2:
+                        packs = 3
+                    elif packs == 1:
+                        packs = 2
+                    else:
+                        packs = 1
                 if int(r.hget('c' + str(cid1), 'build3')) == 2:
                     r_spirit += 1
         if int(r.hget('c' + str(cid1), 'side')) == 4:
@@ -1309,10 +1316,13 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
     if clan == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
         money += 4
         reward = f'{money} \U0001F47E +{r_spirit}'
+        if packs:
+            reward += f' \U0001F4E6 +{packs}'
     for n in members:
         r.hincrby(n, 'trophy', 1)
         r.hincrby(n, 'wins', 1)
         r.hincrby(n, 'money', money)
+        r.hincrby(n, 'packs', packs)
         quest(n, 3, 1, 2)
     r.hincrby('all_trophy', 'trophy', 5)
     r.hincrby(222, cid1, 1)
