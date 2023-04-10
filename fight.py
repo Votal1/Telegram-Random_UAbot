@@ -1170,9 +1170,11 @@ async def war(cid, location, big_battle):
     end = ' завершена.'
     if location in ('Штурм Горлівки', 'Штурм ДАП', 'Розгром командного пункту'):
         end = ' завершено.'
+    msg = location + end + winner + reward + class_reward
+    if not r.hexists(f'c{cid}', 'hints') or int(r.hget(f'c{cid}', 'hints')) == 0:
+        msg += '\n\n/battle'
     await bot.delete_message(m.chat.id, m.message_id)
-    await bot.send_message(cid, location + end + winner + reward + class_reward,
-                           parse_mode='HTML', disable_web_page_preview=True)
+    await bot.send_message(cid, msg, parse_mode='HTML', disable_web_page_preview=True)
 
 
 async def war_power(sett, cid):
@@ -1393,6 +1395,12 @@ async def great_war(cid1, cid2, a, b):
                     r.hincrby('c' + str(cid2), 'points', ran)
                     reward += f' \U0001fa99 +{ran}'
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
+    msg1 = msg2 = msg
+    if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:
+        msg1 += '\n\n/battle'
+    if not r.hexists(f'c{cid2}', 'hints') or int(r.hget(f'c{cid2}', 'hints')) == 0:
+        msg2 += '\n\n/battle'
+
     await sleep(10)
 
     r.hdel('war_battle' + str(cid1), 'start')
@@ -1406,8 +1414,8 @@ async def great_war(cid1, cid2, a, b):
     r.srem('started_battles', cid1)
     r.srem('started_battles', cid2)
 
-    await bot.send_message(cid1, msg, disable_web_page_preview=True)
-    await bot.send_message(cid2, msg, disable_web_page_preview=True)
+    await bot.send_message(cid1, msg1, disable_web_page_preview=True)
+    await bot.send_message(cid2, msg2, disable_web_page_preview=True)
 
 
 async def guard_power(mid):
