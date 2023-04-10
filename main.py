@@ -4334,7 +4334,7 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви вже достатньо псих.')
 
-    elif call.data.startswith('re-roll'):
+    elif call.data.startswith('re-roll') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'qt')) == datetime.now().day:
             q1 = int(r.hget(call.from_user.id, 'q1'))
             q2 = int(r.hget(call.from_user.id, 'q2'))
