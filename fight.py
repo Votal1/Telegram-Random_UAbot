@@ -1315,11 +1315,11 @@ async def great_war(cid1, cid2, a, b):
 
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward = '3'
-    money = 3
+    money = 4
     r_spirit = 1
     if win == ['a']:
         if cid1 == -1001211933154:
-            money = randint(3, 10)
+            money = randint(4, 15)
             reward = str(money)
         msg += r.hget('war_battle' + str(cid1), 'title').decode()
         try:
@@ -1331,11 +1331,11 @@ async def great_war(cid1, cid2, a, b):
                         r_spirit += 1
             if int(r.hget('c' + str(cid1), 'side')) == 4:
                 if gen12 > 0:
-                    money += 3
+                    money += 4
         except:
             pass
         if clan1 == 5 and int(r.hget('c' + str(cid1), 'base')) > 1:
-            money += 3
+            money += 4
             reward = f'{money} \U0001F47E +{r_spirit}'
         for n in a:
             r.hincrby(n, 'trophy', 1)
@@ -1358,7 +1358,7 @@ async def great_war(cid1, cid2, a, b):
                     reward += f' \U0001fa99 +{ran}'
     elif win == ['b']:
         if cid2 == -1001211933154:
-            money = randint(3, 10)
+            money = randint(4, 15)
             reward = str(money)
         msg += r.hget('war_battle' + str(cid2), 'title').decode()
         try:
@@ -1370,11 +1370,11 @@ async def great_war(cid1, cid2, a, b):
                         r_spirit += 1
             if int(r.hget('c' + str(cid2), 'side')) == 4:
                 if gen22 > 0:
-                    money += 3
+                    money += 4
         except:
             pass
         if clan2 == 5 and int(r.hget('c' + str(cid2), 'base')) > 1:
-            money += 3
+            money += 4
             reward = f'{money} \U0001F47E +{r_spirit}'
         for n in b:
             r.hincrby(n, 'trophy', 1)
