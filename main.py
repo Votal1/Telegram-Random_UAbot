@@ -23,7 +23,7 @@ from content.inventory import show_inventory, drop_item, change_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, check_slot, open_gift
-from content.quests import quests, quest
+from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
 
 from cloudscraper import create_scraper
@@ -2956,6 +2956,7 @@ async def status(message):
     uid = message.from_user.id
     day = datetime.now().day
     msg = ''
+    markup = InlineKeyboardMarkup()
 
     if r.hexists(uid, 'time'):
         if int(r.hget(uid, 'time')) == day:
@@ -3008,8 +3009,14 @@ async def status(message):
                 msg += '\U0001f7e9 /quest\n'
             elif int(q[1]) == 0 or int(q[2]) == 0 or int(q[3]) == 0:
                 msg += '\U0001f7e8 /quest\n'
+                if str(uid).encode() in r.smembers('sudoers'):
+                    markup.add(InlineKeyboardButton(text='\U0001F4F0 Змінити квести - \U0001F4B5 50',
+                                                    callback_data='re-roll'))
             else:
                 msg += '\U0001f7e5 /quest\n'
+                if str(uid).encode() in r.smembers('sudoers'):
+                    markup.add(InlineKeyboardButton(text='\U0001F4F0 Змінити квести - \U0001F4B5 50',
+                                                    callback_data='re-roll'))
         else:
             msg += '\U0001f7e5 /quest\n'
 
@@ -4326,6 +4333,27 @@ async def handle_query(call):
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви вже достатньо псих.')
+
+    elif call.data.startswith('re-roll'):
+        if int(r.hget(call.from_user.id, 'qt')) != datetime.now().day:
+            q1 = int(r.hget(call.from_user.id, 'q1'))
+            q2 = int(r.hget(call.from_user.id, 'q2'))
+            q3 = int(r.hget(call.from_user.id, 'q3'))
+            if q1 == 0 or q2 == 0 or q3 == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 50:
+                    r.hincrby(call.from_user.id, 'money', -50)
+                    re_roll(call.from_user.id, q1)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='У вас тепер нові квести')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо коштів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Всі квести вже виконані')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Прострочені квести, візьми нові')
 
     elif call.data.startswith('20_vodka'):
         if int(r.hget(call.from_user.id, 'money')) >= 50:
