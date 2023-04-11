@@ -10,7 +10,7 @@ def wiki_text(data):
                    InlineKeyboardButton(text='\U0001F4C8 Розвиток', callback_data='wiki_grow_feed'),
                    InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
         markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
-                   InlineKeyboardButton(text='\U0001F9ED Рівні', callback_data='wiki_clan'),
+                   InlineKeyboardButton(text='\U0001F9ED Напрями', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
         msg = '\U0001F1FA\U0001F1E6 @Random_UAbot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
