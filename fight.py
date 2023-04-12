@@ -272,10 +272,6 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if injure1 == 0 and sch1 < 4:
                 r.hincrby(uid1, 'injure', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
-                if weapon2 == 30:
-                    r.hincrby(uid1, 's_defense', -3)
-                    if int(r.hget(uid1, 's_defense')) <= 0:
-                        r.hset(uid1, 's_defense', 0, {'defense': 0})
             elif injure1 >= 4 or sch1 >= 4:
                 inj = 10
                 if weapon2 == 30:
