@@ -6072,6 +6072,8 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Клановий магазин тільки для учасників клану.')
 
+    await call.answer()
+
 
 @dp.message_handler()
 async def echo(message):
