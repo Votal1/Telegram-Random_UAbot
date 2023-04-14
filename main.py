@@ -3221,7 +3221,7 @@ async def handle_query(call):
                     if cdata[1] == 'tr':
                         if r.hexists(uid1, 't_ts') == 0:
                             r.hset(uid1, 't_ts', 0)
-                        if timestamp - float(r.hget(uid1, 't_ts')) < 30:
+                        if timestamp - float(r.hget(uid1, 't_ts')) < 60:
                             pass
                         else:
                             r.hset(uid1, 't_ts', timestamp)
