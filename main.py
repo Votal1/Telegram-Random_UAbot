@@ -3222,7 +3222,7 @@ async def handle_query(call):
                         if r.hexists(uid1, 't_ts') == 0:
                             r.hset(uid1, 't_ts', 0)
                         if timestamp - float(r.hget(uid1, 't_ts')) < 15:
-                            await call.answer()
+                            pass
                         else:
                             r.hset(uid1, 't_ts', timestamp)
                             try:
@@ -6072,7 +6072,7 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Клановий магазин тільки для учасників клану.')
 
-    await call.answer()
+    #  await call.answer()
 
 
 @dp.message_handler()
