@@ -3225,7 +3225,6 @@ async def handle_query(call):
                             pass
                         else:
                             r.hset(uid1, 't_ts', timestamp)
-                            await bot.send_message(456514639, str(timestamp - float(r.hget(uid1, 't_ts'))) + '\n' + str(call))
                             try:
                                 q = cdata[2].split()
                                 uname = q[1][1:].lower()
@@ -6073,7 +6072,7 @@ async def handle_query(call):
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Клановий магазин тільки для учасників клану.')
 
-    await call.answer()
+    #  await call.answer()
 
 
 @dp.message_handler()
