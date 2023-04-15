@@ -50,6 +50,8 @@ def shop_msg(uid, mode):
                  '\U0001F393 Курс перекваліфікації - \U0001F31F 3': 'course',
                  '\U0001F3E0 Велике будівництво - \U0001F31F 3': 'fast_cellar',
                  '\U0001F392 Тактичний рюкзак - \U0001F31F 5': 'expand_backpack'}
+        markup.add(InlineKeyboardButton(text='🧺 5 - \U0001F31F 1', callback_data='premium_basket'),
+                   InlineKeyboardButton(text='🧂  5- \U0001F31F 1', callback_data='premium_salt'))
         markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
                    InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
                    InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium4'))

@@ -4993,6 +4993,26 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
+    elif call.data.startswith('premium_basket'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'packs_2023_2', 5)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно замовили 5 донбаських кошиків')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('premium_salt'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'salt', 5)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно замовили 5 солі')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
+
     elif call.data.startswith('jew'):
         if int(r.hget(call.from_user.id, 'head')) == 0:
             if int(r.hget(call.from_user.id, 'strap')) >= 1:
