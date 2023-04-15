@@ -1865,7 +1865,7 @@ async def start_raid(cid):
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) == 7:
+                        if int(r.hget(mem, 'support')) in (7, 12):
                             r.hincrby(mem, 's_support', s)
                         elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
                             r.hset(mem, 'support', 7)
@@ -1909,7 +1909,7 @@ async def start_raid(cid):
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
                     for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) == 7:
+                        if int(r.hget(mem, 'support')) in (7, 12):
                             r.hincrby(mem, 's_support', s)
                         elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
                             r.hset(mem, 'support', 7)
