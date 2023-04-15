@@ -3262,21 +3262,37 @@ async def handle_query(call):
                     await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
                                                 disable_web_page_preview=True)
 
-    elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start') == 1:
+    elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start'):
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
             fighters = r.scard('fighters' + str(call.message.chat.id))
+
+            ts = int(datetime.now().timestamp())
+            if r.hexists('battle' + str(call.message.chat.id), 'edit_ts'):
+                r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
+
+
             if fighters == 1:
-                await bot.edit_message_text(
-                    text=call.message.text + '\n\nБійці: ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                    message_id=call.message.message_id, reply_markup=battle_button(), disable_web_page_preview=True)
+                if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2:
+                    await bot.edit_message_text(
+                        text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
+                        chat_id=call.message.chat.id,
+                        message_id=call.message.message_id,
+                        reply_markup=battle_button(),
+                        disable_web_page_preview=True)
+                    r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
             elif 5 <= fighters <= 9 and call.message.chat.id != -1001211933154:
-                await bot.edit_message_text(
-                    text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                    message_id=call.message.message_id, reply_markup=battle_button_2(), disable_web_page_preview=True)
+                if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2:
+                    await bot.edit_message_text(
+                        text=call.message.text + ', ' + call.from_user.first_name,
+                        chat_id=call.message.chat.id,
+                        message_id=call.message.message_id,
+                        reply_markup=battle_button_2(),
+                        disable_web_page_preview=True)
+                    r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
             elif fighters >= 10:
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name + '\n\nБій почався...',
