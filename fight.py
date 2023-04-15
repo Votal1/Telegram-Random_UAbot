@@ -638,6 +638,25 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         else:
             win = choices(['1', '2'], weights=[chance1, chance2])
 
+        if support1 == 11 and support2 != 11 and t == 1:
+            if support2:
+                win = ['1']
+                damage_support(uid1)
+                support += f'\n\n📝 {names[name2]} втік з поля бою!'
+            else:
+                r.hset(uid2, 'support', 11, {'s_support': r.hget(uid1, 's_support')})
+                r.hset(uid1, 'support', 0, {'s_support': 0})
+                support += f'\n\n📝 {names[name1]} вручив ворогу повістку!'
+        if support2 == 11 and support1 != 11 and t == 1:
+            if support1:
+                win = ['2']
+                damage_support(uid2)
+                support += f'\n\n📝 {names[name1]} втік з поля бою!'
+            else:
+                r.hset(uid1, 'support', 11, {'s_support': r.hget(uid2, 's_support')})
+                r.hset(uid2, 'support', 0, {'s_support': 0})
+                support += f'\n\n📝 {names[name2]} вручив ворогу повістку!'
+
         if t == 5:
             if len(defense) > 0:
                 defense = ' \U0001F6E1'
