@@ -549,8 +549,12 @@ def open_gift2(uid, cdata, edit, cid):
                         r.hincrby(uid, 's_support', 2)
                 elif ran == [5]:
                     msg = '\U0001f535 Ти думав що тут буде їжа? Тримай повістку!'
-                    r.hset(uid, 'support', 11)
-                    r.hset(uid, 's_support', 10)
+                    if int(r.hget(uid, 'support')) == 0:
+                        r.hset(uid, 'support', 11)
+                        r.hset(uid, 's_support', 10)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти повістку',
+                                                        callback_data=f'gift_notice_{uid}'))
                 elif ran == [6]:
                     increase_trance(20, uid)
                     msg = f'\U0001f535 В цьому кошику знаходяться кілька тарілок з сиром!\n' \
@@ -598,6 +602,11 @@ def open_gift2(uid, cdata, edit, cid):
             else:
                 r.hset(uid, 'weapon', 6)
                 r.hset(uid, 's_weapon', 10)
+            return edit, None
+
+        elif cdata.startswith('gift_notice_'):
+            r.hset(uid, 'support', 11)
+            r.hset(uid, 's_support', 10)
             return edit, None
 
         else:
