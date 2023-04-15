@@ -3299,6 +3299,7 @@ async def handle_query(call):
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
                     message_id=call.message.message_id, reply_markup=battle_button(), disable_web_page_preview=True)
+            await call.answer()
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ти або вже в битві, або в тебе відсутній русак')
