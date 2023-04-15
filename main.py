@@ -22,7 +22,7 @@ from content.buttons import battle_button, battle_button_2, battle_button_3, \
 from content.inventory import show_inventory, drop_item, change_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack, check_slot, open_gift
+from content.packs import open_pack, check_slot, open_gift2
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
 
@@ -1515,10 +1515,10 @@ async def pack(message):
 @dp.message_handler(commands=['gift'])
 async def pack(message):
     if r.hexists(message.from_user.id, 'name'):
-        if r.hexists(message.from_user.id, 'packs_2023'):
-            packs = int(r.hget(message.from_user.id, 'packs_2023'))
+        if r.hexists(message.from_user.id, 'packs_2023_2'):
+            packs = int(r.hget(message.from_user.id, 'packs_2023_2'))
             if packs != 0:
-                await message.reply('\U0001F381 Донбаські подарунки: ' + str(packs) + '\n\nВідкрити?',
+                await message.reply('🧺 Донбаські кошики: ' + str(packs) + '\n\nВідкрити?',
                                     reply_markup=gift_unpack(message.from_user.id))
 
 
@@ -5294,14 +5294,14 @@ async def handle_query(call):
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
                 if call.data.startswith('gift_unpack'):
-                    msg = open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
+                    msg = open_gift2(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                     if msg:
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
                 elif call.from_user.id == int(call.data.split('_')[2]):
                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                 call.message.message_id, reply_markup=None)
-                    open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
+                    open_gift2(call.from_user.id, call.data, call.message.text, call.message.chat.id)
         except:
             pass
 

@@ -503,3 +503,105 @@ def open_gift(uid, cdata, edit, cid):
 
     return False
 
+
+def open_gift2(uid, cdata, edit, cid):
+    markup = InlineKeyboardMarkup()
+    msg = ''
+    if uid == int(cdata.split('_')[2]):
+        if cdata.startswith('gift_unpack_'):
+            if r.hexists(uid, 'packs_2023_2') and int(r.hget(uid, 'packs_2023_2')) > 0:
+                r.hincrby(uid, 'packs_2023_2', -1)
+                r.hincrby(uid, 'opened', 1)
+                r.hincrby('baskets_2023', uid, 1)
+
+                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                              weights=[20, 18, 15, 10, 10, 10, 3, 3, 3, 3, 2, 2, 1])
+                if ran == [1]:
+                    ran = randint(1, 5)
+                    if ran == 1:
+                        r.hincrby(uid, 'strength', 1)
+                        msg = '\u26AA В кошику лежить шматочок ковбаси.\n\U0001F4AA +1'
+                    elif ran == 2:
+                        r.hincrby(uid, 'injure', 1)
+                        msg = '\u26AA В кошику лежить хрін.\n\U0001fa78 +1'
+                    elif ran == 3:
+                        r.hincrby(uid, 'sch', 1)
+                        msg = '\u26AA В кошику горить свічка.\n\U0001F464 +1'
+                    elif ran == 4:
+                        increase_trance(1, uid)
+                        msg = '\u26AA В кошику лежить одне яйце.\n\U0001F44A +1'
+                    elif ran == 5:
+                        hp(1, uid)
+                        msg = '\u26AA В кошику лежить шматок масла.\n\U0001fac0 +1'
+                elif ran == [2]:
+                    spirit(3000, uid, 0)
+                    msg = '\u26AA У цьому кошику лежить смачна паска.\n\U0001F54A +3000'
+                elif ran == [3]:
+                    msg = '\u26AA В кошику було кілька крашанок. В одній з них захована заначка.' \
+                          '\n\U0001F4B5 50 гривень'
+                    r.hincrby(uid, 'money', 50)
+                elif ran == [4]:
+                    msg = '\U0001f535 Хтось поклав у цей кошик цукерки Рошен...\n\U0001F9EA +2'
+                    if int(r.hget(uid, 'support')) == 0:
+                        r.hset(uid, 'support', 12)
+                        r.hset(uid, 's_support', 1)
+                    elif int(r.hget(uid, 'support')) not in (6, 10, 11):
+                        r.hincrby(uid, 's_support', 2)
+                elif ran == [5]:
+                    msg = '\U0001f535 Ти думав що тут буде їжа? Тримай повістку!'
+                    r.hset(uid, 'support', 11)
+                    r.hset(uid, 's_support', 10)
+                elif ran == [6]:
+                    increase_trance(20, uid)
+                    msg = f'\U0001f535 В цьому кошику знаходяться кілька тарілок з сиром!\n' \
+                          f'\U0001F44A +20'
+                elif ran == [7]:
+                    msg = '\U0001f7e3 В цьому подарунку знаходиться багато шинки\n\U0001F957 +1'
+                    r.hset(uid, 'time', 0)
+                elif ran == [8]:
+                    ran = randint(1, 5)
+                    r.hincrby(uid, 'salt', ran)
+                    msg = f'\U0001f7e3 В цьому кошику знайдено стаканчик солі\n\U0001F9C2 +{ran}'
+                elif ran == [9]:
+                    msg = '\U0001f7e3 Знайдено цілих 10 крашанок з заначками...\n\U0001F4B5 500 гривень'
+                    r.hincrby(uid, 'money', 500)
+                elif ran == [10]:
+                    msg = '\U0001f7e3 В кошику знайдено ізострічку. Можливо, вона колись знадобиться?\n🌀 +1'
+                    r.hincrby(uid, 'tape', 1)
+                elif ran == [11]:
+                    try:
+                        for mem in r.smembers(cid):
+                            spirit(5000, mem, 0)
+                    except:
+                        spirit(5000, uid, 0)
+                    msg = '\U0001f7e1 Після відкриття цього кошика сталася бавовна...\n' \
+                          '\U0001F54A +5000 всім в чаті'
+                elif ran == [12]:
+                    if int(r.hget(uid, 'weapon')) == 6:
+                        r.hincrby(uid, 's_weapon', 10)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти скриньку Пандори',
+                                                        callback_data=f'gift_box_{uid}'))
+                    msg = '\U0001f7e1 Скринька Пандори [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
+                          'кошик в дуелі.'
+                elif ran == [13]:
+                    msg = '\U0001f7e1 На Великдень, Курочка ряба знесла не просте яйце, а золоте!\n\U0001F31F +1'
+                    r.hincrby(uid, 'strap', 1)
+            else:
+                msg = 'Недостатньо кошиків.'
+
+            return msg, markup
+
+        elif cdata.startswith('gift_box_'):
+            if int(r.hget(uid, 'weapon')) == 6:
+                r.hincrby(uid, 's_weapon', 10)
+            else:
+                r.hset(uid, 'weapon', 6)
+                r.hset(uid, 's_weapon', 10)
+            return edit, None
+
+        else:
+            return False
+
+    return False
+
