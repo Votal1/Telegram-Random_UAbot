@@ -369,16 +369,24 @@ async def feed(message):
                 if h == 5:
                     r.hset(uid, 'head', 0, {'s_head': 0})
 
+                sugar = 0
+                if int(r.hget(uid, 'support')) in (7, 12):
+                    sugar = 1
+                    damage_support(uid)
+                elif r.hexists(uid, 'support2') and int(r.hget(uid, 'support2')) == 12:
+                    sugar = 1
+                    damage_support(uid, second=True)
+
                 if int(stats[0]) > 5000:
                     if int(stats[0]) > 8000:
-                        if int(r.hget(uid, 'support')) == 7:
+                        if sugar:
                             decrease = choices([1, 0], [75, 25])
                             damage_support(uid)
                             increase_trance(5, uid)
                         else:
                             decrease = choices([1, 0], [60, 40])
                     else:
-                        if int(r.hget(uid, 'support')) == 7:
+                        if sugar:
                             decrease = choices([1, 0], [95, 5])
                             damage_support(uid)
                             increase_trance(5, uid)
@@ -393,7 +401,7 @@ async def feed(message):
                             else:
                                 r.hset(uid, 'head', 0, {'s_head': 0})
                 else:
-                    if int(r.hget(uid, 'support')) == 7:
+                    if sugar:
                         ran += 15
                         damage_support(uid)
                         increase_trance(5, uid)

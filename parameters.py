@@ -97,10 +97,15 @@ def damage_defense(uid, d):
             r.hincrby(uid, 'money', 4)
 
 
-def damage_support(uid):
-    r.hincrby(uid, 's_support', -1)
-    if int(r.hget(uid, 's_support')) <= 0:
-        r.hset(uid, 'support', 0)
+def damage_support(uid, second=False):
+    if not second:
+        r.hincrby(uid, 's_support', -1)
+        if int(r.hget(uid, 's_support')) <= 0:
+            r.hset(uid, 'support', 0)
+    else:
+        r.hincrby(uid, 's_support2', -1)
+        if int(r.hget(uid, 's_support2')) <= 0:
+            r.hset(uid, 'support2', 0)
 
 
 def damage_head(uid):
