@@ -514,7 +514,7 @@ def open_gift2(uid, cdata, edit, cid):
                 r.hincrby(uid, 'opened', 1)
                 r.hincrby('baskets_2023', uid, 1)
 
-                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                               weights=[20, 18, 15, 10, 10, 10, 3, 3, 3, 3, 2, 2, 1])
                 if ran == [1]:
                     ran = randint(1, 5)
