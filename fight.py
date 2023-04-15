@@ -1183,7 +1183,7 @@ async def war(cid, location, big_battle):
             if int(member) != win:
                 r.hincrby(member, 'packs_2023_2')
     elif location == 'Битва за великодній кошик':
-        class_reward = '🧺 +1.'
+        class_reward = '🧺 +1'
         r.hincrby(win, 'packs_2023_2')
 
     if class_reward:
