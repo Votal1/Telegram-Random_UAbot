@@ -229,7 +229,7 @@ def drop_item(cdata, uid):
 def change_item(cdata, uid):
     forbidden = {'weapon': (11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32),
                  'defense': (16, 17),
-                 'support': (2, 6, 9),
+                 'support': (2, 6, 9, 11),
                  'head': ()}
     if cdata.startswith('backpack_open'):
         if not r.hexists(uid, 'backpack_1'):
