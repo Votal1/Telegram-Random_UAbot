@@ -1856,7 +1856,7 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 8:
                             r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10):
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11):
                             r.hset(mem, 'support', 8)
                             r.hset(mem, 's_support', s)
                 if mode == 2:
@@ -1867,7 +1867,7 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:
                             r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10):
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
                             r.hset(mem, 'support', 7)
                             r.hset(mem, 's_support', s)
                 if mode == 3:
@@ -1900,7 +1900,7 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 8:
                             r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10):
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11):
                             r.hset(mem, 'support', 8)
                             r.hset(mem, 's_support', s)
                 if mode == 2:
@@ -1911,7 +1911,7 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         if int(r.hget(mem, 'support')) == 7:
                             r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10):
+                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
                             r.hset(mem, 'support', 7)
                             r.hset(mem, 's_support', s)
                 if mode == 3:

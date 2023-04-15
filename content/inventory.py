@@ -199,12 +199,16 @@ def drop_item(cdata, uid):
 
     elif cdata.startswith('drop_s'):
         if int(r.hget(uid, 'support')) != 0:
-            r.hset(uid, 'support', 0)
-            r.hset(uid, 's_support', 0)
+            if int(r.hget(uid, 'support')) == 11:
+                answer = 'Повістки не позбутись'
+                return False, False, False, answer
+            else:
+                r.hset(uid, 'support', 0)
+                r.hset(uid, 's_support', 0)
 
-            msg, markup = show_inventory(uid)
-            answer = 'Русак викинув допоміжне спорядження'
-            return msg, markup, True, answer
+                msg, markup = show_inventory(uid)
+                answer = 'Русак викинув допоміжне спорядження'
+                return msg, markup, True, answer
         else:
             answer = 'В твого русака нема допоміжного спорядження'
             return False, False, False, answer
