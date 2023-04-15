@@ -381,14 +381,12 @@ async def feed(message):
                     if int(stats[0]) > 8000:
                         if sugar:
                             decrease = choices([1, 0], [75, 25])
-                            damage_support(uid)
                             increase_trance(5, uid)
                         else:
                             decrease = choices([1, 0], [60, 40])
                     else:
                         if sugar:
                             decrease = choices([1, 0], [95, 5])
-                            damage_support(uid)
                             increase_trance(5, uid)
                         else:
                             decrease = choices([1, 0], [80, 20])
@@ -403,7 +401,6 @@ async def feed(message):
                 else:
                     if sugar:
                         ran += 15
-                        damage_support(uid)
                         increase_trance(5, uid)
 
                 r.hincrby(uid, 'strength', ran)
