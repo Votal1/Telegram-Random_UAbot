@@ -3284,7 +3284,7 @@ async def handle_query(call):
                         reply_markup=battle_button(),
                         disable_web_page_preview=True)
                     r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
-            elif 5 <= fighters <= 9 and call.message.chat.id != -1001211933154:
+            elif 5 <= fighters <= 19 and call.message.chat.id != -1001211933154:
                 if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2:
                     await bot.edit_message_text(
                         text=call.message.text + ', ' + call.from_user.first_name,
@@ -3293,7 +3293,7 @@ async def handle_query(call):
                         reply_markup=battle_button_2(),
                         disable_web_page_preview=True)
                     r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
-            elif fighters >= 10:
+            elif fighters >= 20:
                 await bot.edit_message_text(
                     text=call.message.text + ', ' + call.from_user.first_name + '\n\nБій почався...',
                     chat_id=call.message.chat.id, message_id=call.message.message_id, disable_web_page_preview=True)
