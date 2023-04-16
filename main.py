@@ -3270,7 +3270,7 @@ async def handle_query(call):
             r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
 
             fighters = r.smembers('fighters' + str(call.message.chat.id))
-            fighters_num = len(fighters)
+            fighters_num = r.scard('fighters' + str(call.message.chat.id))
 
             ts = int(datetime.now().timestamp())
             if r.hexists('battle' + str(call.message.chat.id), 'edit_ts'):
