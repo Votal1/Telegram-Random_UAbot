@@ -3268,38 +3268,46 @@ async def handle_query(call):
                 call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
             r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
-            fighters = r.scard('fighters' + str(call.message.chat.id))
+
+            fighters = r.smembers('fighters' + str(call.message.chat.id))
+            fighters_num = len(fighters)
 
             ts = int(datetime.now().timestamp())
             if r.hexists('battle' + str(call.message.chat.id), 'edit_ts'):
                 r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
 
-            max = 10
+            maximum = 10
             if call.message.chat.id == -1001211933154:
-                max = 20
+                maximum = 20
 
-            if fighters == 1:
-                if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2:
-                    await bot.edit_message_text(
-                        text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
-                        chat_id=call.message.chat.id,
-                        message_id=call.message.message_id,
-                        reply_markup=battle_button(),
-                        disable_web_page_preview=True)
-                    r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
-            elif 5 <= fighters < max:
-                if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2:
-                    await bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name,
-                        chat_id=call.message.chat.id,
-                        message_id=call.message.message_id,
-                        reply_markup=battle_button_2(),
-                        disable_web_page_preview=True)
-                    r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
-            elif fighters >= max:
+            if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2 or fighters_num >= maximum:
+                r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
+
+                msg = '\u2694 Починається битва...\n\nБійці: '
+                i = 1
+                for mem in fighters:
+                    msg += r.hget(mem, 'firstname').decode()
+                    if fighters_num != i:
+                        msg += ', '
+                        i += 1
+                    if fighters_num >= maximum:
+                        msg += '\n\nБій почався...'
+
+                if 5 <= fighters_num < maximum:
+                    markup = battle_button_2()
+                elif fighters_num >= maximum:
+                    markup = None
+                else:
+                    markup = battle_button()
+
                 await bot.edit_message_text(
-                    text=call.message.text + ', ' + call.from_user.first_name + '\n\nБій почався...',
-                    chat_id=call.message.chat.id, message_id=call.message.message_id, disable_web_page_preview=True)
+                    text=msg,
+                    chat_id=call.message.chat.id,
+                    message_id=call.message.message_id,
+                    reply_markup=markup,
+                    disable_web_page_preview=True)
+
+            if fighters_num >= maximum:
                 ran = choice(['Битва в Соледарі', 'Битва на овечій фермі', 'Битва на покинутому заводі',
                               'Битва в темному лісі', 'Битва біля старого дуба', 'Битва в житловому районі',
                               'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
@@ -3315,10 +3323,6 @@ async def handle_query(call):
                 except:
                     pass
                 await war(call.message.chat.id, ran, big_battle)
-            else:
-                await bot.edit_message_text(
-                    text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
-                    message_id=call.message.message_id, reply_markup=battle_button(), disable_web_page_preview=True)
             await call.answer()
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
