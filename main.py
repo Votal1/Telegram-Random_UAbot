@@ -3292,6 +3292,7 @@ async def handle_query(call):
                         i += 1
                     if fighters_num >= maximum:
                         msg += '\n\nБій почався...'
+                        break
 
                 if 5 <= fighters_num < maximum:
                     markup = battle_button_2()
