@@ -3273,7 +3273,7 @@ async def handle_query(call):
             fighters_num = r.scard('fighters' + str(call.message.chat.id))
 
             ts = int(datetime.now().timestamp())
-            if r.hexists('battle' + str(call.message.chat.id), 'edit_ts'):
+            if not r.hexists('battle' + str(call.message.chat.id), 'edit_ts'):
                 r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
 
             maximum = 10
