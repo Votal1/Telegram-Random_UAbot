@@ -544,7 +544,7 @@ def open_gift2(uid, cdata, edit, cid):
                     msg = '\U0001f535 Хтось поклав у цей кошик цукерки Рошен...\n\U0001F9EA +2'
                     if int(r.hget(uid, 'support')) == 0:
                         r.hset(uid, 'support', 12)
-                        r.hset(uid, 's_support', 1)
+                        r.hset(uid, 's_support', 2)
                     elif int(r.hget(uid, 'support')) not in (6, 10, 11):
                         r.hincrby(uid, 's_support', 2)
                 elif ran == [5]:
