@@ -3301,7 +3301,7 @@ async def handle_query(call):
                     markup = battle_button()
 
                 await bot.edit_message_text(
-                    text=msg,
+                    text=msg.replace('@', ''),
                     chat_id=call.message.chat.id,
                     message_id=call.message.message_id,
                     reply_markup=markup,
@@ -3409,7 +3409,8 @@ async def handle_query(call):
                               r.hget(b[3], 'firstname').decode() + \
                               '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + \
                               r.hget(b[4], 'firstname').decode()
-                        await bot.send_message(int(call.message.chat.id), msg, disable_web_page_preview=True)
+                        await bot.send_message(int(call.message.chat.id), msg.replace('@', ''),
+                                               disable_web_page_preview=True)
                         await bot.send_message(int(enemy), msg, disable_web_page_preview=True)
                         await great_war(call.message.chat.id, int(enemy), a, b)
                         try:

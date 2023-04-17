@@ -1061,7 +1061,7 @@ async def war(cid, location, big_battle):
     win = int(str(win)[3:-2])
     quest(win, 1, -2)
     wc = int(r.hget(win, 'class'))
-    user_name = r.hget(win, 'firstname').decode()
+    user_name = r.hget(win, 'firstname').decode().replace('@', '')
     winner = '\n\n\U0001F3C6 ' + ' ' + f'<a href="tg://user?id={win}">{user_name}</a>' + ' перемагає!'
 
     if not big_battle:
@@ -1410,7 +1410,7 @@ async def great_war(cid1, cid2, a, b):
     elif win == ['b']:
         msg, reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
-    msg1 = msg2 = msg
+    msg1 = msg2 = msg.replace('@', '')
     if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:
         msg1 += '\n\n/war'
     if not r.hexists(f'c{cid2}', 'hints') or int(r.hget(f'c{cid2}', 'hints')) == 0:
