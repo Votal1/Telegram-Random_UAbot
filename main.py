@@ -3293,7 +3293,7 @@ async def handle_query(call):
                 if fighters_num >= maximum:
                     msg += '\n\nБій почався...'
 
-                if 5 <= fighters_num < maximum:
+                if 5 <= fighters_num < maximum and call.message.chat.id != -1001211933154:
                     markup = battle_button_2()
                 elif fighters_num >= maximum:
                     markup = None
