@@ -1613,7 +1613,7 @@ async def start_raid(cid):
             for m in r.smembers('guard' + enemy.decode()):
                 r.srem('guard' + enemy.decode(), m)
         chance2 = int(r.hget(c2, 'power'))
-        msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'
+        msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'.replace('@', '')
         try:
             await bot.send_message(cid, msg0, disable_web_page_preview=True)
             await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0, disable_web_page_preview=True)
@@ -1705,8 +1705,8 @@ async def start_raid(cid):
                 hp(-100, member)
 
         await sleep(10)
-        msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode() + '!' + reward
-        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode() + '!'
+        msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode().replace('@', '') + '!' + reward
+        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode().replace('@', '') + '!'
         if win == ['a']:
             msg2 += reward.replace('+', '-')
         else:

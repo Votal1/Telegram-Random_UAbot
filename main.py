@@ -796,7 +796,7 @@ async def passport(message):
         if checkClan(message.from_user.id):
             clan0 = msg_fmt(f'c{stats[6].decode()}', 'title')
             clan1 = f'\n\U0001F3E0 Клан: {clan0}'
-        msg = f'\U0001F4DC {message.from_user.first_name}\n\n{wins}{deaths}' \
+        msg = f'\U0001F4DC {message.from_user.first_name.replace("@", "")}\n\n{wins}{deaths}' \
               f'\n\u2622 Випито горілки: {stats[4].decode()}' \
               f'\n\U0001F4E6 Відкрито пакунків: {stats[5].decode()}{clan1}' \
               f'\n\u26CF Скіли: {skill}%' \
@@ -3369,6 +3369,7 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'w_ts', int(datetime.now().timestamp()))
                 r.sadd('in_war', call.from_user.id)
                 fighters = r.scard('fighters_2' + str(call.message.chat.id))
+                uname = call.from_user.first_name.replace('@', '')
                 try:
                     if int(r.hget(222, call.message.chat.id)) > 250:
                         n = '2'
@@ -3376,12 +3377,12 @@ async def handle_query(call):
                     pass
                 if fighters == 1:
                     await bot.edit_message_text(
-                        text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
+                        text=call.message.text + '\n\nБійці: ' + uname,
                         chat_id=call.message.chat.id, message_id=call.message.message_id,
                         reply_markup=battle_button_3(), disable_web_page_preview=True)
                 elif fighters >= 5 and r.scard('battles' + n) == 0:
                     await call.message.reply('\u2694 Пошук ворогів...')
-                    await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name,
+                    await bot.edit_message_text(text=call.message.text + ', ' + uname,
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 disable_web_page_preview=True)
                     r.sadd('battles' + n, call.message.chat.id)
@@ -3390,7 +3391,7 @@ async def handle_query(call):
                         pass
                     else:
                         enemy = r.spop('battles' + n)
-                        await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
+                        await bot.edit_message_text(text=call.message.text + ', ' + uname +
                                                                              '\n\nБій почався...',
                                                     chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                     disable_web_page_preview=True)
@@ -3426,7 +3427,7 @@ async def handle_query(call):
                             pass
                 else:
                     await bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
+                        text=call.message.text + ', ' + uname, chat_id=call.message.chat.id,
                         message_id=call.message.message_id, reply_markup=battle_button_3(),
                         disable_web_page_preview=True)
             else:
@@ -3441,6 +3442,7 @@ async def handle_query(call):
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.message_id == int(r.hget('c' + str(call.message.chat.id), 'start')) and\
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)):
+            uname = call.from_user.first_name.replace('@', '')
             if 0 <= datetime.now().hour < 8:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Комендантська година, рейди недоступні.')
@@ -3448,12 +3450,11 @@ async def handle_query(call):
                 r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
                 r.sadd('fighters_3' + str(call.message.chat.id), call.from_user.id)
                 if r.scard('fighters_3' + str(call.message.chat.id)) == 1:
-                    await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + call.from_user.first_name,
+                    await bot.edit_message_text(text=call.message.text + '\n\nБійці: ' + uname,
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 reply_markup=battle_button_4(), disable_web_page_preview=True)
                 elif r.scard('fighters_3' + str(call.message.chat.id)) == 5:
-                    await bot.edit_message_text(text=call.message.text + ', ' + call.from_user.first_name +
-                                                                         '\n\nРейд почався...',
+                    await bot.edit_message_text(text=call.message.text + ', ' + uname + '\n\nРейд почався...',
                                                 chat_id=call.message.chat.id, message_id=call.message.message_id,
                                                 disable_web_page_preview=True)
                     await call.message.reply('\u2694 Русаки вирушили в рейд...')
@@ -3464,7 +3465,7 @@ async def handle_query(call):
                                                 disable_web_page_preview=True)
                 else:
                     await bot.edit_message_text(
-                        text=call.message.text + ', ' + call.from_user.first_name, chat_id=call.message.chat.id,
+                        text=call.message.text + ', ' + uname, chat_id=call.message.chat.id,
                         message_id=call.message.message_id, reply_markup=battle_button_4(),
                         disable_web_page_preview=True)
         else:
