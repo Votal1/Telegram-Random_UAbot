@@ -1702,13 +1702,14 @@ async def clan(message):
                     or str(message.from_user.id).encode() in r.smembers('sudoers'):
                 base = int(r.hget(c, 'base'))
                 title = r.hget(c, 'title').decode()
-                leader = r.hget(int(r.hget(c, 'leader')), 'firstname').decode().replace('<', '.').replace('>', '.')
+                leader = r.hget(int(r.hget(c, 'leader')), 'firstname')
                 if r.scard('cl2' + cid) == 1:
                     leader += f"\nЗаступник: {r.hget(r.srandmember('cl2' + cid), 'firstname').decode()}"
                 elif r.scard('cl2' + cid) == 2:
                     ran = r.srandmember('cl2' + cid, 2)
                     leader += f"\nЗаступники: {r.hget(ran[0], 'firstname').decode()}, " \
                               f"{r.hget(ran[1], 'firstname').decode()}"
+                leader = leader.replace('<', ' ').replace('>', ' ').replace('@', ' ')
                 if base == 1:
                     await message.answer(f"<i>Банда</i> {title}\n\nЛідер: {leader}"
                                          f"\nКількість учасників: {r.scard('cl' + cid)} / 25\n\n\U0001f6d6 Барак\n"
