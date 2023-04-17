@@ -3411,7 +3411,7 @@ async def handle_query(call):
                               r.hget(b[4], 'firstname').decode()
                         await bot.send_message(int(call.message.chat.id), msg.replace('@', ''),
                                                disable_web_page_preview=True)
-                        await bot.send_message(int(enemy), msg, disable_web_page_preview=True)
+                        await bot.send_message(int(enemy), msg.replace('@', ''), disable_web_page_preview=True)
                         await great_war(call.message.chat.id, int(enemy), a, b)
                         try:
                             await bot.unpin_chat_message(chat_id=call.message.chat.id,
