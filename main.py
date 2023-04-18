@@ -1240,7 +1240,7 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'salt', salt)
                     r.hincrby(message.from_user.id, 'packs_2023_2', packs)
                     r.hset(message.from_user.id, 'time', 0)
-                    msg = f'\u26CF Промокод живого бота активовано!\n🥓 +1 \U0001F9C2 +{salt} 🧺 {packs}'
+                    msg = f'\u26CF Великодній промокод активовано!\n🥓 +1 \U0001F9C2 +{salt} 🧺 {packs}'
                     await message.reply(msg)
 
                 '''
