@@ -3292,8 +3292,8 @@ async def handle_query(call):
                 r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
 
             maximum = 10
-            if call.message.chat.id == -1001211933154:
-                maximum = 20
+            #  if call.message.chat.id == -1001211933154:
+            #    maximum = 20
 
             if ts - int(r.hget('battle' + str(call.message.chat.id), 'edit_ts')) > 2 or fighters_num >= maximum:
                 r.hset('battle' + str(call.message.chat.id), 'edit_ts', ts)
