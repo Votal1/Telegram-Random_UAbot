@@ -1229,6 +1229,20 @@ async def promo_code(message):
                     msg = f'\u26CF Промокод живого бота активовано!\n\U0001F9C2 +15 \u2622 +50 \U0001F4E6 +{packs}'
                     await message.reply(msg)
 
+                elif msg.startswith('eas') and uid not in r.smembers('thirteenth_code'):
+                    r.sadd('thirteenth_code', message.from_user.id)
+                    if uid not in r.smembers('easter_2023_top_20'):
+                        packs = 20
+                        salt = 10
+                    else:
+                        packs = 10
+                        salt = 5
+                    r.hincrby(message.from_user.id, 'salt', salt)
+                    r.hincrby(message.from_user.id, 'packs_2023_2', packs)
+                    r.hset(message.from_user.id, 'time', 0)
+                    msg = f'\u26CF Промокод живого бота активовано!\n🥓 +1 \U0001F9C2 +{salt} 🧺 {packs}'
+                    await message.reply(msg)
+
                 '''
                 elif msg.startswith('soledar_2') and uid not in r.smembers('eleventh_code'):
                     msg = '\u26CF Ювілейний промокод активовано!\n\U0001F9C2 +22 \U0001F3C5 +22 \U0001F4E6 +100'
