@@ -1231,7 +1231,7 @@ async def promo_code(message):
 
                 elif msg.startswith('eas') and uid not in r.smembers('thirteenth_code'):
                     r.sadd('thirteenth_code', message.from_user.id)
-                    if uid not in r.smembers('easter_2023_top_20'):
+                    if uid in r.smembers('easter_2023_top_20'):
                         packs = 20
                         salt = 10
                     else:
