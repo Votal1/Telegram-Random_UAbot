@@ -946,8 +946,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             money = int(money2 / 50)
                         else:
                             money = 1
-                        if money == 10:
-                            quest(uid2, 3, -3, 4)
+                        quest(uid2, 3, -3, 4)
                     if checkClan(uid1, building='build4', level=4):
                         r.hincrby('c' + r.hget(uid1, 'clan').decode(), 'money', money)
                     r.hincrby(uid1, 'money', money)
