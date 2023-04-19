@@ -60,8 +60,6 @@ def shop_msg(uid, mode):
                 pass
             else:
                 markup.add(InlineKeyboardButton(text=key, callback_data=value))
-        markup.add(InlineKeyboardButton(text='🧺 5 - \U0001F31F 1', callback_data='premium_basket'),
-                   InlineKeyboardButton(text='🧂 5 - \U0001F31F 1', callback_data='premium_salt'))
         markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),
                    InlineKeyboardButton(text='\U0001F9C2', callback_data='switch3'))
         strap = r.hget(uid, 'strap').decode()
