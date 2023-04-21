@@ -314,7 +314,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     s2 = int(s2 * 1.25)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
-        elif weapon2 == 27:
+        elif weapon2 == 27 and t == 1:
             damage_weapon(uid2, c2)
             r.hset(uid1, 'hp', 0)
             weapon = '\n\n🔫 ' + names[name2] + ' вистрелив у ворога електрошокером!\n\U0001fac0 -100'
