@@ -4206,9 +4206,12 @@ async def handle_query(call):
                             intellect(-mush, mem)
                         else:
                             r.hset(mem, 'spirit', i)
-                    if int(r.hget(mem, 'head')) == 1:
+                    h = int(r.hget(mem, 'head'))
+                    if h in (1, 7):
                         r.hset(mem, 'spirit', i1)
                         damage_head(mem)
+                        if h == 7:
+                            spirit(3000, mem, 0)
                 except:
                     pass
         except:
