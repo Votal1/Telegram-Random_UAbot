@@ -318,6 +318,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             damage_weapon(uid2, c2)
             r.hset(uid1, 'hp', 0)
             weapon = '\n\n🔫 ' + names[name2] + ' вистрелив у ворога електрошокером!\n\U0001fac0 -100'
+            quest(uid1, 3, -1, 4)
 
         if weapon2 == 6:
             weapon = '\n\n\U0001F381 ' + names[name1] + ' отримав подарунок від свого суперника...'
