@@ -114,7 +114,7 @@ def open_pack(uid, cdata, edit):
                         r.hset(uid, 'defense', 9)
                         r.hset(uid, 's_defense', 7)
                         msg += '\U0001F6E1 7'
-                    elif int(r.hget(uid, 'defense')) not in (1, 3):
+                    elif int(r.hget(uid, 'defense')) not in (1, 3, 4):
                         r.hincrby(uid, 's_defense', 7)
                         msg += '\U0001F6E1 +7'
                     else:
