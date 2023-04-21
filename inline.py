@@ -22,7 +22,7 @@ def prepare_to_fight(uid, fn, q):
             s, bd = injure(uid, s, bd, False)
         if int(r.hget(uid, 'sch')) > 0:
             i, bd = schizophrenia(uid, i, bd, False)
-        if int(r.hget(uid, 'buff')) > 0:
+        if int(r.hget(uid, 'buff')) > 0 or int(r.hget(uid, 'support')) == 13:
             s, bd = trance(uid, s, bd, False)
 
         if c == 3:
