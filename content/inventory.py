@@ -7,7 +7,8 @@ from constants.equipment import weapons, defenses, supports, heads, upgradable, 
 def invent_start():
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton(text='\U0001F510', callback_data='drop_open'),
-               InlineKeyboardButton(text='\U0001F392', callback_data='backpack_open'))
+               InlineKeyboardButton(text='\U0001F392', callback_data='backpack_open'),
+               InlineKeyboardButton(text=f'🌀', callback_data='tape_all'))
     return markup
 
 
@@ -159,9 +160,6 @@ def show_inventory(uid, full=False, upgrade=False):
         markup = invent(w, d, s, h)
     else:
         markup = invent_start()
-
-    if str(uid).encode() in r.smembers('sudoers'):
-        markup.add(InlineKeyboardButton(text=f'🌀', callback_data='tape_all'))
 
     return msg, markup
 
