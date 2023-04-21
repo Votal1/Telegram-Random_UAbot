@@ -1203,7 +1203,7 @@ async def war(cid, location, big_battle):
 
 
 async def war_power(sett, cid):
-    chance = clan5 = m = pag = meat = mal = gen1 = gen2 = 0
+    chance = clan5 = m = pag = meat = mal = gen1 = gen2 = koj = 0
     for member in sett:
         try:
             cl = int(r.hget(member, 'class'))
@@ -1249,12 +1249,21 @@ async def war_power(sett, cid):
                 if w == 26:
                     w = 0.5
                     damage_weapon(member, 25)
+                elif w == 7:
+                    boost = int(r.hget(member, 's_weapon'))
+                    if boost > 20:
+                        boost = 20
+                    w = 0.25 + boost / 100
+                    damage_weapon(member, 7)
                 else:
                     w = 0.25
             else:
                 w = 0
             d = int(stats[4])
             if d > 0:
+                if d == 4:
+                    koj += 1
+                    damage_defense(member, 4)
                 d = 0.25
             else:
                 d = 0
@@ -1311,14 +1320,15 @@ async def war_power(sett, cid):
                 spirit(250, int(member), 0)
             except:
                 pass
-    return chance, clan5, mal, gen1, gen2
+    return chance, clan5, mal, gen1, gen2, koj
 
 
-def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
+def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members, koj):
     reward, packs = '4', 0
     if cid1 == -1001211933154:
         money = randint(4, 15)
         reward = str(money)
+    money += koj
     msg += r.hget('war_battle' + str(cid1), 'title').decode()
     try:
         if int(r.hget('c' + str(cid1), 'side')) == 1:
@@ -1377,8 +1387,8 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members):
 async def great_war(cid1, cid2, a, b):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, clan1, mal1, gen11, gen12 = await war_power(a, cid1)
-    chance2, clan2, mal2, gen21, gen22 = await war_power(b, cid2)
+    chance1, clan1, mal1, gen11, gen12, koj1 = await war_power(a, cid1)
+    chance2, clan2, mal2, gen21, gen22, koj2 = await war_power(b, cid2)
 
     try:
         if gen11 == 1:
@@ -1405,9 +1415,9 @@ async def great_war(cid1, cid2, a, b):
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward, money, r_spirit = '', 4, 1
     if win == ['a']:
-        msg, reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a)
+        msg, reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a, koj1)
     elif win == ['b']:
-        msg, reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b)
+        msg, reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b, koj2)
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     msg1 = msg2 = msg.replace('@', '')
     if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:

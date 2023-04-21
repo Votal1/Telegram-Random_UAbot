@@ -405,6 +405,8 @@ def allow_class_item(cl, item, item_type='empty'):
 
 
 def upgrade_item(cdata, uid):
+    if not r.hexists(uid, 'tape'):
+        r.hset(uid, 'tape', 0)
     if cdata.startswith('tape_all'):
         msg, markup, response, answer = show_inventory(uid, upgrade=True)
         return msg, markup, response, answer
