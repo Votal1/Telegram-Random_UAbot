@@ -19,7 +19,7 @@ from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
-from content.inventory import show_inventory, drop_item, change_item
+from content.inventory import show_inventory, drop_item, change_item, upgrade_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, check_slot, open_gift2
@@ -5277,6 +5277,14 @@ async def handle_query(call):
 
     elif call.data.startswith('backpack_') and call.from_user.id == call.message.reply_to_message.from_user.id:
         msg, markup, edit, answer = change_item(call.data, call.from_user.id)
+
+        if edit:
+            await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
+        if answer:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=answer)
+
+    elif call.data.startswith('tape_') and call.from_user.id == call.message.reply_to_message.from_user.id:
+        msg, markup, edit, answer = upgrade_item(call.data, call.from_user.id)
 
         if edit:
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)

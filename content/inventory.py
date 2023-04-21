@@ -64,9 +64,38 @@ def take_from_backpack(markup, item1=False, item2=False):
     return markup
 
 
-def show_inventory(uid, full=False):
+def show_inventory(uid, full=False, upgrade=False):
     inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
     w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
+
+    if upgrade:
+        upgradable = {
+            'weapon': (1, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21),
+            'defense': (1, 16),
+            'support': (2, 7, 8),
+            'head': (1, 4)
+        }
+
+        i = 0
+        m1 = m2 = m3 = m4 = ''
+        if w in upgradable['weapon']:
+            i += 1
+            m1 = f'\U0001F6E1 {weapons[w]}\n'
+        if d in upgradable['defense']:
+            i += 1
+            m2 = f'\U0001F6E1 {defenses[d]}\n'
+        if s in upgradable['support']:
+            i += 1
+            m3 = f'\U0001F9EA {supports[s]}\n'
+        if h in upgradable['head']:
+            i += 1
+            m4 = f'\U0001F3A9 {heads[h]}'
+
+        if i:
+            msg = f'🌀 Спорядження, яке можливо покращити\n\n{m1}{m2}{m3}{m4}'
+            return msg, None, True, False
+        else:
+            return None, None, False, 'Нема спорядження, яке можна покращити'
 
     if w == 16:
         m1 = '\nМіцність: ∞'
@@ -98,6 +127,9 @@ def show_inventory(uid, full=False):
         markup = invent(w, d, s, h)
     else:
         markup = invent_start()
+
+    if str(uid).encode() in r.smembers('sudoers'):
+        markup.add(InlineKeyboardButton(text=f'🌀', callback_data='tape_all'))
 
     return msg, markup
 
@@ -338,3 +370,9 @@ def allow_class_item(cl, item, item_type='empty'):
         return True
     else:
         return False
+
+
+def upgrade_item(cdata, uid):
+    if cdata.startswith('tape_all'):
+        msg, markup, response, answer = show_inventory(uid, upgrade=True)
+        return msg, markup, response, answer
