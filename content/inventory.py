@@ -1,6 +1,7 @@
 from config import r
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from constants.equipment import weapons, defenses, supports, heads
+from constants.equipment import weapons, defenses, supports, heads, upgradable, \
+    weapons1, defenses1, supports1, heads1
 
 
 def invent_start():
@@ -60,26 +61,26 @@ def upgrade_button(w, d, s, h):
     markup = InlineKeyboardMarkup()
     if w > 0 and d > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {weapons[w]}',
-                                        callback_data='type_weapon'),
+                                        callback_data='tape_weapon'),
                    InlineKeyboardButton(text=f'\u2B06\uFE0F {defenses[d]}',
-                                        callback_data='type_defense'))
+                                        callback_data='tape_defense'))
     elif w > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {weapons[w]}',
-                                        callback_data='type_weapon'))
+                                        callback_data='tape_weapon'))
     elif d > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {defenses[d]}',
-                                        callback_data='type_defense'))
+                                        callback_data='tape_defense'))
     if s > 0 and h > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {supports[s]}',
-                                        callback_data='type_support'),
+                                        callback_data='tape_support'),
                    InlineKeyboardButton(text=f'\u2B06\uFE0F {heads[h]}',
-                                        callback_data='type_head'))
+                                        callback_data='tape_head'))
     elif s > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {supports[s]}',
-                                        callback_data='type_support'))
+                                        callback_data='tape_support'))
     elif h > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {heads[h]}',
-                                        callback_data='type_head'))
+                                        callback_data='tape_head'))
     markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
 
     return markup
@@ -98,13 +99,6 @@ def show_inventory(uid, full=False, upgrade=False):
     w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
 
     if upgrade:
-        upgradable = {
-            'weapon': (1, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21),
-            'defense': (1, 16),
-            'support': (2, 7, 8),
-            'head': (1, 4)
-        }
-
         i = 0
         m1 = m2 = m3 = m4 = ''
         if w in upgradable['weapon']:
@@ -414,3 +408,38 @@ def upgrade_item(cdata, uid):
     if cdata.startswith('tape_all'):
         msg, markup, response, answer = show_inventory(uid, upgrade=True)
         return msg, markup, response, answer
+    else:
+        item_type = cdata.split('_')[1]
+        item = int(r.hget(uid, item_type))
+        tape = int(r.hget(uid, 'tape'))
+        price = 1
+        if item in upgradable[item_type]:
+            if tape >= price:
+                upgrade_to = item1 = item2 = 0
+                if cdata.startswith('tape_weapon'):
+                    upgrade_to = weapons1[item]
+                    item1 = weapons[item]
+                    item2 = weapons[upgrade_to]
+                elif cdata.startswith('tape_defense'):
+                    upgrade_to = defenses1[item]
+                    item1 = defenses[item]
+                    item2 = defenses[upgrade_to]
+                elif cdata.startswith('tape_support'):
+                    upgrade_to = supports1[item]
+                    item1 = supports[item]
+                    item2 = supports[upgrade_to]
+                elif cdata.startswith('tape_head'):
+                    upgrade_to = heads1[item]
+                    item1 = heads[item]
+                    item2 = heads[upgrade_to]
+                answer = f'Покращено "{item1}" до "{item2}"\nВитрачено: 🌀 {price}'
+                r.hincrby(uid, 'tape', -price)
+                r.hset(uid, item_type, upgrade_to)
+                msg, markup = show_inventory(uid)
+                return msg, markup, True, answer
+            else:
+                answer = 'Необхідна 1 ізострічка'
+                return False, False, False, answer
+        else:
+            answer = 'Це спорядження неможливо покращити'
+            return False, False, False, answer
