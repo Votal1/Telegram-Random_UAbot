@@ -92,7 +92,8 @@ def show_inventory(uid, full=False, upgrade=False):
             m4 = f'\U0001F3A9 {heads[h]}'
 
         if i:
-            msg = f'🌀 Спорядження, яке можливо покращити\n\n{m1}{m2}{m3}{m4}'
+            tape = int(r.hget(uid, 'tape'))
+            msg = f'🌀 Ізострічка: {tape}\nСпорядження, яке можливо покращити:\n\n{m1}{m2}{m3}{m4}'
             return msg, None, True, False
         else:
             return None, None, False, 'Нема спорядження, яке можна покращити'
