@@ -96,12 +96,12 @@ def open_pack(uid, cdata, edit):
                     if int(r.hget(uid, 'weapon')) == 0:
                         r.hset(uid, 'weapon', 1)
                         r.hset(uid, 's_weapon', 1)
-                    elif int(r.hget(uid, 'weapon')) == 1:
+                    elif int(r.hget(uid, 'weapon')) in (1, 7):
                         r.hincrby(uid, 's_weapon', 1)
                     if int(r.hget(uid, 'defense')) == 0:
                         r.hset(uid, 'defense', 1)
                         r.hset(uid, 's_defense', 1)
-                    elif int(r.hget(uid, 'defense')) == 1:
+                    elif int(r.hget(uid, 'defense')) in (1, 4):
                         r.hincrby(uid, 's_defense', 1)
                 elif ran == [4]:
                     msg = '\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).\n\U0001F4B5 + 4'

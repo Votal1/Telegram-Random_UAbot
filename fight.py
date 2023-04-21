@@ -206,13 +206,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         if sc2 > 0:
             i2, bd2 = schizophrenia(uid2, i2, bd2, True)
             inj2 += '\U0001F464 '
-        if int(r.hget(uid1, 'buff')) > 0:
+        if int(r.hget(uid1, 'buff')) > 0 or support1 == 13:
             s1, bd1 = trance(uid1, s1, bd1, True)
             s11 = s1
             inj1 += '\U0001F44A '
             if int(r.hget(uid1, 's5')) >= 3 and randint(1, 2) == 1:
                 increase_trance(1, uid1)
-        if int(r.hget(uid2, 'buff')) > 0:
+        if int(r.hget(uid2, 'buff')) > 0 or support2 == 13:
             s2, bd2 = trance(uid2, s2, bd2, True)
             s22 = s2
             inj2 += '\U0001F44A '
@@ -993,7 +993,7 @@ async def war(cid, location, big_battle):
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
                 i, bd = schizophrenia(int(member), i, bd, True)
-            if int(stats[7]) > 0:
+            if int(stats[7]) > 0 or int(stats[8]) == 13:
                 s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
             if w > 0:
@@ -1241,7 +1241,7 @@ async def war_power(sett, cid):
                     i += 5
                 else:
                     i, bd = schizophrenia(int(member), i, bd, True)
-            if int(stats[9]) > 0:
+            if int(stats[9]) > 0 or int(stats[10]) == 13:
                 s, bd = trance(int(member), s, bd, True)
 
             w = int(stats[3])
@@ -1465,7 +1465,7 @@ async def guard_power(mid):
             i += 5
         else:
             i, bd = schizophrenia(int(mid), i, bd, True)
-    if int(stats[8]) > 0:
+    if int(stats[8]) > 0 or int(stats[9]) == 13:
         s, bd = trance(int(mid), s, bd, True)
 
     if cl == 6 or cl == 16 or cl == 26:
@@ -1536,7 +1536,7 @@ async def start_raid(cid):
                     i += 5
                 else:
                     i, bd = schizophrenia(int(member), i, bd, True)
-            if int(stats[8]) > 0:
+            if int(stats[8]) > 0 or int(stats[9]):
                 s, bd = trance(int(member), s, bd, True)
 
             if cl in (10, 20, 30):

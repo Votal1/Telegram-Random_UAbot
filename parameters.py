@@ -52,11 +52,16 @@ def schizophrenia(uid, i, bd, fi):
 
 
 def trance(uid, s, bd, fi):
+    stats = r.hmget(uid, 'support', 'head', 'buff', 's1')
+    if int(stats[0]) == 13 and int(stats[2]) <= 0:
+        r.hincrby(uid, 'buff', 1)
+        if fi:
+            damage_support(uid)
     alc = 0
     if fi:
         r.hincrby(uid, 'buff', -1)
-    if int(r.hget(uid, 'head')) == 4:
-        alc = int(r.hget(uid, 's1')) * 0.02
+    if int(stats[1]) == 4:
+        alc = int(stats[3]) * 0.02
         if fi:
             damage_head(uid)
     return int(s * (1.2 + alc)), int(bd * (1.8 + alc))
