@@ -754,7 +754,14 @@ async def account(message):
             p = r.hget(message.from_user.id, 'packs').decode()
             s = r.hget(message.from_user.id, 'strap').decode()
             salt = r.hget(message.from_user.id, 'salt').decode()
-            msg = f'\U0001F4B5 Гривні: {m}\n\U0001F4E6 Пакунки: {p}\n\U0001F9C2 Сіль: {salt}\n\U0001F31F Погони: {s}'
+            tape = 0
+            if r.hexists(message.from_user.id, 'tape'):
+                tape = int(r.hget(message.from_user.id, 'tape'))
+            msg = f'\U0001F4B5 Гривні: {m}\n' \
+                  f'\U0001F4E6 Пакунки: {p}\n' \
+                  f'\U0001F9C2 Сіль: {salt}\n' \
+                  f'🌀 Ізострічка: {tape}\n' \
+                  f'\U0001F31F Погони: {s}'
             await message.reply(msg)
     except:
         pass
