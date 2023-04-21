@@ -56,6 +56,33 @@ def put_in_backpack(markup, w, d, s, h):
     return markup
 
 
+def upgrade_button(w, d, s, h):
+    markup = InlineKeyboardMarkup()
+    if w > 0 and d > 0:
+        markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {weapons[w]}',
+                                        callback_data='type_weapon'),
+                   InlineKeyboardButton(text=f'\u2B06\uFE0F {defenses[d]}',
+                                        callback_data='type_defense'))
+    elif w > 0:
+        markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {weapons[w]}',
+                                        callback_data='type_weapon'))
+    elif d > 0:
+        markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {defenses[d]}',
+                                        callback_data='type_defense'))
+    if s > 0 and h > 0:
+        markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {supports[s]}',
+                                        callback_data='type_support'),
+                   InlineKeyboardButton(text=f'\u2B06\uFE0F {heads[h]}',
+                                        callback_data='type_head'))
+    elif s > 0:
+        markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {supports[s]}',
+                                        callback_data='type_support'))
+    elif h > 0:
+        markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {heads[h]}',
+                                        callback_data='type_head'))
+    return markup
+
+
 def take_from_backpack(markup, item1=False, item2=False):
     if item1:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}', callback_data='backpack_take_first'))
@@ -81,20 +108,28 @@ def show_inventory(uid, full=False, upgrade=False):
         if w in upgradable['weapon']:
             i += 1
             m1 = f'\U0001F6E1 {weapons[w]}\n'
+        else:
+            w = 0
         if d in upgradable['defense']:
             i += 1
             m2 = f'\U0001F6E1 {defenses[d]}\n'
+        else:
+            d = 0
         if s in upgradable['support']:
             i += 1
             m3 = f'\U0001F9EA {supports[s]}\n'
+        else:
+            s = 0
         if h in upgradable['head']:
             i += 1
             m4 = f'\U0001F3A9 {heads[h]}'
+        else:
+            h = 0
 
         if i:
             tape = int(r.hget(uid, 'tape'))
-            msg = f'🌀 Ізострічка: {tape}\n\u2B06\uFE0F Спорядження, яке можливо покращити:\n\n{m1}{m2}{m3}{m4}'
-            return msg, None, True, False
+            msg = f'🌀 Ізострічка: {tape}\n\n\u2B06\uFE0F Спорядження, яке можливо покращити:\n\n{m1}{m2}{m3}{m4}'
+            return msg, upgrade_button(w, d, s, h), True, False
         else:
             return None, None, False, 'Нема спорядження, яке можна покращити'
 
