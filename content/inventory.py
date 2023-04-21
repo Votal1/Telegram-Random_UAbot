@@ -80,6 +80,8 @@ def upgrade_button(w, d, s, h):
     elif h > 0:
         markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {heads[h]}',
                                         callback_data='type_head'))
+    markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
+
     return markup
 
 
@@ -107,7 +109,7 @@ def show_inventory(uid, full=False, upgrade=False):
         m1 = m2 = m3 = m4 = ''
         if w in upgradable['weapon']:
             i += 1
-            m1 = f'\U0001F6E1 {weapons[w]}\n'
+            m1 = f'\U0001F5E1 {weapons[w]}\n'
         else:
             w = 0
         if d in upgradable['defense']:
