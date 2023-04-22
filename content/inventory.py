@@ -421,7 +421,7 @@ def upgrade_item(cdata, uid):
                     item1 = weapons[item]
                     item2 = weapons[upgrade_to]
                     if item == 16:
-                        r.hset(uid, f's-{item_type}', 1)
+                        r.hset(uid, f's_{item_type}', 1)
                 elif cdata.startswith('tape_defense'):
                     upgrade_to = defenses1[item]
                     item1 = defenses[item]
