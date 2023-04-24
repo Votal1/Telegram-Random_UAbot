@@ -5446,7 +5446,7 @@ async def handle_query(call):
             markup = InlineKeyboardMarkup()
             if uid_enc in r.smembers(f'cl{cid}'):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
-                    if int(r.hget(c, 'raid_loot_c')) >= 0:
+                    if int(r.hget(c, 'raid_loot_c')) > 0:
                         if ts - int(r.hget(c, 'raid_loot_ts')) < 60 or uid_enc in r.smembers(f'raiders{cid}'):
                             #if int(r.hget(uid, data)) == int(r.hget(c, 'raid_loot_n')):
                              #   r.hincrby(c, 'raid_loot_c', -1)
