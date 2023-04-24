@@ -5442,7 +5442,7 @@ async def handle_query(call):
             uid = call.from_user.id
             uid_enc = str(uid).encode()
             ts = int(datetime.now().timestamp())
-            rl = r.hget(c, 'raid_loot', 'raid_loot_n', 'raid_loot_mid')
+            rl = r.hmget(c, 'raid_loot', 'raid_loot_n', 'raid_loot_mid')
             data = rl[0].decode()
             item = int(rl[1])
             mid = int(rl[2])
