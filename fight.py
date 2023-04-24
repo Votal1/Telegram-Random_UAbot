@@ -2089,12 +2089,15 @@ async def start_raid(cid):
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
-            for mem in r.smembers('fighters_3' + str(cid)):
-                r.hincrby(mem, 'packs', packs)
-                quest(mem, 3, 3, 3)
+            if cid != -1001211386939:
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(mem, 'packs', packs)
+                    quest(mem, 3, 3, 3)
 
-                if packs >= 10:
-                    quest(mem, 3, -2, 4)
+                    if packs >= 10:
+                        quest(mem, 3, -2, 4)
+            else:
+                markup = raid_loot('convoy', 0, packs, 5, int(datetime.now().timestamp()) + 10, markup, c)
             if int(r.hget(c, 'buff_4')) == 31:
                 q_points(int(r.srandmember('fighters_3' + str(cid))), 10)
                 msg += ' \U0001fa99 +10'
@@ -2106,7 +2109,8 @@ async def start_raid(cid):
             msg += '\n\U0001F916 +1'
 
         await sleep(10)
-        await bot.send_message(cid, msg, disable_web_page_preview=True)
+        a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
+        r.hset(c, 'raid_loot_mid', a.message_id)
         if diff == 0 or int(r.hget('convoy', 'first')) == 1:
             if diff == 0:
                 msg = '\U0001F69B Гумконвой розграбовано.'
