@@ -5466,7 +5466,10 @@ async def handle_query(call):
                             elif data == 'convoy':
                                 n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
-                                r.hincrby(uid, 'packs', r.hget(c, 'raid_loot_s'))
+                                packs = int(r.hget(c, 'raid_loot_s'))
+                                r.hincrby(uid, 'packs', packs)
+                                if packs >= 10:
+                                    quest(mem, 3, -2, 4)
                                 if n > 0:
                                     markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
                                                                     callback_data='clan_raid_loot'))
