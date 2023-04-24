@@ -5444,7 +5444,7 @@ async def handle_query(call):
             ts = int(datetime.now().timestamp())
             data = r.hget(c, 'raid_loot').decode()
             markup = InlineKeyboardMarkup()
-            if uid_enc in r.smembers('cl' + cid):
+            if uid_enc in r.smembers(f'cl{cid}'):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
                     if int(r.hget(c, 'raid_loot_c')) <= 0:
                         if ts - int(r.hget(c, 'raid_loot_ts')) < 60 or uid_enc in r.smembers(f'raiders{cid}'):
