@@ -2089,7 +2089,7 @@ async def start_raid(cid):
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
-            if cid != -1001211386939:
+            if cid not in (-1001211386939, -1001836128126):
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hincrby(mem, 'packs', packs)
                     quest(mem, 3, 3, 3)
