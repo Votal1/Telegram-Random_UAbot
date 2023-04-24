@@ -5443,7 +5443,7 @@ async def handle_query(call):
             uid_enc = str(uid).encode()
             ts = int(datetime.now().timestamp())
             data = r.hget(c, 'raid_loot').decode()
-            markup = markup = InlineKeyboardMarkup()
+            markup = InlineKeyboardMarkup()
             if uid_enc in r.smembers('cl' + cid):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
                     if int(r.hget(c, 'raid_loot_c')) <= 0:
