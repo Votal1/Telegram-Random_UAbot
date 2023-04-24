@@ -5452,32 +5452,41 @@ async def handle_query(call):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
                     if int(r.hget(c, 'raid_loot_c')) > 0 and call.message.message_id == mid:
                         if ts - int(r.hget(c, 'raid_loot_ts')) < 60 or uid_enc in r.smembers(f'raiders{cid}'):
-                            if data == 'support':
-                                if item == 7:
-                                    items = (7, 12)
-                                elif item == 8:
-                                    items = (8, 13)
-
-                            if int(r.hget(uid, data)) == item or int(r.hget(uid, data)) in items:
+                            if data == 'food':
                                 n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
-                                r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
-                                markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
-                                                                callback_data='clan_raid_loot'))
-                                await bot.edit_message_text(call.message.text, call.message.chat.id,
-                                                            call.message.message_id, reply_markup=markup)
-                            elif int(r.hget(uid, data)) == 0:
-                                n = r.hincrby(c, 'raid_loot_c', -1)
-                                r.sadd(f'raid_loot{cid}', uid)
-                                r.hset(uid, data, r.hget(c, 'raid_loot_n'),
-                                       {f's_{data}': r.hget(c, 'raid_loot_s')})
+                                r.hset(uid, 'time', 0)
                                 markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
                                                                 callback_data='clan_raid_loot'))
                                 await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                             call.message.message_id, reply_markup=markup)
                             else:
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='У вас вже є спорядження такого типу.')
+                                if data == 'support':
+                                    if item == 7:
+                                        items = (7, 12)
+                                    elif item == 8:
+                                        items = (8, 13)
+
+                                if int(r.hget(uid, data)) == item or int(r.hget(uid, data)) in items:
+                                    n = r.hincrby(c, 'raid_loot_c', -1)
+                                    r.sadd(f'raid_loot{cid}', uid)
+                                    r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
+                                    markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                                                    callback_data='clan_raid_loot'))
+                                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                                call.message.message_id, reply_markup=markup)
+                                elif int(r.hget(uid, data)) == 0:
+                                    n = r.hincrby(c, 'raid_loot_c', -1)
+                                    r.sadd(f'raid_loot{cid}', uid)
+                                    r.hset(uid, data, r.hget(c, 'raid_loot_n'),
+                                           {f's_{data}': r.hget(c, 'raid_loot_s')})
+                                    markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                                                    callback_data='clan_raid_loot'))
+                                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                                call.message.message_id, reply_markup=markup)
+                                else:
+                                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                    text='У вас вже є спорядження такого типу.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                             text='У рейдерів є хвилина на те, щоб забрати лут.')

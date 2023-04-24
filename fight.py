@@ -1939,8 +1939,11 @@ async def start_raid(cid):
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        r.hset(mem, 'time', 0)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            r.hset(mem, 'time', 0)
+                    else:
+                        markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode2 == 1:
                     ran = randint(50, 100)
                     if mar >= 1:
