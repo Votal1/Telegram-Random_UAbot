@@ -5453,7 +5453,7 @@ async def handle_query(call):
             if uid_enc in r.smembers(f'cl{cid}'):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
                     if item_count > 0 and call.message.message_id == mid:
-                        if ts - ts2 > 60 or uid_enc in r.smembers(f'raiders{cid}'):
+                        if ts - ts2 > 300 or uid_enc in r.smembers(f'raiders{cid}'):
                             if data == 'food':
                                 n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
@@ -5469,7 +5469,7 @@ async def handle_query(call):
                                 packs = int(r.hget(c, 'raid_loot_s'))
                                 r.hincrby(uid, 'packs', packs)
                                 if packs >= 10:
-                                    quest(mem, 3, -2, 4)
+                                    quest(uid, 3, -2, 4)
                                 if n > 0:
                                     markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
                                                                     callback_data='clan_raid_loot'))
@@ -5506,7 +5506,7 @@ async def handle_query(call):
                                                                     text='У вас вже є спорядження такого типу.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='У рейдерів є хвилина на те, щоб забрати лут.')
+                                                            text='У рейдерів є 5 хвилин на те, щоб забрати лут.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Лут закінчився.')
