@@ -1834,6 +1834,8 @@ async def start_raid(cid):
                 chance2 = int(chance2 / 2)
         else:
             location = choice(locations)
+            if cid == -1001211386939:
+                location = 'АТБ'
             chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
