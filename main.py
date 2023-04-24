@@ -5436,6 +5436,46 @@ async def handle_query(call):
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Це має зробити лідер.')
+        elif call.data.startswith('clan_raid_loot'):
+            c = 'c' + str(call.message.chat.id)
+            cid = call.message.chat.id
+            uid = call.from_user.id
+            uid_enc = str(uid).encode()
+            ts = int(datetime.now().timestamp())
+            data = r.hget(c, 'raid_loot').decode()
+            markup = markup = InlineKeyboardMarkup()
+            if uid_enc in r.smembers('cl' + cid):
+                if uid_enc not in r.smembers(f'raid_loot{cid}'):
+                    if int(r.hget(c, 'raid_loot_c')) <= 0:
+                        if ts - int(r.hget(c, 'raid_loot_ts')) < 60 or uid_enc in r.smembers(f'raiders{cid}'):
+                            #if int(r.hget(uid, data)) == int(r.hget(c, 'raid_loot_n')):
+                             #   r.hincrby(c, 'raid_loot_c', -1)
+                              #  r.sadd(f'raid_loot{cid}', uid)
+                               # r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
+                            if int(r.hget(uid, data)) == 0:
+                                n = r.hincrby(c, 'raid_loot_c', -1)
+                                r.sadd(f'raid_loot{cid}', uid)
+                                r.hset(uid, data, r.hget(c, 'raid_loot_n'),
+                                       {f's_{data}': r.hget(c, 'raid_loot_s')})
+                                markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                                                callback_data='clan_raid_loot'))
+                                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                            call.message.message_id, reply_markup=markup)
+                            else:
+                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                text='У вас вже є спорядження такого типу.')
+                        else:
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='У рейдерів є хвилина на те, щоб забрати лут.')
+                    else:
+                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                        text='Лут закінчився.')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви вже забрали свою частину.')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви не з цього клану.')
         else:
             cid = call.data.split('_')[-1]
             if str(call.from_user.id).encode() in r.smembers('cl' + cid):

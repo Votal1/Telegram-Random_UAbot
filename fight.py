@@ -2,6 +2,7 @@ from random import randint, choice, choices
 from datetime import datetime
 from asyncio import sleep
 
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import r, bot
 from parameters import spirit, vodka, intellect, injure, schizophrenia, trance, hp, \
     damage_weapon, damage_defense, damage_support, damage_head, increase_trance
@@ -1505,19 +1506,32 @@ async def guard_power(mid):
     return int(s * (1 + 0.1 * i) * (1 + 0.01 * (bd * 0.01)) * (1 + w + d + support + head))
 
 
+def raid_init(cid, raiders, c):
+    if int(r.hget('convoy', 'day')) != datetime.now().day:
+        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day, 'hour': randint(8, 12), 'first': 1})
+    for mem in r.smembers(f'raid_loot{cid}'):
+        r.srem(f'raid_loot{cid}', mem)
+    for mem in r.smembers(f'raiders{cid}'):
+        r.srem(f'raiders{cid}', mem)
+    for mem in raiders:
+        r.sadd(f'raiders{cid}', mem)
+    r.hset(c, 'raid_loot', 'empty', {'raid_loot_n': 0, 'raid_loot_s': 0, 'raid_loot_c': 0, 'raid_loot_ts': 0})
+
+
 async def start_raid(cid):
     c = 'c' + str(cid)
     title = r.hget(c, 'title').decode()
+    raiders = list(r.smembers('fighters_3' + str(cid)))[0:5]
+    markup = InlineKeyboardMarkup()
     await sleep(3)
     await bot.send_message(cid, 'Ціль знайдено')
     await sleep(1)
 
-    if int(r.hget('convoy', 'day')) != datetime.now().day:
-        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day, 'hour': randint(8, 12), 'first': 1})
+    raid_init(cid, raiders, c)
 
     chance1, hack, mar, rocket, fish, jew = 0, 0, 0, 0, 0, 0
     raid1, raid2, raid3 = 50, 50, 0
-    for member in list(r.smembers('fighters_3' + str(cid)))[0:5]:
+    for member in raiders:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
                             'buff', 'support', 'head')
@@ -1877,29 +1891,55 @@ async def start_raid(cid):
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) == 8:
-                            r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11, 12):
-                            r.hset(mem, 'support', 8)
-                            r.hset(mem, 's_support', s)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            if int(r.hget(mem, 'support')) == 8:
+                                r.hincrby(mem, 's_support', s)
+                            elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11, 12):
+                                r.hset(mem, 'support', 8)
+                                r.hset(mem, 's_support', s)
+                    else:
+                        r.hset(c, 'raid_loot', 'support', {
+                            'raid_loot_n': 8,
+                            'raid_loot_s': s,
+                            'raid_loot_c': 5,
+                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
+                        })
+                        markup.add(InlineKeyboardButton(text='Взяти лут (5/5)', callback_data='clan_raid_loot'))
                 if mode == 2:
                     s = 2
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) in (7, 12):
-                            r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
-                            r.hset(mem, 'support', 7)
-                            r.hset(mem, 's_support', s)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            if int(r.hget(mem, 'support')) in (7, 12):
+                                r.hincrby(mem, 's_support', s)
+                            elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
+                                r.hset(mem, 'support', 7)
+                                r.hset(mem, 's_support', s)
+                    else:
+                        r.hset(c, 'raid_loot', 'support', {
+                            'raid_loot_n': 7,
+                            'raid_loot_s': s,
+                            'raid_loot_c': 5,
+                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
+                        })
+                        markup.add(InlineKeyboardButton(text='Взяти лут (5/5)', callback_data='clan_raid_loot'))
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'head')) not in (1, 6):
-                            r.hset(mem, 'head', 3)
-                            r.hset(mem, 's_head', 1)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            if int(r.hget(mem, 'head')) not in (1, 6):
+                                r.hset(mem, 'head', 3)
+                                r.hset(mem, 's_head', 1)
+                    else:
+                        r.hset(c, 'raid_loot', 'head', {
+                            'raid_loot_n': 3,
+                            'raid_loot_s': 1,
+                            'raid_loot_c': 5,
+                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
+                        })
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -1921,29 +1961,53 @@ async def start_raid(cid):
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) == 8:
-                            r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11, 12):
-                            r.hset(mem, 'support', 8)
-                            r.hset(mem, 's_support', s)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            if int(r.hget(mem, 'support')) == 8:
+                                r.hincrby(mem, 's_support', s)
+                            elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11, 12):
+                                r.hset(mem, 'support', 8)
+                                r.hset(mem, 's_support', s)
+                    else:
+                        r.hset(c, 'raid_loot', 'support', {
+                            'raid_loot_n': 8,
+                            'raid_loot_s': s,
+                            'raid_loot_c': 5,
+                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
+                        })
                 if mode == 2:
                     s = 4
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'support')) in (7, 12):
-                            r.hincrby(mem, 's_support', s)
-                        elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
-                            r.hset(mem, 'support', 7)
-                            r.hset(mem, 's_support', s)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            if int(r.hget(mem, 'support')) in (7, 12):
+                                r.hincrby(mem, 's_support', s)
+                            elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
+                                r.hset(mem, 'support', 7)
+                                r.hset(mem, 's_support', s)
+                    else:
+                        r.hset(c, 'raid_loot', 'support', {
+                            'raid_loot_n': 7,
+                            'raid_loot_s': s,
+                            'raid_loot_c': 5,
+                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
+                        })
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        if int(r.hget(mem, 'head')) not in (1, 6):
-                            r.hset(mem, 'head', 3)
-                            r.hset(mem, 's_head', 1)
+                    if cid != -1001211386939:
+                        for mem in r.smembers('fighters_3' + str(cid)):
+                            if int(r.hget(mem, 'head')) not in (1, 6):
+                                r.hset(mem, 'head', 3)
+                                r.hset(mem, 's_head', 1)
+                    else:
+                        r.hset(c, 'raid_loot', 'head', {
+                            'raid_loot_n': 3,
+                            'raid_loot_s': 1,
+                            'raid_loot_c': 5,
+                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
+                        })
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -2006,7 +2070,7 @@ async def start_raid(cid):
             reward += '\n\U0001F916 +1'
         await sleep(10)
         msg = 'Проведено рейд на ' + location + '!' + reward
-        await bot.send_message(cid, msg, disable_web_page_preview=True)
+        await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
 
     elif mode == [3]:
 
