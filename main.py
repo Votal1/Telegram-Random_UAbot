@@ -5459,7 +5459,7 @@ async def handle_query(call):
                                     items = (8, 13)
 
                             if int(r.hget(uid, data)) == item or int(r.hget(uid, data)) in items:
-                                r.hincrby(c, 'raid_loot_c', -1)
+                                n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
                                 r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
                                 markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
