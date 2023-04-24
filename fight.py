@@ -1515,7 +1515,18 @@ def raid_init(cid, raiders, c):
         r.srem(f'raiders{cid}', mem)
     for mem in raiders:
         r.sadd(f'raiders{cid}', mem)
-    r.hset(c, 'raid_loot', 'empty', {'raid_loot_n': 0, 'raid_loot_s': 0, 'raid_loot_c': 0, 'raid_loot_ts': 0})
+    r.hset(c, 'raid_loot', 'empty', {'raid_loot_n': 0, 'raid_loot_s': 0, 'raid_loot_c': 0,
+                                     'raid_loot_ts': 0, 'raid_loot_mid': 0})
+
+
+def raid_loot(t, n, s, c, ts, markup):
+    r.hset(c, 'raid_loot', t, {
+        'raid_loot_n': n,
+        'raid_loot_s': s,
+        'raid_loot_c': c,
+        'raid_loot_ts': ts
+    })
+    return markup.add(InlineKeyboardButton(text='Взяти лут (5/5)', callback_data='clan_raid_loot'))
 
 
 async def start_raid(cid):
@@ -1901,13 +1912,7 @@ async def start_raid(cid):
                                 r.hset(mem, 'support', 8)
                                 r.hset(mem, 's_support', s)
                     else:
-                        r.hset(c, 'raid_loot', 'support', {
-                            'raid_loot_n': 8,
-                            'raid_loot_s': s,
-                            'raid_loot_c': 5,
-                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
-                        })
-                        markup.add(InlineKeyboardButton(text='Взяти лут (5/5)', callback_data='clan_raid_loot'))
+                        markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode == 2:
                     s = 2
                     if mar >= 1:
@@ -1921,13 +1926,7 @@ async def start_raid(cid):
                                 r.hset(mem, 'support', 7)
                                 r.hset(mem, 's_support', s)
                     else:
-                        r.hset(c, 'raid_loot', 'support', {
-                            'raid_loot_n': 7,
-                            'raid_loot_s': s,
-                            'raid_loot_c': 5,
-                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
-                        })
-                        markup.add(InlineKeyboardButton(text='Взяти лут (5/5)', callback_data='clan_raid_loot'))
+                        markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
                     if cid != -1001211386939:
@@ -1936,12 +1935,7 @@ async def start_raid(cid):
                                 r.hset(mem, 'head', 3)
                                 r.hset(mem, 's_head', 1)
                     else:
-                        r.hset(c, 'raid_loot', 'head', {
-                            'raid_loot_n': 3,
-                            'raid_loot_s': 1,
-                            'raid_loot_c': 5,
-                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
-                        })
+                        markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -1971,12 +1965,7 @@ async def start_raid(cid):
                                 r.hset(mem, 'support', 8)
                                 r.hset(mem, 's_support', s)
                     else:
-                        r.hset(c, 'raid_loot', 'support', {
-                            'raid_loot_n': 8,
-                            'raid_loot_s': s,
-                            'raid_loot_c': 5,
-                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
-                        })
+                        markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode == 2:
                     s = 4
                     if mar >= 1:
@@ -1990,12 +1979,7 @@ async def start_raid(cid):
                                 r.hset(mem, 'support', 7)
                                 r.hset(mem, 's_support', s)
                     else:
-                        r.hset(c, 'raid_loot', 'support', {
-                            'raid_loot_n': 7,
-                            'raid_loot_s': s,
-                            'raid_loot_c': 5,
-                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
-                        })
+                        markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
                     if cid != -1001211386939:
@@ -2004,12 +1988,7 @@ async def start_raid(cid):
                                 r.hset(mem, 'head', 3)
                                 r.hset(mem, 's_head', 1)
                     else:
-                        r.hset(c, 'raid_loot', 'head', {
-                            'raid_loot_n': 3,
-                            'raid_loot_s': 1,
-                            'raid_loot_c': 5,
-                            'raid_loot_ts': int(datetime.now().timestamp()) + 10
-                        })
+                        markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup)
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -2072,7 +2051,8 @@ async def start_raid(cid):
             reward += '\n\U0001F916 +1'
         await sleep(10)
         msg = 'Проведено рейд на ' + location + '!' + reward
-        await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
+        a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
+        r.hset(c, 'raid_loot_mid', a.message_id)
 
     elif mode == [3]:
 

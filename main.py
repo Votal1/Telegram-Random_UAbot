@@ -5442,17 +5442,27 @@ async def handle_query(call):
             uid = call.from_user.id
             uid_enc = str(uid).encode()
             ts = int(datetime.now().timestamp())
-            data = r.hget(c, 'raid_loot').decode()
+            rl = r.hget(c, 'raid_loot', 'raid_loot_n', 'raid_loot_mid')
+            data = rl[0].decode()
+            item = int(rl[1])
+            mid = int(rl[2])
+            items = ()
             markup = InlineKeyboardMarkup()
             if uid_enc in r.smembers(f'cl{cid}'):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
-                    if int(r.hget(c, 'raid_loot_c')) > 0:
+                    if int(r.hget(c, 'raid_loot_c')) > 0 and call.message.message_id == mid:
                         if ts - int(r.hget(c, 'raid_loot_ts')) < 60 or uid_enc in r.smembers(f'raiders{cid}'):
-                            #if int(r.hget(uid, data)) == int(r.hget(c, 'raid_loot_n')):
-                             #   r.hincrby(c, 'raid_loot_c', -1)
-                              #  r.sadd(f'raid_loot{cid}', uid)
-                               # r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
-                            if int(r.hget(uid, data)) == 0:
+                            if data == 'support':
+                                if item == 7:
+                                    items = (7, 12)
+                                elif item == 8:
+                                    items = (8, 13)
+
+                            if int(r.hget(uid, data)) == item or int(r.hget(uid, data)) in items:
+                                r.hincrby(c, 'raid_loot_c', -1)
+                                r.sadd(f'raid_loot{cid}', uid)
+                                r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
+                            elif int(r.hget(uid, data)) == 0:
                                 n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
                                 r.hset(uid, data, r.hget(c, 'raid_loot_n'),
