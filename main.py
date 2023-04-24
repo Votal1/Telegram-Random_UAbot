@@ -5442,17 +5442,18 @@ async def handle_query(call):
             uid = call.from_user.id
             uid_enc = str(uid).encode()
             ts = int(datetime.now().timestamp())
-            rl = r.hmget(c, 'raid_loot', 'raid_loot_n', 'raid_loot_mid', 'raid_loot_c')
+            rl = r.hmget(c, 'raid_loot', 'raid_loot_n', 'raid_loot_mid', 'raid_loot_c', 'raid_loot_ts')
             data = rl[0].decode()
             item = int(rl[1])
             mid = int(rl[2])
             item_count = int(rl[3])
+            ts2 = int(rl[4])
             items = ()
             markup = InlineKeyboardMarkup()
             if uid_enc in r.smembers(f'cl{cid}'):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
                     if item_count > 0 and call.message.message_id == mid:
-                        if ts - int(r.hget(c, 'raid_loot_ts')) < 60 or uid_enc in r.smembers(f'raiders{cid}'):
+                        if ts - ts2 > 60 or uid_enc in r.smembers(f'raiders{cid}'):
                             if data == 'food':
                                 n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
