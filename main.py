@@ -2828,7 +2828,7 @@ async def guard(message):
                         if int(r.hget(mid, 'defense')) == 0:
                             r.hset(mid, 'defense', 4, {'s_defense': 20})
                         if int(r.hget(mid, 'support')) == 0:
-                            r.hset(mid, 'support', 7, {'s_support': 20})
+                            r.hset(mid, 'support', 13, {'s_support': 20})
                         if int(r.hget(mid, 'head')) == 0:
                             r.hset(mid, 'head', 4, {'s_head': 20})
                             quest(message.from_user.id, 3, 2, 1)
