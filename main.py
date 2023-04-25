@@ -5846,6 +5846,9 @@ async def handle_query(call):
                                     r.hincrby(mem, 'vodka', 9)
                                     r.hincrby('all_vodka', 'vodka', 9)
                                     spirit(int(vodka(mem)) * 9, mem, 0)
+                                    if int(r.hget(mem, 'support')) == 0:
+                                        r.hset(mem, 'support', 13)
+                                        r.hset(mem, 's_support', randint(1, 5))
                             await bot.send_message(cid, '\u2622 Клан святкує відпрацьовану зміну.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

@@ -1308,7 +1308,7 @@ async def war_power(sett, cid):
                 if r.hget('c' + str(cid), 'side') and int(r.hget('c' + str(cid), 'side')) == 1:
                     codes = int(r.hget('c' + str(cid), 'codes'))
                     if codes > 50:
-                        codes = 0
+                        codes = 50
                     s = int(s + s * codes * 0.01)
             if meat > 0:
                 quest(member, 3, -3, 2)
