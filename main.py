@@ -5816,17 +5816,19 @@ async def handle_query(call):
                 elif call.data.startswith('clan_spike'):
                     c = 'c' + cid
                     if checkLeader(call.from_user.id, cid):
-                        if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 100:
+                        if int(r.hget(c, 'wood')) >= 200 and int(r.hget(c, 'stone')) >= 100 \
+                                and int(r.hget(c, 'cloth')) >= 50:
                             r.hincrby(c, 'wood', -200)
                             r.hincrby(c, 'stone', -100)
+                            r.hincrby(c, 'cloth', -50)
                             for mem in r.smembers('cl' + cid):
-                                if int(r.hget(mem, 'weapon')) == 0:
-                                    r.hset(mem, 'weapon', 1)
-                                    r.hset(mem, 's_weapon', 1)
+                                if int(r.hget(mem, 'weapon')) == 0 and randint(1, 5) == 5:
+                                    r.hset(mem, 'weapon', 7)
+                                    r.hset(mem, 's_weapon', 10)
                                 if int(r.hget(mem, 'defense')) == 0:
-                                    r.hset(mem, 'defense', 1)
-                                    r.hset(mem, 's_defense', 1)
-                            await bot.send_message(cid, '\U0001F5E1\U0001F6E1 Клан готовий йти в бій.')
+                                    r.hset(mem, 'defense', 4)
+                                    r.hset(mem, 's_defense', 10)
+                            await bot.send_message(cid, '\U0001F5E1 Клан готовий йти в бій.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                             text='Недостатньо ресурсів.')

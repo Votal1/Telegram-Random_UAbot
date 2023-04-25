@@ -177,8 +177,8 @@ def c_shop(c, page):
             markup.add(InlineKeyboardButton(text='\U0001F44A 5 - \U0001F47E 10',
                                             callback_data=cdata('clan_monument', c)))
         if int(r.hget(c, 'base')) == 9:
-            msg += '\n\U0001F5E1\U0001F6E1 Колючий комплект - закупити всьому клану дрин і щит.'
-            markup.add(InlineKeyboardButton(text='Колючий комплект - \U0001F333 200, \U0001faa8 100',
+            msg += '\n\U0001F5E1\U0001F6E1 Виготовити всьому клану по кожуху та видати мосінку кожному п\'ятому.'
+            markup.add(InlineKeyboardButton(text='Кожух та мосінка - \U0001F333 200, \U0001faa8 100 \U0001F9F6 50',
                                             callback_data=cdata('clan_spike', c)))
         if int(r.hget(c, 'base')) == 9:
             msg += '\n\u2622 Купити тим, хто відпрацював зміну по 10 горілки.'
