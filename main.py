@@ -2380,7 +2380,7 @@ async def build(message):
                             markup.add(InlineKeyboardButton(text='Побудувати АЗС',
                                                             callback_data='build3'))
                             msg += '\nАЗС (\U0001F333 1000, \U0001faa8 1000, \U0001F9F6 500, ' \
-                                   '\U0001F9F1 400, \U0001F4B5 2000) - дизель в клановому магазині для таксистів.'
+                                   '\U0001F9F1 400, \U0001F4B5 2000) - +5 гривень за перемогу таксиста в масовій битві.'
                         if int(r.hget(c, 'build4')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати дата-центр',
                                                             callback_data='build4'))
