@@ -5472,7 +5472,7 @@ async def handle_query(call):
                                 r.sadd(f'raid_loot{cid}', uid)
                                 r.hset(uid, 'time', 0)
                                 if n > 0:
-                                    markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                    markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
                                                                     callback_data='clan_raid_loot'))
                                 await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                             call.message.message_id, reply_markup=markup)

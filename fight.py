@@ -1519,14 +1519,14 @@ def raid_init(cid, raiders, c):
                                      'raid_loot_ts': 0, 'raid_loot_mid': 0})
 
 
-def raid_loot(t, n, s, cnt, ts, markup, c):
+def raid_loot(t, n, s, cnt, ts, markup, c, text='Взяти лут (5/5)'):
     r.hset(c, 'raid_loot', t, {
         'raid_loot_n': n,
         'raid_loot_s': s,
         'raid_loot_c': cnt,
         'raid_loot_ts': ts
     })
-    return markup.add(InlineKeyboardButton(text='Взяти лут (5/5)', callback_data='clan_raid_loot'))
+    return markup.add(InlineKeyboardButton(text=text, callback_data='clan_raid_loot'))
 
 
 async def start_raid(cid):
@@ -2094,7 +2094,7 @@ async def start_raid(cid):
         else:
             r.hincrby('convoy', 'power', -chance1)
         if s == 3:
-            reward = int(chance2 / 21000 - (diff / 21000))
+            reward = int(chance2 / 20000 - (diff / 20000))
         else:
             reward = int(chance2 / 25000 - (diff / 25000))
         if reward > 0 or packs > 0:
@@ -2108,7 +2108,11 @@ async def start_raid(cid):
                     if packs >= 10:
                         quest(mem, 3, -2, 4)
             else:
-                markup = raid_loot('convoy', 0, packs, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                packs_s = 5
+                if int(r.hget(c, 'build6')) == 3:
+                    packs_s = randint(5, 10)
+                markup = raid_loot('convoy', 0, packs, packs_s, int(datetime.now().timestamp()) + 10, markup, c,
+                                   text=f'Взяти лут. Залишилось {packs_s}')
             if int(r.hget(c, 'buff_4')) == 31:
                 q_points(int(r.srandmember('fighters_3' + str(cid))), 10)
                 msg += ' \U0001fa99 +10'
