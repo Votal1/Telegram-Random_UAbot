@@ -2375,7 +2375,7 @@ async def build(message):
                                                             callback_data='build2'))
                             msg += '\nАптека (\U0001F333 3000, \U0001faa8 500, \U0001F9F6 500, ' \
                                    '\U0001F9F1 300, \U0001F4B5 1000, \U0001F47E 50) - патологоанатом з аптечкою ' \
-                                   'отримуватиме по 10 гривень за воскрешання русаків.'
+                                   'отримуватиме по 10 гривень за піднімання русаків.'
                         if int(r.hget(c, 'build3')) == 0:
                             markup.add(InlineKeyboardButton(text='Побудувати АЗС',
                                                             callback_data='build3'))
@@ -2442,10 +2442,9 @@ async def build(message):
                             markup.add(InlineKeyboardButton(text='Побудувати торговий центр',
                                                             callback_data='build5'))
                             msg += '\nТорговий центр (\U0001F333 2000, \U0001faa8 1000, \U0001F9F6 800, ' \
-                                   '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - можливість ' \
-                                   'купувати Цукор (при годуванні збільшує силу, або зменшує шанс її зменшення) та ' \
-                                   'Кавун базований для всього клану (+5 сили за годування і +5 гривень за роботу ' \
-                                   'на соляній шахті, зникне, якщо сила зменшиться).'
+                                   '\U0001F9F1 500, \U0001F4B5 6000 \U0001F4FB 100) - можливість купувати Цукор ' \
+                                   'і Квас (з подвоєною міцністю, якщо в клані більше мільйона гривень). ' \
+                                   'Можливість закупити Кавун базований для всього клану.'
                         if int(r.hget(c, 'build6')) == 0 and int(r.hget(c, 'build1')) > 0 \
                                 and int(r.hget(c, 'build2')) > 0 and int(r.hget(c, 'build3')) > 0 \
                                 and int(r.hget(c, 'build4')) > 0 and int(r.hget(c, 'build5')) > 0:
@@ -5680,7 +5679,10 @@ async def handle_query(call):
                     if int(r.hget(call.from_user.id, 'money')) >= 55:
                         if int(r.hget(call.from_user.id, 'support')) == 0:
                             r.hset(call.from_user.id, 'support', 7)
-                            r.hset(call.from_user.id, 's_support', 1)
+                            s = 1
+                            if int(r.hget(f'c{cid}', 'money')) >= 1000000:
+                                s = 2
+                            r.hset(call.from_user.id, 's_support', s)
                             r.hincrby(call.from_user.id, 'money', -55)
                             quest(call.from_user.id, 3, 3, 4)
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -5696,7 +5698,10 @@ async def handle_query(call):
                     if int(r.hget(call.from_user.id, 'money')) >= 15:
                         if int(r.hget(call.from_user.id, 'support')) == 0:
                             r.hset(call.from_user.id, 'support', 8)
-                            r.hset(call.from_user.id, 's_support', 5)
+                            s = 5
+                            if int(r.hget(f'c{cid}', 'money')) >= 1000000:
+                                s = 10
+                            r.hset(call.from_user.id, 's_support', 10)
                             r.hincrby(call.from_user.id, 'money', -15)
                             quest(call.from_user.id, 3, 3, 4)
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
