@@ -137,9 +137,7 @@ def c_shop(c, page):
             msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
                    'битвах або рейдах на 25% (тільки для таксистів).'
             markup.add(InlineKeyboardButton(text='Дизель - \U0001F4B5 20', callback_data=cdata('clan_diesel', c)))
-        if int(r.hget(c, 'build5')) == 1:
-            msg += '\n\U0001F5E1 АК-47 [Зброя, міцність=30] - після перемоги активує ефект горілки.'
-            markup.add(InlineKeyboardButton(text='АК-47 - \U0001F4B5 15', callback_data=cdata('clan_ak', c)))
+        if int(r.hget(c, 'build6')) == 1:
             msg += '\n\u2744\uFE0F Вушанка [Шапка, міцність=20] - збільшує ефективність бойового трансу на 2% за' \
                    ' кожен рівень алкоголізму.'
             markup.add(InlineKeyboardButton(text='Вушанка - \U0001F4B5 20', callback_data=cdata('clan_ear', c)))

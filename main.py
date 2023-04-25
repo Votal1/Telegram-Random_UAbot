@@ -2768,7 +2768,11 @@ async def work(message):
                             if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
                                 r.hset(message.from_user.id, 'time', 0)
                                 resources += ' \U0001F372 +1'
-                            
+                        if int(r.hget(c, 'build5')) == 1:
+                            if int(r.hget(message.from_user.id, 'support')) == 0:
+                                r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
+                                resources += '\n🧾 Русаку вручили повістку!'
+
                         await message.reply(name + ' попрацював на благо громади.\n' + resources)
             else:
                 await message.reply('Твій русак сьогодні вже своє відпрацював.')
@@ -2816,11 +2820,19 @@ async def guard(message):
             if int(r.hget(mid, 'clan_time')) != datetime.now().day and r.scard(g) < 5:
                 r.hset(mid, 'clan_time', datetime.now().day)
                 if int(r.hget(c, 'build5')) == 1:
-                    if int(r.hget(mid, 'weapon')) == 0:
-                        r.hset(mid, 'weapon', 15, {'s_weapon': 30})
-                    if int(r.hget(mid, 'head')) == 0:
-                        r.hset(mid, 'head', 4, {'s_head': 20})
-                        quest(message.from_user.id, 3, 2, 1)
+                    if int(r.hget(mid, 'support')) == 11:
+                        r.hset(mid, 'support', 0, {'s_support': 0})
+
+                        if int(r.hget(mid, 'weapon')) == 0:
+                            r.hset(mid, 'weapon', 7, {'s_weapon': 20})
+                        if int(r.hget(mid, 'defense')) == 0:
+                            r.hset(mid, 'defense', 4, {'s_defense': 20})
+                        if int(r.hget(mid, 'support')) == 0:
+                            r.hset(mid, 'support', 7, {'s_support': 20})
+                        if int(r.hget(mid, 'head')) == 0:
+                            r.hset(mid, 'head', 4, {'s_head': 20})
+                            quest(message.from_user.id, 3, 2, 1)
+
                 st = await guard_power(mid)
                 if int(r.hget(c, 'base')) == 12:
                     money = int(r.hget(c, 'money'))
@@ -5646,21 +5658,6 @@ async def handle_query(call):
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Дизель можна купити тільки таксистам.')
-
-                elif call.data.startswith('clan_ak'):
-                    if int(r.hget(call.from_user.id, 'money')) >= 15:
-                        if int(r.hget(call.from_user.id, 'weapon')) == 0:
-                            r.hset(call.from_user.id, 'weapon', 15)
-                            r.hset(call.from_user.id, 's_weapon', 30)
-                            r.hincrby(call.from_user.id, 'money', -15)
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Ви успішно купили АК-47.')
-                        else:
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='У вас вже є зброя.')
-                    else:
-                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Недостатньо коштів на рахунку.')
 
                 elif call.data.startswith('clan_ear'):
                     if int(r.hget(call.from_user.id, 'money')) >= 20:
