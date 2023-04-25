@@ -5639,26 +5639,6 @@ async def handle_query(call):
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Недостатньо коштів на рахунку.')
 
-                elif call.data.startswith('clan_diesel'):
-                    if int(r.hget(call.from_user.id, 'class')) in (31, 32, 33):
-                        if int(r.hget(call.from_user.id, 'money')) >= 20:
-                            if int(r.hget(call.from_user.id, 'support')) == 0:
-                                r.hset(call.from_user.id, 'support', 2)
-                                r.hset(call.from_user.id, 's_support', 5)
-                                r.hincrby(call.from_user.id, 'money', -20)
-                                quest(call.from_user.id, 3, 3, 4)
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='Ви успішно купили дизель.')
-                            else:
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='У вас вже є допоміжне спорядження.')
-                        else:
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо коштів на рахунку.')
-                    else:
-                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Дизель можна купити тільки таксистам.')
-
                 elif call.data.startswith('clan_ear'):
                     if int(r.hget(call.from_user.id, 'money')) >= 20:
                         if int(r.hget(call.from_user.id, 'head')) == 0:

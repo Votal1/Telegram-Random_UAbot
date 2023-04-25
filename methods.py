@@ -133,10 +133,6 @@ def c_shop(c, page):
                    'Максимальна кількість покупок на русака - 3.'
             markup.add(InlineKeyboardButton(text='Мухомор королівський - \U0001F4B5 100',
                                             callback_data=cdata('clan_mushroom', c)))
-        if int(r.hget(c, 'build3')) == 4:
-            msg += '\n\U0001F695 Дизель [Допомога, міцність=5] - збільшує власну силу в битвах, міжчатових ' \
-                   'битвах або рейдах на 25% (тільки для таксистів).'
-            markup.add(InlineKeyboardButton(text='Дизель - \U0001F4B5 20', callback_data=cdata('clan_diesel', c)))
         if int(r.hget(c, 'build6')) == 1:
             msg += '\n\u2744\uFE0F Вушанка [Шапка, міцність=20] - збільшує ефективність бойового трансу на 2% за' \
                    ' кожен рівень алкоголізму.'
