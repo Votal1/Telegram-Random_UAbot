@@ -5878,6 +5878,9 @@ async def handle_query(call):
                             markup.add(InlineKeyboardButton(text='❌', callback_data=f'clan_rpg-_{c[1:]}'))
                             msg = f'\U0001f7e1 {call.from_user.first_name} хоче купити РПГ-7.'
                             await bot.send_message(cid, msg, reply_markup=markup)
+                        else:
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='Це може зробити тільки лідер чи заступник.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Недостатньо ресурсів.')
@@ -5920,6 +5923,9 @@ async def handle_query(call):
                             markup.add(InlineKeyboardButton(text='❌', callback_data=f'clan_armor-_{c[1:]}'))
                             msg = f'\U0001f7e1 {call.from_user.first_name} хоче купити Бронежилет вагнерівця.'
                             await bot.send_message(cid, msg, reply_markup=markup)
+                        else:
+                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                            text='Це може зробити тільки лідер чи заступник.')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Недостатньо ресурсів.')
