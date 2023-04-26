@@ -5896,6 +5896,7 @@ async def handle_query(call):
                             markup = InlineKeyboardMarkup()
                             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 500',
                                                             callback_data=f'clan_armor+{call.from_user.id}_{c[1:]}'))
+                            markup.add(InlineKeyboardButton(text='❌', callback_data=f'clan_armor+_{c[1:]}'))
                             msg = f'\U0001f7e1 {call.from_user.first_name} хоче купити Бронежилет вагнерівця.'
                             await bot.send_message(cid, msg, reply_markup=markup)
                     else:
