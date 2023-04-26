@@ -5494,7 +5494,7 @@ async def handle_query(call):
                                 if packs >= 10:
                                     quest(uid, 3, -2, 4)
                                 if n > 0:
-                                    markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                    markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
                                                                     callback_data='clan_raid_loot'))
                                 await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                             call.message.message_id, reply_markup=markup)
@@ -5511,7 +5511,7 @@ async def handle_query(call):
                                     r.sadd(f'raid_loot{cid}', uid)
                                     r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
                                     if n > 0:
-                                        markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                        markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
                                                                         callback_data='clan_raid_loot'))
                                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                                 call.message.message_id, reply_markup=markup)
@@ -5521,7 +5521,7 @@ async def handle_query(call):
                                     r.hset(uid, data, r.hget(c, 'raid_loot_n'),
                                            {f's_{data}': r.hget(c, 'raid_loot_s')})
                                     if n > 0:
-                                        markup.add(InlineKeyboardButton(text=f'Взяти лут ({n}/5)',
+                                        markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
                                                                         callback_data='clan_raid_loot'))
                                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                                 call.message.message_id, reply_markup=markup)
