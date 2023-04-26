@@ -1762,16 +1762,8 @@ async def start_raid(cid):
                     r.hincrby(c, 'codes')
                     msg += '\n\U0001F916 +1'
                 else:
-                    msg += '\n\U0001F6E1 +10'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'defense')) == 0 or int(r.hget(mem, 'defense')) == 1:
-                                r.hset(mem, 'defense', 9)
-                                r.hset(mem, 's_defense', 10)
-                            elif int(r.hget(mem, 'defense')) != 3:
-                                r.hincrby(mem, 's_defense', 10)
-                    else:
-                        markup = raid_loot('defense', 9, 10, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    msg += '\n\U0001F6E1 Кожух [Захист, міцність=20]'
+                    markup = raid_loot('defense', 4, 20, 5, int(datetime.now().timestamp()) + 10, markup, c)
 
             elif side2 == 2:
                 if randint(1, 5) == 5:
@@ -1779,16 +1771,8 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'deaths', 5)
                 else:
-                    msg += '\n\U0001F3A9 +20'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'head')) == 0:
-                                r.hset(mem, 'head', 2)
-                                r.hset(mem, 's_head', 20)
-                            elif int(r.hget(mem, 'head')) == 2:
-                                r.hincrby(mem, 's_head', 20)
-                    else:
-                        markup = raid_loot('head', 2, 20, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    msg += '\n\U0001F3A9 Тактичний шолом [Шапка, міцність=20]'
+                    markup = raid_loot('head', 2, 20, 5, int(datetime.now().timestamp()) + 10, markup, c)
 
             elif side2 == 3:
                 if randint(1, 5) == 5:
@@ -1797,16 +1781,8 @@ async def start_raid(cid):
                         r.hset(mem, 'hp', 100)
                         r.hincrby(mem, 'money', 100)
                 else:
-                    msg += '\n\U0001F5E1 +3'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'weapon')) in (0, 1):
-                                r.hset(mem, 'weapon', 3)
-                                r.hset(mem, 's_weapon', 3)
-                            elif int(r.hget(mem, 'weapon')) == 3:
-                                r.hincrby(mem, 's_weapon', 3)
-                    else:
-                        markup = raid_loot('weapon', 3, 3, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3]'
+                    markup = raid_loot('weapon', 3, 3, 5, int(datetime.now().timestamp()) + 10, markup, c)
 
             elif side2 == 4:
                 if randint(1, 5) == 5:
@@ -1814,16 +1790,8 @@ async def start_raid(cid):
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'childs', 1)
                 else:
-                    msg += '\n\U0001F9EA +1'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'support')) == 0:
-                                r.hset(mem, 'support', 7)
-                                r.hset(mem, 's_support', 1)
-                            elif int(r.hget(mem, 'support')) != 10:
-                                r.hincrby(mem, 's_support', 1)
-                    else:
-                        markup = raid_loot('support', 7, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    msg += '\n\U0001F9EA Цукор [Допомога, міцність=1]'
+                    markup = raid_loot('support', 7, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
             else:
                 if randint(1, 5) == 5:
                     msg += '\n\U0001F4E6 +3'
@@ -1918,46 +1886,20 @@ async def start_raid(cid):
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'support')) == 8:
-                                r.hincrby(mem, 's_support', s)
-                            elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11, 12):
-                                r.hset(mem, 'support', 8)
-                                r.hset(mem, 's_support', s)
-                    else:
-                        markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 2:
                     s = 2
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'support')) in (7, 12):
-                                r.hincrby(mem, 's_support', s)
-                            elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
-                                r.hset(mem, 'support', 7)
-                                r.hset(mem, 's_support', s)
-                    else:
-                        markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'head')) not in (1, 6):
-                                r.hset(mem, 'head', 3)
-                                r.hset(mem, 's_head', 1)
-                    else:
-                        markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            r.hset(mem, 'time', 0)
-                    else:
-                        markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode2 == 1:
                     ran = randint(50, 100)
                     if mar >= 1:
@@ -1974,46 +1916,20 @@ async def start_raid(cid):
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'support')) == 8:
-                                r.hincrby(mem, 's_support', s)
-                            elif int(r.hget(mem, 'support')) not in (2, 6, 7, 9, 10, 11, 12):
-                                r.hset(mem, 'support', 8)
-                                r.hset(mem, 's_support', s)
-                    else:
-                        markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 2:
                     s = 4
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'support')) in (7, 12):
-                                r.hincrby(mem, 's_support', s)
-                            elif int(r.hget(mem, 'support')) not in (2, 6, 9, 10, 11):
-                                r.hset(mem, 'support', 7)
-                                r.hset(mem, 's_support', s)
-                    else:
-                        markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            if int(r.hget(mem, 'head')) not in (1, 6):
-                                r.hset(mem, 'head', 3)
-                                r.hset(mem, 's_head', 1)
-                    else:
-                        markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
-                    if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                        for mem in r.smembers('fighters_3' + str(cid)):
-                            r.hset(mem, 'time', 0)
-                    else:
-                        markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode2 == 1:
                     ran = randint(100, 200)
                     if mar >= 1:
@@ -2103,19 +2019,14 @@ async def start_raid(cid):
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
-            if cid not in (-1001211386939, -1001836128126, -1001753741231, -1001721449561, -1001802699062):
-                for mem in r.smembers('fighters_3' + str(cid)):
-                    r.hincrby(mem, 'packs', packs)
-                    quest(mem, 3, 3, 3)
+            for mem in r.smembers('fighters_3' + str(cid)):
+                quest(mem, 3, 3, 3)
 
-                    if packs >= 10:
-                        quest(mem, 3, -2, 4)
-            else:
-                packs_s = 5
-                if int(r.hget(c, 'build6')) == 3:
-                    packs_s = randint(5, 10)
-                markup = raid_loot('convoy', 0, packs, packs_s, int(datetime.now().timestamp()) + 10, markup, c,
-                                   text=f'Взяти лут. Залишилось {packs_s}')
+            packs_s = 5
+            if int(r.hget(c, 'build6')) == 3:
+                packs_s = randint(5, 10)
+            markup = raid_loot('convoy', 0, packs, packs_s, int(datetime.now().timestamp()) + 10, markup, c,
+                               text=f'Взяти лут. Залишилось {packs_s}')
             if int(r.hget(c, 'buff_4')) == 31:
                 q_points(int(r.srandmember('fighters_3' + str(cid))), 10)
                 msg += ' \U0001fa99 +10'
