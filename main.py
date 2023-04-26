@@ -5892,7 +5892,7 @@ async def handle_query(call):
                                 msg = call.message.text + '\n\n❌'
                                 await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
                                                             message_id=call.message.message_id, reply_markup=None)
-                        else:
+                        elif not call.data.startswith('clan_armor-') and not call.data.startswith('clan_armor+'):
                             markup = InlineKeyboardMarkup()
                             markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 500',
                                                             callback_data=f'clan_armor+{call.from_user.id}_{c[1:]}'))
