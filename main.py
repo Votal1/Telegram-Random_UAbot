@@ -5863,24 +5863,44 @@ async def handle_query(call):
 
                 elif call.data.startswith('clan_armor'):
                     c = 'c' + cid
-                    if checkLeader(call.from_user.id, cid):
-                        if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 50:
-                            if int(r.hget(call.from_user.id, 'defense')) == 0:
-                                r.hset(call.from_user.id, 'defense', 2)
-                                r.hset(call.from_user.id, 's_defense', 50)
-                                r.hincrby(c, 'money', -500)
-                                r.hincrby(c, 'r_spirit', -50)
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='Ви успішно купили бронежилет вагнерівця.')
+                    if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 50:
+                        if checkLeader(call.from_user.id, cid):
+                            if not call.data.startswith('clan_armor-'):
+                                uid = call.from_user.id
+                                if call.data.startswith('clan_armor+'):
+                                    uid = call.data.split('_')[1].split('+')[1]
+                                if str(uid).encode() in r.smembers(r.smembers('cl' + cid)):
+                                    if int(r.hget(uid, 'defense')) == 0:
+                                        r.hset(uid, 'defense', 2)
+                                        r.hset(uid, 's_defense', 50)
+                                        r.hincrby(c, 'money', -500)
+                                        r.hincrby(c, 'r_spirit', -50)
+                                        if call.data.startswith('clan_armor+'):
+                                            msg = call.message.text + '\n\n✅'
+                                            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                                                        message_id=call.message.message_id,
+                                                                        reply_markup=None)
+                                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                        text='Ви успішно купили бронежилет вагнерівця.')
+                                    else:
+                                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                        text='У вас вже є захисне спорядження.')
+                                else:
+                                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                    text='Схоже цей учасник не в клані.')
                             else:
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='У вас вже є захисне спорядження.')
+                                msg = call.message.text + '\n\n❌'
+                                await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                                            message_id=call.message.message_id, reply_markup=None)
                         else:
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо ресурсів.')
+                            markup = InlineKeyboardMarkup()
+                            markup.add(InlineKeyboardButton(text='Бронежилет - \U0001F47E 50, \U0001F4B5 500',
+                                                            callback_data=f'clan_armor+{call.from_user.id}_{c[1:]}'))
+                            msg = f'\U0001f7e1 {call.from_user.first_name} хоче купити Бронежилет вагнерівця.'
+                            await bot.send_message(cid, msg, reply_markup=markup)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Це може зробити тільки лідер чи заступник.')
+                                                        text='Недостатньо ресурсів.')
 
                 elif call.data.startswith('clan_watermelon'):
                     c = 'c' + cid
