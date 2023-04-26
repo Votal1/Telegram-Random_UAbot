@@ -5842,24 +5842,45 @@ async def handle_query(call):
 
                 elif call.data.startswith('clan_rpg'):
                     c = 'c' + cid
-                    if checkLeader(call.from_user.id, cid):
-                        if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 100:
-                            if int(r.hget(call.from_user.id, 'weapon')) == 0:
-                                r.hset(call.from_user.id, 'weapon', 2)
-                                r.hset(call.from_user.id, 's_weapon', 1)
-                                r.hincrby(c, 'money', -500)
-                                r.hincrby(c, 'r_spirit', -100)
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='Ви успішно купили РПГ-7.')
+                    if int(r.hget(c, 'money')) >= 500 and int(r.hget(c, 'r_spirit')) >= 100:
+                        if checkLeader(call.from_user.id, cid):
+                            if not call.data.startswith('clan_rpg-'):
+                                uid = call.from_user.id
+                                if call.data.startswith('clan_rpg+'):
+                                    uid = call.data.split('_')[1].split('+')[1]
+                                if str(uid).encode() in r.smembers('cl' + cid):
+                                    if int(r.hget(uid, 'weapon')) in (0, 16):
+                                        r.hset(uid, 'weapon', 2)
+                                        r.hset(uid, 's_weapon', 1)
+                                        r.hincrby(c, 'money', -500)
+                                        r.hincrby(c, 'r_spirit', -100)
+                                        if call.data.startswith('clan_rpg+'):
+                                            msg = call.message.text + '\n\n✅'
+                                            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                                                        message_id=call.message.message_id,
+                                                                        reply_markup=None)
+                                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                        text='Ви успішно купили РПГ-7.')
+                                    else:
+                                        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                        text='У вас вже є зброя.')
+                                else:
+                                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                    text='Схоже, цей учасник не в клані.')
                             else:
-                                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                text='У вас вже є зброя.')
-                        else:
-                            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                            text='Недостатньо ресурсів.')
+                                msg = call.message.text + '\n\n❌'
+                                await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                                            message_id=call.message.message_id, reply_markup=None)
+                        elif not call.data.startswith('clan_rpg-') and not call.data.startswith('clan_rpg+'):
+                            markup = InlineKeyboardMarkup()
+                            markup.add(InlineKeyboardButton(text='РПГ-7 - \U0001F47E 100, \U0001F4B5 500',
+                                                            callback_data=f'clan_rpg+{call.from_user.id}_{c[1:]}'))
+                            markup.add(InlineKeyboardButton(text='❌', callback_data=f'clan_rpg-_{c[1:]}'))
+                            msg = f'\U0001f7e1 {call.from_user.first_name} хоче купити РПГ-7.'
+                            await bot.send_message(cid, msg, reply_markup=markup)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Це може зробити тільки лідер.')
+                                                        text='Недостатньо ресурсів.')
 
                 elif call.data.startswith('clan_armor'):
                     c = 'c' + cid
