@@ -1522,14 +1522,14 @@ def raid_init(cid, raiders, c):
                                      'raid_loot_ts': 0, 'raid_loot_mid': 0})
 
 
-def raid_loot(t, n, s, cnt, ts, markup, c, text='Взяти лут (5/5)'):
+def raid_loot(t, n, s, cnt, ts, markup, c):
     r.hset(c, 'raid_loot', t, {
         'raid_loot_n': n,
         'raid_loot_s': s,
         'raid_loot_c': cnt,
         'raid_loot_ts': ts
     })
-    return markup.add(InlineKeyboardButton(text=text, callback_data='clan_raid_loot'))
+    return markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {s}', callback_data='clan_raid_loot'))
 
 
 async def start_raid(cid):
@@ -1881,21 +1881,22 @@ async def start_raid(cid):
                 reward += 'Русаки пограбували АТБ\n'
                 mode = choice([1, 2, 3, 4])
                 mode2 = choice([1, 2])
+                items = randint(5, 10)
                 if mode == 1:
                     s = 3
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
-                    markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('support', 8, s, items, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 2:
                     s = 2
                     if mar >= 1:
                         s *= 2
                     reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('support', 7, s, items, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 3:
                     reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
-                    markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                    markup = raid_loot('head', 3, 1, items, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 4:
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
@@ -1940,6 +1941,7 @@ async def start_raid(cid):
             elif locations.index(location) == 4:
                 reward += 'Русаки пограбували Епіцентр\n'
                 base = int(r.hget(c, 'base'))
+                mode = choice([1, 2])
                 if base >= 1:
                     ran = randint(25, 75)
                     if mar >= 1:
@@ -1964,6 +1966,12 @@ async def start_raid(cid):
                         ran *= 2
                     reward += ' \U0001F9F1 +' + str(ran)
                     brick(c, ran)
+                if mode == 1:
+                    ran = 1
+                    if mar >= 1:
+                        ran *= 2
+                    reward += f'\n🌀 +{ran}'
+                    markup = raid_loot('tape', 0, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
             elif locations.index(location) == 5:
                 reward += 'Русаки вчинили жахливий теракт...\n'
                 ran = randint(10, 20)
@@ -2025,8 +2033,7 @@ async def start_raid(cid):
             packs_s = 5
             if int(r.hget(c, 'build6')) == 3:
                 packs_s = randint(5, 10)
-            markup = raid_loot('convoy', 0, packs, packs_s, int(datetime.now().timestamp()) + 10, markup, c,
-                               text=f'Взяти лут. Залишилось {packs_s}')
+            markup = raid_loot('convoy', 0, packs, packs_s, int(datetime.now().timestamp()) + 10, markup, c)
             if int(r.hget(c, 'buff_4')) == 31:
                 q_points(int(r.srandmember('fighters_3' + str(cid))), 10)
                 msg += ' \U0001fa99 +10'

@@ -5475,6 +5475,17 @@ async def handle_query(call):
                                                                     callback_data='clan_raid_loot'))
                                 await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                             call.message.message_id, reply_markup=markup)
+
+                            elif data == 'tape':
+                                n = r.hincrby(c, 'raid_loot_c', -1)
+                                r.sadd(f'raid_loot{cid}', uid)
+                                r.hincrby(uid, 'tape', r.hget(c, 'raid_loot_s'))
+                                if n > 0:
+                                    markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
+                                                                    callback_data='clan_raid_loot'))
+                                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                            call.message.message_id, reply_markup=markup)
+
                             elif data == 'convoy':
                                 n = r.hincrby(c, 'raid_loot_c', -1)
                                 r.sadd(f'raid_loot{cid}', uid)
@@ -5487,6 +5498,7 @@ async def handle_query(call):
                                                                     callback_data='clan_raid_loot'))
                                 await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                             call.message.message_id, reply_markup=markup)
+
                             else:
                                 if data == 'support':
                                     if item == 7:
