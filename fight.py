@@ -1260,8 +1260,8 @@ async def war_power(sett, cid):
                     damage_weapon(member, 25)
                 elif w == 7:
                     boost = int(r.hget(member, 's_weapon'))
-                    if boost > 20:
-                        boost = 20
+                    if boost > 25:
+                        boost = 25
                     w = 0.25 + boost / 100
                     damage_weapon(member, 7)
                 else:
