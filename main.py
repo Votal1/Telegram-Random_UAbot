@@ -5869,7 +5869,7 @@ async def handle_query(call):
                                 uid = call.from_user.id
                                 if call.data.startswith('clan_armor+'):
                                     uid = call.data.split('_')[1].split('+')[1]
-                                if str(uid).encode() in r.smembers(r.smembers('cl' + cid)):
+                                if str(uid).encode() in r.smembers('cl' + cid):
                                     if int(r.hget(uid, 'defense')) == 0:
                                         r.hset(uid, 'defense', 2)
                                         r.hset(uid, 's_defense', 50)
