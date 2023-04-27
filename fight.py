@@ -1529,7 +1529,7 @@ def raid_loot(t, n, s, cnt, ts, markup, c):
         'raid_loot_c': cnt,
         'raid_loot_ts': ts
     })
-    return markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {s}', callback_data='clan_raid_loot'))
+    return markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {cnt}', callback_data='clan_raid_loot'))
 
 
 async def start_raid(cid):
