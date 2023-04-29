@@ -11,6 +11,7 @@ from constants.classes import icons
 from constants.names import names
 from constants.photos import p7
 from content.quests import quest
+from content.inventory import check_set
 
 
 async def fight(uid1, uid2, un1, un2, t, mid):
@@ -1543,7 +1544,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1, hack, mar, rocket, fish, jew = 0, 0, 0, 0, 0, 0
+    chance1 = hack = mar = rocket = fish = jew = did, again = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
@@ -1553,6 +1554,8 @@ async def start_raid(cid):
             i = int(stats[1])
             bd = int(stats[2])
             cl = int(stats[7])
+            if check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 1:
+                did += 1
             if checkClan(member, base=4, building='morgue'):
                 d = int(r.hget(member, 'deaths'))
                 if d > 100:
@@ -1569,7 +1572,7 @@ async def start_raid(cid):
                     i += 5
                 else:
                     i, bd = schizophrenia(int(member), i, bd, True)
-            if int(stats[8]) > 0 or int(stats[9]):
+            if int(stats[8]) > 0 or int(stats[9]) == 13:
                 s, bd = trance(int(member), s, bd, True)
 
             if cl in (10, 20, 30):
@@ -1746,6 +1749,12 @@ async def start_raid(cid):
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
 
+            if did > 0:
+                chance = 15 * did
+                again = choices([0, 1], weights=[100 - chance, chance])[0]
+                if again:
+                    reward += '\nРусаки готові до реваншу!'
+
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode().replace('@', '') + '!' + reward
         msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode().replace('@', '') + '!'
@@ -1877,6 +1886,11 @@ async def start_raid(cid):
                     r.hincrby('all_vodka', 'vodka', ran)
                     hp(100, mem)
                     spirit(10000, mem, 0)
+                if did > 0:
+                    chance = 15 * did
+                    again = choices([0, 1], weights=[100 - chance, chance])[0]
+                    if again:
+                        reward += '\nРусаки готові йти в наступний рейд!'
             elif locations.index(location) == 2:
                 reward += 'Русаки пограбували АТБ\n'
                 mode = choice([1, 2, 3, 4])
@@ -1990,6 +2004,11 @@ async def start_raid(cid):
                 reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
+            if did > 0:
+                chance = 15 * did
+                again = choices([0, 1], weights=[100 - chance, chance])[0]
+                if again:
+                    reward += '\nРусаки готові до реваншу!'
         if choices([1, 0], [5, 95]) == [1]:
             r.hincrby(c, 'codes', 1)
             reward += '\n\U0001F916 +1'
@@ -2071,7 +2090,8 @@ async def start_raid(cid):
         await bot.unpin_chat_message(chat_id=cid, message_id=int(r.hget(c, 'pin')))
     except:
         pass
-    r.hset(c, 'raid_ts2', int(datetime.now().timestamp()))
+    if not again:
+        r.hset(c, 'raid_ts2', int(datetime.now().timestamp()))
     r.hdel(c, 'start')
     for member in r.smembers('fighters_3' + str(cid)):
         r.srem('fighters_3' + str(cid), member)
