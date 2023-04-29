@@ -2507,7 +2507,8 @@ async def join(message):
             diff = int(datetime.now().timestamp()) - int(r.hget(message.from_user.id, 'clan_ts'))
             if diff > ts:
                 if r.scard('cl' + str(message.chat.id)) < num:
-                    if int(r.hget(c, 'allow')) == 0 or str(message.from_user.id).encode() in r.smembers('sudoers'):
+                    if int(r.hget(c, 'allow')) == 0 or message.from_user.id == int(r.hget(c, 'leader')) \
+                            or str(message.from_user.id).encode() in r.smembers('sudoers'):
                         r.hset(message.from_user.id, 'clan', cid, {'clan_ts': int(datetime.now().timestamp())})
                         if r.hexists(message.from_user.id, 'clan_time') == 0:
                             r.hset(message.from_user.id, 'clan_time', 0)
