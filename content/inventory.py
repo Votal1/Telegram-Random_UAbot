@@ -87,6 +87,21 @@ def upgrade_button(w, d, s, h):
     return markup
 
 
+def upgrade_button2():
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {weapons[7]}',
+                                    callback_data='tape1_weapon'),
+               InlineKeyboardButton(text=f'\u2B06\uFE0F {defenses[4]}',
+                                    callback_data='tape1_defense'))
+    markup.add(InlineKeyboardButton(text=f'\u2B06\uFE0F {supports[13]}',
+                                    callback_data='tape1_support'),
+               InlineKeyboardButton(text=f'\u2B06\uFE0F {heads[4]}',
+                                    callback_data='tape1_head'))
+    markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
+
+    return markup
+
+
 def take_from_backpack(markup, item1=False, item2=False):
     if item1:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}', callback_data='backpack_take_first'))
@@ -101,34 +116,40 @@ def show_inventory(uid, full=False, upgrade=False):
 
     if upgrade:
         i = 0
+        tape = int(r.hget(uid, 'tape'))
         m1 = m2 = m3 = m4 = ''
-        if w in upgradable['weapon']:
-            i += 1
-            m1 = f'\U0001F5E1 {weapons[w]}\n'
-        else:
-            w = 0
-        if d in upgradable['defense']:
-            i += 1
-            m2 = f'\U0001F6E1 {defenses[d]}\n'
-        else:
-            d = 0
-        if s in upgradable['support']:
-            i += 1
-            m3 = f'\U0001F9EA {supports[s]}\n'
-        else:
-            s = 0
-        if h in upgradable['head']:
-            i += 1
-            m4 = f'\U0001F3A9 {heads[h]}'
-        else:
-            h = 0
 
-        if i:
-            tape = int(r.hget(uid, 'tape'))
-            msg = f'🌀 Ізострічка: {tape}\n\n\u2B06\uFE0F Спорядження, яке можливо покращити:\n\n{m1}{m2}{m3}{m4}'
-            return msg, upgrade_button(w, d, s, h), True, False
+        if check_set(w, d, s, h) == 1:
+            msg = f'🌀 Ізострічка: {tape}\n\n\u2B06\uFE0F Ваше спорядження може бути відремонтоване за 1 ' \
+                  f'ізострічку (міцність буде збільшена до 50)'
+            return msg, upgrade_button2(), True, False
         else:
-            return None, None, False, 'Нема спорядження, яке можна покращити'
+            if w in upgradable['weapon']:
+                i += 1
+                m1 = f'\U0001F5E1 {weapons[w]}\n'
+            else:
+                w = 0
+            if d in upgradable['defense']:
+                i += 1
+                m2 = f'\U0001F6E1 {defenses[d]}\n'
+            else:
+                d = 0
+            if s in upgradable['support']:
+                i += 1
+                m3 = f'\U0001F9EA {supports[s]}\n'
+            else:
+                s = 0
+            if h in upgradable['head']:
+                i += 1
+                m4 = f'\U0001F3A9 {heads[h]}'
+            else:
+                h = 0
+
+            if i:
+                msg = f'🌀 Ізострічка: {tape}\n\n\u2B06\uFE0F Спорядження, яке можливо покращити:\n\n{m1}{m2}{m3}{m4}'
+                return msg, upgrade_button(w, d, s, h), True, False
+            else:
+                return None, None, False, 'Нема спорядження, яке можна покращити'
 
     if w == 16:
         m1 = '\nМіцність: ∞'
@@ -408,6 +429,29 @@ def upgrade_item(cdata, uid):
     if cdata.startswith('tape_all'):
         msg, markup, response, answer = show_inventory(uid, upgrade=True)
         return msg, markup, response, answer
+    elif cdata.startswith('tape1'):
+        item_type = cdata.split('_')[1]
+        tape = int(r.hget(uid, 'tape'))
+        inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
+        w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
+        if check_set(w, d, s, h) and str(uid).encode() in r.smembers('sudoers'):
+            if tape >= 1:
+                if int(r.hget(uid, f's_{item_type}')) < 50:
+                    r.hset(uid, f's_{item_type}', 50)
+                    r.hincrby(uid, 'tape', -1)
+                    answer = f'Спорядження відремонтовано\nВитрачено: 🌀 1'
+                    msg, markup = show_inventory(uid)
+                    return msg, markup, True, answer
+                else:
+                    answer = 'Необхідне спорядження, міцність якого менша 50'
+                    return False, False, False, answer
+            else:
+                answer = 'Необхідна 1 ізострічка'
+                return False, False, False, answer
+        else:
+            answer = 'Зараз у вас немає такої можливості'
+            return False, False, False, answer
+
     else:
         item_type = cdata.split('_')[1]
         item = int(r.hget(uid, item_type))
@@ -445,3 +489,9 @@ def upgrade_item(cdata, uid):
         else:
             answer = 'Це спорядження неможливо покращити'
             return False, False, False, answer
+
+
+def check_set(w, d, s, h):
+    if w == 7 and d == 4 and s == 13 and h == 4:
+        return 1
+    return 0
