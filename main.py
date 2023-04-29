@@ -4790,17 +4790,16 @@ async def handle_query(call):
                                         call.message.message_id)
             r.hset('soledar', 'merchant_hour_now', 26)
 
-    elif call.data.startswith('foil'):
+    elif call.data.startswith('helmet'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
             if int(r.hget(call.from_user.id, 'head')) == 0:
-                if int(r.hget(call.from_user.id, 'money')) >= 30:
-                    r.hincrby(call.from_user.id, 'money', -30)
-                    r.hincrby(call.from_user.id, 'sch', 30)
-                    r.hset(call.from_user.id, 'head', 1)
-                    r.hset(call.from_user.id, 's_head', 10)
+                if int(r.hget(call.from_user.id, 'money')) >= 70:
+                    r.hincrby(call.from_user.id, 'money', -70)
+                    r.hset(call.from_user.id, 'head', 2)
+                    r.hset(call.from_user.id, 's_head', 40)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                    text='Ви успішно купили шапочку з фольги')
+                                                    text='Ви успішно купили тактичний шолом')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо коштів на рахунку')
