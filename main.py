@@ -459,7 +459,7 @@ async def mine(message):
                 if cl == 2 or cl == 12 or cl == 22:
                     success = choice([0, 0, 1, 1, 1])
                 support = int(r.hget(message.from_user.id, 'support'))
-                if support == 8:
+                if support in (8, 13):
                     success = 1
                     increase_trance(5, message.from_user.id)
                     damage_support(message.from_user.id)

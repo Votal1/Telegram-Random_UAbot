@@ -1750,7 +1750,7 @@ async def start_raid(cid):
                 hp(-100, member)
 
             if did > 0:
-                chance = 20 * did
+                chance = 15 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
                 if again:
                     reward += '\nРусаки готові до реваншу!'
@@ -1837,10 +1837,7 @@ async def start_raid(cid):
             if s == 3:
                 chance2 = int(chance2 / 2)
         else:
-            if cid == -1001753741231:
-                location = 'Магазин алкоголю'
-            else:
-                location = choice(locations)
+            location = choice(locations)
             chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
@@ -1890,7 +1887,7 @@ async def start_raid(cid):
                     hp(100, mem)
                     spirit(10000, mem, 0)
                 if did > 0:
-                    chance = 20 * did
+                    chance = 15 * did
                     again = choices([0, 1], weights=[100 - chance, chance])[0]
                     if again:
                         reward += '\nРусаки готові йти в наступний рейд!'
@@ -2008,7 +2005,7 @@ async def start_raid(cid):
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
             if did > 0:
-                chance = 20 * did
+                chance = 15 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
                 if again:
                     reward += '\nРусаки готові до реваншу!'
