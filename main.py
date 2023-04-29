@@ -1533,6 +1533,27 @@ async def pack(message):
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
 
 
+@dp.message_handler(commands=['openpack'])
+async def pack(message):
+    if r.hexists(message.from_user.id, 'name') == 1 and str(message.from_user.id).encode() in r.smembers('sudoers'):
+        packs = int(r.hget(message.from_user.id, 'packs'))
+        if r.hexists('pack_ts2', message.from_user.id) == 0:
+            r.hset('pack_ts2', message.from_user.id, 0)
+        timestamp = int(datetime.now().timestamp())
+        if timestamp - int(r.hget('pack_ts2', message.from_user.id)) < 0.2:
+            pass
+        elif packs > 0:
+            r.hset('pack_ts2', message.from_user.id, timestamp)
+            msg = open_pack(message.from_user.id, f'pack_unpack_{message.from_user.id}', None)
+            if msg:
+                await message.reply(msg[0], reply_markup=msg[1])
+        else:
+            await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
+                                '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
+    else:
+        await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+
+
 @dp.message_handler(commands=['gift'])
 async def pack(message):
     if r.hexists(message.from_user.id, 'name'):
