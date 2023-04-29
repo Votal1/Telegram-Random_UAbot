@@ -5327,7 +5327,7 @@ async def handle_query(call):
         if answer:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=answer)
 
-    elif call.data.startswith('tape_') and call.from_user.id == call.message.reply_to_message.from_user.id:
+    elif call.data.startswith('tape') and call.from_user.id == call.message.reply_to_message.from_user.id:
         msg, markup, edit, answer = upgrade_item(call.data, call.from_user.id)
 
         if edit:
