@@ -1544,7 +1544,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1 = hack = mar = rocket = fish = jew = did, again = 0
+    chance1 = hack = mar = rocket = fish = jew = did = again = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
