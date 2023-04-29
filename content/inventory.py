@@ -434,7 +434,7 @@ def upgrade_item(cdata, uid):
         tape = int(r.hget(uid, 'tape'))
         inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
         w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
-        if check_set(w, d, s, h) and str(uid).encode() in r.smembers('sudoers'):
+        if check_set(w, d, s, h):
             if tape >= 1:
                 if int(r.hget(uid, f's_{item_type}')) < 50:
                     r.hset(uid, f's_{item_type}', 50)
