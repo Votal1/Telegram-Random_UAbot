@@ -1535,7 +1535,7 @@ async def pack(message):
 
 @dp.message_handler(commands=['openpack'])
 async def pack(message):
-    if r.hexists(message.from_user.id, 'name') == 1 and str(message.from_user.id).encode() in r.smembers('sudoers'):
+    try:
         packs = int(r.hget(message.from_user.id, 'packs'))
         if r.hexists('pack_ts2', message.from_user.id) == 0:
             r.hset('pack_ts2', message.from_user.id, 0)
@@ -1550,8 +1550,8 @@ async def pack(message):
         else:
             await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
                                 '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
-    else:
-        await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+    except:
+        pass
 
 
 @dp.message_handler(commands=['gift'])
