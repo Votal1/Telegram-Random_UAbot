@@ -276,7 +276,7 @@ def show_backpack(uid):
         for n in (b1, b2, b3, b4):
             if n:
                 free_slots -= 1
-        if extra_slot >= 4 - free_slots and str(uid).encode() in r.smembers('beta-test'):
+        if extra_slot >= 4 - free_slots:
             markup = put_in_backpack(markup, w, d, s, h)
 
         markup = take_from_backpack(markup, item1, item2, item3, item4)
