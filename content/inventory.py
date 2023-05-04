@@ -198,8 +198,8 @@ def show_backpack(uid):
 
     inv = r.hmget(uid, 'extra_slot', 'backpack_1', 'backpack_1_s', 'backpack_1_type',
                   'backpack_2', 'backpack_2_s', 'backpack_2_type',
-                  'backpack_2', 'backpack_2_s', 'backpack_2_type',
-                  'backpack_2', 'backpack_2_s', 'backpack_2_type')
+                  'backpack_3', 'backpack_3_s', 'backpack_3_type',
+                  'backpack_4', 'backpack_4_s', 'backpack_4_type')
     extra_slot = int(inv[0])
     b1, b1s, b1t = int(inv[1]), int(inv[2]), inv[3].decode()
     b2, b2s, b2t = int(inv[4]), int(inv[5]), inv[6].decode()
