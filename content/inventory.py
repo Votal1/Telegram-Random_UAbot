@@ -102,13 +102,15 @@ def upgrade_button2():
     return markup
 
 
-def take_from_backpack(markup, item1=False, item2=False, item3=False):
+def take_from_backpack(markup, item1=False, item2=False, item3=False, item4=False):
     if item1:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}', callback_data='backpack_take_first'))
     if item2:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item2}', callback_data='backpack_take_second'))
     if item3:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item3}', callback_data='backpack_take_third'))
+    if item4:
+        markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item4}', callback_data='backpack_take_third'))
     return markup
 
 
@@ -342,9 +344,8 @@ def change_item(cdata, uid):
         if not r.hexists(uid, 'backpack_1'):
             r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
                                           'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
-        if str(uid).encode() in r.smembers('beta-test') and not r.hexists(uid, 'backpack_3'):
-            r.hset(uid, 'backpack_3', 0, {'backpack_3_s': 0, 'backpack_3_type': 'empty',
-                                          'backpack_4': 0, 'backpack_4_s': 0, 'backpack_4_type': 'empty'})
+        r.hset(uid, 'backpack_3', 0, {'backpack_3_s': 0, 'backpack_3_type': 'empty',
+                                      'backpack_4': 0, 'backpack_4_s': 0, 'backpack_4_type': 'empty'})
 
         msg, markup = show_backpack(uid)
         return msg, markup, True, False
@@ -356,22 +357,15 @@ def change_item(cdata, uid):
     elif cdata.startswith('backpack_put_in'):
         item_type = cdata.split('_')[3]
         item, s_item = int(r.hget(uid, item_type)), int(r.hget(uid, f's_{item_type}'))
+        extra = int(r.hget(uid, 'extra_slot'))
 
-        if int(r.hget(uid, 'backpack_1')):
-            if not int(r.hget(uid, 'backpack_2')) and int(r.hget(uid, 'extra_slot')) >= 1:
-                slot = 2
-            else:
-                if str(uid).encode() in r.smembers('beta-test') and \
-                        not int(r.hget(uid, 'backpack_3')) and int(r.hget(uid, 'extra_slot')) >= 2:
-                    slot = 3
-                else:
-                    if str(uid).encode() in r.smembers('beta-test') and \
-                            not int(r.hget(uid, 'backpack_4')) and int(r.hget(uid, 'extra_slot')) >= 3:
-                        slot = 4
-                    else:
-                        slot = 0
+        for n in range(5):
+            if n > 0:
+                if extra >= n - 1 and not int(r.hget(uid, f'backpack_{n}')):
+                    slot = n
+                    break
         else:
-            slot = 1
+            slot = 0
 
         if item:
             if slot:
