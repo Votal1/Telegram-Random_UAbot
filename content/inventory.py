@@ -107,7 +107,7 @@ def take_from_backpack(markup, item1=False, item2=False, item3=False):
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}', callback_data='backpack_take_first'))
     if item2:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item2}', callback_data='backpack_take_second'))
-    if item2:
+    if item3:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item3}', callback_data='backpack_take_third'))
     return markup
 
