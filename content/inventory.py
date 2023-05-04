@@ -110,7 +110,7 @@ def take_from_backpack(markup, item1=False, item2=False, item3=False, item4=Fals
     if item3:
         markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item3}', callback_data='backpack_take_third'))
     if item4:
-        markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item4}', callback_data='backpack_take_third'))
+        markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item4}', callback_data='backpack_take_fourth'))
     return markup
 
 
@@ -412,6 +412,8 @@ def change_item(cdata, uid):
             slot = 2
         elif place == 'third':
             slot = 3
+        elif place == 'fourth':
+            slot = 4
 
         inv = r.hmget(uid, f'backpack_{slot}', f'backpack_{slot}_s', f'backpack_{slot}_type')
         b, bs, item_type = int(inv[0]), int(inv[1]), inv[2].decode()
