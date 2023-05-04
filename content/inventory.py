@@ -196,16 +196,21 @@ def show_backpack(uid):
     inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
     w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
 
-    inv = r.hmget(uid, 'backpack_1', 'backpack_1_s', 'backpack_1_type',
-                  'backpack_2', 'backpack_2_s', 'backpack_2_type', 'extra_slot')
-    b1, b1s, b1t, b2, b2s, b2t = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), int(inv[4]), inv[5].decode()
-    extra_slot = int(inv[6])
+    inv = r.hmget(uid, 'extra_slot', 'backpack_1', 'backpack_1_s', 'backpack_1_type',
+                  'backpack_2', 'backpack_2_s', 'backpack_2_type',
+                  'backpack_2', 'backpack_2_s', 'backpack_2_type',
+                  'backpack_2', 'backpack_2_s', 'backpack_2_type')
+    extra_slot = int(inv[0])
+    b1, b1s, b1t = int(inv[1]), int(inv[2]), inv[3].decode()
+    b2, b2s, b2t = int(inv[4]), int(inv[5]), inv[6].decode()
+    b3, b3s, b3t = int(inv[7]), int(inv[8]), inv[9].decode()
+    b4, b4s, b4t = int(inv[10]), int(inv[11]), inv[12].decode()
 
-    if not b1 and not b2:
+    if not b1 and not b2 and not b3 and not b4:
         msg += '[Порожньо]'
         markup = put_in_backpack(markup, w, d, s, h)
     else:
-        item1, item2 = False, False
+        item1, item2, item3, item4 = False, False, False, False
 
         if b1t == 'weapon':
             item1 = weapons[b1]
@@ -236,34 +241,45 @@ def show_backpack(uid):
             if b2 == 3:
                 b2s = '∞'
             msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
-        item3 = False
-        if str(uid).encode() in r.smembers('beta-test'):
-            inv = r.hmget(uid, 'backpack_3', 'backpack_3_s', 'backpack_3_type',
-                          'backpack_4', 'backpack_4_s', 'backpack_4_type')
-            b3, b3s, b3t, b4, b4s, b4t = int(inv[0]), int(inv[1]), inv[2].decode(), int(inv[3]), int(inv[4]), inv[5].decode()
-            if b3t == 'weapon':
-                item3 = weapons[b3]
-                msg += f'\U0001F5E1 Зброя: {weapons[b3]}\nМіцність: {b3s}\n'
-            elif b3t == 'defense':
-                item3 = defenses[b3]
-                msg += f'\U0001F6E1 Захист: {defenses[b3]}\nМіцність: {b3s}\n'
-            elif b3t == 'support':
-                item3 = supports[b3]
-                msg += f'\U0001F9EA Допомога: {supports[b3]}\nМіцність: {b3s}\n'
-            elif b3t == 'head':
-                item3 = heads[b3]
-                if b3 == 3:
-                    b3s = '∞'
-                msg += f'\U0001F3A9 Шапка: {heads[b3]}\nМіцність: {b3s}\n'
-            if not b1 or not b2 or not b3:
-                if extra_slot == 2:
-                    markup = put_in_backpack(markup, w, d, s, h)
 
-        if not b1 or not b2:
-            if extra_slot:
-                markup = put_in_backpack(markup, w, d, s, h)
+        if b3t == 'weapon':
+            item3 = weapons[b3]
+            msg += f'\U0001F5E1 Зброя: {weapons[b3]}\nМіцність: {b3s}\n'
+        elif b3t == 'defense':
+            item3 = defenses[b3]
+            msg += f'\U0001F6E1 Захист: {defenses[b3]}\nМіцність: {b3s}\n'
+        elif b3t == 'support':
+            item3 = supports[b3]
+            msg += f'\U0001F9EA Допомога: {supports[b3]}\nМіцність: {b3s}\n'
+        elif b3t == 'head':
+            item3 = heads[b3]
+            if b3 == 3:
+                b3s = '∞'
+            msg += f'\U0001F3A9 Шапка: {heads[b3]}\nМіцність: {b3s}\n'
 
-        markup = take_from_backpack(markup, item1, item2, item3)
+        if b4t == 'weapon':
+            item4 = weapons[b4]
+            msg += f'\U0001F5E1 Зброя: {weapons[b4]}\nМіцність: {b4s}\n'
+        elif b4t == 'defense':
+            item4 = defenses[b4]
+            msg += f'\U0001F6E1 Захист: {defenses[b4]}\nМіцність: {b4s}\n'
+        elif b4t == 'support':
+            item4 = supports[b4]
+            msg += f'\U0001F9EA Допомога: {supports[b4]}\nМіцність: {b4s}\n'
+        elif b4t == 'head':
+            item4 = heads[b4]
+            if b4 == 3:
+                b4s = '∞'
+            msg += f'\U0001F3A9 Шапка: {heads[b4]}\nМіцність: {b4s}\n'
+
+        free_slots = 4
+        for n in (b1, b2, b3, b4):
+            if n:
+                free_slots -= 1
+        if extra_slot >= 4 - free_slots and str(uid).encode() in r.smembers('beta-test'):
+            markup = put_in_backpack(markup, w, d, s, h)
+
+        markup = take_from_backpack(markup, item1, item2, item3, item4)
 
     markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
 
