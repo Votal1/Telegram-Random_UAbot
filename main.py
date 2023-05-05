@@ -3434,7 +3434,6 @@ async def handle_query(call):
                         msg += ', '
                         i += 1
                 if fighters_num >= 5:
-                    msg += '\n\nБій почався...'
                     markup = None
                 else:
                     markup = battle_button_3()
@@ -3446,11 +3445,8 @@ async def handle_query(call):
                     reply_markup=markup,
                     disable_web_page_preview=True)
 
-                try:
-                    if int(r.hget(222, call.message.chat.id)) > 250:
-                        n = '2'
-                except:
-                    pass
+                if r.hexists(222, call.message.chat.id) and int(r.hget(222, call.message.chat.id)) > 250:
+                    n = '2'
 
                 if fighters_num >= 5:
                     if not r.scard('battles' + n):
