@@ -3323,7 +3323,13 @@ async def handle_query(call):
                 r.hexists(call.from_user.id, 'name') == 1 and \
                 call.message.message_id == int(r.hget('battle' + str(call.message.chat.id), 'start')):
             r.hset(call.from_user.id, 'firstname', call.from_user.first_name)
-            r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
+
+            maximum = 10
+            #  if call.message.chat.id == -1001211933154:
+            #    maximum = 20
+
+            if r.scard('fighters' + str(call.message.chat.id)) < 10:
+                r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
 
             fighters = r.smembers('fighters' + str(call.message.chat.id))
             fighters_num = r.scard('fighters' + str(call.message.chat.id))
