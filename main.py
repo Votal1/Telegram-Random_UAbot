@@ -3458,7 +3458,7 @@ async def handle_query(call):
                 except:
                     pass
 
-                if fighters >= 5:
+                if fighters_num >= 5:
                     if not r.scard('battles' + n):
                         await call.message.reply('\u2694 Пошук ворогів...')
                         r.sadd('battles' + n, call.message.chat.id)
