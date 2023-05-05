@@ -1752,8 +1752,6 @@ async def start_raid(cid):
             if did > 0:
                 chance = 15 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
-                if again:
-                    reward += '\nРусаки готові до реваншу!'
 
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode().replace('@', '') + '!' + reward
@@ -1762,6 +1760,8 @@ async def start_raid(cid):
             msg2 += reward.replace('+', '-')
         else:
             msg2 += reward
+        if again:
+            msg += '\nРусаки готові до реваншу!'
 
         if win == ['a'] and int(r.hget(c, 'buff_1')) == 1:
             side2 = int(r.hget(c2, 'side'))
