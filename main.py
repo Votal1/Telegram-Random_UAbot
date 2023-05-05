@@ -3426,32 +3426,26 @@ async def handle_query(call):
                 fighters = r.smembers('fighters_2' + str(call.message.chat.id))
                 fighters_num = r.scard('fighters_2' + str(call.message.chat.id))
 
-                ts = int(datetime.now().timestamp())
-                if not r.hexists('war_battle' + str(call.message.chat.id), 'edit_ts'):
-                    r.hset('war_battle' + str(call.message.chat.id), 'edit_ts', ts)
+                msg = f'{call.message.text.split()[0]} Починається міжчатова битва...\n\nБійці: '
+                i = 1
+                for mem in fighters:
+                    msg += r.hget(mem, 'firstname').decode()
+                    if fighters_num != i:
+                        msg += ', '
+                        i += 1
+                if fighters_num >= 5:
+                    msg += '\n\nБій почався...'
+                    markup = None
+                else:
+                    markup = battle_button_3()
 
-                if ts - int(r.hget('war_battle' + str(call.message.chat.id), 'edit_ts')) > 2 or fighters_num >= 5:
-                    r.hset('war_battle' + str(call.message.chat.id), 'edit_ts', ts)
+                await bot.edit_message_text(
+                    text=msg.replace('@', ''),
+                    chat_id=call.message.chat.id,
+                    message_id=call.message.message_id,
+                    reply_markup=markup,
+                    disable_web_page_preview=True)
 
-                    msg = f'{call.message.text.split()[0]} Починається міжчатова битва...\n\nБійці: '
-                    i = 1
-                    for mem in fighters:
-                        msg += r.hget(mem, 'firstname').decode()
-                        if fighters_num != i:
-                            msg += ', '
-                            i += 1
-                    if fighters_num >= 5:
-                        msg += '\n\nБій почався...'
-                        markup = None
-                    else:
-                        markup = battle_button_3()
-
-                    await bot.edit_message_text(
-                        text=msg.replace('@', ''),
-                        chat_id=call.message.chat.id,
-                        message_id=call.message.message_id,
-                        reply_markup=markup,
-                        disable_web_page_preview=True)
                 try:
                     if int(r.hget(222, call.message.chat.id)) > 250:
                         n = '2'
