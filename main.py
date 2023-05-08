@@ -2923,14 +2923,16 @@ async def guard(message):
                             pass
                     msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
                 elif int(r.hget(mid, 'class')) in (8, 18, 28) and int(r.hget(mid, 'weapon')) == 39:
-                    damage_weapon(mid, 0)
-                    ch = int(r.hget('convoy', 'hour'))
-                    o = 'об' if ch == 11 else 'о'
-                    if datetime.now().hour >= ch:
-                        msg2 = f'📟 Хакер дізнався, що гумконвой приїжджав {o} {ch} годині.'
-                    else:
-                        msg2 = f'📟 Хакер дізнався, що гумконвой приїде {o} {ch} годині.'
-                    await bot.send_message(mid, msg2)
+                    chance = int(r.hget(mid, 'intellect'))
+                    if choices([1, 0], weights=[chance, 100 - chance])[0]:
+                        damage_weapon(mid, 0)
+                        ch = int(r.hget('convoy', 'hour'))
+                        o = 'об' if ch == 11 else 'о'
+                        if datetime.now().hour >= ch:
+                            msg2 = f'📟 Хакер дізнався, що гумконвой приїжджав {o} {ch} годині.'
+                        else:
+                            msg2 = f'📟 Хакер дізнався, що гумконвой приїде {o} {ch} годині.'
+                        await bot.send_message(mid, msg2)
                 msg += f"\n\U0001F4AA Загальна сила: {r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: " \
                        f"{r.scard(g)}/5"
                 mines = int(r.hget(c, 'mines'))
