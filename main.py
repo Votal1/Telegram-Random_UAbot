@@ -484,13 +484,6 @@ async def mine(message):
                         msg += '\n\U0001F9C2 +1'
                         r.hincrby(message.from_user.id, 'salt', 1)
                     await message.reply(msg)
-                    if cl in (18, 28):
-                        if int(r.hget(message.from_user.id, 'weapon')) == 39 \
-                                and int(r.hget('soledar', 'merchant_day')) != datetime.now().day:
-                            damage_weapon(message.from_user.id, cl)
-                            msg = f'📟 Хакер дізнався, що торговець прийде о ' \
-                                  f'{int(r.hget("soledar", "merchant_hour"))} годині.'
-                            await bot.send_message(message.from_user.id, msg)
                 else:
                     fish = 0
                     if support == 10:
@@ -2909,10 +2902,10 @@ async def guard(message):
                     if choices([1, 0], [int(ch / 1000), 100 - int(ch / 1000)]) == [1]:
                         r.hset(message.from_user.id, 'time', 0)
                         msg += '\n\U0001F372 +1'
+                if int(r.hget('convoy', 'day')) != datetime.now().day:
+                    r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
+                                                        'hour': randint(8, 12), 'first': 1})
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
-                    if int(r.hget('convoy', 'day')) != datetime.now().day:
-                        r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
-                                                            'hour': randint(8, 12), 'first': 1})
                     r.hincrby('convoy', 'power', 500000)
                     for mem in r.smembers('followers'):
                         try:
@@ -2929,6 +2922,15 @@ async def guard(message):
                         except:
                             pass
                     msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
+                elif int(r.hget(mid, 'class')) in (8, 18, 28) and int(r.hget(mid, 'weapon')) == 39:
+                    damage_weapon(mid, 0)
+                    ch = int(r.hget('convoy', 'hour'))
+                    o = 'об' if ch == 11 else 'о'
+                    if datetime.now().hour >= ch:
+                        msg = f'📟 Хакер дізнався, що гумконвой приїжджав {o} {ch} годині.'
+                    else:
+                        msg = f'📟 Хакер дізнався, що гумконвой приїде {o} {ch} годині.'
+                    await bot.send_message(mid, msg)
                 msg += f"\n\U0001F4AA Загальна сила: {r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: " \
                        f"{r.scard(g)}/5"
                 mines = int(r.hget(c, 'mines'))
