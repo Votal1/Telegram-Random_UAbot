@@ -92,7 +92,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if c1 == 26 and t == 1:
             quest(uid2, 3, -1, 1)
-            if c2 not in (6, 16, 26) and defense1 in (16, 17):
+            if c2 not in (6, 16, 26) and defense1 in (16, 17, 18):
                 if weapon2 != 0:
                     cop1 = choices([1, 0], weights=[10, 90])
                     if cop1 == [1]:
@@ -106,7 +106,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                ' вилучив у ворога зброю!\n\U0001F6E1 +20\n'
         if c2 == 26 and t == 1:
             quest(uid1, 3, -3, 1)
-            if c1 not in (6, 16, 26) and defense2 in (16, 17):
+            if c1 not in (6, 16, 26) and defense2 in (16, 17, 18):
                 if weapon1 != 0:
                     cop2 = choices([1, 0], weights=[10, 90])
                     if cop2 == [1]:
@@ -200,10 +200,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if in1 > 0:
             s1, bd1 = injure(uid1, s1, bd1, True)
+            if defense1 == 18 and c1 in (6, 16, 26):
+                s1 *= 3
             s11 = s1
             inj1 = '\U0001fa78 '
         if in2 > 0:
             s2, bd2 = injure(uid2, s2, bd2, True)
+            if defense2 == 18 and c2 in (6, 16, 26):
+                s2 *= 3
             s22 = s2
             inj2 = '\U0001fa78 '
         if sc1 > 0:
@@ -277,7 +281,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                 ' важкі поранення, як і ' + names[name1] + '.'
                     r.hset(uid1, 'spirit', 0, {'hp': 0})
                     r.hincrby(uid1, 'injure', 150)
-        elif defense2 in (16, 17):
+        elif defense2 in (16, 17, 18):
             s1 = int(s1 * 0.8)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' атакує, прикрившись поліцейським щитом.'
             damage_defense(uid2, 16)
@@ -417,7 +421,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1 = int(s1 * 1.3)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
             damage_defense(uid1, 9)
-        elif defense1 in (16, 17):
+        elif defense1 in (16, 17, 18):
             s2 = int(s2 * 0.8)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'
             damage_defense(uid1, 16)
@@ -431,24 +435,24 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if c2 == 6 or c2 == 16 or c2 == 26:
                     bd1, bd2 = 0, 0
                 else:
-                    if weapon1 == 16 and defense1 in (16, 17):
+                    if weapon1 == 16 and defense1 in (16, 17, 18):
                         bd2 = 0
                     elif weapon1 == 16:
                         bd1, bd2 = 0, 0
                     if c1 == 16 or c1 == 26:
                         if i2 >= i1:
                             i1, i2 = 0, 0
-                            if defense1 in (16, 17) and s2 >= s1:
+                            if defense1 in (16, 17, 18) and s2 >= s1:
                                 s1, s2 = 10, 10
             else:
-                if weapon2 == 16 and defense2 in (16, 17):
+                if weapon2 == 16 and defense2 in (16, 17, 18):
                     bd1 = 0
                 elif weapon2 == 16:
                     bd1, bd2 = 0, 0
                 if c2 == 16 or c2 == 26:
                     if i1 >= i2:
                         i1, i2 = 0, 0
-                        if defense2 in (16, 17) and s1 >= s2:
+                        if defense2 in (16, 17, 18) and s1 >= s2:
                             s1, s2 = 10, 10
 
         if hach1 == 1:
@@ -1179,7 +1183,7 @@ async def war(cid, location, big_battle):
         if wc == 6 or wc == 16 or wc == 26:
             class_reward = '\U0001F46E: \U0001F4B5 +5'
             r.hincrby(win, 'money', 5)
-            if int(r.hget(win, 'defense')) in (16, 17):
+            if int(r.hget(win, 'defense')) in (16, 17, 18):
                 r.hincrby(win, 's_defense', 10)
                 class_reward = '\U0001F46E: \U0001F4B5 +5 \U0001F6E1 +10'
             elif int(r.hget(win, 'defense')) == 0:
