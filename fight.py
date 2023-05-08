@@ -746,6 +746,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if hach1 == 1:
                 if c1 in (11, 21):
                     hc = s2 / (s1 + s2)
+                    if hc > 0.95:
+                        hc = 0.95
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
                         ran1, ran2 = randint(50, 100), 2
@@ -878,6 +880,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if hach2 == 1:
                 if c2 in (11, 21):
                     hc = s1 / (s1 + s2)
+                    if hc > 0.95:
+                        hc = 0.95
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
                         ran1, ran2 = randint(50, 100), 2
