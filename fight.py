@@ -85,9 +85,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon1, defense1 = 0, 0
                 damage_weapon(uid2, c2)
                 weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' обеззброїв ворога битою!'
-        if weapon1 in (15, 26, 37):
+        if weapon1 in (15, 26, 37) and c1 in (5, 15, 25):
             weapon2 = 0
-        if weapon2 in (15, 26, 37):
+        if weapon2 in (15, 26, 37) and c2 in (5, 15, 25):
             weapon1 = 0
 
         if c1 == 26 and t == 1:
