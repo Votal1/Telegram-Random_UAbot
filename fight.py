@@ -189,14 +189,14 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if hp1 >= 90:
             if c1 in (34, 35, 36):
-                s1 = int(s1 * 1.4)
+                s1 = int(s1 * 1.3)
             else:
                 s1 = int(s1 * 1.1)
         elif hp1 < 10:
             s1 = int(s1 * 0.1)
         if hp2 >= 90:
             if c2 in (34, 35, 36):
-                s2 = int(s2 * 1.4)
+                s2 = int(s2 * 1.3)
             else:
                 s2 = int(s2 * 1.1)
         elif hp2 < 10:
@@ -1057,7 +1057,7 @@ async def war(cid, location, big_battle):
 
             if hp1 >= 90:
                 if cl in (34, 35, 36):
-                    s = int(s * 1.4)
+                    s = int(s * 1.3)
                 else:
                     s = int(s * 1.1)
             elif hp1 < 10:
@@ -1307,7 +1307,7 @@ async def war_power(sett, cid):
 
             if hp1 >= 90:
                 if cl in (34, 35, 36):
-                    s = int(s * 1.4)
+                    s = int(s * 1.3)
                 else:
                     s = int(s * 1.1)
             elif hp1 < 10:
@@ -1550,7 +1550,7 @@ async def guard_power(mid):
 
     if hp1 >= 90:
         if cl in (34, 35, 36):
-            s = int(s * 1.4)
+            s = int(s * 1.3)
         else:
             s = int(s * 1.1)
     elif hp1 < 10:
@@ -1655,7 +1655,7 @@ async def start_raid(cid):
 
             if hp1 >= 90:
                 if cl in (34, 35, 36):
-                    s = int(s * 1.4)
+                    s = int(s * 1.3)
                 else:
                     s = int(s * 1.1)
             elif hp1 < 10:
