@@ -1280,7 +1280,7 @@ async def war(cid, location, big_battle):
 
 
 async def war_power(sett, cid):
-    chance = clan5 = m = pag = meat = mal = gen1 = gen2 = koj = 0
+    chance = clan5 = med = pag = meat = mal = gen1 = gen2 = koj = 0
     for member in sett:
         try:
             cl = int(r.hget(member, 'class'))
@@ -1380,8 +1380,10 @@ async def war_power(sett, cid):
                 s = int(s * 1.2)
             elif cl in (7, 17, 27) and checkClan(member, building='build4', level=3):
                 mal += 1
-            elif cl in (9, 19, 29):
-                m = 1
+            elif cl in (9, 19, 29) and med < 2:
+                med = 1
+                if int(stats[3]) == 40:
+                    med = 2
             elif cl in (34, 35, 36):
                 if choices([1, 0], [2, 98]) == [1]:
                     intellect(1, member)
@@ -1399,7 +1401,7 @@ async def war_power(sett, cid):
             quest(member, 1, 3)
         except:
             continue
-    if m == 1:
+    if med >= 1:
         chance = chance * 2
     if pag == 1 and clan5 == 5:
         chance = chance * 1.25
@@ -1408,7 +1410,7 @@ async def war_power(sett, cid):
                 spirit(250, int(member), 0)
             except:
                 pass
-    return chance, clan5, mal, gen1, gen2, koj
+    return chance, clan5, mal, gen1, gen2, koj, med
 
 
 def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members, koj):
@@ -1475,8 +1477,8 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members, koj):
 async def great_war(cid1, cid2, a, b):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    chance1, clan1, mal1, gen11, gen12, koj1 = await war_power(a, cid1)
-    chance2, clan2, mal2, gen21, gen22, koj2 = await war_power(b, cid2)
+    chance1, clan1, mal1, gen11, gen12, koj1, med1 = await war_power(a, cid1)
+    chance2, clan2, mal2, gen21, gen22, koj2, med2 = await war_power(b, cid2)
 
     try:
         if gen11 == 1:
@@ -1489,6 +1491,12 @@ async def great_war(cid1, cid2, a, b):
             r.hincrby(choice(b), 'sch', 3)
         for i in range(mal2):
             r.hincrby(choice(a), 'sch', 3)
+        if med1 == 2:
+            for mem in b:
+                hp(-10, mem)
+        if med2 == 2:
+            for mem in a:
+                hp(-10, mem)
     except:
         pass
 
