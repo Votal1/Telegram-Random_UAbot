@@ -744,7 +744,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     grn = '\n\U0001F4B5 +' + str(m_bonus[0]) + ' (вкрадено фокусником!)'
 
             if hach1 == 1:
-                if c1 != 1:
+                if c1 in (11, 21):
                     hc = s2 / (s1 + s2)
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
@@ -876,7 +876,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     grn = '\n\U0001F4B5 +' + str(m_bonus[0]) + ' (вкрадено фокусником!)'
 
             if hach2 == 1:
-                if c2 != 1:
+                if c2 in (11, 21):
                     hc = s1 / (s1 + s2)
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
