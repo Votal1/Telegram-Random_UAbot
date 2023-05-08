@@ -296,7 +296,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'injure', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
             elif injure1 >= 4 or sch1 >= 4:
-                inj = randint(5, 10)
+                inj = randint(4, 10)
                 if weapon2 in (30, 40):
                     inj = 15
                 if injure1 >= 4:
