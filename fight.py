@@ -1384,6 +1384,7 @@ async def war_power(sett, cid):
                 med = 1
                 if int(stats[3]) == 40:
                     med = 2
+                    damage_weapon(member, cl)
             elif cl in (34, 35, 36):
                 if choices([1, 0], [2, 98]) == [1]:
                     intellect(1, member)
