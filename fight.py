@@ -39,7 +39,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if c1 == 1 or c1 == 11 or c1 == 21:
             quest(uid2, 3, -1, 2)
-            if weapon2 == 0:
+            if weapon2 == 0 or weapon1 == 33:
                 hach1 = 1
         if weapon2 == 0:
             quest(uid1, 3, -1, 3)
@@ -47,7 +47,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             quest(uid2, 3, -1, 3)
         if c2 == 1 or c2 == 11 or c2 == 21:
             quest(uid1, 3, -1, 2)
-            if weapon1 == 0:
+            if weapon1 == 0 or weapon2 == 33:
                 hach2 = 1
         if c1 == 21 and t == 1:
             if c2 == 1 or c2 == 11 or c2 == 21:
@@ -228,14 +228,17 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s2 = int(s2 * 1.31)
             damage_head(uid2)
 
-        if weapon2 in (11, 22):
+        if weapon2 in (11, 22, 33):
             s1 = int(s1 / 2)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав травмат і прострелив ворогу коліно!'
             damage_weapon(uid2, c2)
-            if weapon2 == 22:
+            if weapon2 in (22, 33):
                 i1 = int(i1 / 2)
                 bd1 = int(bd1 / 2)
-                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав револьвер і прострелив ворогу коліно!'
+                if weapon2 == 22:
+                    weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав револьвер і прострелив ворогу коліно!'
+                if weapon2 == 33:
+                    weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав пістолет-кулемет і прострелив ворогу коліно!'
         elif weapon2 in (12, 23):
             s2 = int(s2 * 1.2)
             i2 = int(i2 * 1.2)
@@ -345,7 +348,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid1, 'head', 0)
                 quest(uid1, 3, -1, 4)
 
-        elif weapon1 in (15, 26) and c1 in (5, 15, 25):
+        if weapon1 in (15, 26) and c1 in (5, 15, 25):
             s1 = int(s1 * 1.5)
             ak = 'АКМ' if weapon1 == 26 else 'АК-47'
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...'
@@ -362,6 +365,12 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                 ' важкі поранення, як і ' + names[name2] + '.'
                     r.hset(uid2, 'spirit', 0, {'hp': 0})
                     r.hincrby(uid2, 'injure', 150)
+        elif weapon1 == 33:
+            s2 = int(s2 / 2)
+            i2 = int(i2 / 2)
+            bd2 = int(bd2 / 2)
+            defense = '\n\n\U0001F5E1 ' + names[name2] + ' дістав пістолет-кулемет і прострелив ворогу коліно!'
+            damage_weapon(uid1, c1)
 
         if support1 == 6 and t == 1:
             if i2 > i1:
@@ -739,22 +748,24 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     hc = s2 / (s1 + s2)
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
+                        ran1, ran2 = randint(50, 100), 2
+                        if weapon1 == 33:
+                            ran1 *= 2
+                            ran2 *= 2
                         trick = choices([1, 2, 3], weights=[45, 45, 10])
                         if checkClan(uid1, building='build2', level=3):
                             trick = choices([1, 2, 3], weights=[35, 35, 30])
                         if trick == [1]:
-                            ran = randint(50, 100)
                             hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника через стегно!\n\U0001F54A -' + \
-                                    str(ran) + '\n'
-                            spirit(-ran, uid2, 0)
+                                    str(ran1) + '\n'
+                            spirit(-ran1, uid2, 0)
                         elif trick == [2]:
-                            ran = randint(50, 100)
                             hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника млином!\n\U0001F54A +' + \
-                                    str(ran) + '\n'
-                            spirit(ran, uid1, 0)
+                                    str(ran1) + '\n'
+                            spirit(ran1, uid1, 0)
                         elif trick == [3] and can_earn1:
-                            hach += '\n\U0001F919 ' + names[name1] + ' кинув суперника прогином!\n\U0001F4B5 +2\n'
-                            r.hincrby(uid1, 'money', 2)
+                            hach += f'\n\U0001F919 {names[name1]} кинув суперника прогином!\n\U0001F4B5 +{ran2}\n'
+                            r.hincrby(uid1, 'money', ran2)
 
             pag = ''
             if weapon2 in (14, 25):
@@ -869,22 +880,24 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     hc = s1 / (s1 + s2)
                     trick = choices([1, 0], weights=[hc, 1 - hc])
                     if trick == [1]:
+                        ran1, ran2 = randint(50, 100), 2
+                        if weapon2 == 33:
+                            ran1 *= 2
+                            ran2 *= 2
                         trick = choices([1, 2, 3], weights=[45, 45, 10])
                         if checkClan(uid2, building='build2', level=3):
                             trick = choices([1, 2, 3], weights=[35, 35, 30])
                         if trick == [1]:
-                            ran = randint(50, 100)
                             hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника через стегно!\n\U0001F54A -' + \
-                                    str(ran) + '\n'
-                            spirit(-ran, uid1, 0)
+                                    str(ran1) + '\n'
+                            spirit(-ran1, uid1, 0)
                         elif trick == [2]:
-                            ran = randint(50, 100)
                             hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника млином!\n\U0001F54A +' + \
-                                    str(ran) + '\n'
-                            spirit(ran, uid2, 0)
+                                    str(ran1) + '\n'
+                            spirit(ran1, uid2, 0)
                         elif trick == [3] and can_earn2:
-                            hach += '\n\U0001F919 ' + names[name2] + ' кинув суперника прогином!\n\U0001F4B5 +2\n'
-                            r.hincrby(uid2, 'money', 2)
+                            hach += f'\n\U0001F919 {names[name2]} кинув суперника прогином!\n\U0001F4B5 +{ran2}\n'
+                            r.hincrby(uid2, 'money', ran2)
 
             pag = ''
             if weapon2 in (14, 25):
