@@ -8,7 +8,7 @@ from asyncio import sleep
 from config import r, TOKEN, bot, dp
 from inline import prepare_to_fight, pastLife, earnings, political, love, \
     question, zradoMoga, penis, choose, beer, generator, race, gender, roll_push_ups, donate_to_zsu
-from parameters import spirit, vodka, intellect, hp, damage_support, damage_head, increase_trance
+from parameters import spirit, vodka, intellect, hp, damage_weapon, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
     wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
@@ -484,10 +484,17 @@ async def mine(message):
                         msg += '\n\U0001F9C2 +1'
                         r.hincrby(message.from_user.id, 'salt', 1)
                     await message.reply(msg)
+                    if cl in (18, 28):
+                        if int(r.hget(message.from_user.id, 'weapon')) == 39 \
+                                and int(r.hget('soledar', 'merchant_day')) != datetime.now().day:
+                            damage_weapon(message.from_user.id, cl)
+                            msg = f'📟 Хакер дізнався, що торговець прийде о ' \
+                                  f'{int(r.hget("soledar", "merchant_hour"))} годині.'
+                            await bot.send_message(message.from_user.id, msg)
                 else:
                     fish = 0
                     if support == 10:
-                        fish = choices([1, 0], [2, 8])[0]
+                        fish = choices([1, 0], [1, 4])[0]
                     if cl in (2, 12, 22) and fish == 0:
                         msg = f'\U0001F37A Твій роботяга {r_name} втік з-під нагляду. ' \
                               f'Його знайшли п`яним біля шахти.\n\u2622 +5'
@@ -509,9 +516,14 @@ async def mine(message):
                                             f'Його знайшли п`яним біля шахти.\n\u2622 +1')
                         r.hincrby(message.from_user.id, 'vodka', 1)
                         r.hincrby('all_vodka', 'vodka', 1)
-                        if int(r.hget(message.from_user.id, 'class')) == 18 or \
-                                int(r.hget(message.from_user.id, 'class')) == 28:
+                        if cl in (18, 28):
                             r.hset(message.from_user.id, 'time1', 0)
+                            if int(r.hget(message.from_user.id, 'weapon')) == 39 \
+                                    and int(r.hget('soledar', 'merchant_day')) != datetime.now().day:
+                                damage_weapon(message.from_user.id, cl)
+                                msg = f'📟 Хакер дізнався, що торговець прийде о ' \
+                                      f'{int(r.hget("soledar", "merchant_hour"))} годині.'
+                                await bot.send_message(message.from_user.id, msg)
             elif datetime.now().day == int(r.hget(message.from_user.id, 'time1')):
                 await message.reply('Твій русак сьогодні відпрацював зміну.')
         except:
