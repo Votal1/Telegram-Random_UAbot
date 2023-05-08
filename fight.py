@@ -85,6 +85,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon1, defense1 = 0, 0
                 damage_weapon(uid2, c2)
                 weapon = '\n\n\U0001F5E1\U0001F5FF ' + names[name2] + ' обеззброїв ворога битою!'
+        if weapon1 in (15, 26, 37):
+            weapon2 = 0
+        if weapon2 in (15, 26, 37):
+            weapon1 = 0
 
         if c1 == 26 and t == 1:
             quest(uid2, 3, -1, 1)
@@ -252,9 +256,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 pass
             else:
                 damage_weapon(uid2, c2)
-        elif weapon2 in (15, 26) and c2 in (5, 15, 25):
+        elif weapon2 in (15, 26, 37) and c2 in (5, 15, 25):
             s2 = int(s2 * 1.5)
-            ak = 'АКМ' if weapon2 == 26 else 'АК-47'
+            ak = 'АКM'
+            if weapon2 == 26:
+                ak = 'AKM'
+            elif weapon2 == 37:
+                ak = 'AK-74M'
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid2, c2)
             ran = choices([1, 2], weights=[99, 1])
@@ -350,9 +358,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid1, 'head', 0)
                 quest(uid1, 3, -1, 4)
 
-        if weapon1 in (15, 26) and c1 in (5, 15, 25):
+        if weapon1 in (15, 26, 37) and c1 in (5, 15, 25):
             s1 = int(s1 * 1.5)
-            ak = 'АКМ' if weapon1 == 26 else 'АК-47'
+            ak = 'АКM'
+            if weapon1 == 26:
+                ak = 'AKM'
+            elif weapon1 == 37:
+                ak = 'AK-74M'
             defense = '\n\n\U0001F5E1 ' + names[name1] + ' приніс на бій заряджений ' + ak + '...'
             damage_weapon(uid1, c1)
             ran = choices([1, 2], weights=[99, 1])
@@ -844,7 +856,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     hack = hack + '\n\U0001F4DF ' + names[name2] + ' зламав бота, і переписав бонусний бойовий дух ' \
                                                                    'собі.\n\U0001F4B5 +' + str(money)
 
-            if weapon1 in (15, 26):
+            if weapon1 in (15, 26, 37):
                 meat += '\n' + names[name1] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid1)
                 if c1 not in (5, 15, 25):
                     damage_weapon(uid1, c1)
@@ -996,7 +1008,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     hack = hack + '\n\U0001F4DF ' + names[name1] + ' зламав бота, і переписав бонусний бойовий дух ' \
                                                                    'собі.\n\U0001F4B5 +' + str(money)
 
-            if weapon2 in (15, 26):
+            if weapon2 in (15, 26, 37):
                 meat += '\n' + names[name2] + ' бахнув горілочки. ' + '\U0001F54A ' + vodka(uid2)
                 if c2 not in (5, 15, 25):
                     damage_weapon(uid2, c2)
