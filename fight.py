@@ -788,7 +788,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з рунічною сокирою Перуна. Коли русак' \
                                                            ' програв, ворога вдарило блискавкою...'
             elif weapon2 == 36 and c2 in (4, 14, 24):
-                if choices([0, 1], weights=[1, 9])[0] == 0:
+                if choices([0, 1], weights=[1, 4])[0] == 0:
                     r.hset(uid2, 'weapon', 0, {'s_weapon': 0})
                     ran = randint(1, 100)
                     r.hincrby(uid2, 'sch', ran)
