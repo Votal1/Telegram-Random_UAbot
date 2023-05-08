@@ -248,7 +248,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з незеритовим кайлом.'
             elif weapon2 == 34:
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з зачарованим незеритовим кайлом.'
-            if weapon2 == 23 and choice([1, 2, 3]) != 1:
+            if weapon2 in (23, 34) and choice([1, 2, 3]) != 1:
                 pass
             else:
                 damage_weapon(uid2, c2)
@@ -931,7 +931,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                                               '\n\U0001F3C6 +1'
             elif weapon2 == 34:
                 if int(r.hget(uid2, 'weapon')) == 34 and int(r.hget(uid2, 's_weapon')) < 100:
-                    r.hincrby(uid2, 's_weapon', 3)
+                    r.hincrby(uid2, 's_weapon', 2)
 
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
