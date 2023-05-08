@@ -289,7 +289,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1 = int(s1 * 0.8)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' атакує, прикрившись поліцейським щитом.'
             damage_defense(uid2, 16)
-        elif weapon2 in (19, 30):
+        elif weapon2 in (19, 30, 40):
             db = r.hmget(uid1, 'injure', 'sch')
             injure1, sch1 = int(db[0]), int(db[1])
             if injure1 == 0 and sch1 < 4:
@@ -297,7 +297,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
             elif injure1 >= 4 or sch1 >= 4:
                 inj = randint(5, 10)
-                if weapon2 == 30:
+                if weapon2 in (30, 40):
                     inj = 15
                 if injure1 >= 4:
                     stat = 'injure'
