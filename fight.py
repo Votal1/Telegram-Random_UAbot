@@ -192,11 +192,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 s1 = int(s1 * 1.4)
             else:
                 s1 = int(s1 * 1.1)
+        elif hp1 < 10:
+            s1 = int(s1 * 0.1)
         if hp2 >= 90:
             if c2 in (34, 35, 36):
                 s2 = int(s2 * 1.4)
             else:
                 s2 = int(s2 * 1.1)
+        elif hp2 < 10:
+            s2 = int(s2 * 0.1)
 
         if in1 > 0:
             s1, bd1 = injure(uid1, s1, bd1, True)
@@ -1044,10 +1048,21 @@ async def war(cid, location, big_battle):
     for member in everyone:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'buff',
-                            'support', 'head')
+                            'support', 'head', 'hp', 'class')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            cl = int(stats[11])
+            hp1 = int(stats[10])
+
+            if hp1 >= 90:
+                if cl in (34, 35, 36):
+                    s = int(s * 1.4)
+                else:
+                    s = int(s * 1.1)
+            elif hp1 < 10:
+                s = int(s * 0.1)
+
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
@@ -1280,13 +1295,24 @@ async def war_power(sett, cid):
     for member in sett:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'clan', 'buff', 'support', 'head')
+                            'clan', 'buff', 'support', 'head', 'hp')
             if checkClan(member):
                 if int(stats[8]) == cid:
                     clan5 += 1
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
+            cl = int(stats[7])
+            hp1 = int(stats[12])
+
+            if hp1 >= 90:
+                if cl in (34, 35, 36):
+                    s = int(s * 1.4)
+                else:
+                    s = int(s * 1.1)
+            elif hp1 < 10:
+                s = int(s * 0.1)
+
             if checkClan(member, base=4, building='morgue'):
                 d = int(r.hget(member, 'deaths'))
                 if d > 100:
@@ -1348,15 +1374,15 @@ async def war_power(sett, cid):
             else:
                 head = 0
 
-            if int(stats[7]) == 24:
+            if cl == 24:
                 pag = 1
-            elif int(stats[7]) in (5, 15, 25) and checkClan(member, building='build4', level=2):
+            elif cl in (5, 15, 25) and checkClan(member, building='build4', level=2):
                 s = int(s * 1.2)
-            elif int(stats[7]) in (7, 17, 27) and checkClan(member, building='build4', level=3):
+            elif cl in (7, 17, 27) and checkClan(member, building='build4', level=3):
                 mal += 1
-            elif int(stats[7]) in (9, 19, 29):
+            elif cl in (9, 19, 29):
                 m = 1
-            elif int(stats[7]) in (34, 35, 36):
+            elif cl in (34, 35, 36):
                 if choices([1, 0], [2, 98]) == [1]:
                     intellect(1, member)
                 if gen1 == 1 and meat > 0:
@@ -1506,11 +1532,21 @@ async def great_war(cid1, cid2, a, b):
 
 async def guard_power(mid):
     stats = r.hmget(mid, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                    'buff', 'support', 'head')
+                    'buff', 'support', 'head', 'hp')
     s = int(stats[0])
     i = int(stats[1])
     bd = int(stats[2])
     cl = int(stats[7])
+    hp1 = int(stats[11])
+
+    if hp1 >= 90:
+        if cl in (34, 35, 36):
+            s = int(s * 1.4)
+        else:
+            s = int(s * 1.1)
+    elif hp1 < 10:
+        s = int(s * 0.1)
+
     if checkClan(mid, base=4, building='morgue'):
         d = int(r.hget(mid, 'deaths'))
         if d > 100:
@@ -1601,11 +1637,21 @@ async def start_raid(cid):
     for member in raiders:
         try:
             stats = r.hmget(member, 'strength', 'intellect', 'spirit', 'weapon', 'defense', 'injure', 'sch', 'class',
-                            'buff', 'support', 'head')
+                            'buff', 'support', 'head', 'hp')
             s = int(stats[0])
             i = int(stats[1])
             bd = int(stats[2])
             cl = int(stats[7])
+            hp1 = int(stats[11])
+
+            if hp1 >= 90:
+                if cl in (34, 35, 36):
+                    s = int(s * 1.4)
+                else:
+                    s = int(s * 1.1)
+            elif hp1 < 10:
+                s = int(s * 0.1)
+
             if check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 1:
                 did += 1
             if checkClan(member, base=4, building='morgue'):
