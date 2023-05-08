@@ -929,6 +929,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 ran = int(r.hget(uid2, 'sch'))
                 r.hincrby(uid1, 'sch', ran)
                 r.hincrby(uid2, 'sch', -ran)
+                damage_weapon(uid2, c2)
                 pag = f'\n\U0001F5E1 {names[name2]} прийшов на бій з аномальною сокирою Перуна. Ворог отримав ' \
                       f'дозу псі-опромінення...\n\U0001F464 +{ran}'
 
