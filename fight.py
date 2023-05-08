@@ -296,23 +296,21 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'injure', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' порізав ворога медичною пилкою.\n\U0001fa78 +1'
             elif injure1 >= 4 or sch1 >= 4:
-                inj = 10
+                inj = randint(5, 10)
                 if weapon2 == 30:
                     inj = 15
                 if injure1 >= 4:
                     stat = 'injure'
                     weapon = f'\n\n\U0001F5E1 {names[name2]} припинив ворогу кровотечу.\n' \
-                             f'\U0001fa78 -{inj} \U0001fac0 -10'
+                             f'\U0001fa78 -{inj} \U0001fac0 +{inj}'
                 else:
                     stat = 'sch'
                     weapon = f'\n\n\U0001F5E1 {names[name2]} заглушив ворогу голоси в голові.\n' \
-                             f'\U0001F464 -{inj} \U0001fac0 -10'
+                             f'\U0001F464 -{inj} \U0001fac0 +{inj}'
                 r.hincrby(uid1, stat, -inj)
                 if int(r.hget(uid1, stat)) < 0:
                     r.hset(uid1, stat, 0)
-                hp(-10, uid1)
-                if int(r.hget(uid1, 'hp')) == 0:
-                    quest(uid1, 3, -1, 4)
+                hp(inj, uid1)
             damage_weapon(uid2, c2)
         elif weapon2 in (20, 31):
             i1 = i1 - 10
