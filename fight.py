@@ -2171,6 +2171,10 @@ async def start_raid(cid):
         await sleep(10)
         a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
         r.hset(c, 'raid_loot_mid', a.message_id)
+        try:
+            await bot.send_message(456514639, f'{msg0}\n{msg}')
+        except:
+            pass
         if diff == 0 or int(r.hget('convoy', 'first')) == 1:
             if diff == 0:
                 msg = '\U0001F69B Гумконвой розграбовано.'
