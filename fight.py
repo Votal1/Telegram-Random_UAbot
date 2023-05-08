@@ -931,7 +931,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                                               '\n\U0001F3C6 +1'
             elif weapon2 == 34:
                 if int(r.hget(uid2, 'weapon')) == 34 and int(r.hget(uid2, 's_weapon')) < 100:
-                    r.hincrby(uid2, 's_weapon', 2)
+                    r.hincrby(uid2, 's_weapon', 3)
 
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
@@ -1322,7 +1322,7 @@ async def war_power(sett, cid):
                 pag = 1
             elif int(stats[7]) in (5, 15, 25) and checkClan(member, building='build4', level=2):
                 s = int(s * 1.2)
-            elif int(stats[7]) in (7, 17, 27) and checkClan(member, building='build3', level=3):
+            elif int(stats[7]) in (7, 17, 27) and checkClan(member, building='build4', level=3):
                 mal += 1
             elif int(stats[7]) in (9, 19, 29):
                 m = 1
