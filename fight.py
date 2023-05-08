@@ -931,7 +931,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                                                               '\n\U0001F3C6 +1'
             elif weapon2 == 34:
                 if int(r.hget(uid2, 'weapon')) == 34 and int(r.hget(uid2, 's_weapon')) < 100:
-                    r.hincrby(uid2, 's_weapon', 2)
+                    r.hincrby(uid2, 's_weapon', 3)
 
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
