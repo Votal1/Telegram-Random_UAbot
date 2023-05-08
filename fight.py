@@ -787,6 +787,13 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hincrby(uid1, 'sch', 5-ran)
                     pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з рунічною сокирою Перуна. Коли русак' \
                                                            ' програв, ворога вдарило блискавкою...'
+            elif weapon2 == 36 and c2 in (4, 14, 24):
+                if choices([0, 1], weights=[1, 2])[0] == 0:
+                    r.hset(uid2, 'weapon', 0, {'s_weapon': 0})
+                    ran = randint(1, 100)
+                    r.hincrby(uid2, 'sch', ran)
+                    pag = f'\n\U0001F5E1 {names[name2]} прийшов на бій з аномальною сокирою Перуна. Коли русак' \
+                          f' програв, сокира вибухнула...\n\U0001F464 +{ran}'
 
             spirit(bonus, uid1, c1)
             spirit(-bonus, uid2, 0)
@@ -918,6 +925,12 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if weapon2 == 25:
                     pag = '\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з рунічною сокирою Перуна. Коли ворог ' \
                                                            'програв, його бойовий дух влився у русака...'
+            elif weapon2 == 36 and c2 in (4, 14, 24) and int(r.hget(uid2, 'sch')) > 0:
+                ran = int(r.hget(uid2, 'sch'))
+                r.hincrby(uid1, 'sch', ran)
+                r.hincrby(uid2, 'sch', -ran)
+                pag = f'\n\U0001F5E1 {names[name2]} прийшов на бій з аномальною сокирою Перуна. Ворог отримав ' \
+                      f'дозу псі-опромінення...\n\U0001F464 +{ran}'
 
             elif weapon2 in (17, 28) and can_earn2:
                 r.hincrby(uid2, 'wins', 1)
