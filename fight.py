@@ -239,13 +239,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав револьвер і прострелив ворогу коліно!'
                 if weapon2 == 33:
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав пістолет-кулемет і прострелив ворогу коліно!'
-        elif weapon2 in (12, 23):
+        elif weapon2 in (12, 23, 34):
             s2 = int(s2 * 1.2)
             i2 = int(i2 * 1.2)
             bd2 = int(bd2 * 1.2)
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з діамантовим кайлом.'
             if weapon2 == 23:
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з незеритовим кайлом.'
+            elif weapon2 == 34:
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з зачарованим незеритовим кайлом.'
             if weapon2 == 23 and choice([1, 2, 3]) != 1:
                 pass
             else:
@@ -341,7 +343,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid1, 's_defense', 0)
             else:
                 r.hincrby(uid1, 'injure', 300)
-                if c1 != 6 and c1 != 16 and c1 != 26:
+                if c1 not in (6, 16, 26) and weapon1 != 34:
                     r.hset(uid1, 'weapon', 0)
                 r.hset(uid1, 'spirit', 0, {'hp': 0, 'defense': 0, 'support': 0})
                 if head1 != 6:
@@ -927,6 +929,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     increase_trance(2, uid2)
                     fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор совка.' \
                                                               '\n\U0001F3C6 +1'
+            elif weapon2 == 34:
+                if int(r.hget(uid2, 'weapon')) == 34 and int(r.hget(uid2, 's_weapon')) < 100:
+                    r.hincrby(uid2, 's_weapon', 2)
 
             spirit(bonus, uid2, c2)
             spirit(-bonus, uid1, 0)
