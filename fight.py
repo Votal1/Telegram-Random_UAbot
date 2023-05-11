@@ -957,7 +957,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 pag = f'\n\U0001F5E1 {names[name2]} прийшов на бій з аномальною сокирою Перуна. Ворог отримав ' \
                       f'дозу псі-опромінення...\n\U0001F464 +{ran}'
 
-            elif weapon2 in (17, 28) and can_earn2:
+            elif weapon2 in (17, 28, 38) and can_earn2:
                 r.hincrby(uid2, 'wins', 1)
                 if weapon2 == 17:
                     fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор новоросії.' \
@@ -966,6 +966,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if weapon2 == 28:
                     increase_trance(2, uid2)
                     fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках прапор совка.' \
+                                                              '\n\U0001F3C6 +1'
+                if weapon2 == 38:
+                    fsb += '\n\n\U0001F5E1 ' + names[name2] + ' гордо стоїть, тримаючи в руках серп і молот.' \
                                                               '\n\U0001F3C6 +1'
             elif weapon2 == 34:
                 if int(r.hget(uid2, 'weapon')) == 34 and int(r.hget(uid2, 's_weapon')) < 100:
