@@ -930,10 +930,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         m_bonus = [m_bonus[0] * 2]
                 if steal == 0:
                     r.hincrby(uid2, 'money', int(m_bonus[0]))
-                    grn = '\n\U0001F4B5 +' + str(m_bonus[0])
+                    grn = '\n\U0001F4B5 +' + str(int(m_bonus[0]))
                 else:
                     r.hincrby(uid1, 'money', int(m_bonus[0]))
-                    grn = '\n\U0001F4B5 +' + str(m_bonus[0]) + ' (вкрадено фокусником!)'
+                    grn = '\n\U0001F4B5 +' + str(int(m_bonus[0])) + ' (вкрадено фокусником!)'
 
             if hach2 == 1:
                 if c2 in (11, 21):
