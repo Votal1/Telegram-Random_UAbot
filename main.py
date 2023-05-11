@@ -2906,7 +2906,8 @@ async def guard(message):
                     r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
                                                         'hour': randint(8, 12), 'first': 1})
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
-                    r.hincrby('convoy', 'power', 500000)
+                    value = 100000 + r.scard('cl' + str(message.chat.id)) * 10000
+                    r.hincrby('convoy', 'power', value)
                     for mem in r.smembers('followers'):
                         try:
                             c3 = 'c' + mem.decode()
@@ -2921,7 +2922,7 @@ async def guard(message):
                             await bot.send_message(int(mem), '\U0001F69B Додатковий гумконвой вже в дорозі!')
                         except:
                             pass
-                    msg += '\n\U0001F396 Генерал викликав додатковий гумконвой.'
+                    msg += f'\n\U0001F396 Генерал викликав додатковий гумконвой.\n\U0001F69B +{value}'
                 elif int(r.hget(mid, 'class')) in (8, 18, 28) and int(r.hget(mid, 'weapon')) == 39:
                     chance = int(r.hget(mid, 'intellect'))
                     if choices([1, 0], weights=[chance, 100 - chance])[0]:

@@ -2168,6 +2168,8 @@ async def start_raid(cid):
             pass
 
         msg = 'Русаки приїхали грабувати гумконвой...\n\n'
+        if chance1 > 1000000:
+            chance1 = 1000000
         diff = chance2 - chance1
         packs = 0
         if diff < 0:
