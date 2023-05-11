@@ -323,7 +323,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'injure', 1)
                 r.hincrby(uid1, 'sch', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога кастетом по морді!'
-            if weapon2 == 31:
+            if weapon2 == 41:
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' пирнув ворога ножем!'
             damage_weapon(uid2, c2)
         elif weapon2 in (21, 32, 42):
