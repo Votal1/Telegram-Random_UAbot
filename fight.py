@@ -2167,8 +2167,11 @@ async def start_raid(cid):
         except:
             pass
 
+        first = int(r.hget('convoy', 'first'))
         msg = 'Русаки приїхали грабувати гумконвой...\n\n'
-        if chance1 > 1000000:
+        if first and chance1 > 2000000:
+            chance1 = 2000000
+        if not first and chance1 > 1000000:
             chance1 = 1000000
         diff = chance2 - chance1
         packs = 0
@@ -2211,10 +2214,10 @@ async def start_raid(cid):
             await bot.send_message(456514639, f'{msg0}\n{msg}')
         except:
             pass
-        if diff == 0 or int(r.hget('convoy', 'first')) == 1:
+        if diff == 0 or first:
             if diff == 0:
                 msg = '\U0001F69B Гумконвой розграбовано.'
-            if int(r.hget('convoy', 'first')) == 1:
+            if first:
                 msg = '\U0001F69B Гумконвой прибув.'
                 r.hset('convoy', 'first', 0)
             for mem in r.smembers('followers'):
