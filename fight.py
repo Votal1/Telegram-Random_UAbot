@@ -314,7 +314,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     r.hset(uid1, stat, 0)
                 hp(inj, uid1)
             damage_weapon(uid2, c2)
-        elif weapon2 in (20, 31):
+        elif weapon2 in (20, 31, 41):
             i1 = i1 - 10
             if i1 < 0:
                 i1 = 0
@@ -323,6 +323,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'injure', 1)
                 r.hincrby(uid1, 'sch', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога кастетом по морді!'
+            if weapon2 == 31:
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' пирнув ворога ножем!'
             damage_weapon(uid2, c2)
         elif weapon2 in (21, 32):
             damage_weapon(uid2, c2)
