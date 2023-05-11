@@ -2524,7 +2524,8 @@ async def join(message):
     if r.hexists(message.from_user.id, 'clan_ts') == 0:
         r.hset(message.from_user.id, 'clan_ts', 0)
     try:
-        if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5:
+        if int(r.hget(c, 'base')) > 0 and len(str(r.hget(message.from_user.id, 'clan'))) < 5 \
+                and r.hexists(message.from_user.id, 'name'):
             if int(r.hget(c, 'complex')) >= 1:
                 num += 25
             if int(r.hget(c, 'build5')) == 3:
