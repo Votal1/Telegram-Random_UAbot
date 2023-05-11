@@ -3671,21 +3671,25 @@ async def handle_query(call):
         if call.from_user.id in admins and \
                 str(call.from_user.id).encode() in r.smembers('cl' + str(call.message.chat.id)) and \
                 r.scard('cl' + str(call.message.chat.id)) < num:
-            if int(datetime.now().timestamp()) - int(r.hget(uid, 'clan_ts')) > ts \
-                    or str(uid).encode() in r.smembers('sudoers'):
-                r.hset(uid, 'clan', call.message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
-                                                           'firstname': call.from_user.first_name})
-                if r.hexists(uid, 'clan_time') == 0:
-                    r.hset(uid, 'clan_time', 0)
-                r.sadd('cl' + str(call.message.chat.id), uid)
-                if int(r.hget('c' + str(call.message.chat.id), 'buff_4')) == 32:
-                    q_points(call.from_user.id, 10)
-                await bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
-                                            r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
-                                            call.message.chat.id, call.message.message_id)
+            if r.hexists(call.from_user.id, 'name'):
+                if int(datetime.now().timestamp()) - int(r.hget(uid, 'clan_ts')) > ts \
+                        or str(uid).encode() in r.smembers('sudoers'):
+                    r.hset(uid, 'clan', call.message.chat.id, {'clan_ts': int(datetime.now().timestamp()),
+                                                               'firstname': call.from_user.first_name})
+                    if r.hexists(uid, 'clan_time') == 0:
+                        r.hset(uid, 'clan_time', 0)
+                    r.sadd('cl' + str(call.message.chat.id), uid)
+                    if int(r.hget('c' + str(call.message.chat.id), 'buff_4')) == 32:
+                        q_points(call.from_user.id, 10)
+                    await bot.edit_message_text('\U0001F4E5 Ти вступив в клан ' +
+                                                r.hget('c' + str(call.message.chat.id), 'title').decode() + '.',
+                                                call.message.chat.id, call.message.message_id)
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='\U0001F4E5 Вступати в клан можна лише раз в тиждень.')
+                                                text='Цей користувач не має свого русака.')
 
     elif call.data.startswith('promote_to_leader'):
         try:
