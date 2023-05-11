@@ -2906,7 +2906,7 @@ async def guard(message):
                     r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
                                                         'hour': randint(8, 12), 'first': 1})
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
-                    value = 100000 + r.scard('cl' + str(message.chat.id)) * 10000
+                    value = 200000 + r.scard('cl' + str(message.chat.id)) * 5000
                     r.hincrby('convoy', 'power', value)
                     for mem in r.smembers('followers'):
                         try:
