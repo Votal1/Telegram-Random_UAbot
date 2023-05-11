@@ -895,6 +895,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     m_bonus[0] += 2
                 elif int(r.hget(uid2, 'money')) < 200 and checkClan(uid2, building='build3', level=1):
                     m_bonus[0] += 2
+                if weapon2 == 41 and in1 > 0:
+                    m_bonus = [m_bonus[0] * 1.34]
             if m_bonus[0] > 0 and can_earn2:
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
