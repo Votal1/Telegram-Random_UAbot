@@ -5518,8 +5518,12 @@ async def handle_query(call):
                 if uid_enc not in r.smembers(f'raid_loot{cid}'):
                     if item_count > 0 and call.message.message_id == mid:
                         if ts - ts2 > 300 or uid_enc in r.smembers(f'raiders{cid}'):
+                            lt = -1
+                            if int(r.hget(uid, 'weapon')) == 35 and int(r.hget(uid, 'class')) in (3, 13, 23):
+                                il = int(r.hget(uid, 'intellect'))
+                                lt = 1
                             if data == 'food':
-                                n = r.hincrby(c, 'raid_loot_c', -1)
+                                n = r.hincrby(c, 'raid_loot_c', lt)
                                 r.sadd(f'raid_loot{cid}', uid)
                                 r.hset(uid, 'time', 0)
                                 if n > 0:
@@ -5529,7 +5533,7 @@ async def handle_query(call):
                                                             call.message.message_id, reply_markup=markup)
 
                             elif data == 'tape':
-                                n = r.hincrby(c, 'raid_loot_c', -1)
+                                n = r.hincrby(c, 'raid_loot_c', lt)
                                 r.sadd(f'raid_loot{cid}', uid)
                                 r.hincrby(uid, 'tape', r.hget(c, 'raid_loot_s'))
                                 if n > 0:
@@ -5539,7 +5543,7 @@ async def handle_query(call):
                                                             call.message.message_id, reply_markup=markup)
 
                             elif data == 'convoy':
-                                n = r.hincrby(c, 'raid_loot_c', -1)
+                                n = r.hincrby(c, 'raid_loot_c', lt)
                                 r.sadd(f'raid_loot{cid}', uid)
                                 packs = int(r.hget(c, 'raid_loot_s'))
                                 r.hincrby(uid, 'packs', packs)
@@ -5559,7 +5563,7 @@ async def handle_query(call):
                                         items = (8, 13)
 
                                 if int(r.hget(uid, data)) == item or int(r.hget(uid, data)) in items:
-                                    n = r.hincrby(c, 'raid_loot_c', -1)
+                                    n = r.hincrby(c, 'raid_loot_c', lt)
                                     r.sadd(f'raid_loot{cid}', uid)
                                     r.hincrby(uid, f's_{data}', r.hget(c, 'raid_loot_s'))
                                     if n > 0:
@@ -5568,7 +5572,7 @@ async def handle_query(call):
                                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                                 call.message.message_id, reply_markup=markup)
                                 elif int(r.hget(uid, data)) == 0:
-                                    n = r.hincrby(c, 'raid_loot_c', -1)
+                                    n = r.hincrby(c, 'raid_loot_c', lt)
                                     r.sadd(f'raid_loot{cid}', uid)
                                     r.hset(uid, data, r.hget(c, 'raid_loot_n'),
                                            {f's_{data}': r.hget(c, 'raid_loot_s')})
