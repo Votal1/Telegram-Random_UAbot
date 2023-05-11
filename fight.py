@@ -35,7 +35,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         head1, head2 = int(stats1[5]), int(stats2[5])
 
         grn, hach, worker, meat, cop, fsb, m1, m2, inj1, inj2 = '', '', '', '', '', '', '', '', '', ''
-        m_bonus, hach1, hach2 = [0], 0, 0
+        m_bonus, hach1, hach2, l1, l2 = [0], 0, 0, 0, 0
 
         if c1 == 1 or c1 == 11 or c1 == 21:
             quest(uid2, 3, -1, 2)
@@ -326,7 +326,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if weapon2 == 31:
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' пирнув ворога ножем!'
             damage_weapon(uid2, c2)
-        elif weapon2 in (21, 32):
+        elif weapon2 in (21, 32, 42):
             damage_weapon(uid2, c2)
             if not checkClan(uid1):
                 s2 = int(s2 * 2)
@@ -339,6 +339,27 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     s2 = int(s2 * 1.25)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці золотий палаш!'
+            if weapon2 == 42 and c2 in (34, 35, 36):
+                l2 += 1
+                if defense2 == 2:
+                    l2 += 1
+                if support2 == 10:
+                    l2 += 1
+                if head2 == 6:
+                    l2 += 1
+                if weapon1 in (2, 6, 42):
+                    l1 += 1
+                if defense1 == 2:
+                    l1 += 1
+                if support1 == 10:
+                    l1 += 1
+                if head1 == 6:
+                    l1 += 1
+
+                i1 += l1
+                i2 += l2
+
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' марширує в бій, тримаючи в руці антикварний палаш!'
         if weapon2 == 27 and t == 1:
             damage_weapon(uid2, c2)
             r.hset(uid1, 'hp', 0)
@@ -756,6 +777,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                     m_bonus[0] += 2
                 elif int(r.hget(uid1, 'money')) < 200 and checkClan(uid1, building='build3', level=1):
                     m_bonus[0] += 2
+            elif c2 in (34, 35, 36):
+                m_bonus = [int(m_bonus[0] * (1 + 0.1 * i1))]
             if m_bonus[0] > 0 and can_earn1:
                 if checkClan(uid1, base=4):
                     if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
@@ -898,7 +921,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 elif int(r.hget(uid2, 'money')) < 200 and checkClan(uid2, building='build3', level=1):
                     m_bonus[0] += 2
                 if weapon2 == 41 and in1 > 0:
-                    m_bonus = [m_bonus[0] * 1.34]
+                    m_bonus = [int(m_bonus[0] * 1.34)]
+            elif c2 in (34, 35, 36):
+                m_bonus = [int(m_bonus[0] * (1 + 0.1 * l2))]
             if m_bonus[0] > 0 and can_earn2:
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
