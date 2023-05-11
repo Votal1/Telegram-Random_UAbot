@@ -217,6 +217,8 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         if sc1 > 0:
             i1, bd1 = schizophrenia(uid1, i1, bd1, True)
             inj1 += '\U0001F464 '
+            if weapon2 == 38:
+                i1, bd1 = schizophrenia(uid1, i1, bd1, True)
         if sc2 > 0:
             i2, bd2 = schizophrenia(uid2, i2, bd2, True)
             inj2 += '\U0001F464 '

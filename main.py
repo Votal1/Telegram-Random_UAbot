@@ -5521,7 +5521,9 @@ async def handle_query(call):
                             lt = -1
                             if int(r.hget(uid, 'weapon')) == 35 and int(r.hget(uid, 'class')) in (3, 13, 23):
                                 il = int(r.hget(uid, 'intellect'))
-                                lt = 1
+                                damage_weapon(uid, 0)
+                                if choices([1, 0], weights=[il, 100 - il])[0]:
+                                    lt = 1
                             if data == 'food':
                                 n = r.hincrby(c, 'raid_loot_c', lt)
                                 r.sadd(f'raid_loot{cid}', uid)
