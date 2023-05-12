@@ -2908,7 +2908,7 @@ async def guard(message):
                     r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
                                                         'hour': randint(8, 12), 'first': 1})
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
-                    value = 200000 + r.scard('cl' + str(message.chat.id)) * 5000
+                    value = 500000
                     r.hincrby('convoy', 'power', value)
                     for mem in r.smembers('followers'):
                         try:
@@ -5552,17 +5552,27 @@ async def handle_query(call):
                                                             call.message.message_id, reply_markup=markup)
 
                             elif data == 'convoy':
-                                n = r.hincrby(c, 'raid_loot_c', lt)
-                                r.sadd(f'raid_loot{cid}', uid)
-                                packs = int(r.hget(c, 'raid_loot_s'))
-                                r.hincrby(uid, 'packs', packs)
-                                if packs >= 10:
-                                    quest(uid, 3, -2, 4)
-                                if n > 0:
-                                    markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
-                                                                    callback_data='clan_raid_loot'))
-                                await bot.edit_message_text(call.message.text, call.message.chat.id,
-                                                            call.message.message_id, reply_markup=markup)
+                                if not r.hexists(uid, 'convoy_time'):
+                                    r.hset(uid, 'convoy_time', datetime.now().day, {'convoy_c': 0})
+                                if int(r.hget(uid, 'convoy_time')) != datetime.now().day:
+                                    r.hset(uid, 'convoy_time', datetime.now().day, {'convoy_c': 0})
+                                if int(r.hget(uid, 'convoy_c')) < 3:
+                                    n = r.hincrby(c, 'raid_loot_c', lt)
+                                    r.sadd(f'raid_loot{cid}', uid)
+                                    r.hincrby(uid, 'convoy_c', 1)
+                                    packs = int(r.hget(c, 'raid_loot_s'))
+                                    r.hincrby(uid, 'packs', packs)
+                                    if packs >= 10:
+                                        quest(uid, 3, -2, 4)
+                                    if n > 0:
+                                        markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
+                                                                        callback_data='clan_raid_loot'))
+                                    await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                                call.message.message_id, reply_markup=markup)
+                                else:
+                                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                                    text='Ви вже сьогодні взяли лут з конвою 3 рази,'
+                                                                         ' залиште іншим!')
 
                             else:
                                 if data == 'support':
