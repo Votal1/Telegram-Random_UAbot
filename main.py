@@ -856,7 +856,7 @@ async def woman(message):
     except:
         pass
 
-
+'''
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
@@ -868,7 +868,7 @@ async def l_top(message):
     except:
         pass
 
-'''
+
 @dp.message_handler(commands=['gtop'])
 async def g_top(message):
     try:
