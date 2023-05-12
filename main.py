@@ -1999,8 +1999,13 @@ async def clan_war(message):
 
                     r.hincrby(c, 'codes', codes)
                     for mem in r.smembers(f'cl{cid}'):
-                        r.hincrby(mem, 'salt', salt)
-                        r.hincrby(mem, 'packs', packs)
+                        if not r.hexists(mem, 'clan_war_ts'):
+                            r.hset(mem, 'clan_war_ts', 0)
+                        ts = int(datetime.now().timestamp())
+                        if ts - int(r.hget(mem, 'clan_war_ts')) > 259200:
+                            r.hset(mem, 'clan_war_ts', ts)
+                            r.hincrby(mem, 'salt', salt)
+                            r.hincrby(mem, 'packs', packs)
 
                     await message.answer(msg)
 
