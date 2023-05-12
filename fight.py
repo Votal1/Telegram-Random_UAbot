@@ -1730,6 +1730,7 @@ async def start_raid(cid):
                 if w == 3:
                     w = 1 if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0 else 0.5
                     damage_weapon(member, cl)
+                    w = 0.25
                 else:
                     w = 0.25
             else:
@@ -1746,7 +1747,7 @@ async def start_raid(cid):
                 if support in (2, 9):
                     if support == 9:
                         rocket += 1
-                    support = 0.5
+                    support = 0.25
                     damage_support(member)
                 else:
                     support = 0.25
