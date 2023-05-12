@@ -1673,7 +1673,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1 = hack = mar = rocket = fish = jew = did = again = 0
+    chance1 = hack = mar = rocket = fish = jew = did = again = lash = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
@@ -1728,11 +1728,10 @@ async def start_raid(cid):
             w = int(stats[3])
             if w > 0:
                 if w == 3:
-                    w = 1 if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0 else 0.5
-                    damage_weapon(member, cl)
-                    w = 0.25
-                else:
-                    w = 0.25
+                    if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0:
+                        damage_weapon(member, cl)
+                        lash += 1
+                w = 0.25
             else:
                 w = 0
             d = int(stats[4])
@@ -1798,6 +1797,7 @@ async def start_raid(cid):
             for m in r.smembers('guard' + enemy.decode()):
                 r.srem('guard' + enemy.decode(), m)
         chance2 = int(r.hget(c2, 'power'))
+        chance1 = int(chance1 + (chance1 * 0.3 * lash))
         msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'.replace('@', '')
         try:
             await bot.send_message(cid, msg0, disable_web_page_preview=True)
