@@ -1746,7 +1746,7 @@ async def start_raid(cid):
                 if support in (2, 9):
                     if support == 9:
                         rocket += 1
-                    support = 0.25
+                    support = 0.5
                     damage_support(member)
                 else:
                     support = 0.25
