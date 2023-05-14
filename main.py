@@ -5699,11 +5699,11 @@ async def handle_query(call):
                                                         text='Недостатньо коштів на рахунку.')
 
                 elif call.data.startswith('clan_lash'):
-                    if int(r.hget(call.from_user.id, 'money')) >= 60:
+                    if int(r.hget(call.from_user.id, 'money')) >= 25:
                         if int(r.hget(call.from_user.id, 'weapon')) == 0:
                             r.hset(call.from_user.id, 'weapon', 3)
                             r.hset(call.from_user.id, 's_weapon', 3)
-                            r.hincrby(call.from_user.id, 'money', -60)
+                            r.hincrby(call.from_user.id, 'money', -25)
                             quest(call.from_user.id, 3, 1, 3)
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                             text='Ви успішно купили батіг')

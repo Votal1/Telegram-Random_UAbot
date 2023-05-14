@@ -126,7 +126,7 @@ def c_shop(c, page):
         elif int(r.hget(c, 'build1')) == 3:
             msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 15%, або на 33%, ' \
                    'якщо нема жінки.'
-            markup.add(InlineKeyboardButton(text='Батіг - \U0001F4B5 60', callback_data=cdata('clan_lash', c)))
+            markup.add(InlineKeyboardButton(text='Батіг - \U0001F4B5 25', callback_data=cdata('clan_lash', c)))
         elif int(r.hget(c, 'build1')) == 4:
             msg += '\n\U0001F344 Мухомор королівський [Допомога, міцність=1] - якщо у ворога більший інтелект, додає ' \
                    '+1 інтелекту (не діє проти фокусників). На бій зменшує свою силу на 50%. ' \
