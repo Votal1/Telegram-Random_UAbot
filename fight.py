@@ -1119,8 +1119,8 @@ async def war(cid, location, big_battle):
                 d = 0
             support = int(stats[8])
             if support > 0:
-                if support in (2, 9):
-                    support = 0.5
+                if support in (2, 9, 14) and cl in (31, 32, 33):
+                    support = 0.45
                     damage_support(member)
                 else:
                     support = 0.25
@@ -1389,8 +1389,8 @@ async def war_power(sett, cid):
                 d = 0
             support = int(stats[10])
             if support > 0:
-                if support in (2, 9):
-                    support = 0.5
+                if support in (2, 9, 14) and cl in (31, 32, 33):
+                    support = 0.45
                     damage_support(member)
                 else:
                     support = 0.25
@@ -1673,7 +1673,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1 = hack = mar = rocket = fish = jew = did = again = lash = 0
+    chance1 = hack = mar = rocket = fish = jew = did = again = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
@@ -1706,11 +1706,11 @@ async def start_raid(cid):
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                if checkClan(member, building='build6', level=2):
-                    r.hincrby(member, 'sch', -1)
-                    i += 5
-                else:
-                    i, bd = schizophrenia(int(member), i, bd, True)
+                #if checkClan(member, building='build6', level=2):
+                #    r.hincrby(member, 'sch', -1)
+                #    i += 5
+                #else:
+                i, bd = schizophrenia(int(member), i, bd, True)
             if int(stats[8]) > 0 or int(stats[9]) == 13:
                 s, bd = trance(int(member), s, bd, True)
 
@@ -1728,10 +1728,10 @@ async def start_raid(cid):
             w = int(stats[3])
             if w > 0:
                 if w == 3:
-                    if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0:
-                        damage_weapon(member, cl)
-                        lash += 1
-                w = 0.25
+                    w = 0.58 if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0 else 0.4
+                    damage_weapon(member, cl)
+                else:
+                    w = 0.25
             else:
                 w = 0
             d = int(stats[4])
@@ -1743,10 +1743,9 @@ async def start_raid(cid):
             if support > 0:
                 if support == 10:
                     fish += 1
-                if support in (2, 9):
-                    if support == 9:
-                        rocket += 1
-                    support = 0.5
+                if support in (9, 14) and cl in (31, 32, 33):
+                    rocket += 1
+                    support = 0.45
                     damage_support(member)
                 else:
                     support = 0.25
@@ -1797,7 +1796,6 @@ async def start_raid(cid):
             for m in r.smembers('guard' + enemy.decode()):
                 r.srem('guard' + enemy.decode(), m)
         chance2 = int(r.hget(c2, 'power'))
-        chance1 = int(chance1 + (chance1 * 0.3 * lash))
         msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'.replace('@', '')
         try:
             await bot.send_message(cid, msg0, disable_web_page_preview=True)

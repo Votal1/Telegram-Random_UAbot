@@ -5056,7 +5056,7 @@ async def handle_query(call):
                         r.hset(call.from_user.id, 'support', 2)
                         r.hset(call.from_user.id, 's_support', 5)
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                        text='Ви успішно купили дизель')
+                                                        text='Ви успішно купили солярку')
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Недостатньо коштів на рахунку')

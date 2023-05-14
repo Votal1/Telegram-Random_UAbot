@@ -124,7 +124,7 @@ def c_shop(c, page):
                    'зменшує міцність зброї на 5. Можливість використати міни при захисті клану.'
             markup.add(InlineKeyboardButton(text='Міни - \U0001F4B5 20', callback_data=cdata('clan_bombs', c)))
         elif int(r.hget(c, 'build1')) == 3:
-            msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 25%, або на 75%, ' \
+            msg += '\n\U0001F5E1 Батіг [Зброя, міцність=3] - збільшує силу в рейдах на 15%, або на 33%, ' \
                    'якщо нема жінки.'
             markup.add(InlineKeyboardButton(text='Батіг - \U0001F4B5 60', callback_data=cdata('clan_lash', c)))
         elif int(r.hget(c, 'build1')) == 4:
