@@ -5560,7 +5560,17 @@ async def handle_query(call):
                                     r.hset(uid, 'convoy_time', datetime.now().day, {'convoy_c': 0})
                                 if int(r.hget(uid, 'convoy_time')) != datetime.now().day:
                                     r.hset(uid, 'convoy_time', datetime.now().day, {'convoy_c': 0})
-                                if int(r.hget(uid, 'convoy_c')) < 3:
+                                if int(r.hget(c, 'side')) == 3:
+                                    tier = int(r.hget(c, 'tier'))
+                                    if tier == 2:
+                                        limit = 4
+                                    elif tier == 1:
+                                        limit = 5
+                                    else:
+                                        limit = 3
+                                else:
+                                    limit = 2
+                                if int(r.hget(uid, 'convoy_c')) < limit:
                                     n = r.hincrby(c, 'raid_loot_c', lt)
                                     r.sadd(f'raid_loot{cid}', uid)
                                     r.hincrby(uid, 'convoy_c', 1)
@@ -5574,9 +5584,10 @@ async def handle_query(call):
                                     await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                                 call.message.message_id, reply_markup=markup)
                                 else:
+                                    msg = f'Ви вже сьогодні достатньо взяли луту з конвоїв, залиште іншим!\n' \
+                                          f'{limit}/{limit}'
                                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                                    text='Ви вже сьогодні взяли лут з конвою 3 рази,'
-                                                                         ' залиште іншим!')
+                                                                    text=msg)
 
                             else:
                                 if data == 'support':
