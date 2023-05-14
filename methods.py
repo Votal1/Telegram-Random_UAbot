@@ -291,7 +291,7 @@ def c_shop(c, page):
                                                     callback_data=cdata('clan_buff_4_2_2', c)))
 
                 elif int(r.hget(c, 'side')) == 3:
-                    msg += '\U0001f7e3\U0001f7e3 +10 квестових очків за пограбування гумконвою.\n'
+                    msg += '\U0001f7e3\U0001f7e3 +30 квестових очків за пограбування гумконвою.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F4FB 120 \U0001F4B5 2500',
                                                     callback_data=cdata('clan_buff_4_3_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +10 квестових очків за приєднання учасника в клан.\n'

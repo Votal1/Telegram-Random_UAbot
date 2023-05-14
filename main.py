@@ -6302,7 +6302,7 @@ async def handle_query(call):
                                             r.hincrby(c, 'technics', -120)
                                             r.hincrby(c, 'money', -2500)
                                             r.hset(c, 'buff_4', 31)
-                                            msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 +10 квестових очків ' \
+                                            msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 +30 квестових очків ' \
                                                   'за пограбування гумконвою.'
                                             await bot.send_message(cid, msg)
                                         else:

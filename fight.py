@@ -2196,8 +2196,8 @@ async def start_raid(cid):
                 packs_s = randint(5, 10)
             markup = raid_loot('convoy', 0, packs, packs_s, int(datetime.now().timestamp()) + 10, markup, c)
             if int(r.hget(c, 'buff_4')) == 31:
-                q_points(int(r.srandmember('fighters_3' + str(cid))), 10)
-                msg += ' \U0001fa99 +10'
+                q_points(int(r.srandmember('fighters_3' + str(cid))), 30)
+                msg += ' \U0001fa99 +30'
         elif reward <= 0 and diff != 0:
             msg += 'Але їхньої сили не вистачило, щоб залутати хоч щось'
 
