@@ -1366,7 +1366,7 @@ async def war_power(sett, cid):
 
             w = int(stats[3])
             if w > 0:
-                if w == 26:
+                if w in (26, 37):
                     w = 0.5
                     damage_weapon(member, 25)
                 elif w == 7:
@@ -1744,7 +1744,8 @@ async def start_raid(cid):
                 if support == 10:
                     fish += 1
                 if support in (9, 14) and cl in (31, 32, 33):
-                    rocket += 1
+                    if support == 14:
+                        rocket += 1
                     support = 0.45
                     damage_support(member)
                 else:
@@ -2177,10 +2178,13 @@ async def start_raid(cid):
             packs += 5
         else:
             r.hincrby('convoy', 'power', -chance1)
+
+        pack = 25000
         if s == 3:
-            reward = int(chance2 / 20000 - (diff / 20000))
-        else:
-            reward = int(chance2 / 25000 - (diff / 25000))
+            pack = 20000
+        pack = pack - 1000 * rocket
+
+        reward = int(chance2 / pack - (diff / pack))
         if reward > 0 or packs > 0:
             packs += reward
             msg += f'\U0001F4E6 +{packs}'
