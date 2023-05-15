@@ -319,7 +319,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if i1 < 0:
                 i1 = 0
             weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога пляшкою по голові!'
-            if weapon2 == 31:
+            if weapon2 in (31, 41):
                 r.hincrby(uid1, 'injure', 1)
                 r.hincrby(uid1, 'sch', 1)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' вдарив ворога кастетом по морді!'
