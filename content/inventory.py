@@ -352,9 +352,10 @@ def drop_item(cdata, uid):
 
 
 def change_item(cdata, uid):
-    forbidden = {'weapon': (11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32),
-                 'defense': (16, 17),
-                 'support': (2, 6, 9, 11),
+    forbidden = {'weapon': (11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+                            27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42),
+                 'defense': (16, 17, 18),
+                 'support': (2, 6, 9, 11, 14),
                  'head': ()}
     if cdata.startswith('backpack_open'):
         if not r.hexists(uid, 'backpack_1'):
@@ -442,32 +443,32 @@ def change_item(cdata, uid):
 
 
 def allow_class_item(cl, item, item_type='empty'):
-    if cl in (1, 11, 21) and item in (11, 22):
+    if cl in (1, 11, 21) and item in (11, 22, 33):
         return True
-    elif cl in (2, 12, 22) and item in (12, 23):
+    elif cl in (2, 12, 22) and item in (12, 23, 34):
         return True
-    elif cl in (3, 13, 23) and item in (13, 24):
+    elif cl in (3, 13, 23) and item in (13, 24, 35):
         return True
-    elif cl in (4, 14, 24) and item in (14, 25):
+    elif cl in (4, 14, 24) and item in (14, 25, 36):
         return True
-    elif cl in (5, 15, 25) and item in (15, 26):
+    elif cl in (5, 15, 25) and item in (15, 26, 37):
         return True
-    elif cl in (6, 16, 26) and item in (16, 17):
+    elif cl in (6, 16, 26) and item in (16, 17, 18):
         if item_type == 'weapon':
             return False
         else:
             return True
-    elif cl in (7, 17, 27) and item in (17, 28):
+    elif cl in (7, 17, 27) and item in (17, 28, 38):
         return True
-    elif cl in (8, 18, 28) and item in (18, 29):
+    elif cl in (8, 18, 28) and item in (18, 29, 39):
         return True
-    elif cl in (9, 19, 29) and item in (19, 30):
+    elif cl in (9, 19, 29) and item in (19, 30, 40):
         return True
-    elif cl in (10, 20, 30) and item in (20, 31):
+    elif cl in (10, 20, 30) and item in (20, 31, 41):
         return True
-    elif cl in (31, 32, 33) and item in (2, 9):
+    elif cl in (31, 32, 33) and item in (2, 9, 14):
         return True
-    elif cl in (34, 35, 36) and item in (21, 32):
+    elif cl in (34, 35, 36) and item in (21, 32, 42):
         return True
     else:
         return False
@@ -506,8 +507,16 @@ def upgrade_item(cdata, uid):
         item_type = cdata.split('_')[1]
         item = int(r.hget(uid, item_type))
         tape = int(r.hget(uid, 'tape'))
-        price = 1
         if item in upgradable[item_type]:
+
+            price = 1
+            if item_type == 'weapon' and item in (22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32):
+                price = 3
+            elif item_type == 'defense' and item == 17:
+                price = 3
+            elif item_type == 'support' and item == 9:
+                price = 3
+
             if tape >= price:
                 upgrade_to = item1 = item2 = 0
                 if cdata.startswith('tape_weapon'):
@@ -534,7 +543,7 @@ def upgrade_item(cdata, uid):
                 msg, markup = show_inventory(uid)
                 return msg, markup, True, answer
             else:
-                answer = 'Необхідна 1 ізострічка'
+                answer = f'Необхідно ізострічок: {price}'
                 return False, False, False, answer
         else:
             answer = 'Це спорядження неможливо покращити'
