@@ -374,7 +374,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         if weapon2 == 2 and t == 1:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
             damage_weapon(uid2, c2)
-            if defense1 in (2, 17):
+            if defense1 in (2, 17, 18):
                 damage = int(int(r.hget(uid1, 's_defense')) / 2 - 5)
                 r.hset(uid1, 's_defense', damage)
                 if damage <= 0:
@@ -587,7 +587,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         m1 += '\n\U0001fa78 +' + str(2 + int(nar[0])) + ' \U0001fac0 -' + nar[1].decode()
         if c2 == 9 or c2 == 19 or c2 == 29:
             if hp1 < 50:
-                if weapon2 in (19, 30) and in1 < 4 and sc1 < 4:
+                if weapon2 in (19, 30, 40) and in1 < 4 and sc1 < 4:
                     pass
                 else:
                     hp(5, uid1)
@@ -606,7 +606,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                             m2 += '\n\U0001F4B5 +' + str(money)
                             r.hincrby(uid2, 'money', money)
             else:
-                if weapon2 in (19, 30) and in1 > 4:
+                if weapon2 in (19, 30, 40) and in1 > 4:
                     pass
                 else:
                     ran = choices([0, 1], weights=[80, 20])
@@ -636,7 +636,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     bd1 = int(bd1 * 0.8)
 
-        if weapon2 in (13, 24):
+        if weapon2 in (13, 24, 35):
             if c2 == 13 or c2 == 23:
                 if i1 > i2:
                     it = i2
@@ -862,7 +862,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             hack = ''
             if c2 == 8 or c2 == 18 or c2 == 28:
                 hack1 = choices([0, 1], weights=[82, 18])
-                if weapon2 in (18, 29) and can_earn2:
+                if weapon2 in (18, 29, 39) and can_earn2:
                     hack1 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name2] + ' використав експлойт...'
                     if hack1 == [0]:
@@ -1021,7 +1021,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             hack = ''
             if c1 == 8 or c1 == 18 or c1 == 28:
                 hack2 = choices([0, 1], weights=[82, 18])
-                if weapon1 in (18, 29) and can_earn1:
+                if weapon1 in (18, 29, 39) and can_earn1:
                     hack2 = choices([0, 1], weights=[1, 99])
                     hack = '\n\n\U0001F5E1 ' + names[name1] + ' використав експлойт...'
                     if hack2 == [0]:
