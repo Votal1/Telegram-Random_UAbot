@@ -134,7 +134,7 @@ def open_pack(uid, cdata, edit):
                     msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити непогану шапку ' \
                           'для русака.\n\U0001F464 +10'
                     r.hincrby(uid, 'sch', 10)
-                    if int(r.hget(uid, 'head')) == 1:
+                    if int(r.hget(uid, 'head')) in (1, 7):
                         r.hincrby(uid, 's_head', 20)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти шапочку', callback_data=f'pack_foil_{uid}'))
@@ -275,7 +275,7 @@ def open_pack(uid, cdata, edit):
             return edit, None
 
         elif cdata.startswith('pack_foil_'):
-            if int(r.hget(uid, 'head')) == 1:
+            if int(r.hget(uid, 'head')) in (1, 7):
                 r.hincrby(uid, 's_head', 20)
             else:
                 r.hset(uid, 'head', 1)
@@ -346,7 +346,7 @@ def check_slot(uid, cdata):
         if s in (0, 10):
             return True
     elif cdata.startswith('pack_foil_'):
-        if h in (0, 1):
+        if h in (0, 1, 7):
             return True
     elif cdata.startswith('pack_jew_'):
         if h in (0, 6):
