@@ -2209,7 +2209,7 @@ async def start_raid(cid):
         a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
         r.hset(c, 'raid_loot_mid', a.message_id)
         try:
-            await bot.send_message(456514639, f'{msg0}\n{msg}')
+            await bot.send_message(5180155065, f'{msg0}\n{msg}')
         except:
             pass
         first = int(r.hget('convoy', 'first'))
