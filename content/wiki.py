@@ -311,6 +311,8 @@ def wiki_text(data):
 
     elif data.startswith('wiki_weapons_class1'):
         markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
+        markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
@@ -337,7 +339,9 @@ def wiki_text(data):
               '\U0001F396 Палаш [Зброя, міцність=15] - +100% сили проти русаків без клану, +25% в іншому випадку.\n\n' \
               'Щоб переглянути покращене класове спорядження - натисніть 🌀 або 🌀🌀🌀'
     elif data.startswith('wiki_weapons_class2'):
-        markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
+        markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class1'))
+        markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'),
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
@@ -367,13 +371,17 @@ def wiki_text(data):
               'випадку, +100% сили проти тих, хто не має погонів російських генералів, +25% проти тих, хто має.'
     elif data.startswith('wiki_weapons_class3'):
         markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
+        markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
+                   InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
                    InlineKeyboardButton(text='\U0001F3A9 Шапка', callback_data='wiki_weapons_4'))
-        msg = 'хто прочитав той лох'
+        msg = '[beta]\n\n\U0001F9F3 Список двічі покращеного класового спорядження\n\n'
     elif data.startswith('wiki_weapons_1'):
         markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class1'))
+        markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
@@ -393,6 +401,8 @@ def wiki_text(data):
               'поранень. Можна знайти в пакунках або купити в Ордені.'
     elif data.startswith('wiki_weapons_2'):
         markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class1'))
+        markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
@@ -411,6 +421,8 @@ def wiki_text(data):
               'Захищає від РПГ-7, зменшуючи свою міцність на 50% + 5. Можна знайти в пакунках або купити в Ордені.'
     elif data.startswith('wiki_weapons_3'):
         markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class1'))
+        markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'),
@@ -441,6 +453,8 @@ def wiki_text(data):
               '(відпочивати, нажертись, напитись).'
     elif data.startswith('wiki_weapons_4'):
         markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class1'))
+        markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
