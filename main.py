@@ -32,9 +32,9 @@ from bs4 import BeautifulSoup
 from PIL import Image
 import requests
 import logging
-import sentry_sdk
+#import sentry_sdk
 
-sentry_sdk.init(environ.get('SENTRY'), traces_sample_rate=0.1)
+#sentry_sdk.init(environ.get('SENTRY'), traces_sample_rate=0.1)
 logging.basicConfig(level=logging.INFO)
 
 
