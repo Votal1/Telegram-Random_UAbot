@@ -291,7 +291,7 @@ def wiki_text(data):
     elif data.startswith('wiki_weapons_0'):
         markup.add(InlineKeyboardButton(text='\U0001fa96 Класове спорядження', callback_data='wiki_weapons_class1'))
         markup.add(InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class2'),
-                   InlineKeyboardButton(text='🌀', callback_data='wiki_weapons_class3'))
+                   InlineKeyboardButton(text='🌀🌀🌀', callback_data='wiki_weapons_class3'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
         markup.add(InlineKeyboardButton(text='\U0001F9EA Допомога', callback_data='wiki_weapons_3'),
@@ -334,7 +334,8 @@ def wiki_text(data):
               '\U0001F6AC Скляна пляшка [Зброя, міцність=10] - зменшує інтелект ворогу на 10.\n' \
               '\U0001F695 Солярка [Допомога, міцність=5] - збільшує власну силу в масових битвах та міжчатових битвах '\
               'на 20%.\n' \
-              '\U0001F396 Палаш [Зброя, міцність=15] - +100% сили проти русаків без клану, +25% в іншому випадку.\n'
+              '\U0001F396 Палаш [Зброя, міцність=15] - +100% сили проти русаків без клану, +25% в іншому випадку.\n\n' \
+              'Щоб переглянути покращене класове спорядження натисніть 🌀 або 🌀🌀🌀'
     elif data.startswith('wiki_weapons_class2'):
         markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
@@ -364,7 +365,7 @@ def wiki_text(data):
               'та рейдах на 20%.\n' \
               '\U0001F396 Золотий палаш [Зброя, міцність=15] - +100% сили проти русаків без клану, +25% в іншому ' \
               'випадку, +100% сили проти тих, хто не має погонів російських генералів, +25% проти тих, хто має.'
-    elif data.startswith('wiki_weapons_class2'):
+    elif data.startswith('wiki_weapons_class3'):
         markup.add(InlineKeyboardButton(text='\U0001F9F3 Інвентар', callback_data='wiki_weapons_0'))
         markup.add(InlineKeyboardButton(text='\U0001F5E1 Зброя', callback_data='wiki_weapons_1'),
                    InlineKeyboardButton(text='\U0001F6E1 Захист', callback_data='wiki_weapons_2'))
