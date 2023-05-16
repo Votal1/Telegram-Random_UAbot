@@ -612,7 +612,7 @@ async def itop(uid, cid, chat, text):
                 if r.hget(uid, 'username').decode() == n:
                     try:
                         if text.split(' ')[1] == '-d':
-                            result = '\U0001F3C6 Твоє місце в рейтингу донатерів: \n' + msg
+                            result = '\U0001F3C6 Твоє місце в рейтингу донатерів: \n' + msg + str(s_rating)
                         else:
                             raise Exception
                     except:
