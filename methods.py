@@ -541,7 +541,7 @@ async def itop(uid, cid, chat, text):
     try:
         if r.hexists(uid, 'top_ts') == 0:
             r.hset(uid, 'top_ts', 0)
-        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60 and uid == 456514639:
+        if int(datetime.now().timestamp()) - int(r.hget(uid, 'top_ts')) >= 60:
             r.hset(uid, 'top_ts', int(datetime.now().timestamp()))
             result = ''
             if chat == 'supergroup' and cid != -1001211933154:
@@ -604,15 +604,14 @@ async def itop(uid, cid, chat, text):
                 except:
                     continue
             s_rating = sorted(rating, key=rating.get, reverse=True)
-            place, msg = 1, ''
+            place = 1
             for n in s_rating:
                 place1 = str(place) + '. '
                 place += 1
-                msg += place1 + n
                 if r.hget(uid, 'username').decode() == n:
                     try:
                         if text.split(' ')[1] == '-d':
-                            result = '\U0001F3C6 Твоє місце в рейтингу донатерів: \n' + msg + str(s_rating)
+                            result = '\U0001F3C6 Твоє місце в рейтингу донатерів: \n' + place1 + n
                         else:
                             raise Exception
                     except:
