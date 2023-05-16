@@ -880,8 +880,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         money2 = int(r.hget(uid1, 'money'))
                         if money2 > 250 and weapon2 not in (29, 39):
                             money2 = 250
-                        elif money2 > 500 and weapon2 in (29, 39):
+                        elif money2 > 500 and weapon2 == 29:
                             money2 = 500
+                        elif money2 > 600 and weapon2 == 39:
+                            money2 = 600
                         if money2 >= 50:
                             money = int(money2 / 50)
                         else:
@@ -1039,8 +1041,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         money2 = int(r.hget(uid2, 'money'))
                         if money2 > 250 and weapon1 not in (29, 39):
                             money2 = 250
-                        elif money2 > 500 and weapon1 in (29, 39):
+                        elif money2 > 500 and weapon1 == 29:
                             money2 = 500
+                        elif money2 > 600 and weapon1 == 39:
+                            money2 = 600
                         if money2 >= 50:
                             money = int(money2 / 50)
                         else:
