@@ -254,13 +254,17 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if weapon2 == 33:
                     weapon = '\n\n\U0001F5E1 ' + names[name2] + ' дістав пістолет-кулемет і прострелив ворогу коліно!'
         elif weapon2 in (12, 23, 34):
-            s2 = int(s2 * 1.2)
-            i2 = int(i2 * 1.2)
-            bd2 = int(bd2 * 1.2)
-            weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з діамантовим кайлом.'
+            if weapon2 in (12, 23):
+                s2 = int(s2 * 1.2)
+                i2 = int(i2 * 1.2)
+                bd2 = int(bd2 * 1.2)
+                weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з діамантовим кайлом.'
             if weapon2 == 23:
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з незеритовим кайлом.'
             elif weapon2 == 34:
+                s2 = int(s2 * 1.33)
+                i2 = int(i2 * 1.33)
+                bd2 = int(bd2 * 1.33)
                 weapon = '\n\n\U0001F5E1 ' + names[name2] + ' прийшов на бій з зачарованим незеритовим кайлом.'
             if weapon2 in (23, 34) and choice([1, 2, 3]) != 1:
                 pass
