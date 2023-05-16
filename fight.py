@@ -883,7 +883,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         elif money2 > 500 and weapon2 == 29:
                             money2 = 500
                         elif money2 > 600 and weapon2 == 39:
-                            money2 = 600
+                            money2 = choice([500, 550, 600])
                         if money2 >= 50:
                             money = int(money2 / 50)
                         else:
@@ -1044,7 +1044,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                         elif money2 > 500 and weapon1 == 29:
                             money2 = 500
                         elif money2 > 600 and weapon1 == 39:
-                            money2 = 600
+                            money2 = choice([500, 550, 600])
                         if money2 >= 50:
                             money = int(money2 / 50)
                         else:
