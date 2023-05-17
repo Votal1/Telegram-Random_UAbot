@@ -1226,6 +1226,17 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
 
+                elif msg.startswith('🐷') and uid not in r.smembers('fourteenth_code'):
+                    msg = '\u26CF Промокод двохсот тисяч активовано!\n☠ +20 🧂 +20 📦 +200'
+                    r.sadd('fourteenth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'deaths', 20)
+                    r.hincrby(message.from_user.id, 'salt', 20)
+                    r.hincrby(message.from_user.id, 'packs', 200)
+                    if r.hexists(message.from_user.id, 'name') and not int(r.hget(message.from_user.id, 'support')):
+                        r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
+                        msg += ' 🧾 +1'
+                    await message.reply(msg)
+                '''
                 elif msg.startswith('bot') and uid not in r.smembers('twelfth_code'):
                     r.sadd('twelfth_code', message.from_user.id)
                     if not r.hexists(message.from_user.id, 'opened') \
@@ -1240,7 +1251,6 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'packs', packs)
                     msg = f'\u26CF Промокод живого бота активовано!\n\U0001F9C2 +15 \u2622 +50 \U0001F4E6 +{packs}'
                     await message.reply(msg)
-
                 elif msg.startswith('eas') and uid not in r.smembers('thirteenth_code'):
                     r.sadd('thirteenth_code', message.from_user.id)
                     if uid in r.smembers('easter_2023_top_20'):
@@ -1254,8 +1264,6 @@ async def promo_code(message):
                     r.hset(message.from_user.id, 'time', 0)
                     msg = f'\u26CF Великодній промокод активовано!\n🥓 +1 \U0001F9C2 +{salt} 🧺 {packs}'
                     await message.reply(msg)
-
-                '''
                 elif msg.startswith('soledar_2') and uid not in r.smembers('eleventh_code'):
                     msg = '\u26CF Ювілейний промокод активовано!\n\U0001F9C2 +22 \U0001F3C5 +22 \U0001F4E6 +100'
                     r.sadd('eleventh_code', message.from_user.id)
