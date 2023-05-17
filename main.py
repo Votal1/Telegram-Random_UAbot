@@ -5182,7 +5182,7 @@ async def handle_query(call):
                                             text='Недостатньо погонів на рахунку, або русак без класу')
 
     elif call.data.startswith('premium4'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1 and r.hexists(call.from_user.id, 'name'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1 and int(r.hget(call.from_user.id, 'class')) > 0:
             r.hincrby(call.from_user.id, 'strap', -1)
             cl = int(r.hget(call.from_user.id, 'class'))
             if cl == 1 or cl == 11 or cl == 21:
