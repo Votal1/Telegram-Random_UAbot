@@ -418,7 +418,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s2 = int(s2 / 2)
             i2 = int(i2 / 2)
             bd2 = int(bd2 / 2)
-            defense = '\n\n\U0001F5E1 ' + names[name2] + ' дістав пістолет-кулемет і прострелив ворогу коліно!'
+            defense = '\n\n\U0001F5E1 ' + names[name1] + ' дістав пістолет-кулемет і прострелив ворогу коліно!'
             damage_weapon(uid1, c1)
 
         if support1 == 6 and t == 1:
