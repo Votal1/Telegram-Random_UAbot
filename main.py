@@ -57,7 +57,7 @@ async def gruz200(message):
               f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
         await message.reply(title + msg)
     except:
-        await message.reply('minusrus.com', disable_web_page_preview=True)
+        await message.reply('index.minfin.com.ua/ua/russian-invading/casualties', disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['start'])
