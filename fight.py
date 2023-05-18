@@ -664,7 +664,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 i1 = it
                 bd2 = bd1
                 bd1 = bt
-            if weapon2 == 24:
+            if weapon2 in (24, 35):
                 sh = int(r.hget(uid2, 'sch'))
                 if sh > 5:
                     sh = 5
