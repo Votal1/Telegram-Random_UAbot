@@ -640,7 +640,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 else:
                     bd1 = int(bd1 * 0.8)
 
-        if weapon2 in (13, 24, 35):
+        if weapon2 in (13, 24, 35) and c2 in (3, 13, 23):
             if c2 == 13 or c2 == 23:
                 if i1 > i2:
                     it = i2
