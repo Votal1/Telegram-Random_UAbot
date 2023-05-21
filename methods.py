@@ -777,7 +777,7 @@ def msg_fmt(key, value):
 
 def get_message(uid, key, language_code=False):
     if not language_code:
-        if r.hexists(uid, 'language'):
+        if r.hexists(uid, 'language_code'):
             language_code = r.hget(uid, 'language_code').decode()
         else:
             language_code = 'uk'
