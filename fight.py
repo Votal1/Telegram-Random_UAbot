@@ -375,7 +375,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             r.hincrby(uid1, 'packs_2023_2', 1)
             damage_weapon(uid2, c2)
 
-        if weapon2 == 2 and t == 1:
+        if weapon2 == 2 and t == 1 and int(r.hset(uid1, 'strength')) > 2000:
             weapon = '\n\n\u2620\uFE0F ' + names[name2] + ': АЛЛАХ АКБАР!'
             damage_weapon(uid2, c2)
             if defense1 in (2, 17, 18):
