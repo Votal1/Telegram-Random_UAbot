@@ -11,14 +11,14 @@ from inline import prepare_to_fight, pastLife, earnings, political, love, \
 from parameters import spirit, vodka, intellect, hp, damage_weapon, damage_support, damage_head, increase_trance
 from fight import fight, war, great_war, start_raid, guard_power
 from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, top, itop, ctop, \
-    wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, get_message, msg_fmt
+    wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, msg_fmt
 
 
 from constants.names import names, names_case
 from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
-    battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools, choose_lang
+    battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools
 from content.inventory import show_inventory, drop_item, change_item, upgrade_item
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
@@ -64,6 +64,18 @@ async def gruz200(message):
 async def send_welcome(message):
     if message.chat.type == 'private':
         uid = message.from_user.id
+        r.sadd('everyone_3', uid)
+        msg = '👋 Вітаю.\n\n' \
+              '🐒 Щоб взяти русака напиши команду\n/donbass\n\n' \
+              '📃 Для кращого ознайомлення з грою, переглянь список команд (/commands), особливо ті, які ' \
+              'показані в /status\n\n' \
+              '⛏ Обов\'язково заходь в <a href="https://t.me/+cClR7rA-sZAyY2Uy">Соледар</a>, ' \
+              'особливо коли не маєш з ким грати\n\n' \
+              '🖲 Введи <code>@RandomUA3bot</code>, щоб почати битву русаків або обрати одну з функцій рандому\n\n' \
+              '📚 У /wiki зібрана вся актуальна інфа по грі, а на @randomuanews можна слідкувати за оновленнями\n\n' \
+              '🚨 Слід зазначити, що бот може надати карту тривог. Для цього напиши "Тривога" або /alert'
+        await message.reply(msg, disable_web_page_preview=True)
+        '''
         if str(uid).encode() not in r.smembers('sudoers'):
             await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
                                 '/commands - всі команди\n@randomuanews - новини', disable_web_page_preview=True)
@@ -77,15 +89,20 @@ async def send_welcome(message):
                 language_code = r.hget(uid, 'language_code').decode()
             msg = get_message(message.from_user.id, 'start', language_code=language_code)
             await message.reply(msg, disable_web_page_preview=True, reply_markup=choose_lang())
-        r.sadd('everyone_3', uid)
+        '''
 
 
 @dp.message_handler(commands=['help'])
 async def get_help(message):
-    await message.reply('Щоб почати дуель русаків зайди в який-небудь чат, напиши @RandomUA3bot, а далі думаю все '
-                        'зрозумієш.\n\nЩоб взяти русака напиши команду \n/donbass\n/commands - всі команди\n'
-                        '/wiki - вся інфа по грі\n'
-                        '@randomuanews - новини', disable_web_page_preview=True)
+    msg = '🐒 Щоб взяти русака напиши команду\n/donbass\n\n' \
+          '📃 Для кращого ознайомлення з грою, переглянь список команд (/commands), особливо ті, які ' \
+          'показані в /status\n\n' \
+          '⛏ Обов\'язково заходь в <a href="https://t.me/+cClR7rA-sZAyY2Uy">Соледар</a>, ' \
+          'особливо коли не маєш з ким грати\n\n' \
+          '🖲 Введи <code>@RandomUA3bot</code>, щоб почати битву русаків або обрати одну з функцій рандому\n\n' \
+          '📚 У /wiki зібрана вся актуальна інфа по грі, а на @randomuanews можна слідкувати за оновленнями\n\n' \
+          '🚨 Слід зазначити, що бот може надати карту тривог. Для цього напиши "Тривога" або /alert'
+    await message.reply(msg, disable_web_page_preview=True)
 
 
 @dp.message_handler(commands=['links'])
@@ -3138,6 +3155,7 @@ async def commands(message):
                         '/mine - заробити гривні (доступно тільки в '
                         '<a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>)\n'
                         '/woman - провідати жінку\n'
+                        '/status - прогрес за день\n'
                         '/clan - інформація про клан\n'
                         '/achieve - досягнення\n'
                         '/skills - вміння\n'
