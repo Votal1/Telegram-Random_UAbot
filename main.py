@@ -683,7 +683,7 @@ async def sacrifice(message):
             await message.reply(f'\U0001F52A Вбити свого русака?\n\nУ всіх русаків в цьому чаті зменшиться '
                                 f'бойовий дух на {percent}%.',
                                 reply_markup=markup.add(InlineKeyboardButton(text='Принести в жертву русака',
-                                                                             callback_data='sacrifice')))
+                                                                             callback_data='sacrifice1')))
         else:
             await message.reply('Робити жертвоприношення русаків можна раз в день, і якщо є живий русак.')
     except:
@@ -4291,58 +4291,72 @@ async def handle_query(call):
 
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
-        r.hset(call.from_user.id, 'time2', datetime.now().day)
-        name = int(r.hget(call.from_user.id, 'name'))
-        r.hdel(call.from_user.id, 'name')
-        try:
-            cl = int(r.hget(call.from_user.id, 'class'))
-            for member in r.smembers(call.message.chat.id):
-                try:
-                    mem = int(member)
+        if call.data.startswith('sacrifice1'):
+            msg = f'{call.message.text}\n\n\U0001F52A Точно вбити русака?'
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice2'))
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+        elif call.data.startswith('sacrifice2'):
+            str1 = int(r.hget(call.from_user.id, 'strength'))
+            int1 = int(r.hget(call.from_user.id, 'intellect'))
+            msg = f'{call.message.text}\n\n\U0001F52A {str1} сили, {int1} інтелекту і все спорядження русака ' \
+                  f'будуть назавжди втрачені'
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice3'))
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+        elif call.data.startswith('sacrifice3'):
+            r.hset(call.from_user.id, 'time2', datetime.now().day)
+            name = int(r.hget(call.from_user.id, 'name'))
+            r.hdel(call.from_user.id, 'name')
+            try:
+                cl = int(r.hget(call.from_user.id, 'class'))
+                for member in r.smembers(call.message.chat.id):
                     try:
-                        st = await bot.get_chat_member(call.message.chat.id, mem)
-                        if st.status in ('left', 'kicked', 'banned'):
+                        mem = int(member)
+                        try:
+                            st = await bot.get_chat_member(call.message.chat.id, mem)
+                            if st.status in ('left', 'kicked', 'banned'):
+                                r.srem(call.message.chat.id, mem)
+                                continue
+                        except:
                             r.srem(call.message.chat.id, mem)
-                            continue
+                        i1 = int(r.hget(mem, 'spirit'))
+                        i = int(i1 / 10)
+                        r.hincrby(mem, 'spirit', -i)
+                        if cl in (7, 17, 27):
+                            mush = int(r.hget(mem, 'mushrooms'))
+                            if mush > 0:
+                                r.hset(mem, 'mushrooms', 0)
+                                intellect(-mush, mem)
+                            else:
+                                r.hset(mem, 'spirit', i)
+                        h = int(r.hget(mem, 'head'))
+                        if h in (1, 7):
+                            r.hset(mem, 'spirit', i1)
+                            damage_head(mem)
+                            if h == 7:
+                                spirit(3000, mem, 0)
                     except:
-                        r.srem(call.message.chat.id, mem)
-                    i1 = int(r.hget(mem, 'spirit'))
-                    i = int(i1 / 10)
-                    r.hincrby(mem, 'spirit', -i)
-                    if cl in (7, 17, 27):
-                        mush = int(r.hget(mem, 'mushrooms'))
-                        if mush > 0:
-                            r.hset(mem, 'mushrooms', 0)
-                            intellect(-mush, mem)
-                        else:
-                            r.hset(mem, 'spirit', i)
-                    h = int(r.hget(mem, 'head'))
-                    if h in (1, 7):
-                        r.hset(mem, 'spirit', i1)
-                        damage_head(mem)
-                        if h == 7:
-                            spirit(3000, mem, 0)
-                except:
-                    pass
-        except:
-            pass
-        clm = int(r.hget(call.from_user.id, 'class'))
-        r.srem('class-' + str(clm), call.from_user.id)
-        #r.hset(call.from_user.id, 'spirit', 0, {'strength': 100, 'intellect': 1, 'photo': choice(default),
-        #                                        'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0, 's_defense': 0,
-        #                                        'support': 0, 's_support': 0, 'mushrooms': 0})
-        r.hincrby(call.from_user.id, 'deaths', 1)
-        r.hincrby('all_deaths', 'deaths', 1)
-        msg = '\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, а вторий насрав в штани.'
-        if checkClan(call.from_user.id, base=4, building='morgue'):
-            r.hincrby('c' + r.hget(call.from_user.id, 'clan').decode(), 'r_spirit', 1)
-            msg += '\n\U0001F47E +1'
-        if clm == 36:
-            r.hincrby(call.from_user.id, 'strap', 1)
-            msg += '\n\U0001F31F +1'
-        if call.message.chat.type != 'private':
-            msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
-        await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+                        pass
+            except:
+                pass
+            clm = int(r.hget(call.from_user.id, 'class'))
+            r.srem('class-' + str(clm), call.from_user.id)
+            #r.hset(call.from_user.id, 'spirit', 0, {'strength': 100, 'intellect': 1, 'photo': choice(default),
+            #                                        'class': 0, 'weapon': 0, 's_weapon': 0, 'defense': 0,
+            #                                        's_defense': 0, 'support': 0, 's_support': 0, 'mushrooms': 0})
+            r.hincrby(call.from_user.id, 'deaths', 1)
+            r.hincrby('all_deaths', 'deaths', 1)
+            msg = '\u2620\uFE0F ' + names[name] + ' був убитий. \nОдним кацапом менше, а вторий насрав в штани.'
+            if checkClan(call.from_user.id, base=4, building='morgue'):
+                r.hincrby('c' + r.hget(call.from_user.id, 'clan').decode(), 'r_spirit', 1)
+                msg += '\n\U0001F47E +1'
+            if clm == 36:
+                r.hincrby(call.from_user.id, 'strap', 1)
+                msg += '\n\U0001F31F +1'
+            if call.message.chat.type != 'private':
+                msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
 
     elif call.data.startswith('full_list'):
         msg, markup = com(call.data)
