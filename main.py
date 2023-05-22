@@ -74,7 +74,7 @@ async def send_welcome(message):
               '🖲 Введи <code>@RandomUA3bot</code>, щоб почати битву русаків або обрати одну з функцій рандому\n\n' \
               '📚 У /wiki зібрана вся актуальна інфа по грі, а на @randomuanews можна слідкувати за оновленнями\n\n' \
               '🚨 Слід зазначити, що бот може надати карту тривог. Для цього напиши "Тривога" або /alert'
-        await message.reply(msg, disable_web_page_preview=True)
+        await message.reply(msg, disable_web_page_preview=True, parse_mode='HTML')
         '''
         if str(uid).encode() not in r.smembers('sudoers'):
             await message.reply('Почнемо.\n\nЩоб взяти русака напиши команду \n/donbass\n/wiki - вся інфа по грі\n'
@@ -102,7 +102,7 @@ async def get_help(message):
           '🖲 Введи <code>@RandomUA3bot</code>, щоб почати битву русаків або обрати одну з функцій рандому\n\n' \
           '📚 У /wiki зібрана вся актуальна інфа по грі, а на @randomuanews можна слідкувати за оновленнями\n\n' \
           '🚨 Слід зазначити, що бот може надати карту тривог. Для цього напиши "Тривога" або /alert'
-    await message.reply(msg, disable_web_page_preview=True)
+    await message.reply(msg, disable_web_page_preview=True, parse_mode='HTML')
 
 
 @dp.message_handler(commands=['links'])
