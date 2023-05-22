@@ -4295,7 +4295,8 @@ async def handle_query(call):
             msg = f'{call.message.text}\n\n\U0001F52A Точно вбити русака?'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice2'))
-            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                        message_id=call.message.message_id, reply_markup=markup)
         elif call.data.startswith('sacrifice2'):
             str1 = int(r.hget(call.from_user.id, 'strength'))
             int1 = int(r.hget(call.from_user.id, 'intellect'))
@@ -4303,7 +4304,8 @@ async def handle_query(call):
                   f'будуть назавжди втрачені'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice3'))
-            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
+            await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
+                                        message_id=call.message.message_id, reply_markup=markup)
         elif call.data.startswith('sacrifice3'):
             r.hset(call.from_user.id, 'time2', datetime.now().day)
             name = int(r.hget(call.from_user.id, 'name'))
