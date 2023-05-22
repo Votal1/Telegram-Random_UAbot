@@ -680,7 +680,7 @@ async def sacrifice(message):
                 percent = 90
             else:
                 percent = 10
-            await message.reply(f'\U0001F52A Вбити свого русака?\n\nУ всіх русаків в цьому чаті зменшиться '
+            await message.reply(f'\U0001F52A Вбити свого русака?\n\n🦇 У всіх русаків в цьому чаті зменшиться '
                                 f'бойовий дух на {percent}%.',
                                 reply_markup=markup.add(InlineKeyboardButton(text='Принести в жертву русака',
                                                                              callback_data='sacrifice1')))
@@ -4292,7 +4292,7 @@ async def handle_query(call):
     elif call.data.startswith('sacrifice') and call.from_user.id == call.message.reply_to_message.from_user.id and \
             int(r.hget(call.from_user.id, 'time2')) != datetime.now().day:
         if call.data.startswith('sacrifice1'):
-            msg = f'{call.message.text}\n\n🩸 Точно вбити русака?'
+            msg = f'{call.message.text}\n\n⚰ Точно вбити русака?'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice2'))
             await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
@@ -4300,7 +4300,7 @@ async def handle_query(call):
         elif call.data.startswith('sacrifice2'):
             str1 = int(r.hget(call.from_user.id, 'strength'))
             int1 = int(r.hget(call.from_user.id, 'intellect'))
-            msg = f'{call.message.text}\n\n🚨 {str1} сили, {int1} інтелекту і все спорядження русака ' \
+            msg = f'{call.message.text}\n\n🕯 {str1} сили, {int1} інтелекту і все спорядження русака ' \
                   f'будуть назавжди втрачені'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice3'))
