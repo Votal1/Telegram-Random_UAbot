@@ -4301,7 +4301,7 @@ async def handle_query(call):
             str1 = int(r.hget(call.from_user.id, 'strength'))
             int1 = int(r.hget(call.from_user.id, 'intellect'))
             msg = f'{call.message.text}\n\n🕯 {str1} сили, {int1} інтелекту і все спорядження русака ' \
-                  f'будуть назавжди втрачені'
+                  f'будуть назавжди втрачені.'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Принести в жертву русака', callback_data='sacrifice3'))
             await bot.edit_message_text(text=msg, chat_id=call.message.chat.id,
