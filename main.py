@@ -3149,7 +3149,8 @@ async def commands(message):
     markup.add(InlineKeyboardButton(text='Топ', callback_data='full_list_3'),
                InlineKeyboardButton(text='Клани', callback_data='full_list_4'))
     markup.add(InlineKeyboardButton(text='Адміністраторські команди', callback_data='full_list_5'))
-    await message.reply('/links - реклама, головний чат, творець\n'
+    await message.reply('/help - основна інформація\n'
+                        '/links - реклама, головний чат, творець\n'
                         '/wiki - інформація щодо гри\n'
                         '/feed - погодувати русака\n'
                         '/mine - заробити гривні (доступно тільки в '
