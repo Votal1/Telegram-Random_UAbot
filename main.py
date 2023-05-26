@@ -3128,6 +3128,14 @@ async def status(message):
         else:
             msg += '\U0001f7e5 /quest\n'
 
+    if r.hexists(uid, 'wordle_time'):
+        if int(r.hget(uid, 'wordle_time')) == day:
+            msg += '\U0001f7e9 <a href="@wordle1bot">/daily</a>\n'
+        else:
+            msg += '\U0001f7e5 <a href="@wordle1bot">/daily</a>\n'
+    else:
+        msg += '\U0001f7e5 <a href="@wordle1bot">/daily</a>\n'
+
     if r.hexists(uid, 'restriction'):
         ts1 = int(r.hget(uid, 'restriction_ts')) + 604800
         ts = datetime.fromtimestamp(ts1)
@@ -3138,7 +3146,7 @@ async def status(message):
         else:
             msg += '\n\u231B Дуелі: 0/10000'
 
-    await message.reply(msg, reply_markup=markup)
+    await message.reply(msg, reply_markup=markup, parse_mode='HTML')
 
 
 @dp.message_handler(commands=['commands'])
