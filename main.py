@@ -3130,11 +3130,11 @@ async def status(message):
 
     if r.hexists(uid, 'wordle_time'):
         if int(r.hget(uid, 'wordle_time')) == day:
-            msg += '\U0001f7e9 <a href="@wordle1bot">/daily</a>\n'
+            msg += '\U0001f7e9 <a href="https://t.me/wordle1bot">/daily</a>\n'
         else:
-            msg += '\U0001f7e5 <a href="@wordle1bot">/daily</a>\n'
+            msg += '\U0001f7e5 <a href="https://t.me/wordle1bot">/daily</a>\n'
     else:
-        msg += '\U0001f7e5 <a href="@wordle1bot">/daily</a>\n'
+        msg += '\U0001f7e5 <a href="https://t.me/wordle1bot">/daily</a>\n'
 
     if r.hexists(uid, 'restriction'):
         ts1 = int(r.hget(uid, 'restriction_ts')) + 604800
