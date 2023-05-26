@@ -1454,11 +1454,12 @@ async def war_power(sett, cid):
     return chance, clan5, mal, gen1, gen2, koj, med
 
 
-def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members, koj):
+def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members, koj, power):
     reward, packs = '4', 0
     if cid1 == -1001211933154:
         money = randint(4, 15)
         reward = str(money)
+        r.hset('soledar', 'power', power)
     money += koj
     msg += r.hget('war_battle' + str(cid1), 'title').decode()
     try:
@@ -1552,9 +1553,9 @@ async def great_war(cid1, cid2, a, b):
     msg = 'Міжчатова битва русаків завершена!\n\n\U0001F3C6 Бійці з '
     reward, money, r_spirit = '', 4, 1
     if win == ['a']:
-        msg, reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a, koj1)
+        msg, reward = war_reward(cid1, cid2, msg, r_spirit, money, gen12, clan1, a, koj1, int(chance1))
     elif win == ['b']:
-        msg, reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b, koj2)
+        msg, reward = war_reward(cid2, cid1, msg, r_spirit, money, gen22, clan2, b, koj2, int(chance2))
     msg += ' перемагають!\n\U0001F3C5 +1 \U0001F3C6 +1 \U0001F4B5 +' + reward
     msg1 = msg2 = msg.replace('@', '')
     if not r.hexists(f'c{cid1}', 'hints') or int(r.hget(f'c{cid1}', 'hints')) == 0:
