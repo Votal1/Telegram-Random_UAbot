@@ -1120,7 +1120,7 @@ async def war(cid, location, big_battle):
                 s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
             if w > 0:
-                if w == 5:
+                if w in (5, 8):
                     mas = int(r.hget(member, 's2'))
                     w = 0.25 + 0.5 * mas
                     if choices([1, 0], [100 - 18 * mas, 18 * mas]) == [1]:
@@ -1914,6 +1914,18 @@ async def start_raid(cid):
             if did > 0:
                 chance = 20 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
+
+        if r.scard(f'guard{enemy}') > 0:
+            for mem in r.smembers('fighters_3' + str(cid)):
+                if int(r.hget(mem, 'weapon')) == 8:
+                    ran = (1, 5)
+                    reward += f'\nОхорона атакована дроном!\n\U0001fa78 +{ran}'
+                    for mem2 in r.smembers(f'guard{enemy}'):
+                        r.hincrby(mem2, 'injure', ran)
+                    mas = int(r.hget(mem, 's2'))
+                    if choices([1, 0], [100 - 18 * mas, 18 * mas]) == [1]:
+                        damage_weapon(mem, int(r.hget(mem, 'class')))
+                    break
 
         await sleep(10)
         msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode().replace('@', '') + '!' + reward

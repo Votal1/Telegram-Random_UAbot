@@ -533,6 +533,8 @@ def upgrade_item(cdata, uid):
                     upgrade_to = supports1[item]
                     item1 = supports[item]
                     item2 = supports[upgrade_to]
+                    if item == 1:
+                        r.hset(uid, f's_{item_type}', 40)
                 elif cdata.startswith('tape_head'):
                     upgrade_to = heads1[item]
                     item1 = heads[item]
