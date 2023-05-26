@@ -1682,7 +1682,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1 = hack = mar = rocket = fish = jew = did = again = 0
+    chance1 = hack = mar = rocket = fish = jew = did = again = ter = soledar = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
@@ -1704,6 +1704,8 @@ async def start_raid(cid):
 
             if check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 1:
                 did += 1
+            elif check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 2:
+                ter += 1
             if checkClan(member, base=4, building='morgue'):
                 d = int(r.hget(member, 'deaths'))
                 if d > 100:
@@ -1974,6 +1976,11 @@ async def start_raid(cid):
         locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївський роднічок']
         chances = ['0', '0.1', '0.2', '0.3', '0.5', '0.75']
         s = int(r.hget(c, 'side'))
+
+        if ter > 0:
+            chance = 10 * ter
+            soledar = choices([0, 1], weights=[100 - chance, chance])[0]
+
         if s == 3:
             chances = ['0', '0.05', '0.1', '0.15', '0.25', '0.375']
         if fish >= 5:
@@ -1984,6 +1991,9 @@ async def start_raid(cid):
             chance2 = int(chance1 * choice([0.5, 1, 2, 3]))
             if s == 3:
                 chance2 = int(chance2 / 2)
+        elif soledar:
+            location = 'Соледар'
+            chance2 = int(r.hget('soledar', 'power'))
         else:
             location = choice(locations)
             chance2 = int(chance1 * float(chances[locations.index(location)]))
@@ -2011,6 +2021,23 @@ async def start_raid(cid):
                 if int(r.hget(c, 'buff_5')) > 2:
                     reward += '\n\n\U0001fa99 +100'
                     r.hincrby(c, 'points', 100)
+            elif location == 'Соледар':
+                mode = randint(1, 2)
+                if mode == 1:
+                    ran = randint(200, 300)
+                    if mar >= 1:
+                        ran *= 2
+                    r.hincrby('soledar', 'money', ran * (-5))
+                    reward += f'Русакам вдалось проникнути в Соледар і забрати трохи грошей.\n💵 +{ran}'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'money', ran)
+                elif mode == 2:
+                    ran = 1
+                    if mar >= 1:
+                        ran *= 2
+                    reward += f'Русакам вдалось проникнути в Соледар і вкрасти трохи солі.\n🧂 +{ran}'
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'salt', ran)
             elif locations.index(location) == 0:
                 if hack >= 1:
                     ran = randint(30, 250)
