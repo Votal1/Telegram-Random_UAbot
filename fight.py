@@ -1915,12 +1915,13 @@ async def start_raid(cid):
                 chance = 20 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
 
-        if r.scard(f'guard{enemy}') > 0:
+        drone = ''
+        if r.scard(f'guard{int(enemy)}') > 0:
             for mem in r.smembers('fighters_3' + str(cid)):
                 if int(r.hget(mem, 'weapon')) == 8:
                     ran = (1, 5)
-                    reward += f'\nОхорона атакована дроном!\n\U0001fa78 +{ran}'
-                    for mem2 in r.smembers(f'guard{enemy}'):
+                    drone = f'\nОхорона атакована дроном!\n\U0001fa78 +{ran}'
+                    for mem2 in r.smembers(f'guard{int(enemy)}'):
                         r.hincrby(mem2, 'injure', ran)
                     mas = int(r.hget(mem, 's2'))
                     if choices([1, 0], [100 - 18 * mas, 18 * mas]) == [1]:
@@ -1928,8 +1929,8 @@ async def start_raid(cid):
                     break
 
         await sleep(10)
-        msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode().replace('@', '') + '!' + reward
-        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode().replace('@', '') + '!'
+        msg = 'Проведено рейд на клан ' + r.hget(c2, 'title').decode().replace('@', '') + '!' + reward + drone
+        msg2 = 'На нас напали рейдери з клану ' + r.hget(c, 'title').decode().replace('@', '') + '!' + drone
         if win == ['a']:
             msg2 += reward.replace('+', '-')
         else:
