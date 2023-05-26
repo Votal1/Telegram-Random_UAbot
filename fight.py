@@ -1695,7 +1695,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1 = hack = mar = rocket = fish = jew = did = again = ter = soledar = 0
+    chance1 = hack = mar = rocket = fish = jew = did = again = ter = soledar = goy = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
@@ -1719,6 +1719,8 @@ async def start_raid(cid):
                 did += 1
             elif check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 2:
                 ter += 1
+            elif check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 4:
+                goy += 1
             if checkClan(member, base=4, building='morgue'):
                 d = int(r.hget(member, 'deaths'))
                 if d > 100:
@@ -2046,6 +2048,9 @@ async def start_raid(cid):
                 if int(r.hget(c, 'buff_5')) > 2:
                     reward += '\n\n\U0001fa99 +100'
                     r.hincrby(c, 'points', 100)
+                if randint(1, 2) == 1:
+                    reward += f'💼 Саквояж [Допомога, міцність=7]'
+                    markup = raid_loot('weapon', 10, 7, 5, int(datetime.now().timestamp()) + 10, markup, c)
             elif location == 'Соледар':
                 mode = randint(1, 2)
                 if mode == 1:
