@@ -215,12 +215,18 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s22 = s2
             inj2 = '\U0001fa78 '
         if sc1 > 0:
-            i1, bd1 = schizophrenia(uid1, i1, bd1, True)
             inj1 += '\U0001F464 '
-            if weapon2 == 38 and c2 in (7, 17, 27) and sc1 > 1:
+            if check_set(weapon1, defense1, support1, head1) == 2:
+                r.hincrby(uid1, 'sch', -1)
+            else:
                 i1, bd1 = schizophrenia(uid1, i1, bd1, True)
+                if weapon2 == 38 and c2 in (7, 17, 27) and sc1 > 1:
+                    i1, bd1 = schizophrenia(uid1, i1, bd1, True)
         if sc2 > 0:
-            i2, bd2 = schizophrenia(uid2, i2, bd2, True)
+            if check_set(weapon2, defense2, support2, head2) == 2:
+                r.hincrby(uid2, 'sch', -1)
+            else:
+                i2, bd2 = schizophrenia(uid2, i2, bd2, True)
             inj2 += '\U0001F464 '
         if int(r.hget(uid1, 'buff')) > 0 or support1 == 13:
             s1, bd1 = trance(uid1, s1, bd1, True)
@@ -1106,7 +1112,10 @@ async def war(cid, location, big_battle):
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                i, bd = schizophrenia(int(member), i, bd, True)
+                if check_set(int(stats[3]), int(stats[4]), int(stats[8]), int(stats[9])) == 2:
+                    r.hincrby(member, 'sch', -1)
+                else:
+                    i, bd = schizophrenia(int(member), i, bd, True)
             if int(stats[7]) > 0 or int(stats[8]) == 13:
                 s, bd = trance(int(member), s, bd, True)
             w = int(stats[3])
@@ -1717,11 +1726,10 @@ async def start_raid(cid):
             if int(stats[5]) > 0:
                 s, bd = injure(int(member), s, bd, True)
             if int(stats[6]) > 0:
-                #if checkClan(member, building='build6', level=2):
-                #    r.hincrby(member, 'sch', -1)
-                #    i += 5
-                #else:
-                i, bd = schizophrenia(int(member), i, bd, True)
+                if check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 2:
+                    r.hincrby(member, 'sch', -1)
+                else:
+                    i, bd = schizophrenia(int(member), i, bd, True)
             if int(stats[8]) > 0 or int(stats[9]) == 13:
                 s, bd = trance(int(member), s, bd, True)
 
