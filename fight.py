@@ -1920,7 +1920,7 @@ async def start_raid(cid):
             for mem in r.smembers('fighters_3' + str(cid)):
                 if int(r.hget(mem, 'weapon')) == 8:
                     ran = randint(1, 5)
-                    drone = f'\nОхорона атакована дроном!\n\U0001fa78 +{ran}'
+                    drone = f'\n\nОхорона атакована дроном!\n\U0001fa78 +{ran}'
                     for mem2 in r.smembers(f'guard{int(enemy)}'):
                         r.hincrby(mem2, 'injure', ran)
                     mas = int(r.hget(mem, 's2'))
