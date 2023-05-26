@@ -169,10 +169,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             damage_defense(uid1, 1)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захистився колючим щитом, опонент розгубився!'
 
-        if support1 == 1:
+        if support1 in (1, 15):
             hp(10, uid1)
             damage_support(uid1)
-        if support2 == 1:
+        if support2 in (1, 15):
             hp(10, uid2)
             damage_support(uid2)
 
@@ -1408,6 +1408,10 @@ async def war_power(sett, cid):
             if support > 0:
                 if support in (2, 9, 14) and cl in (31, 32, 33):
                     support = 0.45
+                    damage_support(member)
+                elif support == 15:
+                    hp(10, member)
+                    support = 0.25
                     damage_support(member)
                 else:
                     support = 0.25
