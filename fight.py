@@ -1897,7 +1897,7 @@ async def start_raid(cid):
                 hp(-100, member)
 
             if did > 0:
-                chance = 15 * did
+                chance = 20 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
 
         await sleep(10)
@@ -2034,7 +2034,7 @@ async def start_raid(cid):
                     hp(100, mem)
                     spirit(10000, mem, 0)
                 if did > 0:
-                    chance = 15 * did
+                    chance = 20 * did
                     again = choices([0, 1], weights=[100 - chance, chance])[0]
                     if again:
                         reward += '\nРусаки готові йти в наступний рейд!'
@@ -2152,7 +2152,7 @@ async def start_raid(cid):
             for member in r.smembers('fighters_3' + str(cid)):
                 hp(-100, member)
             if did > 0:
-                chance = 15 * did
+                chance = 20 * did
                 again = choices([0, 1], weights=[100 - chance, chance])[0]
                 if again:
                     reward += '\nРусаки готові до реваншу!'
