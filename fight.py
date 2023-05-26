@@ -2048,9 +2048,9 @@ async def start_raid(cid):
                 if int(r.hget(c, 'buff_5')) > 2:
                     reward += '\n\n\U0001fa99 +100'
                     r.hincrby(c, 'points', 100)
-                if randint(1, 2) == 1:
-                    reward += f'💼 Саквояж [Допомога, міцність=7]'
-                    markup = raid_loot('weapon', 10, 7, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                #if randint(1, 2) == 1:
+                reward += f'💼 Саквояж [Допомога, міцність=7]'
+                markup = raid_loot('weapon', 10, 7, 5, int(datetime.now().timestamp()) + 10, markup, c)
             elif location == 'Соледар':
                 mode = randint(1, 2)
                 if mode == 1:
