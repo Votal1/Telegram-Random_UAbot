@@ -2790,16 +2790,18 @@ async def work(message):
                             if side == 4:
                                 money = money + tax
                                 tax = 0
-                            r.hincrby(c, 'money', -(money + tax))
-                            r.hincrby('soledar', 'money', tax)
                             if int(r.hget(message.from_user.id, 'defense')) == 5 and int(r.hget(c, 'money')) >= 50:
                                 if message.from_user.is_premium:
                                     money = money * 5
+                                    tax = tax * 5
                                     packs = packs * 5
                                 else:
                                     money = money * 3
+                                    tax = tax * 3
                                     packs = packs * 3
                                 damage_defense(message.from_user.id, 5)
+                            r.hincrby(c, 'money', -(money + tax))
+                            r.hincrby('soledar', 'money', tax)
                             if int(r.hget(c, 'buff_4')) == 5:
                                 money = packs = 0
                                 ran = randint(1, 3)
@@ -2900,16 +2902,18 @@ async def guard(message):
                     if int(r.hget(c, 'side')) == 4:
                         money = money + tax
                         tax = 0
-                    r.hincrby(c, 'money', -(money + tax))
-                    r.hincrby('soledar', 'money', tax)
                     if int(r.hget(message.from_user.id, 'defense')) == 5 and int(r.hget(c, 'money')) >= 50:
                         if message.from_user.is_premium:
                             money = money * 5
+                            tax = tax * 5
                             packs = packs * 5
                         else:
                             money = money * 3
+                            tax = tax * 3
                             packs = packs * 3
                         damage_defense(message.from_user.id, 5)
+                    r.hincrby(c, 'money', -(money + tax))
+                    r.hincrby('soledar', 'money', tax)
                     if money:
                         r.hincrby(message.from_user.id, 'money', money)
                         msg += f' \n\U0001F4B5 +{money}'
