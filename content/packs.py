@@ -69,7 +69,7 @@ def open_pack(uid, cdata, edit):
                         msg = '\u26AA В цьому пакунку лежать дивні речі, якими русак не вміє користуватись...'
                 elif ran == [3]:
                     msg = '\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).'
-                    if int(r.hget(uid, 'weapon')) == 0:
+                    if int(r.hget(uid, 'weapon')) in (0, 16):
                         r.hset(uid, 'weapon', 1)
                         r.hset(uid, 's_weapon', 1)
                     elif int(r.hget(uid, 'weapon')) in (1, 7):
