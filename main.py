@@ -2633,7 +2633,7 @@ async def invest(message):
                                 quest(message.from_user.id, 3, -2, 4)
                             if int(r.hget(message.from_user.id, 'defense')) == 0:
                                 r.hset(message.from_user.id, 'defense', 5, {'s_defense': 7})
-                                msg += '\n🛡 +7'
+                                msg += '\n✡ +7'
                         await message.reply(msg)
                     else:
                         await message.reply('Недостатньо коштів на рахунку.')
