@@ -2810,7 +2810,7 @@ async def work(message):
                                 resources += f' \n\U0001F4B5 +{money}'
                                 if packs:
                                     r.hincrby(message.from_user.id, 'packs', packs)
-                                    resources += ' \U0001F4E6 +1'
+                                    resources += f' \U0001F4E6 +{packs}'
 
                         if int(r.hget(c, 'build6')) == 1:
                             ch = 3 * (int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) +
@@ -2915,7 +2915,7 @@ async def guard(message):
                         msg += f' \n\U0001F4B5 +{money}'
                         if packs:
                             r.hincrby(message.from_user.id, 'packs', packs)
-                            msg += ' \U0001F4E6 +1'
+                            msg += f' \U0001F4E6 +{packs}'
                     if int(r.hget(c, 'buff_4')) == 22:
                         q_points(message.from_user.id, 12)
                         msg += ' \U0001fa99 +12'
