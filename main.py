@@ -2625,11 +2625,15 @@ async def invest(message):
                         if m >= 500:
                             if r.hexists(message.from_user.id, 'ac15') == 0:
                                 r.hset(message.from_user.id, 'ac15', 1)
-                        if m >= 1000 and int(r.hget(c, 'base')) == 12:
-                            p = int(m / 20)
-                            r.hincrby(message.from_user.id, 'packs', p)
-                            msg += f'\n\U0001F4E6 +{p}'
-                            quest(message.from_user.id, 3, -2, 4)
+                        if m >= 1000:
+                            if int(r.hget(c, 'base')) == 12:
+                                p = int(m / 20)
+                                r.hincrby(message.from_user.id, 'packs', p)
+                                msg += f'\n\U0001F4E6 +{p}'
+                                quest(message.from_user.id, 3, -2, 4)
+                            if int(r.hget(message.from_user.id, 'defense')) == 0:
+                                r.hset(message.from_user.id, 'defense', 5, {'s_defense', 7})
+                                msg += '\n🛡 +7'
                         await message.reply(msg)
                     else:
                         await message.reply('Недостатньо коштів на рахунку.')
