@@ -2894,31 +2894,32 @@ async def guard(message):
                 name = names[int(r.hget(mid, 'name'))]
                 msg = name + ' сьогодні охоронятиме територію від злодіїв.\n\n\U0001F4AA +' + str(st)
                 if int(r.hget(c, 'salary')) == 1 and int(r.hget(c, 'money')) >= 10:
+                    money, tax, packs = 5, 3, 0
+                    if int(r.hget(c, 'new_post')):
+                        money, tax, packs = 5, 5, 1
                     if int(r.hget(c, 'side')) == 4:
-                        if int(r.hget(c, 'new_post')) == 0:
-                            msg += ' \U0001F4B5 +8'
-                            r.hincrby(message.from_user.id, 'money', 8)
-                            r.hincrby(c, 'money', -8)
+                        money = money + tax
+                        tax = 0
+                    r.hincrby(c, 'money', -(money + tax))
+                    r.hincrby('soledar', 'money', tax)
+                    if int(r.hget(message.from_user.id, 'defense')) == 5 and int(r.hget(c, 'money')) >= 50:
+                        if message.from_user.is_premium:
+                            money = money * 5
+                            packs = packs * 5
                         else:
-                            msg += ' \U0001F4B5 +10'
-                            r.hincrby(message.from_user.id, 'money', 10)
-                            r.hincrby(c, 'money', -10)
+                            money = money * 3
+                            packs = packs * 3
+                        damage_defense(message.from_user.id, 5)
+                    if money:
+                        r.hincrby(message.from_user.id, 'money', money)
+                        msg += f' \n\U0001F4B5 +{money}'
+                        if packs:
+                            r.hincrby(message.from_user.id, 'packs', packs)
                             msg += ' \U0001F4E6 +1'
-                            r.hincrby(message.from_user.id, 'packs', 1)
-                    else:
-                        msg += ' \U0001F4B5 +5'
-                        r.hincrby(message.from_user.id, 'money', 5)
-                        if int(r.hget(c, 'new_post')) == 0:
-                            r.hincrby(c, 'money', -8)
-                            r.hincrby('soledar', 'money', 3)
-                        else:
-                            r.hincrby(c, 'money', -10)
-                            r.hincrby('soledar', 'money', 5)
-                            msg += ' \U0001F4E6 +1'
-                            r.hincrby(message.from_user.id, 'packs', 1)
                     if int(r.hget(c, 'buff_4')) == 22:
                         q_points(message.from_user.id, 12)
                         msg += ' \U0001fa99 +12'
+
                 if int(r.hget(c, 'build6')) == 1:
                     ch = 3 * (int(r.hget(c, 'wood')) + int(r.hget(c, 'stone')) +
                               int(r.hget(c, 'cloth')) + int(r.hget(c, 'brick')))
