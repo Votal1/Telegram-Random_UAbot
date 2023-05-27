@@ -2018,6 +2018,8 @@ async def start_raid(cid):
             chance2 = int(chance1 * choice([0.5, 1, 2, 3]))
             if s == 3:
                 chance2 = int(chance2 / 2)
+            if goy > 0:
+                chance2 = 0
         elif soledar:
             location = 'Соледар'
             chance2 = int(r.hget('soledar', 'power'))

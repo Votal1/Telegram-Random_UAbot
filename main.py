@@ -20,7 +20,7 @@ from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools
-from content.inventory import show_inventory, drop_item, change_item, upgrade_item
+from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, check_slot, open_gift2
@@ -5150,16 +5150,43 @@ async def handle_query(call):
                                             text='Недостатньо погонів на рахунку')
 
     elif call.data.startswith('jew'):
-        if int(r.hget(call.from_user.id, 'head')) == 0:
-            if int(r.hget(call.from_user.id, 'strap')) >= 1:
-                r.hincrby(call.from_user.id, 'strap', -1)
-                r.hset(call.from_user.id, 'head', 6)
-                r.hset(call.from_user.id, 's_head', 7)
+        uid = call.from_user.id
+        inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
+        w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
+        s_w, s_d, s_s, s_h = int(inv[4]), int(inv[5]), int(inv[6]), int(inv[7])
+        goy = 0
+        if check_set(w, d, s, h) == 4:
+            goy = 1
+        if h == 0:
+            if int(r.hget(uid, 'strap')) >= 1:
+                r.hincrby(uid, 'strap', -1)
+                r.hset(uid, 'head', 6)
+                r.hset(uid, 's_head', 7)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви успішно купили ярмулку')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо погонів на рахунку')
+        elif goy:
+            if s_w < 30 or s_d < 30 or s_s < 30 or s_h < 30:
+                if int(r.hget(uid, 'strap')) >= 1:
+                    r.hincrby(uid, 'strap', -1)
+                    if s_w < 30:
+                        r.hincrby(uid, 's_weapon', 7)
+                    if s_d < 30:
+                        r.hincrby(uid, 's_defense', 7)
+                    if s_s < 30:
+                        r.hincrby(uid, 's_support', 7)
+                    if s_h < 30:
+                        r.hincrby(uid, 's_head', 7)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно збільшили міцність свого гойського комплекту')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо погонів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Все ваше спорядження має більше 30 міцності')
         else:
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='У вас вже є шапка')
