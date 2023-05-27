@@ -12,7 +12,7 @@ def wiki_text(data):
         markup.add(InlineKeyboardButton(text='\U0001F530 Клани', callback_data='wiki_clan_description'),
                    InlineKeyboardButton(text='\U0001F9ED Напрями', callback_data='wiki_clan'),
                    InlineKeyboardButton(text='\U0001F4DC Паспорт', callback_data='wiki_passport'))
-        msg = '\U0001F1FA\U0001F1E6 @Random_UAbot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
+        msg = '\U0001F1FA\U0001F1E6 @RandomUA3bot - бот, який перенесе тебе в альтернативну реальність, у якій ти ' \
               'потрапляєш на Донбас і ловиш русаків.\nЇх можна розвивати, відправляти в бої проти інших ' \
               'русаків, об`єднувати в клани, а також - вбивати.\nТут можна знайти майже всю інформацію щодо гри.'
     elif data.startswith('wiki_duel'):
