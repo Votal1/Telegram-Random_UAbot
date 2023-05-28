@@ -1,7 +1,8 @@
 from random import randint, choice, choices
 from datetime import datetime, timedelta
 from os import environ
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, InlineQueryResultArticle
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, \
+    InlineQueryResultArticle, ChatPermissions
 from aiogram.utils.executor import start_webhook
 from asyncio import sleep
 
@@ -194,13 +195,24 @@ async def mute(message):
     try:
         uid = message.reply_to_message.from_user.id
         st = await bot.get_chat_member(message.chat.id, message.from_user.id)
+        mute_permissions = ChatPermissions(
+            can_send_messages=False
+        )
+        un_mute_permissions = ChatPermissions(
+            can_send_messages=True,
+            can_send_media_messages=True,
+            can_send_polls=True,
+            can_send_other_messages=True,
+            can_add_web_page_previews=True,
+            can_change_info=True,
+            can_invite_users=True,
+            can_pin_messages=True
+        )
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
             if st.status == 'creator' or st.can_restrict_members is True:
                 msg = message.reply_to_message.from_user.first_name
                 if message.text.startswith('/unmute'):
-                    await bot.restrict_chat_member(message.chat.id, uid,
-                                                   can_send_messages=True, can_send_media_messages=True,
-                                                   can_send_other_messages=True, can_add_web_page_previews=True)
+                    await bot.restrict_chat_member(message.chat.id, uid, permissions=un_mute_permissions)
                     await message.answer('З ' + message.reply_to_message.from_user.first_name + ' знято всі обмеження.')
                 else:
                     try:
@@ -208,25 +220,23 @@ async def mute(message):
                         if a[1].endswith('m'):
                             await bot.restrict_chat_member(message.chat.id, uid,
                                                            until_date=datetime.now() + timedelta(
-                                                               minutes=int(a[1][:-1])),
-                                                           can_send_messages=False)
+                                                               minutes=int(a[1][:-1])), permissions=mute_permissions)
                             msg += ' посидить ' + a[1][:-1] + ' хвилин без права голосу.'
                             await message.answer(msg)
                         elif a[1].endswith('h'):
                             await bot.restrict_chat_member(message.chat.id, uid,
                                                            until_date=datetime.now() + timedelta(hours=int(a[1][:-1])),
-                                                           can_send_messages=False)
+                                                           permissions=mute_permissions)
                             msg += ' посидить ' + a[1][:-1] + ' годин без права голосу.'
                             await message.answer(msg)
                         elif a[1].endswith('d'):
                             await bot.restrict_chat_member(message.chat.id, uid,
                                                            until_date=datetime.now() + timedelta(days=int(a[1][:-1])),
-                                                           can_send_messages=False)
+                                                           permissions=mute_permissions)
                             msg += ' посидить ' + a[1][:-1] + ' днів без права голосу.'
                             await message.answer(msg)
                         elif a[1].endswith('f'):
-                            await bot.restrict_chat_member(message.chat.id, uid,
-                                                           can_send_messages=False)
+                            await bot.restrict_chat_member(message.chat.id, uid, permissions=mute_permissions)
                             msg += ' назавжди залишається без права голосу.'
                             await message.answer(msg)
                         else:
@@ -234,7 +244,7 @@ async def mute(message):
                     except:
                         await bot.restrict_chat_member(message.chat.id, uid,
                                                        until_date=datetime.now() + timedelta(hours=12),
-                                                       can_send_messages=False)
+                                                       permissions=mute_permissions)
                         msg += ' посидить 12 годин без права голосу.'
                         await message.answer(msg)
     except:
@@ -246,6 +256,16 @@ async def moxir(message):
     try:
         uid = message.reply_to_message.from_user.id
         st = await bot.get_chat_member(message.chat.id, message.from_user.id)
+        moxir_permissions = ChatPermissions(
+            can_send_messages=True,
+            can_send_media_messages=False,
+            can_send_polls=False,
+            can_send_other_messages=False,
+            can_add_web_page_previews=False,
+            can_change_info=False,
+            can_invite_users=False,
+            can_pin_messages=False
+        )
         if int(r.hget('f' + str(message.chat.id), 'admin')) == 1:
             if st.status == 'creator' or st.can_restrict_members is True:
                 msg = 'У ' + message.reply_to_message.from_user.first_name + ' забрали стікери і медіа'
@@ -254,27 +274,22 @@ async def moxir(message):
                     if a[1].endswith('m'):
                         await bot.restrict_chat_member(message.chat.id, uid,
                                                        until_date=datetime.now() + timedelta(minutes=int(a[1][:-1])),
-                                                       can_send_messages=True, can_send_media_messages=False,
-                                                       can_add_web_page_previews=False, can_send_other_messages=False)
+                                                       permissions=moxir_permissions)
                         await message.answer(msg + ' на ' + a[1][:-1] + ' хвилин.')
                     elif a[1].endswith('h'):
                         await bot.restrict_chat_member(message.chat.id, uid,
                                                        until_date=datetime.now() + timedelta(hours=int(a[1][:-1])),
-                                                       can_send_messages=True, can_send_media_messages=False,
-                                                       can_add_web_page_previews=False, can_send_other_messages=False)
+                                                       permissions=moxir_permissions)
                         await message.answer(msg + ' на ' + a[1][:-1] + ' годин.')
                     elif a[1].endswith('d'):
                         await bot.restrict_chat_member(message.chat.id, uid,
                                                        until_date=datetime.now() + timedelta(days=int(a[1][:-1])),
-                                                       can_send_messages=True, can_send_media_messages=False,
-                                                       can_add_web_page_previews=False, can_send_other_messages=False)
+                                                       permissions=moxir_permissions)
                         await message.answer(msg + ' на ' + a[1][:-1] + ' днів.')
                     else:
                         raise Exception
                 except:
-                    await bot.restrict_chat_member(message.chat.id, uid,
-                                                   can_send_messages=True, can_send_media_messages=False,
-                                                   can_send_other_messages=False, can_add_web_page_previews=False)
+                    await bot.restrict_chat_member(message.chat.id, uid, permissions=moxir_permissions)
                     await message.answer(msg + '.')
     except:
         pass
@@ -292,7 +307,8 @@ async def handler_new_member(message):
             else:
                 markup.add(InlineKeyboardButton(text='\U0001F353', callback_data='captcha_false'),
                            InlineKeyboardButton(text='\U0001F35E', callback_data='captcha_true'))
-            await bot.restrict_chat_member(message.chat.id, message.new_chat_members[0].id, can_send_messages=False)
+            await bot.restrict_chat_member(message.chat.id, message.new_chat_members[0].id,
+                                           permissions=ChatPermissions(can_send_messages=False))
             await message.reply(f'\u274E {user_name}, цей чат під охороною. Дай відповідь на одне питання.\n\n'
                                 f'Що таке паляниця?', reply_markup=markup)
     except:
@@ -3600,9 +3616,17 @@ async def handle_query(call):
     elif call.data.startswith('captcha_true') and \
             call.from_user.id == call.message.reply_to_message.new_chat_members[0].id:
         try:
-            await bot.restrict_chat_member(call.message.chat.id, call.from_user.id,
-                                           can_send_messages=True, can_send_media_messages=True,
-                                           can_send_other_messages=True, can_add_web_page_previews=True)
+            un_mute_permissions = ChatPermissions(
+                can_send_messages=True,
+                can_send_media_messages=True,
+                can_send_polls=True,
+                can_send_other_messages=True,
+                can_add_web_page_previews=True,
+                can_change_info=True,
+                can_invite_users=True,
+                can_pin_messages=True
+            )
+            await bot.restrict_chat_member(call.message.chat.id, call.from_user.id, permissions=un_mute_permissions)
             await bot.edit_message_text(text=f'\u2705 Вітаю в чаті, {call.from_user.first_name}.',
                                         chat_id=call.message.chat.id, message_id=call.message.message_id)
         except:
