@@ -4769,20 +4769,20 @@ async def handle_query(call):
     elif call.data.startswith('fragment'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            if int(r.hget(call.from_user.id, 'defense')) == 0:
-                if int(r.hget(call.from_user.id, 'money')) >= 10:
-                    r.hincrby(call.from_user.id, 'money', -10)
-                    r.hset(call.from_user.id, 'defense', 9)
-                    r.hset(call.from_user.id, 's_defense', 7)
+            if int(r.hget(call.from_user.id, 'weapon')) == 0:
+                if int(r.hget(call.from_user.id, 'money')) >= 150:
+                    r.hincrby(call.from_user.id, 'money', -150)
+                    r.hset(call.from_user.id, 'weapon', 3)
+                    r.hset(call.from_user.id, 's_weapon', 5)
                     quest(call.from_user.id, 3, 3, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                    text='Ви успішно купили уламок бронетехніки')
+                                                    text='Ви успішно купили батіг')
                 else:
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Недостатньо коштів на рахунку')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='У вас вже є захисне спорядження')
+                                                text='У вас вже є зброя')
         else:
             await bot.edit_message_text('Мандрівний торговець повернеться завтра.', call.message.chat.id,
                                         call.message.message_id)
