@@ -4774,7 +4774,6 @@ async def handle_query(call):
                     r.hincrby(call.from_user.id, 'money', -150)
                     r.hset(call.from_user.id, 'weapon', 3)
                     r.hset(call.from_user.id, 's_weapon', 5)
-                    quest(call.from_user.id, 3, 3, 1)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили батіг')
                 else:
