@@ -283,7 +283,7 @@ def c_shop(c, page):
                                                     callback_data=cdata('clan_buff_4_1_2', c)))
 
                 elif int(r.hget(c, 'side')) == 2:
-                    msg += '\U0001f7e3\U0001f7e3 1% шанс непомітно отримати квестове очко за перемогу в дуелі.\n'
+                    msg += '\U0001f7e3\U0001f7e3 2% шанс непомітно отримати квестове очко за перемогу в дуелі.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F47E 180',
                                                     callback_data=cdata('clan_buff_4_2_1', c)))
                     msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n'
