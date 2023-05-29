@@ -6379,7 +6379,7 @@ async def handle_query(call):
                                         if int(r.hget(c, 'r_spirit')) >= 180:
                                             r.hincrby(c, 'r_spirit', -180)
                                             r.hset(c, 'buff_4', 21)
-                                            msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 2% шанс непомітно отримати' \
+                                            msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3 3% шанс непомітно отримати' \
                                                   ' квестове очко за перемогу в дуелі.'
                                             await bot.send_message(cid, msg)
                                         else:

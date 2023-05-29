@@ -865,7 +865,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if c2 in (7, 17, 27):
                 quest(uid1, 3, -3, 3)
 
-            if randint(1, 50) == 50:
+            if randint(1, 34) == 34:
                 if checkClan(uid1) and int(r.hget('c' + r.hget(uid1, 'clan').decode(), 'buff_4')) == 21:
                     q_points(uid1, 1)
 
@@ -1026,7 +1026,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             if c1 in (7, 17, 27):
                 quest(uid2, 3, -3, 3)
 
-            if randint(1, 50) == 50:
+            if randint(1, 34) == 34:
                 if checkClan(uid2) and int(r.hget('c' + r.hget(uid2, 'clan').decode(), 'buff_4')) == 21:
                     q_points(uid2, 1)
 
