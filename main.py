@@ -6520,22 +6520,25 @@ async def echo(message):
         elif message.text.lower().startswith('/fix'):
             layout_en = "`~@#$%^&qwertyuiop[]QWERTYUIOP{}asdfghjkl;'\\ASDFGHJKL:\"|zxcvbnm,./ZXCVBNM<>?"
             layout_ua = "'₴\"№;%:?йцукенгшщзхїЙЦУКЕНГШЩЗХЇфівапролджє\\ФІВАПРОЛДЖЄ/ячсмитьбю.ЯЧСМИТЬБЮ,"
+            try:
+                msg1 = message.reply_to_message.text
+                enl = 0
+                msg2 = ''
 
-            enl = 0
-            msg2 = ''
-
-            for letter in message.text:
-                if letter in layout_en:
-                    enl += 1
-
-            if len(message.text) / 2 < enl:
-                for letter in message:
+                for letter in msg1:
                     if letter in layout_en:
-                        msg2 += layout_ua[layout_en.index(letter)]
-                    else:
-                        msg2 += letter
+                        enl += 1
 
-                await message.answer(f'[Транслітерація]\n\n{msg2}')
+                if len(msg1) / 2 < enl:
+                    for letter in message:
+                        if letter in layout_en:
+                            msg2 += layout_ua[layout_en.index(letter)]
+                        else:
+                            msg2 += letter
+
+                    await message.answer(f'[Транслітерація]\n\n{msg2}')
+            except:
+                pass
 
         if message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
