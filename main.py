@@ -6517,6 +6517,25 @@ async def echo(message):
                                    reply_to_message_id=message.message_id)
             r.hincrby('logs', 'alert_count', 1)
 
+        elif message.text.lower().startswith('/fix'):
+            layout_en = "`~@#$%^&qwertyuiop[]QWERTYUIOP{}asdfghjkl;'\\ASDFGHJKL:\"|zxcvbnm,./ZXCVBNM<>?"
+            layout_ua = "'₴\"№;%:?йцукенгшщзхїЙЦУКЕНГШЩЗХЇфівапролджє\\ФІВАПРОЛДЖЄ/ячсмитьбю.ЯЧСМИТЬБЮ,"
+
+            enl = 0
+            msg2 = ''
+
+            for letter in message.text:
+                if letter in layout_en:
+                    enl += 1
+
+            if len(message.text) / 2 < enl:
+                for letter in message:
+                    if letter in layout_en:
+                        msg2 += layout_ua[layout_en.index(letter)]
+                    else:
+                        msg2 += letter
+
+                await message.answer(f'[Транслітерація]\n\n{msg2}')
 
         if message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
