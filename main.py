@@ -6517,7 +6517,7 @@ async def echo(message):
                                    reply_to_message_id=message.message_id)
             r.hincrby('logs', 'alert_count', 1)
 
-        elif message.text.lower().startswith('/fix'):
+        elif message.text.lower() == '/fix':
             layout_en = "`~@#$%^&qwertyuiop[]QWERTYUIOP{}asdfghjkl;'\\ASDFGHJKL:\"|zxcvbnm,./ZXCVBNM<>?"
             layout_ua = "'₴\"№;%:?йцукенгшщзхїЙЦУКЕНГШЩЗХЇфівапролджє\\ФІВАПРОЛДЖЄ/ячсмитьбю.ЯЧСМИТЬБЮ,"
             #try:
