@@ -6536,7 +6536,7 @@ async def echo(message):
                     else:
                         msg2 += letter
 
-                await message.answer(f'[Транслітерація]\n\n{msg2}')
+                await message.answer(f'[Фікс розкладки]\n\n{msg2}')
 
         if message.chat.type == 'private':
             if r.hexists(message.from_user.id, 'intellect') == 1:
