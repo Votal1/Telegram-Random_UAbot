@@ -5432,6 +5432,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'strap')) >= 5:
                     r.hincrby(uid, 'strap', -5)
                     r.hset(uid, 'extra_slot', 1)
+                    r.sadd('backpackers', uid)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили тактичний рюкзак з другим слотом!')
                 else:
@@ -5445,6 +5446,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'strap')) >= 10:
                     r.hincrby(uid, 'strap', -10)
                     r.hset(uid, 'extra_slot', 2)
+                    r.sadd('backpackers', uid)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили тактичний рюкзак з третім слотом!')
                 else:
@@ -5458,6 +5460,7 @@ async def handle_query(call):
                 if int(r.hget(uid, 'strap')) >= 20:
                     r.hincrby(uid, 'strap', -20)
                     r.hset(uid, 'extra_slot', 3)
+                    r.sadd('backpackers', uid)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                     text='Ви успішно купили тактичний рюкзак з четвертим слотом!')
                 else:
