@@ -5427,18 +5427,45 @@ async def handle_query(call):
             r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
                                           'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
 
-        if not int(r.hget(uid, 'extra_slot')):
-            if int(r.hget(uid, 'strap')) >= 5:
-                r.hincrby(uid, 'strap', -5)
-                r.hset(uid, 'extra_slot', 1)
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Ви успішно купили тактичний рюкзак!')
+        if call.data.startswith('expand_backpack1'):
+            if int(r.hget(uid, 'extra_slot')) == 0:
+                if int(r.hget(uid, 'strap')) >= 5:
+                    r.hincrby(uid, 'strap', -5)
+                    r.hset(uid, 'extra_slot', 1)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили тактичний рюкзак з другим слотом!')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо погонів на рахунку')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Недостатньо погонів на рахунку')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='У вас вже є тактичний рюкзак')
+                                                text='У вас вже є тактичний рюкзак з другим слотом')
+        elif call.data.startswith('expand_backpack2'):
+            if int(r.hget(uid, 'extra_slot')) == 1:
+                if int(r.hget(uid, 'strap')) >= 10:
+                    r.hincrby(uid, 'strap', -10)
+                    r.hset(uid, 'extra_slot', 2)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили тактичний рюкзак з третім слотом!')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо погонів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є тактичний рюкзак з третім слотом')
+        elif call.data.startswith('expand_backpack3'):
+            if int(r.hget(uid, 'extra_slot')) == 2:
+                if int(r.hget(uid, 'strap')) >= 20:
+                    r.hincrby(uid, 'strap', -20)
+                    r.hset(uid, 'extra_slot', 3)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили тактичний рюкзак з четвертим слотом!')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо погонів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є тактичний рюкзак з четвертим слотом')
 
     elif call.data.startswith('zero_time') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'strap')) >= 1:

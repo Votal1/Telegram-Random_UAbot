@@ -49,14 +49,20 @@ def shop_msg(uid, mode):
                  '\U0001F9FE Ресурси - \U0001F31F 2': 'buy_resources',
                  '\U0001F393 Курс перекваліфікації - \U0001F31F 3': 'course',
                  '\U0001F3E0 Велике будівництво - \U0001F31F 3': 'fast_cellar',
-                 '\U0001F392 Тактичний рюкзак - \U0001F31F 5': 'expand_backpack'}
+                 '\U0001F392 Тактичний рюкзак - \U0001F31F 5': 'expand_backpack1',
+                 '\U0001F392 Тактичний рюкзак - \U0001F31F 10': 'expand_backpack2',
+                 '\U0001F392 Тактичний рюкзак - \U0001F31F 20': 'expand_backpack3'}
         markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
                    InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
                    InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium4'))
         for key, value in items.items():
             if value == 'fast_cellar' and int(r.hget(uid, 's3')) > 2:
                 pass
-            elif value == 'expand_backpack' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) > 0:
+            elif value == 'expand_backpack1' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 0:
+                pass
+            elif value == 'expand_backpack2' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 1:
+                pass
+            elif value == 'expand_backpack3' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 2:
                 pass
             else:
                 markup.add(InlineKeyboardButton(text=key, callback_data=value))
@@ -84,7 +90,7 @@ def shop_msg(uid, mode):
               f'\U0001F393 Курс перекваліфікації - дозволяє русаку ' \
               f'наново вибрати клас.\n\U0001F3E0 Велике будівництво - додатковий підвал ' \
               f'найвищого рівня (покупка доступна до етапу 2. Купівля будівельних матеріалів).\n' \
-              f'\U0001F392 Тактичний рюкзак - можливість складати в рюкзак до 2 предметів.'
+              f'\U0001F392 Тактичний рюкзак - можливість складати в рюкзак більше предметів.'
 
     elif mode == 3:
         items = {'\U0001F4AA Сила - 5 \U0001F9C2': 'salt_strength',
