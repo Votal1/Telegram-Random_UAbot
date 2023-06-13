@@ -58,8 +58,15 @@ def shop_msg(uid, mode):
         for key, value in items.items():
             if value == 'fast_cellar' and int(r.hget(uid, 's3')) > 2:
                 pass
-            elif value == 'expand_backpack1' and r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) > 0:
-                pass
+            elif value == 'expand_backpack1':
+                if r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 0:
+                    markup.add(InlineKeyboardButton(text=key, callback_data=value))
+            elif value == 'expand_backpack2':
+                if r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 1:
+                    markup.add(InlineKeyboardButton(text=key, callback_data=value))
+            elif value == 'expand_backpack3':
+                if r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 2:
+                    markup.add(InlineKeyboardButton(text=key, callback_data=value))
             else:
                 markup.add(InlineKeyboardButton(text=key, callback_data=value))
         markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),
