@@ -97,7 +97,7 @@ def shop_msg(uid, mode):
 
     elif mode == 3:
         items = {'\U0001F4AA Сила - 5 \U0001F9C2': 'salt_strength',
-                 '\U0001F531 Спорядження - 10 \U0001F9C2': 'salt_upgraded',
+                 '🌀 Ізострічка - 8 \U0001F9C2': 'salt_upgraded',
                  '\U0001F349 Кавун - 15 \U0001F9C2': 'salt_watermelon',
                  '\U0001F4FB\U0001F9F1\U0001F9F6 - 20 \U0001F9C2': 'salt_resources',
                  '\U0001F43D\U0001F41F Швайнокарась - 33 \U0001F9C2': 'salt_fish'}
@@ -111,7 +111,7 @@ def shop_msg(uid, mode):
         salt = int(r.hget(uid, 'salt'))
         msg = f'\U0001F9C2 Сіль: {salt}\n\nОсь опис товарів, які можна придбати:\n\n' \
               f'\U0001F4AA Збільшити силу на 30/20/10/5/3 (залежно від сили русака).\n' \
-              f'\U0001F531 Покращене класове спорядження стандартної міцності.\n' \
+              f'🌀 Ізострічка - використовується для покращення спорядження.\n' \
               f'\U0001F349 Кавун базований - [Шапка, міцність=∞] - збільшує зарплату за роботу на соляній шахті ' \
               f'на 5 та силу при годуванні на 5. Кавун буде конфісковано, якщо при годуванні зменшиться сила.\n' \
               f'\U0001F4FB 22 \U0001F9F1 55 \U0001F9F6 111 - ресурси для клану.\n' \
@@ -164,51 +164,11 @@ def salt_shop(uid, cdata):
             return 'Поранений русак не може отримати силу від солі.'
 
     elif cdata.startswith('salt_upgraded'):
-        if int(r.hget(uid, 'salt')) >= 10:
-            cl = int(r.hget(uid, 'class'))
-            if cl == 0:
-                return 'Ваш русак не має класу.'
-            if cl in (1, 11, 21) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 22)
-                r.hincrby(uid, 's_weapon', 5)
-            elif cl in (2, 12, 22) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 23)
-                r.hset(uid, 's_weapon', 25)
-            elif cl in (3, 13, 23) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 24)
-                r.hset(uid, 's_weapon', 3)
-            elif cl in (4, 14, 24) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 25)
-                r.hset(uid, 's_weapon', 1)
-            elif cl in (5, 15, 25) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 26)
-                r.hset(uid, 's_weapon', 30)
-            elif cl in (6, 16, 26) and int(r.hget(uid, 'defense')) == 0:
-                r.hset(uid, 'defense', 17)
-                r.hset(uid, 's_defense', 10)
-            elif cl in (7, 17, 27) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 28)
-                r.hset(uid, 's_weapon', 8)
-            elif cl in (8, 18, 28) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 29)
-                r.hset(uid, 's_weapon', 2)
-            elif cl in (9, 19, 29) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 30)
-                r.hset(uid, 's_weapon', 8)
-            elif cl in (10, 20, 30) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 31)
-                r.hset(uid, 's_weapon', 10)
-            elif cl in (31, 32, 33) and int(r.hget(uid, 'support')) == 0:
-                r.hset(uid, 'support', 9)
-                r.hset(uid, 's_support', 5)
-            elif cl in (34, 35, 36) and int(r.hget(uid, 'weapon')) == 0:
-                r.hset(uid, 'weapon', 32)
-                r.hset(uid, 's_weapon', 15)
-            else:
-                return 'У вас вже є спорядження цього типу'
-            r.hincrby(uid, 'salt', -10)
+        if int(r.hget(uid, 'salt')) >= 8:
+            r.hincrby(uid, 'tape', 1)
+            r.hincrby(uid, 'salt', -8)
             r.hincrby(uid, 'purchase', 1)
-            return 'Покращене класове спорядження успішно придбано.'
+            return 'Ізострічку успішно придбано.'
         else:
             return 'Недостатньо солі на рахунку.'
 
