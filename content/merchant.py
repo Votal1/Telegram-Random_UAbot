@@ -64,4 +64,7 @@ def merchant_msg():
            '\U0001F396 Палаш [Зброя, міцність=15, ціна=10] - +100% сили проти русаків без клану, +25% в іншому випадку.'
     markup.add(InlineKeyboardButton(text='\U0001F5E1 Купити спорядження свого класу', callback_data='equipment'))
 
+    if slot4:
+        slots = randint()
+
     return msg, markup
