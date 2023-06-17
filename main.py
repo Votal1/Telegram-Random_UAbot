@@ -810,8 +810,13 @@ async def account(message):
 async def passport(message):
     if r.hexists(message.from_user.id, 'wins') == 1:
         stats = r.hmget(message.from_user.id, 'wins', 'trophy', 'deaths', 'childs', 'vodka', 'opened', 'clan')
-        sk = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5')
-        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4])) * 100 / 30)
+        sk = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5', 'extra_slot')
+        s6 = sk[5]
+        if s6:
+            s6 = int(s6) + 1
+        else:
+            s6 = 1
+        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4]) + s6) * 100 / 34)
         ac = 0
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
                       'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13', 'ac14', 'ac15', 'ac16')
