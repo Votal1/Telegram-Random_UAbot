@@ -1073,17 +1073,18 @@ async def classes_3(message):
 
 @dp.message_handler(commands=['merchant'])
 async def merchant(message):
-    if message.chat.id == -1001211933154123:
+    if message.chat.id == -1001211933154:
         if r.hexists('soledar', 'merchant_day') == 0:
             r.hset('soledar', 'merchant_day', 0)
             r.hset('soledar', 'merchant_hour', randint(18, 22))
         if int(r.hget('soledar', 'merchant_day')) != datetime.now().day and \
                 int(r.hget('soledar', 'merchant_hour')) == datetime.now().hour:
             slot, strap, tape = randint(1, 3), randint(1, 3), randint(20, 50)
+            slot = 2
             r.hset('soledar', 'merchant_slot', slot)
             r.hset('soledar', 'merchant_strap', strap)
             r.hset('soledar', 'merchant_tape', tape)
-            msg, markup = merchant_msg()
+            msg, markup = merchant_msg(slot, strap, tape)
             pin = await message.reply(msg, reply_markup=markup)
             r.hset('soledar', 'merchant_day', datetime.now().day)
             r.hset('soledar', 'merchant_hour_now', datetime.now().hour)
@@ -1102,7 +1103,7 @@ async def merchant(message):
                     int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
                 msg = msg + '\n\nТорговець прийшов:\nt.me/c/1211933154/' + r.hget('soledar', 'pin').decode()
             await message.answer(msg, disable_web_page_preview=True)
-    elif message.chat.id == -100121193315412322:
+    else:
         msg = 'Мандрівний торговець приходить увечері в <a href="https://t.me/+cClR7rA-sZAyY2Uy">@soledar1</a>.'
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
@@ -4992,10 +4993,14 @@ async def handle_query(call):
     elif call.data.startswith('merchant_backpack'):
         if int(r.hget('soledar', 'merchant_hour_now')) == datetime.now().hour or \
                 int(r.hget('soledar', 'merchant_hour_now')) + 1 == datetime.now().hour:
-            slot = 2 #  int(r.hget('soledar', 'merchant_slot'))
+            slot = int(r.hget('soledar', 'merchant_slot'))
             strap = int(r.hget('soledar', 'merchant_strap'))
             tape = int(r.hget('soledar', 'merchant_tape'))
             extra = r.hget(call.from_user.id, 'extra_slot')
+            if slot == 2:
+                tape *= 2
+            elif slot == 3:
+                tape *= 4
             if extra:
                 extra = int(extra)
             else:

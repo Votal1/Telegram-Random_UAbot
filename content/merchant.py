@@ -2,11 +2,15 @@ from random import choice
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def merchant_msg():
+def merchant_msg(slot, strap, tape):
     slot1 = choice([1, 2, 3])
     slot2 = choice([1, 2, 3])
     slot3 = choice([1, 2, 3])
     markup = InlineKeyboardMarkup()
+    if slot == 2:
+        tape *= 2
+    elif slot == 3:
+        tape *= 4
     msg = 'Прийшов мандрівний торговець, приніс різноманітні товари.\n\n'
     if slot1 == 1:
         msg += '🗡 Батіг [Зброя, міцність=5, ціна=125] - +15% сили в рейді, +33% якщо в русака нема жінки.'
@@ -64,7 +68,8 @@ def merchant_msg():
            '\U0001F396 Палаш [Зброя, міцність=15, ціна=10] - +100% сили проти русаків без клану, +25% в іншому випадку.'
     markup.add(InlineKeyboardButton(text='\U0001F5E1 Купити спорядження свого класу', callback_data='equipment'))
 
-    if slot4:
-        slots = randint()
+    msg += f'\n\n🎒 Тактичний рюкзак [слоти={slot}, ціна=🌟{strap}🌀{tape}] - ' \
+           f'збільшує кількість слотів спорядження та кількість можливої ізострічки з пакунків'
+    markup.add(InlineKeyboardButton(text=f'🎒 Купити рюкзак - 🌟{strap} 🌀{tape}', callback_data='merchant_backpack'))
 
     return msg, markup
