@@ -1080,7 +1080,6 @@ async def merchant(message):
         if int(r.hget('soledar', 'merchant_day')) != datetime.now().day and \
                 int(r.hget('soledar', 'merchant_hour')) == datetime.now().hour:
             slot, strap, tape = randint(1, 3), randint(1, 3), randint(20, 50)
-            slot = 2
             r.hset('soledar', 'merchant_slot', slot)
             r.hset('soledar', 'merchant_strap', strap)
             r.hset('soledar', 'merchant_tape', tape)

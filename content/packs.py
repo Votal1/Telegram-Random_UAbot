@@ -127,9 +127,15 @@ def open_pack(uid, cdata, edit):
                     else:
                         msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                 elif ran == [10]:
-                    r.hincrby(uid, 'tape', 1)
-                    msg = '\U0001f7e3 В пакунку знайдено ізострічку - незамінний компонент для ' \
-                            'покращення спорядження\n🌀 +1'
+                    extra = r.hget(uid, 'extra_slot')
+                    if extra:
+                        extra = int(extra) + 1
+                    else:
+                        extra = 1
+                    ran = randint(1, extra)
+                    r.hincrby(uid, 'tape', ran)
+                    msg = f'\U0001f7e3 В пакунку знайдено ізострічку - незамінний компонент для покращення ' \
+                          f'спорядження\n🌀 +{ran}'
                 elif ran == [11]:
                     msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити непогану шапку ' \
                           'для русака.\n\U0001F464 +10'
@@ -359,7 +365,6 @@ def open_gift(uid, cdata, edit, cid):
     markup = InlineKeyboardMarkup()
     msg = ''
     if uid == int(cdata.split('_')[2]):
-        cl = int(r.hget(uid, 'class'))
         if cdata.startswith('gift_unpack_'):
             if int(r.hget(uid, 'packs_2023')) > 0:
                 r.hincrby(uid, 'packs_2023', -1)
@@ -570,4 +575,3 @@ def open_gift2(uid, cdata, edit, cid):
             return False
 
     return False
-
