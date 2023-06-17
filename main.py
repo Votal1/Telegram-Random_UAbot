@@ -1618,6 +1618,12 @@ async def skills(message):
         s = r.hmget(message.from_user.id, 's1', 's2', 's3', 's4', 's5')
         pur = int(r.hget(message.from_user.id, 'purchase'))
         s1, s2, s3, s4, s5 = int(s[0]), int(s[1]), int(s[2]), int(s[3]), int(s[4])
+        s6 = r.hget(message.from_user.id, 'extra_slot')
+
+        if s6:
+            s6 = int(s6) + 1
+        else:
+            s6 = 1
 
         if s1 < 10:
             markup.add(InlineKeyboardButton(text='Прокачати алкоголізм', callback_data='alcohol'))
@@ -1671,6 +1677,7 @@ async def skills(message):
               f'3. 50% шанс не зменшити бойовий транс в дуелях\n' \
               f'4. Русаки отримають порцію їжі, коли жінка народить немовля\n' \
               f'5. Мінімальна сила від годування - 10\n'
+        up6 = f'Рюкзак можна купити в мандрівного торговця за ізострічку або в магазині за погони.\n'
         if s1 >= 10:
             up1 = ''
         if s2 >= 5:
@@ -1681,13 +1688,15 @@ async def skills(message):
             up4 = ''
         if s5 >= 5:
             up5 = ''
+        if s6 >= 5:
+            up6 = ''
         msg = '\u2622 Алкоголізм:\n\nГорілка додає від ' + str(10 * s1) + ' до ' + str(70 * s1) + \
               ' бойового духу.' + up1 + '\n'
         for a in range(10):
             if s1 <= 0:
-                msg = msg + '\u2B1C'
+                msg = msg + '⬜'
             else:
-                msg = msg + '\U0001f7e7'
+                msg = msg + '🟧'
                 s1 = s1 - 1
 
         msg = msg + '\n\n\u26CF Майстерність:\n\nЗараз русак в шахті може заробити від ' + str(s221) + ' до ' + \
@@ -1695,34 +1704,43 @@ async def skills(message):
 
         for a in range(5):
             if s2 <= 0:
-                msg = msg + '\u2B1C'
+                msg = msg + '⬜'
             else:
-                msg = msg + '\U0001f7e5'
+                msg = msg + '🟥'
                 s2 = s2 - 1
 
         msg = msg + '\n\n\U0001F3DA Велике будівництво\n\nПідвал для додаткового русака. \n' + up3
         for a in range(5):
             if s3 <= 0:
-                msg = msg + '\u2B1C'
+                msg = msg + '⬜'
             else:
-                msg = msg + '\U0001f7eb'
+                msg = msg + '🟫'
                 s3 = s3 - 1
 
         msg = msg + '\n\n\U0001F9C2 Наркозалежність\n\nЗбільшує вигоду купівлі сили в сольовому магазині.\n' + up4
         for a in range(5):
             if s4 <= 0:
-                msg = msg + '\u2B1C'
+                msg = msg + '⬜'
             else:
-                msg = msg + '\U0001f7e6'
+                msg = msg + '🟦'
                 s4 = s4 - 1
 
         msg = msg + '\n\n\u2620\uFE0F Психоз\n\nПокращує вміння різати русню.\n' + up5
         for a in range(5):
             if s5 <= 0:
-                msg = msg + '\u2B1C'
+                msg = msg + '⬜'
             else:
-                msg = msg + '\U0001f7e8'
+                msg = msg + '🟦'
                 s5 = s5 - 1
+
+        msg = msg + '\n\n🎒 Тактичний рюкзак\n\nЗбільшує кількість слотів спорядження та кількість можливої ' \
+                    'ізострічки з пакунків.\n' + up6
+        for a in range(4):
+            if s6 <= 0:
+                msg = msg + '⬜'
+            else:
+                msg = msg + '🟪'
+                s6 = s6 - 1
 
         await bot.send_message(message.from_user.id, msg, reply_markup=markup)
         if message.chat.type != 'private':
