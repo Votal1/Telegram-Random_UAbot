@@ -6095,7 +6095,7 @@ async def handle_query(call):
                             r.hincrby(c, 'stone', -100)
                             r.hincrby(c, 'cloth', -50)
                             for mem in r.smembers('cl' + cid):
-                                if int(r.hget(mem, 'weapon')) == 0 and randint(1, 5) == 5:
+                                if int(r.hget(mem, 'weapon')) == 0:
                                     r.hset(mem, 'weapon', 7)
                                     r.hset(mem, 's_weapon', 10)
                                 if int(r.hget(mem, 'defense')) == 0:
