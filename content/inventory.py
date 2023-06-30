@@ -351,6 +351,24 @@ def drop_item(cdata, uid):
             return False, False, False, answer
 
 
+def empty_backpack(cdata, uid):
+    if not cdata:
+        backpack = show_backpack(uid)[0]
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton(text='Так', callback_data='backpack_empty'))
+        msg = f'{backpack}\n\nДійсно бажаєте викинути увесь вміст рюкзака?'
+        return msg, markup
+
+    if cdata.startswith('backpack_empty'):
+        r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty',
+                                      'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty',
+                                      'backpack_3': 0, 'backpack_3_s': 0, 'backpack_3_type': 'empty',
+                                      'backpack_4': 0, 'backpack_4_s': 0, 'backpack_4_type': 'empty'})
+        answer = 'Рюкзак очищено'
+        msg, markup = show_inventory(uid)
+        return msg, markup, True, answer
+
+
 def change_item(cdata, uid):
     forbidden = {'weapon': (11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
                             27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42),

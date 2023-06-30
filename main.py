@@ -21,7 +21,7 @@ from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
 from content.buttons import battle_button, battle_button_2, battle_button_3, \
     battle_button_4, unpack, gift_unpack, create_clan, clan_set, invite, buy_tools
-from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set
+from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set, empty_backpack
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, check_slot, open_gift2
@@ -1569,7 +1569,11 @@ async def achievements(message):
 @dp.message_handler(commands=['i'])
 async def inventory(message):
     if r.hexists(message.from_user.id, 'name'):
-        msg, markup = show_inventory(message.from_user.id)
+        msg1 = message.text.split()
+        if len(msg1) > 1 and msg1[1] in ('e', 'empty', '-e', '--empty'):
+            msg, markup = empty_backpack(False, message.from_user.id)
+        else:
+            msg, markup = show_inventory(message.from_user.id)
         await message.reply(msg, reply_markup=markup)
     else:
         await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
@@ -5557,7 +5561,10 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text=answer)
 
     elif call.data.startswith('backpack_') and call.from_user.id == call.message.reply_to_message.from_user.id:
-        msg, markup, edit, answer = change_item(call.data, call.from_user.id)
+        if call.data.startswith('backpack_empty'):
+            msg, markup, edit, answer = empty_backpack(call.data, call.from_user.id)
+        else:
+            msg, markup, edit, answer = change_item(call.data, call.from_user.id)
 
         if edit:
             await bot.edit_message_text(msg, call.message.chat.id, call.message.message_id, reply_markup=markup)
