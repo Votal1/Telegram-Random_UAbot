@@ -2070,7 +2070,7 @@ async def start_raid(cid):
                     reward += f'Русакам вдалось проникнути в Соледар і вкрасти трохи солі.\n🧂 +{ran}'
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'salt', ran)
-            elif locations.index(location) == 0:
+            elif location == 'Відділення монобанку':
                 if hack >= 1:
                     ran = randint(30, 250)
                     if mar >= 1:
@@ -2082,7 +2082,7 @@ async def start_raid(cid):
                 else:
                     reward += 'Русаки шукали відділення...\nНа цей раз нічого не вдалось знайти.'
 
-            elif locations.index(location) == 1:
+            elif location == 'Магазин алкоголю':
                 reward += 'Русаки пограбували магазин алкоголю\n'
                 ran = randint(5, 20)
                 if mar >= 1:
@@ -2098,7 +2098,7 @@ async def start_raid(cid):
                     again = choices([0, 1], weights=[100 - chance, chance])[0]
                     if again:
                         reward += '\nРусаки готові йти в наступний рейд!'
-            elif locations.index(location) == 2:
+            elif location == 'АТБ':
                 reward += 'Русаки пограбували АТБ\n'
                 mode = choice([1, 2, 3, 4])
                 mode2 = choice([1, 2])
@@ -2129,7 +2129,7 @@ async def start_raid(cid):
                     reward += '\n\U0001F4B5 +' + str(ran)
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'money', ran)
-            elif locations.index(location) == 3:
+            elif location == 'Сільпо':
                 reward += 'Русаки пограбували Сільпо\n'
                 mode = choice([1, 2, 3, 4])
                 mode2 = choice([1, 2])
@@ -2159,7 +2159,7 @@ async def start_raid(cid):
                     reward += '\n\U0001F4B5 +' + str(ran)
                     for mem in r.smembers('fighters_3' + str(cid)):
                         r.hincrby(mem, 'money', ran)
-            elif locations.index(location) == 4:
+            elif location == 'Епіцентр':
                 reward += 'Русаки пограбували Епіцентр\n'
                 base = int(r.hget(c, 'base'))
                 mode = choice([1, 2])
@@ -2193,7 +2193,7 @@ async def start_raid(cid):
                         ran *= 2
                     reward += f'\n🌀 +{ran}'
                     markup = raid_loot('tape', 0, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
-            elif locations.index(location) == 5:
+            elif location == 'Макіївський роднічок':
                 reward += 'Русаки вчинили жахливий теракт...\n'
                 ran = randint(10, 20)
                 if mar >= 1:
