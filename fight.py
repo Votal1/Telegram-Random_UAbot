@@ -2200,6 +2200,159 @@ async def start_raid(cid):
                     ran *= 2
                 reward += ' \U0001F47E +' + str(ran)
                 r.hincrby(c, 'r_spirit', ran)
+            '''
+            elif location == 'Підвал Сидоровича':
+                reward += 'Русаки завітали до підвалу Сидоровича\n\U0001F4B5 -100\n'
+                mode = choice([1, 2, 3, 4])
+                items = 5
+                if mode == 1:
+                    s = 3
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 8, s, items, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 2:
+                    s = 5
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 7, s, items, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 3:
+                    s = 10
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'💊 Аптечка [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 1, s, items, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 4:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    reward += emoji + ' +1'
+                    markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    if int(r.hget(mem, 'money')) >= 100:
+                        r.hincrby(mem, 'money', -100)
+
+            elif location == 'Табір бандитів':
+                reward += 'Русаки відвідали табір бандитів\n'
+                ran = randint(5, 20)
+                if mar >= 1:
+                    ran *= 2
+                    again = 1
+                    if again:
+                        reward += '\nРусаки готові йти в наступний рейд!'
+                reward += '\u2622 +' + str(ran) + ' \U0001F44A +20 \U0001fac0 +100 \U0001F54A +10000'
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(mem, 'vodka', ran)
+                    r.hincrby('all_vodka', 'vodka', ran)
+                    hp(100, mem)
+                    increase_trance(20, mem)
+                    spirit(10000, mem, 0)
+
+            elif location == 'Бар 100 рентген':
+                reward += 'Русаки пограбували 100 рентген\n'
+                mode = choice([1, 2])
+                items = randint(5, 10)
+                if mode == 1:
+                    s = 10
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 8, s, items, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 2:
+                    s = 2
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 7, s, items, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 3:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    reward += emoji + ' +1'
+                    markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                for mem in r.smembers('fighters_3' + str(cid)):
+                    r.hset(mem, 'time', 0)
+            elif location == 'Сільпо':
+                reward += 'Русаки пограбували Сільпо\n'
+                mode = choice([1, 2, 3, 4])
+                mode2 = choice([1, 2])
+                if mode == 1:
+                    s = 6
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 2:
+                    s = 4
+                    if mar >= 1:
+                        s *= 2
+                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
+                    markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 3:
+                    reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
+                    markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 4:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    reward += emoji + ' +1'
+                    markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode2 == 1:
+                    ran = randint(100, 200)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += '\n\U0001F4B5 +' + str(ran)
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        r.hincrby(mem, 'money', ran)
+            elif location == 'Завод Юпітер':
+                reward += 'Русаки знайшли щось корисне на заводі Юпітер\n'
+                base = int(r.hget(c, 'base'))
+                mode = randint(1, 3)
+                if base >= 1:
+                    ran = randint(25, 75)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += '\U0001F333 +' + str(ran)
+                    wood(c, ran)
+                if base >= 2:
+                    ran = randint(10, 50)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += ' \U0001faa8 +' + str(ran)
+                    stone(c, ran)
+                if base >= 3:
+                    ran = randint(10, 25)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += ' \U0001F9F6 +' + str(ran)
+                    cloth(c, ran)
+                if base >= 4:
+                    ran = randint(5, 15)
+                    if mar >= 1:
+                        ran *= 2
+                    reward += ' \U0001F9F1 +' + str(ran)
+                    brick(c, ran)
+                if mode == 1:
+                    ran = 30
+                    if mar >= 1:
+                        ran *= 2
+                    reward += f'\n🗡 ВСС +{ran}'
+                    markup = raid_loot('weapon', 9, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 2:
+                    ran = 3
+                    if mar >= 1:
+                        ran *= 2
+                    reward += f'\n🛡 Контакт-1 +{ran}'
+                    markup = raid_loot('defense', 6, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 3:
+                    ran = 2
+                    if mar >= 1:
+                        ran *= 2
+                    reward += f'\n🌀 +{ran}'
+                    markup = raid_loot('tape', 0, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
+            elif location == 'Макіївський роднічок':
+                reward += 'Русаки вчинили жахливий теракт...\n'
+                ran = randint(10, 20)
+                if mar >= 1:
+                    ran *= 2
+                reward += ' \U0001F47E +' + str(ran)
+                r.hincrby(c, 'r_spirit', ran)
+            '''
         elif win == ['b']:
             if location == 'Макіївський роднічок':
                 reward += 'Русаки вирішили напитись води...\n\U0001F44A +20 \U0001fac0 -100'
