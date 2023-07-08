@@ -1186,7 +1186,7 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'money', 100)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
-                elif msg.startswith('ne') and uid not in r.smembers('third_code'):
+                elif msg.startswith('ne1112') and uid not in r.smembers('third_code'):
                     r.sadd('third_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'salt', 10)
                     r.hincrby(message.from_user.id, 'packs', 100)
