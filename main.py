@@ -1186,17 +1186,17 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'money', 100)
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
-                elif msg.startswith('ne1112') and uid not in r.smembers('third_code'):
+                elif msg.startswith('ne') and uid not in r.smembers('third_code'):
                     r.sadd('third_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'salt', 10)
-                    r.hincrby(message.from_user.id, 'packs', 100)
+                    r.hincrby(message.from_user.id, 'packs', 50)
                     if not r.hexists(message.from_user.id, 'weapon') or \
-                            int(r.hget(message.from_user.id, 'weapon')) not in (12, 23, 34):
+                            int(r.hget(message.from_user.id, 'weapon')) == 0:
                         r.hset(message.from_user.id, 'weapon', 23)
                         r.hset(message.from_user.id, 's_weapon', 300)
-                    else:
+                    elif int(r.hget(message.from_user.id, 'weapon')) in (12, 23, 34):
                         r.hincrby(message.from_user.id, 's_weapon', 300)
-                    await message.reply('\u26CF Промокод Майнкрафту активовано!\n🧂 +10 \U0001F4E6 +100 \U0001F5E1 +300')
+                    await message.reply('\u26CF Промокод Майнкрафту активовано!\n🧂 +10 \U0001F4E6 +50 \U0001F5E1 +300')
                 elif msg.startswith('kh') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
