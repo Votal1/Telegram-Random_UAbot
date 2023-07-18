@@ -6113,19 +6113,22 @@ async def handle_query(call):
                             r.hincrby(c, 'stone', -100)
                             r.hincrby(c, 'cloth', -50)
                             for mem in r.smembers('cl' + cid):
-                                stats = r.hmget(mem, 'weapon', 's_weapon', 'defense', 's_defense')
-                                if int(stats[0]) in (0, 7, 16):
-                                    if int(stats[0]) == 7:
-                                        if int(stats[1]) < 10:
-                                            r.hset(mem, 's_weapon', 10)
-                                    else:
-                                        r.hset(mem, 'weapon', 7, {'s_weapon': 10})
-                                if int(stats[2]) in (0, 4):
-                                    if int(stats[2]) == 4:
-                                        if int(stats[3]) < 10:
-                                            r.hset(mem, 's_defense', 10)
-                                    else:
-                                        r.hset(mem, 'defense', 4, {'s_defense': 10})
+                                try:
+                                    stats = r.hmget(mem, 'weapon', 's_weapon', 'defense', 's_defense')
+                                    if int(stats[0]) in (0, 7, 16):
+                                        if int(stats[0]) == 7:
+                                            if int(stats[1]) < 10:
+                                                r.hset(mem, 's_weapon', 10)
+                                        else:
+                                            r.hset(mem, 'weapon', 7, {'s_weapon': 10})
+                                    if int(stats[2]) in (0, 4):
+                                        if int(stats[2]) == 4:
+                                            if int(stats[3]) < 10:
+                                                r.hset(mem, 's_defense', 10)
+                                        else:
+                                            r.hset(mem, 'defense', 4, {'s_defense': 10})
+                                except:
+                                    pass
                             await bot.send_message(cid, '\U0001F5E1 Клан готовий йти в бій.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -6140,13 +6143,16 @@ async def handle_query(call):
                         if int(r.hget(c, 'money')) >= 300:
                             r.hincrby(c, 'money', -300)
                             for mem in r.smembers('cl' + cid):
-                                if int(r.hget(mem, 'clan_time')) == datetime.now().day:
-                                    r.hincrby(mem, 'vodka', 9)
-                                    r.hincrby('all_vodka', 'vodka', 9)
-                                    spirit(int(vodka(mem)) * 9, mem, 0)
-                                    if int(r.hget(mem, 'support')) == 0:
-                                        r.hset(mem, 'support', 13)
-                                        r.hset(mem, 's_support', randint(1, 5))
+                                try:
+                                    if int(r.hget(mem, 'clan_time')) == datetime.now().day:
+                                        r.hincrby(mem, 'vodka', 9)
+                                        r.hincrby('all_vodka', 'vodka', 9)
+                                        spirit(int(vodka(mem)) * 9, mem, 0)
+                                        if int(r.hget(mem, 'support')) == 0:
+                                            r.hset(mem, 'support', 13)
+                                            r.hset(mem, 's_support', randint(1, 5))
+                                except:
+                                    pass
                             await bot.send_message(cid, '\u2622 Клан святкує відпрацьовану зміну.')
                         else:
                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
