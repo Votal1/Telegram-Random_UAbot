@@ -3531,7 +3531,7 @@ async def handle_query(call):
                     n = '2'
             if str(call.from_user.id).encode() in r.smembers('war_crime'):
                 allow = False
-                msg = 'Тобі заборонено заходити в міжчатові битви'
+                msg = 'Юзерботам заборонено заходити в міжчатові битви'
             if allow:
                 if r.scard('fighters_2' + str(call.message.chat.id)) < 5:
                     r.sadd('fighters_2' + str(call.message.chat.id), call.from_user.id)
