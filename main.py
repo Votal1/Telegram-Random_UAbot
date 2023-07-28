@@ -2048,6 +2048,8 @@ async def clan_war(message):
                     c2 = f'c{r.hget(c, "enemy").decode()}'
                     points1 = int(r.hget(c, "points"))
                     points2 = int(r.hget(c2, "points"))
+                    if c in ('c-1001769310881', 'c-1001940826678'):
+                        points2 = points1
                     packs = points1 // 10
                     salt, codes = 0, 0
                     msg = f'\U0001f4ef Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
