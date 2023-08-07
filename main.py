@@ -4430,6 +4430,10 @@ async def handle_query(call):
                 msg += '\n\U0001F31F +1'
             if call.message.chat.type != 'private':
                 msg += '\n' + str(len(r.smembers(call.message.chat.id)) - 1) + ' русаків втратили бойовий дух.'
+            try:
+                msg += f'\n\n{r.hget("promo_code", "death_promo_code").decode()}'
+            except:
+                pass
             await bot.edit_message_text(text=msg, chat_id=call.message.chat.id, message_id=call.message.message_id)
 
     elif call.data.startswith('full_list'):
