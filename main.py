@@ -6604,7 +6604,7 @@ async def echo(message):
             await bot.send_sticker(message.chat.id,
                                    'CAACAgIAAxkBAAEIjuhhS6oNEVDkBDkBUokJJLjTBRloBAACCQADT9w1GxCgVEna0OwQIQQ',
                                    reply_to_message_id=message.message_id)
-        elif 'мавпа' in message.text.lower():
+        elif 'мавпа' in message.text.lower() or 'чурка' in message.text.lower():
             await bot.send_sticker(message.chat.id,
                                    'CAACAgIAAxkBAAEMZfVim53LeR6F2ivPdG-_GmEUXcigIQACDAgAAnTPIUglz-b_Qh_CJCQE',
                                    reply_to_message_id=message.message_id)
