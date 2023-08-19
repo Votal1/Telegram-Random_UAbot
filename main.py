@@ -28,6 +28,8 @@ from content.packs import open_pack, check_slot, open_gift2
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
 
+from content.packs_new import open_pack2
+
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
 
@@ -1616,6 +1618,11 @@ async def pack(message):
             msg = open_pack(message.from_user.id, f'pack_unpack_{message.from_user.id}', None)
             if msg:
                 await message.reply(msg[0], reply_markup=msg[1])
+            if message.from_user.id == 456514639:
+                count = message.text.split()[1]
+                msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
+                if msg:
+                    await message.reply(msg[0], reply_markup=msg[1])
         else:
             await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
                                 '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
