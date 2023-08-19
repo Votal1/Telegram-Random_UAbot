@@ -544,7 +544,7 @@ def open_pack2(uid, cdata, edit, count):
                     if count == 1:
                         msg = '\U0001f535 Знайдено: \U0001F4B5 50 гривень.'
                     else:
-                        msg += f'\n\U0001f535 \U0001F4B5 +{rewards["50grn"]}'
+                        msg += f'\n\U0001f535 \U0001F4B5 +{rewards["50grn"] * 50}'
                     r.hincrby(uid, 'money', rewards['50grn'] * 50)
                     quest(uid, 3, 1, 4)
                 if rewards['vodka']:
