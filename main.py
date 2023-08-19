@@ -1619,7 +1619,7 @@ async def pack(message):
             if msg:
                 await message.reply(msg[0], reply_markup=msg[1])
             if message.from_user.id == 456514639:
-                count = message.text.split()[1]
+                count = int(message.text.split()[1])
                 msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
                 if msg:
                     await message.reply(msg[0], reply_markup=msg[1])
