@@ -609,7 +609,7 @@ def open_pack2(uid, cdata, edit, count):
                         msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити' \
                               ' непогану шапку для русака.\n\U0001F464 +10'
                     else:
-                        msg += f'\U0001f7e3 \U0001F464 +{ran * 10}'
+                        msg += f'\n\U0001f7e3 \U0001F464 +{ran * 10}'
                     r.hincrby(uid, 'sch', ran * 10)
                     if int(r.hget(uid, 'head')) in (1, 7) and count == 1:
                         r.hincrby(uid, 's_head', ran * 20)
