@@ -5620,10 +5620,17 @@ async def handle_query(call):
                 elif call.from_user.id == int(call.data.split('_')[2]):
                     if check_slot(call.from_user.id, call.data):
                         msg = call.message.text
+
+                        markup = call.message.reply_markup
+                        markup2 = InlineKeyboardMarkup()
+                        for i in markup.inline_keyboard:
+                            if i[0]['callback_data'] != call.data:
+                                markup2.add(i[0])
+
                         if msg.endswith('#loot'):
                             msg = msg[:-5]
                         await bot.edit_message_text(msg, call.message.chat.id,
-                                                    call.message.message_id, reply_markup=None)
+                                                    call.message.message_id, reply_markup=markup2)
                         open_pack(call.from_user.id, call.data, call.message.text)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,

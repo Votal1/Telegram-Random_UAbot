@@ -12,6 +12,11 @@ def open_pack(uid, cdata, edit):
     msg = ''
     if uid == int(cdata.split('_')[2]):
         cl = int(r.hget(uid, 'class'))
+        s = 1
+        try:
+            s = int(cdata.split('_')[3])
+        except:
+            pass
         if cdata.startswith('pack_unpack_'):
             if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
                 if int(r.hget(uid, 'packs')) > 0:
@@ -201,109 +206,109 @@ def open_pack(uid, cdata, edit):
         elif cdata.startswith('pack_class_'):
             if cl == 1 or cl == 11 or cl == 21:
                 if int(r.hget(uid, 'weapon')) in (11, 22, 33):
-                    r.hincrby(uid, 's_weapon', 5)
+                    r.hincrby(uid, 's_weapon', 5 * s)
                 else:
                     r.hset(uid, 'weapon', 11)
-                    r.hset(uid, 's_weapon', 5)
+                    r.hset(uid, 's_weapon', 5 * s)
             elif cl == 2 or cl == 12 or cl == 22:
                 if int(r.hget(uid, 'weapon')) in (12, 23, 34):
-                    r.hincrby(uid, 's_weapon', 25)
+                    r.hincrby(uid, 's_weapon', 25 * s)
                 else:
                     r.hset(uid, 'weapon', 12)
-                    r.hset(uid, 's_weapon', 25)
+                    r.hset(uid, 's_weapon', 25 * s)
             elif cl == 3 or cl == 13 or cl == 23:
                 if int(r.hget(uid, 'weapon')) in (13, 24, 35):
-                    r.hincrby(uid, 's_weapon', 3)
+                    r.hincrby(uid, 's_weapon', 3 * s)
                 else:
                     r.hset(uid, 'weapon', 13)
-                    r.hset(uid, 's_weapon', 3)
+                    r.hset(uid, 's_weapon', 3 * s)
             elif cl == 4 or cl == 14 or cl == 24:
                 if int(r.hget(uid, 'weapon')) in (14, 25, 36):
-                    r.hincrby(uid, 's_weapon', 1)
+                    r.hincrby(uid, 's_weapon', 1 * s)
                 else:
                     r.hset(uid, 'weapon', 14)
-                    r.hset(uid, 's_weapon', 1)
+                    r.hset(uid, 's_weapon', 1 * s)
             elif cl == 5 or cl == 15 or cl == 25:
                 if int(r.hget(uid, 'weapon')) in (15, 26, 37):
-                    r.hincrby(uid, 's_weapon', 30)
+                    r.hincrby(uid, 's_weapon', 30 * s)
                 else:
                     r.hset(uid, 'weapon', 15)
-                    r.hset(uid, 's_weapon', 30)
+                    r.hset(uid, 's_weapon', 30 * s)
             elif cl == 6 or cl == 16 or cl == 26:
                 if int(r.hget(uid, 'defense')) in (16, 17, 18):
                     r.hincrby(uid, 's_defense', 10)
                 else:
                     r.hset(uid, 'defense', 16)
-                    r.hset(uid, 's_defense', 10)
+                    r.hset(uid, 's_defense', 10 * s)
             elif cl == 7 or cl == 17 or cl == 27:
                 if int(r.hget(uid, 'weapon')) in (17, 28, 38):
-                    r.hincrby(uid, 's_weapon', 8)
+                    r.hincrby(uid, 's_weapon', 8 * s)
                 else:
                     r.hset(uid, 'weapon', 17)
-                    r.hset(uid, 's_weapon', 8)
+                    r.hset(uid, 's_weapon', 8 * s)
             elif cl == 8 or cl == 18 or cl == 28:
                 if int(r.hget(uid, 'weapon')) in (18, 29, 39):
-                    r.hincrby(uid, 's_weapon', 2)
+                    r.hincrby(uid, 's_weapon', 2 * s)
                 else:
                     r.hset(uid, 'weapon', 18)
-                    r.hset(uid, 's_weapon', 2)
+                    r.hset(uid, 's_weapon', 2 * s)
             elif cl == 9 or cl == 19 or cl == 29:
                 if int(r.hget(uid, 'weapon')) in (19, 30, 40):
-                    r.hincrby(uid, 's_weapon', 8)
+                    r.hincrby(uid, 's_weapon', 8 * s)
                 else:
                     r.hset(uid, 'weapon', 19)
-                    r.hset(uid, 's_weapon', 8)
+                    r.hset(uid, 's_weapon', 8 * s)
             elif cl == 10 or cl == 20 or cl == 30:
                 if int(r.hget(uid, 'weapon')) in (20, 31, 41):
-                    r.hincrby(uid, 's_weapon', 10)
+                    r.hincrby(uid, 's_weapon', 10 * s)
                 else:
                     r.hset(uid, 'weapon', 20)
-                    r.hset(uid, 's_weapon', 10)
+                    r.hset(uid, 's_weapon', 10 * s)
             elif cl == 31 or cl == 32 or cl == 33:
                 if int(r.hget(uid, 'support')) in (2, 9, 14):
-                    r.hincrby(uid, 's_support', 5)
+                    r.hincrby(uid, 's_support', 5 * s)
                 else:
                     r.hset(uid, 'support', 2)
-                    r.hset(uid, 's_support', 5)
+                    r.hset(uid, 's_support', 5 * s)
             elif cl == 34 or cl == 35 or cl == 36:
                 if int(r.hget(uid, 'weapon')) in (21, 32, 42):
-                    r.hincrby(uid, 's_weapon', 15)
+                    r.hincrby(uid, 's_weapon', 15 * s)
                 else:
                     r.hset(uid, 'weapon', 21)
-                    r.hset(uid, 's_weapon', 15)
+                    r.hset(uid, 's_weapon', 15 * s)
             return edit, None
 
         elif cdata.startswith('pack_mushroom_'):
             if int(r.hget(uid, 'intellect')) < 20:
                 if int(r.hget(uid, 'support')) == 6:
-                    r.hincrby(uid, 's_support', 1)
+                    r.hincrby(uid, 's_support', 1 * s)
                 else:
                     r.hset(uid, 'support', 6)
-                    r.hset(uid, 's_support', 1)
+                    r.hset(uid, 's_support', 1 * s)
             return edit, None
 
         elif cdata.startswith('pack_foil_'):
             if int(r.hget(uid, 'head')) in (1, 7):
-                r.hincrby(uid, 's_head', 20)
+                r.hincrby(uid, 's_head', 20 * s)
             else:
                 r.hset(uid, 'head', 1)
-                r.hset(uid, 's_head', 20)
+                r.hset(uid, 's_head', 20 * s)
             return edit, None
 
         elif cdata.startswith('pack_armor_'):
             if int(r.hget(uid, 'defense')) == 2:
-                r.hincrby(uid, 's_defense', 50)
+                r.hincrby(uid, 's_defense', 50 * s)
             else:
                 r.hset(uid, 'defense', 2)
-                r.hset(uid, 's_defense', 50)
+                r.hset(uid, 's_defense', 50 * s)
             return edit, None
 
         elif cdata.startswith('pack_rpg_'):
             if int(r.hget(uid, 'weapon')) == 2:
-                r.hincrby(uid, 's_weapon', 1)
+                r.hincrby(uid, 's_weapon', 1 * s)
             else:
                 r.hset(uid, 'weapon', 2)
-                r.hset(uid, 's_weapon', 1)
+                r.hset(uid, 's_weapon', 1 * s)
             return edit, None
 
         elif cdata.startswith('pack_fish_'):
@@ -316,10 +321,10 @@ def open_pack(uid, cdata, edit):
 
         elif cdata.startswith('pack_jew_'):
             if int(r.hget(uid, 'head')) == 6:
-                r.hincrby(uid, 's_head', 7)
+                r.hincrby(uid, 's_head', 7 * s)
             else:
                 r.hset(uid, 'head', 6)
-                r.hset(uid, 's_head', 7)
+                r.hset(uid, 's_head', 7 * s)
             return edit, None
 
         else:
