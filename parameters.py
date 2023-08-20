@@ -13,12 +13,12 @@ def spirit(value, uid, c):
         r.hset(uid, 'spirit', 0)
 
 
-def vodka(uid):
-    ran = randint(10, 70)
+def vodka(uid, count=1):
+    ran = randint(10 * count, 70 * count)
     increase = ran * int(r.hget(uid, 's1'))
     spirit(increase, uid, 0)
-    r.hincrby(uid, 'vodka', 1)
-    r.hincrby('all_vodka', 'vodka', 1)
+    r.hincrby(uid, 'vodka', count)
+    r.hincrby('all_vodka', 'vodka', count)
     return str(increase)
 
 

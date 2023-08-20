@@ -527,12 +527,7 @@ def open_pack2(uid, cdata, edit, count):
                     r.hincrby(uid, 'money', rewards['50grn'] * 50)
                     quest(uid, 3, 1, 4)
                 if rewards['vodka']:
-                    vo = 0
-                    for v in range(rewards['vodka'] * 20):
-                        if vo < 10000:
-                            vo += int(vodka(uid))
-                    if vo > 10000:
-                        vo = 10000
+                    vo = int(vodka(uid, count=rewards['vodka']))
                     if count == 1:
                         msg = f'\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 \U0001F54A +{vo}'
                     else:
