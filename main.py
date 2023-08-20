@@ -24,11 +24,9 @@ from content.buttons import battle_button, battle_button_2, battle_button_3, \
 from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set, empty_backpack
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack, check_slot, open_gift2
+from content.packs import open_pack, open_pack2, check_slot, open_gift2
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
-
-from content.packs_new import open_pack2
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -1615,7 +1613,7 @@ async def pack(message):
             pass
         elif packs > 0:
             r.hset('pack_ts2', message.from_user.id, timestamp)
-            msg = open_pack(message.from_user.id, f'pack_unpack_{message.from_user.id}', None)
+            msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, 1)
             if msg:
                 await message.reply(msg[0], reply_markup=msg[1])
             if message.from_user.id == 456514639:
@@ -5613,7 +5611,7 @@ async def handle_query(call):
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
                 if call.data.startswith('pack_unpack'):
-                    msg = open_pack(call.from_user.id, call.data, call.message.text)
+                    msg = open_pack2(call.from_user.id, call.data, call.message.text, 1)
                     if msg:
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
@@ -5631,7 +5629,7 @@ async def handle_query(call):
                             msg = msg[:-5]
                         await bot.edit_message_text(msg, call.message.chat.id,
                                                     call.message.message_id, reply_markup=markup2)
-                        open_pack(call.from_user.id, call.data, call.message.text)
+                        open_pack2(call.from_user.id, call.data, call.message.text, 1)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Неможливо взяти спорядження, '
