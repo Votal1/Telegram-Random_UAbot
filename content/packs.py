@@ -478,7 +478,7 @@ def open_pack2(uid, cdata, edit, count):
                     elif int(r.hget(uid, 'defense')) in (1, 4):
                         r.hincrby(uid, 's_defense', rewards['spike'])
                 if rewards['4grn']:
-                    money = rewards['fragment'] * 4
+                    money = rewards['4grn'] * 4
                     if count == 1:
                         msg = '\n\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).' \
                               f'\n\U0001F4B5 +{money}'
