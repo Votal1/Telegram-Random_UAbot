@@ -1613,14 +1613,17 @@ async def pack(message):
             pass
         elif packs > 0:
             r.hset('pack_ts2', message.from_user.id, timestamp)
-            msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, 1)
+            count = 1
+            try:
+                if message.from_user.id in [456514639, 764407699, 1760585978, 1042645070, 312085379, 1290022349]:
+                    count = int(message.text.split()[1])
+                    if count > 20:
+                        count = 1
+            except:
+                pass
+            msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
             if msg:
                 await message.reply(msg[0], reply_markup=msg[1])
-            if message.from_user.id == 456514639:
-                count = int(message.text.split()[1])
-                msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
-                if msg:
-                    await message.reply(msg[0], reply_markup=msg[1])
         else:
             await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
                                 '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
