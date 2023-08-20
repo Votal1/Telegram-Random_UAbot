@@ -512,7 +512,7 @@ def open_pack2(uid, cdata, edit, count):
                         msg = '\n\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).' \
                               f'\n\U0001F4B5 +{money}'
                     else:
-                        msg = f'\n\u26AA \U0001F4B5 +{money}'
+                        msg += f'\n\u26AA \U0001F4B5 +{money}'
                     r.hincrby(uid, 'money', money)
                     quest(uid, 3, 1, 4)
                 if rewards['fragment']:
