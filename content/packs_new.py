@@ -368,9 +368,9 @@ def open_pack2(uid, cdata, edit, count):
     if uid == int(cdata.split('_')[2]):
         cl = int(r.hget(uid, 'class'))
         if cdata.startswith('pack_unpack_'):
-            if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) > 0:
-                if int(r.hget(uid, 'packs')) > 0:
-                    r.hincrby(uid, 'packs', -1)
+            if int(r.hget(uid, 'money')) >= 20 or int(r.hget(uid, 'packs')) >= count:
+                if int(r.hget(uid, 'packs')) >= count:
+                    r.hincrby(uid, 'packs', -count)
                 else:
                     r.hincrby(uid, 'money', -20)
                 r.hincrby(uid, 'opened', 1)
