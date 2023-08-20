@@ -350,8 +350,8 @@ def open_pack2(uid, cdata, edit, count):
                 else:
                     r.hincrby(uid, 'money', -20)
                     count = 1
-                r.hincrby(uid, 'opened', 1)
-                r.hincrby('all_opened', 'packs', 1)
+                r.hincrby(uid, 'opened', count)
+                r.hincrby('all_opened', 'packs', count)
                 quest(uid, 1, -5)
 
                 rewards = {
