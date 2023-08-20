@@ -344,6 +344,7 @@ def open_pack2(uid, cdata, edit, count):
                     r.hincrby(uid, 'packs', -count)
                 else:
                     r.hincrby(uid, 'money', -20)
+                    count = 1
                 r.hincrby(uid, 'opened', 1)
                 r.hincrby('all_opened', 'packs', 1)
                 quest(uid, 1, -5)
