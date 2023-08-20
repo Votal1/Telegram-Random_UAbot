@@ -335,7 +335,7 @@ def open_pack(uid, cdata, edit):
 
 def open_pack2(uid, cdata, edit, count):
     markup = InlineKeyboardMarkup()
-    msg = ''
+    msg, loot = '', 0
     if uid == int(cdata.split('_')[2]):
         cl = int(r.hget(uid, 'class'))
         if cdata.startswith('pack_unpack_'):
@@ -463,6 +463,7 @@ def open_pack2(uid, cdata, edit, count):
                         markup.add(InlineKeyboardButton(text='Взяти спорядження',
                                                         callback_data=f'pack_class_{uid}_{rewards["class"]}'))
                         msg += f'\n\u26AA {icons_simple[cl]} - {rewards["class"]}'
+                        loot = 1
                 if rewards['spike']:
                     if count == 1:
                         msg = '\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).'
@@ -550,6 +551,8 @@ def open_pack2(uid, cdata, edit, count):
                         if count == 1:
                             msg = '\U0001f7e3 Знайдено: \U0001F344 Мухомор королівський [Допомога, міцність=1] ' \
                                   '- якщо в дуелі у ворога більший інтелект, додає +1 інтелекту.\n#loot'
+                        else:
+                            loot = 1
                         if int(r.hget(uid, 'support')) != 6:
                             markup.add(InlineKeyboardButton(text='Взяти мухомор',
                                                             callback_data=f'pack_mushroom_{uid}_{mushroom}'))
@@ -589,6 +592,8 @@ def open_pack2(uid, cdata, edit, count):
                         markup.add(InlineKeyboardButton(text='Взяти шапочку', callback_data=f'pack_foil_{uid}_{ran}'))
                         if count == 1:
                             msg += '\n#loot'
+                        else:
+                            loot = 1
                 if rewards['300grn']:
                     ran = rewards['300grn']
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
@@ -616,6 +621,8 @@ def open_pack2(uid, cdata, edit, count):
                                                         callback_data=f'pack_armor_{uid}_{ran}'))
                         if count == 1:
                             msg += '\n#loot'
+                        else:
+                            loot = 1
                 if rewards['rpg']:
                     ran = rewards['rpg']
                     if count == 1:
@@ -631,6 +638,8 @@ def open_pack2(uid, cdata, edit, count):
                         markup.add(InlineKeyboardButton(text='Взяти РПГ-7', callback_data=f'pack_rpg_{uid}_{ran}'))
                         if count == 1:
                             msg += '\n#loot'
+                        else:
+                            loot = 1
                 if rewards['fish']:
                     ran = rewards['fish']
                     markup.add(InlineKeyboardButton(text='Взяти Швайнокарася', callback_data=f'pack_fish_{uid}_{ran}'))
@@ -639,6 +648,7 @@ def open_pack2(uid, cdata, edit, count):
                               'може виконувати бажання русаків (відпочивати, нажертись, напитись).\n#loot'
                     else:
                         msg += f'\n\U0001f7e1 Швайнокарась - {ran}'
+                        loot = 1
                 if rewards['cap']:
                     ran = rewards['cap']
                     if count == 1:
@@ -653,6 +663,8 @@ def open_pack2(uid, cdata, edit, count):
                         markup.add(InlineKeyboardButton(text='Взяти ярмулку', callback_data=f'pack_jew_{uid}_{ran}'))
                         if count == 1:
                             msg += '\n#loot'
+                        else:
+                            loot = 1
                 if rewards['strap']:
                     ran = rewards['strap']
                     if count == 1:
@@ -661,6 +673,8 @@ def open_pack2(uid, cdata, edit, count):
                     else:
                         msg += f'\n\U0001f7e1 \U0001F31F +{ran}'
                     r.hincrby(uid, 'strap', ran)
+                if loot:
+                    msg += '\n\n#loot'
             else:
                 msg = 'Недостатньо коштів на рахунку.'
 

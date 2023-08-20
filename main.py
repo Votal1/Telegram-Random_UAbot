@@ -5625,7 +5625,7 @@ async def handle_query(call):
                             if i[0]['callback_data'] != call.data:
                                 markup2.add(i[0])
 
-                        if msg.endswith('#loot'):
+                        if msg.endswith('#loot') and len(markup2.inline_keyboard) == 0:
                             msg = msg[:-5]
                         await bot.edit_message_text(msg, call.message.chat.id,
                                                     call.message.message_id, reply_markup=markup2)
