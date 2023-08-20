@@ -396,7 +396,7 @@ def open_pack2(uid, cdata, edit, count):
                     technics = nothing = points = 0
                     if np:
                         buff = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 41
-                        points = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 500
+                        points_limit = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 500
                     for n in range(rewards['nothing']):
                         if np and choice([0, 1]) == 1:
                             if buff and points_limit:
