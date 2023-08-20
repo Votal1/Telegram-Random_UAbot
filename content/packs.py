@@ -452,7 +452,7 @@ def open_pack2(uid, cdata, edit, count):
                             r.hincrby(uid, 's_support', 5)
                         elif cl in (34, 35, 36) and int(r.hget(uid, 'weapon')) in (21, 32, 42):
                             r.hincrby(uid, 's_weapon', 15)
-                        if cl > 0:
+                        elif cl > 0:
                             markup.add(InlineKeyboardButton(text='Взяти спорядження',
                                                             callback_data=f'pack_class_{uid}'))
                             msg += '\n#loot'
