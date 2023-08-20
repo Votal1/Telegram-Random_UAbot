@@ -624,7 +624,7 @@ def open_pack2(uid, cdata, edit, count):
                         msg = f'\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої бараболі і ' \
                               f'закруток з помідорами (можна згодувати русаку).\n\u2B50 +1 \U0001F4B5 +300 {emoji} +1'
                     else:
-                        msg += f'\n\U0001f7e3 \U0001F4B5 +{ran} {emoji} +1'
+                        msg += f'\n\U0001f7e3 \U0001F4B5 +{ran * 300} {emoji} +1'
                     r.hincrby(uid, 'money', ran * 300)
                     r.hset(uid, 'time', 0)
                     if r.hexists(uid, 'ac13') == 0:
