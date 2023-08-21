@@ -563,7 +563,7 @@ def open_pack2(uid, cdata, edit, count):
                         if count == 1:
                             msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                         else:
-                            msg += f'\n\U0001f7e3 \U0001F344 +{mushroom}'
+                            msg += f'\n\u26AA Теж пил і гнилі недоїдки - {mushroom}'
                 if rewards['tape']:
                     extra = r.hget(uid, 'extra_slot')
                     if extra:
