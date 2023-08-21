@@ -554,6 +554,7 @@ def open_pack2(uid, cdata, edit, count):
                                   '- якщо в дуелі у ворога більший інтелект, додає +1 інтелекту.\n#loot'
                         else:
                             loot = 1
+                            msg += f'\n\U0001f7e3 \U0001F344 +{mushroom}'
                         if int(r.hget(uid, 'support')) != 6:
                             markup.add(InlineKeyboardButton(text='Взяти мухомор',
                                                             callback_data=f'pack_mushroom_{uid}_{mushroom}'))
