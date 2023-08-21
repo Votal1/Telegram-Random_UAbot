@@ -1615,11 +1615,11 @@ async def pack(message):
             r.hset('pack_ts2', message.from_user.id, timestamp)
             count = 1
             try:
-                if message.from_user.id in [456514639, 764407699, 1760585978, 1042645070,
-                                            721627017, 1290022349, 354277131]:
-                    count = int(message.text.split()[1])
-                    if count > 20 or count < 1:
-                        count = 1
+                #if message.from_user.id in [456514639, 764407699, 1760585978, 1042645070,
+                 #                           721627017, 1290022349, 354277131]:
+                count = int(message.text.split()[1])
+                if count > 20 or count < 1:
+                    count = 1
             except:
                 pass
             msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
