@@ -286,7 +286,8 @@ def c_shop(c, page):
                     msg += '\U0001f7e3\U0001f7e3 3% шанс непомітно отримати квестове очко за перемогу в дуелі.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3 - \U0001F47E 180',
                                                     callback_data=cdata('clan_buff_4_2_1', c)))
-                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території.\n'
+                    msg += '\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків за охорону території, ' \
+                           'якщо увімкнена зарплата.\n'
                     markup.add(InlineKeyboardButton(text='\U0001f7e3\U0001f7e3\U0001f7e3 - \U0001F916 10',
                                                     callback_data=cdata('clan_buff_4_2_2', c)))
 

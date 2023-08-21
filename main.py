@@ -6529,8 +6529,8 @@ async def handle_query(call):
                                         if int(r.hget(c, 'codes')) >= 10:
                                             r.hincrby(c, 'codes', -10)
                                             r.hset(c, 'buff_4', 22)
-                                            msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків' \
-                                                  ' за охорону території.'
+                                            msg = 'Отримано баф:\n\n\U0001f7e3\U0001f7e3\U0001f7e3 +12 квестових очків'\
+                                                  ' за охорону території, якщо увімкнена зарплата.'
                                             await bot.send_message(cid, msg)
                                         else:
                                             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
