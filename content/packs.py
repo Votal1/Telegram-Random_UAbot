@@ -335,7 +335,7 @@ def open_pack(uid, cdata, edit):
 
 def open_pack2(uid, cdata, edit, count):
     markup = InlineKeyboardMarkup()
-    msg, loot = '', 0
+    msg, loot, nothing = '', 0, 0
     if uid == int(cdata.split('_')[2]):
         cl = int(r.hget(uid, 'class'))
         s = 1
@@ -399,7 +399,7 @@ def open_pack2(uid, cdata, edit, count):
                 if rewards['nothing']:
                     np = checkClan(uid, base=2, building='new_post')
                     buff = points_limit = False
-                    technics = nothing = points = 0
+                    technics = points = 0
                     if np:
                         buff = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'buff_4')) == 41
                         points_limit = int(r.hget('c' + r.hget(uid, 'clan').decode(), 'q-points')) < 500
@@ -412,9 +412,7 @@ def open_pack2(uid, cdata, edit, count):
                         else:
                             nothing += 1
                     if nothing:
-                        if count > 1:
-                            msg += f'\n\u26AA Пил і гнилі недоїдки - {nothing}'
-                        else:
+                        if count == 1:
                             msg += '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                     if technics:
                         quest(uid, 3, 3, 3)
@@ -564,7 +562,7 @@ def open_pack2(uid, cdata, edit, count):
                         if count == 1:
                             msg = '\u26AA В пакунку знайдено лише пил і гнилі недоїдки.'
                         else:
-                            msg += f'\n\u26AA Теж пил і гнилі недоїдки - {mushroom}'
+                            nothing += 1
                 if rewards['tape']:
                     extra = r.hget(uid, 'extra_slot')
                     if extra:
@@ -675,6 +673,9 @@ def open_pack2(uid, cdata, edit, count):
                     else:
                         msg += f'\n\U0001f7e1 \U0001F31F +{ran}'
                     r.hincrby(uid, 'strap', ran)
+                if nothing:
+                    if count > 1:
+                        msg = f'\n\u26AA Пил і гнилі недоїдки - {nothing}{msg}'
                 if loot:
                     msg += '\n\n#loot'
             else:
