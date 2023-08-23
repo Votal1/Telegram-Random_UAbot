@@ -418,14 +418,14 @@ def open_pack2(uid, cdata, edit, count):
                         quest(uid, 3, 3, 3)
                         r.hincrby('c' + r.hget(uid, 'clan').decode(), 'technics', technics)
                         if count > 1:
-                            msg += f'\n\u26AA \U0001F4FB +{technics}'
+                            msg += f'\n\u26AA Радіотехніка \U0001F4FB +{technics}'
                         else:
                             msg += f'\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001F4FB +{technics}'
                     if points:
                         quest(uid, 3, 3, 3)
                         q_points(uid, points)
                         if count > 1:
-                            msg += f'\n\u26AA \U0001fa99 +{points}'
+                            msg += f'\n\u26AA Очки \U0001fa99 +{points}'
                         else:
                             msg += f'\u26AA В пакунку знайдено робочу радіотехніку.\n\U0001fa99 +{points}'
                 if rewards['class']:
@@ -466,13 +466,13 @@ def open_pack2(uid, cdata, edit, count):
                         ran = rewards['class']
                         markup.add(InlineKeyboardButton(text='Взяти спорядження',
                                                         callback_data=f'pack_class_{uid}_{ran}'))
-                        msg += f'\n\u26AA {icons_simple[cl]} - {ran}'
+                        msg += f'\n\u26AA Спорядження {icons_simple[cl]} - {ran}'
                         loot = 1
                 if rewards['spike']:
                     if count == 1:
                         msg = '\u26AA Знайдено: \U0001F6E1\U0001F5E1 Колючий комплект (дрин і щит).'
                     else:
-                        msg += f'\n\u26AA \U0001F6E1\U0001F5E1 - {rewards["spike"]}'
+                        msg += f'\n\u26AA Дрин і щит \U0001F6E1\U0001F5E1 - {rewards["spike"]}'
                     if int(r.hget(uid, 'weapon')) in (0, 16):
                         r.hset(uid, 'weapon', 1)
                         r.hset(uid, 's_weapon', rewards['spike'])
@@ -489,7 +489,7 @@ def open_pack2(uid, cdata, edit, count):
                         msg = '\n\u26AA Знайдено: пошкоджений уламок бронетехніки (здати на металобрухт).' \
                               f'\n\U0001F4B5 +{money}'
                     else:
-                        msg += f'\n\u26AA \U0001F4B5 +{money}'
+                        msg += f'\n\u26AA Металобрухт \U0001F4B5 +{money}'
                     r.hincrby(uid, 'money', money)
                     quest(uid, 3, 1, 4)
                 if rewards['fragment']:
@@ -503,25 +503,25 @@ def open_pack2(uid, cdata, edit, count):
                         if count == 1:
                             msg += '\U0001F6E1 7'
                         else:
-                            msg += f'\n\u26AA \U0001F6E1 +{strength * 7}'
+                            msg += f'\n\u26AA Уламок \U0001F6E1 +{strength * 7}'
                     elif int(r.hget(uid, 'defense')) in (2, 9, 16, 17, 18):
                         r.hincrby(uid, 's_defense', strength * 7)
                         if count == 1:
                             msg += '\U0001F6E1 +7'
                         else:
-                            msg += f'\n\u26AA \U0001F6E1 +{strength * 7}'
+                            msg += f'\n\u26AA Уламок \U0001F6E1 +{strength * 7}'
                     else:
                         r.hincrby(uid, 'money', strength * 10)
                         if count == 1:
                             msg += '\U0001F4B5 +10'
                         else:
-                            msg += f'\n\u26AA \U0001F4B5 +{strength * 10}'
+                            msg += f'\n\u26AA Уламок \U0001F4B5 +{strength * 10}'
                         quest(uid, 3, 1, 4)
                 if rewards['50grn']:
                     if count == 1:
                         msg = '\U0001f535 Знайдено: \U0001F4B5 50 гривень.'
                     else:
-                        msg += f'\n\U0001f535 \U0001F4B5 +{rewards["50grn"] * 50}'
+                        msg += f'\n\U0001f535 Гривні \U0001F4B5 +{rewards["50grn"] * 50}'
                     r.hincrby(uid, 'money', rewards['50grn'] * 50)
                     quest(uid, 3, 1, 4)
                 if rewards['vodka']:
@@ -529,7 +529,7 @@ def open_pack2(uid, cdata, edit, count):
                     if count == 1:
                         msg = f'\U0001f535 Цей пакунок виявився ящиком горілки.\n\u2622 +20 \U0001F54A +{vo}'
                     else:
-                        msg += f'\n\U0001f535 \u2622 +{rewards["vodka"]}'
+                        msg += f'\n\U0001f535 Ящик горілки \u2622 +{rewards["vodka"]}'
                 if rewards['dead']:
                     quest(uid, 1, -4)
                     s5 = int(r.hget(uid, 's5')) >= 2
@@ -541,7 +541,7 @@ def open_pack2(uid, cdata, edit, count):
                     if count == 1:
                         msg = f'\U0001f535 В цьому пакунку лежать мертві русаки...\n\u2620\uFE0F +{num}'
                     else:
-                        msg += f'\n\U0001f535 \u2620\uFE0F +{num}'
+                        msg += f'\n\U0001f535 Мертвий русак \u2620\uFE0F +{num}'
                     r.hincrby(uid, 'deaths', num)
                     r.hincrby('all_deaths', 'deaths', num)
                 if rewards['mushroom']:
@@ -552,7 +552,7 @@ def open_pack2(uid, cdata, edit, count):
                                   '- якщо в дуелі у ворога більший інтелект, додає +1 інтелекту.\n#loot'
                         else:
                             loot = 1
-                            msg += f'\n\U0001f7e3 \U0001F344 +{mushroom}'
+                            msg += f'\n\U0001f7e3 Мухомор \U0001F344 +{mushroom}'
                         if int(r.hget(uid, 'support')) != 6:
                             markup.add(InlineKeyboardButton(text='Взяти мухомор',
                                                             callback_data=f'pack_mushroom_{uid}_{mushroom}'))
@@ -577,14 +577,14 @@ def open_pack2(uid, cdata, edit, count):
                         msg = f'\U0001f7e3 В пакунку знайдено ізострічку - незамінний компонент для покращення ' \
                               f'спорядження\n🌀 +{ran}'
                     else:
-                        msg += f'\n\U0001f7e3 🌀 +{ran}'
+                        msg += f'\n\U0001f7e3 Ізострічка 🌀 +{ran}'
                 if rewards['foil']:
                     ran = rewards['foil']
                     if count == 1:
                         msg = '\U0001f7e3 В пакунку знайдено кілька упаковок фольги. З неї можна зробити' \
                               ' непогану шапку для русака.\n\U0001F464 +10'
                     else:
-                        msg += f'\n\U0001f7e3 \U0001F464 +{ran * 10}'
+                        msg += f'\n\U0001f7e3 Фольга \U0001F464 +{ran * 10}'
                     r.hincrby(uid, 'sch', ran * 10)
                     if int(r.hget(uid, 'head')) in (1, 7) and count == 1:
                         r.hincrby(uid, 's_head', ran * 20)
@@ -601,7 +601,7 @@ def open_pack2(uid, cdata, edit, count):
                         msg = f'\U0001f7e3 Крім гаманця з грошима, в цьому пакунку лежить багато гнилої бараболі і ' \
                               f'закруток з помідорами (можна згодувати русаку).\n\u2B50 +1 \U0001F4B5 +300 {emoji} +1'
                     else:
-                        msg += f'\n\U0001f7e3 \U0001F4B5 +{ran * 300} {emoji} +1'
+                        msg += f'\n\U0001f7e3 Гаманець і їжа \U0001F4B5 +{ran * 300} {emoji} +1'
                     r.hincrby(uid, 'money', ran * 300)
                     r.hset(uid, 'time', 0)
                     if r.hexists(uid, 'ac13') == 0:
@@ -671,7 +671,7 @@ def open_pack2(uid, cdata, edit, count):
                         msg = '\U0001f7e1 В пакунку лежить дорога парадна форма якогось російського генерала.\n' \
                               '\U0001F31F +1'
                     else:
-                        msg += f'\n\U0001f7e1 \U0001F31F +{ran}'
+                        msg += f'\n\U0001f7e1 Погон \U0001F31F +{ran}'
                     r.hincrby(uid, 'strap', ran)
                 if nothing:
                     if count > 1:
