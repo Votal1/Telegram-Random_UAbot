@@ -1120,10 +1120,10 @@ async def merchant(message):
 async def donate(message):
     try:
         markup = InlineKeyboardMarkup()
-        url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
+        url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=20'
         markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
         msg = 'Якщо хтось хоче підтримати автора, то може задонатити і отримати\n\U0001F31F погон російського ' \
-              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону — 30 грн.' \
+              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Акційна ціна одного погону — 20 грн!' \
               '\n\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.'
         await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True, parse_mode='HTML')
         if message.chat.type != 'private':
