@@ -335,7 +335,7 @@ def open_pack(uid, cdata, edit):
 
 def open_pack2(uid, cdata, edit, count):
     markup = InlineKeyboardMarkup()
-    msg, loot, nothing = '', 0, 0
+    msg, opened, loot, nothing = '', '', 0, 0
     if uid == int(cdata.split('_')[2]):
         cl = int(r.hget(uid, 'class'))
         s = 1
@@ -397,7 +397,7 @@ def open_pack2(uid, cdata, edit, count):
                         weights=[20, 18, 15, 12, 10, 7, 6, 5, 2, 1, 2, 1, 0.225, 0.225, 0.225, 0.225, 0.1])
                     rewards[ran[0]] += 1
                 if count > 1:
-                    msg = f'\U0001F4E6 Відкрито: {count}\n'
+                    opened = f'\U0001F4E6 Відкрито: {count}\n'
                 if rewards['nothing']:
                     np = checkClan(uid, base=2, building='new_post')
                     buff = points_limit = False
@@ -677,7 +677,9 @@ def open_pack2(uid, cdata, edit, count):
                     r.hincrby(uid, 'strap', ran)
                 if nothing:
                     if count > 1:
-                        msg = f'\n\u26AA Пил і гнилі недоїдки - {nothing}{msg}'
+                        msg = f'{opened}\n\u26AA Пил і гнилі недоїдки - {nothing}{msg}'
+                    else:
+                        msg = f'{opened}{msg}'
                 if loot:
                     msg += '\n\n#loot'
             else:
