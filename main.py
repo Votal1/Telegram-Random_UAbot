@@ -34,9 +34,9 @@ from bs4 import BeautifulSoup
 from PIL import Image
 import requests
 import logging
-#import sentry_sdk
+import sentry_sdk
 
-#sentry_sdk.init(environ.get('SENTRY'), traces_sample_rate=0.1)
+sentry_sdk.init(environ.get('SENTRY'), traces_sample_rate=0.1)
 logging.basicConfig(level=logging.INFO)
 
 
@@ -1629,8 +1629,8 @@ async def pack(message):
             await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
                                 '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
     except Exception as e:
-        pass
-        #sentry_sdk.capture_exception(e)
+        #pass
+        sentry_sdk.capture_exception(e)
 
 
 @dp.message_handler(commands=['gift'])
