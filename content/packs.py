@@ -396,6 +396,8 @@ def open_pack2(uid, cdata, edit, count):
                     ],
                         weights=[20, 18, 15, 12, 10, 7, 6, 5, 2, 1, 2, 1, 0.225, 0.225, 0.225, 0.225, 0.1])
                     rewards[ran[0]] += 1
+                if count > 1:
+                    msg = f'\U0001F4E6 Відкрито: {count}\n'
                 if rewards['nothing']:
                     np = checkClan(uid, base=2, building='new_post')
                     buff = points_limit = False
