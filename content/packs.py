@@ -675,11 +675,10 @@ def open_pack2(uid, cdata, edit, count):
                     else:
                         msg += f'\n\U0001f7e1 Парадна форма \U0001F31F +{ran}'
                     r.hincrby(uid, 'strap', ran)
-                if nothing:
-                    if count > 1:
-                        msg = f'{opened}\n\u26AA Пил і гнилі недоїдки - {nothing}{msg}'
-                    else:
-                        msg = f'{opened}{msg}'
+                if nothing and count > 1:
+                    msg = f'{opened}\n\u26AA Пил і гнилі недоїдки - {nothing}{msg}'
+                elif not nothing and count > 1:
+                    msg = f'{opened}{msg}'
                 if loot:
                     msg += '\n\n#loot'
             else:
