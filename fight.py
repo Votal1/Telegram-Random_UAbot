@@ -1307,9 +1307,12 @@ async def war(cid, location, big_battle):
         for member in r.smembers('fighters' + str(cid)):
             if int(member) != win:
                 r.hincrby(member, 'packs_2023_2')
-    elif location == 'Битва за великодній кошик':
-        class_reward = '🧺 +1'
-        r.hincrby(win, 'packs_2023_2')
+    elif location == 'Битва на борту бізнес-літака Embraer Legacy 600':
+        class_reward = '🧳 +1\nПоловина учасників також отримала по валізі'
+        r.hincrby(win, 'packs_2023_3')
+        for member in r.smembers('fighters' + str(cid)):
+            if int(member) != win and randint(0, 1):
+                r.hincrby(member, 'packs_2023_3')
 
     if class_reward:
         class_reward = '\n' + class_reward
