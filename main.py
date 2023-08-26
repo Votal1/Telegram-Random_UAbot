@@ -3438,11 +3438,14 @@ async def handle_query(call):
                     else:
                         raise Exception
                 except:
-                    uid2 = call.from_user.id
-                    un2 = call.from_user.first_name
-                    fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
-                    await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
-                                                disable_web_page_preview=True)
+                    try:
+                        uid2 = call.from_user.id
+                        un2 = call.from_user.first_name
+                        fi = await fight(uid1, uid2, un1, un2, 1, call.inline_message_id)
+                        await bot.edit_message_text(text=fi, inline_message_id=call.inline_message_id,
+                                                    disable_web_page_preview=True)
+                    except:
+                        pass
 
     elif call.data.startswith('join') and r.hexists('battle' + str(call.message.chat.id), 'start'):
         if str(call.from_user.id).encode() not in r.smembers('fighters' + str(call.message.chat.id)) and \
