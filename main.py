@@ -1410,6 +1410,7 @@ async def battle(message):
 @dp.message_handler(commands=['war'])
 async def war_battle(message):
     c = await bot.get_chat_members_count(message.chat.id)
+    tid = message.message_thread_id
     if message.chat.type != 'private' and c >= 10 and '@' not in message.chat.title and \
             str(message.chat.id).encode() not in r.smembers('war_banned') and \
             str(message.from_user.id).encode() not in r.smembers('war_banned'):
@@ -1420,11 +1421,15 @@ async def war_battle(message):
                 pass
             emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
             a = await bot.send_message(message.chat.id, emoji + ' Починається міжчатова битва...\n\n',
-                                       reply_markup=battle_button_3(), disable_web_page_preview=True)
-            r.hset('war_battle' + str(message.chat.id), 'start', a.message_id)
-            r.hset('war_battle' + str(message.chat.id), 'title', message.chat.title)
-            r.hset('war_battle' + str(message.chat.id), 'starter', message.from_user.id)
-            r.hset('war_battle' + str(message.chat.id), 'war_ts', int(datetime.now().timestamp()))
+                                       reply_markup=battle_button_3(), disable_web_page_preview=True,
+                                       message_thread_id=tid)
+            r.hset('war_battle' + str(message.chat.id), 'start', a.message_id,{
+                'title': message.chat.title,
+                'starter': message.from_user.id,
+                'war_ts': int(datetime.now().timestamp()),
+            })
+            if tid:
+                r.hset('war_battle' + str(message.chat.id), 'thread', tid)
             r.sadd('started_battles', message.chat.id)
             try:
                 await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
@@ -3611,10 +3616,17 @@ async def handle_query(call):
                                       r.hget(b[3], 'firstname').decode() + \
                                       '\n5. ' + r.hget(a[4], 'firstname').decode() + ' | ' + \
                                       r.hget(b[4], 'firstname').decode()
+                                tid1 = r.hget('war_battle' + str(call.message.chat.id), 'thread')
+                                if tid1:
+                                    tid1 = int(tid1)
+                                tid2 = r.hget('war_battle' + enemy.decode(), 'thread')
+                                if tid2:
+                                    tid2 = int(tid2)
                                 await bot.send_message(int(call.message.chat.id), msg.replace('@', ''),
-                                                       disable_web_page_preview=True)
-                                await bot.send_message(int(enemy), msg.replace('@', ''), disable_web_page_preview=True)
-                                await great_war(call.message.chat.id, int(enemy), a, b)
+                                                       disable_web_page_preview=True, message_thread_id=tid1)
+                                await bot.send_message(int(enemy), msg.replace('@', ''), disable_web_page_preview=True,
+                                                       message_thread_id=tid2)
+                                await great_war(call.message.chat.id, int(enemy), a, b, tid1, tid2)
                                 try:
                                     mid = int(r.hget('war_battle' + str(call.message.chat.id), 'pin'))
                                     await bot.unpin_chat_message(chat_id=call.message.chat.id, message_id=mid)

@@ -1532,7 +1532,7 @@ def war_reward(cid1, cid2, msg, r_spirit, money, general, clan, members, koj, po
     return msg, reward
 
 
-async def great_war(cid1, cid2, a, b):
+async def great_war(cid1, cid2, a, b, tid1, tid2):
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
     chance1, clan1, mal1, gen11, gen12, koj1, med1 = await war_power(a, cid1)
@@ -1559,9 +1559,9 @@ async def great_war(cid1, cid2, a, b):
         pass
 
     await bot.send_message(cid1, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
-                           + str(int(chance1)) + ' | ' + str(int(chance2)))
+                           + str(int(chance1)) + ' | ' + str(int(chance2)), message_thread_id=tid1)
     await bot.send_message(cid2, ran + ' Русаки несамовито молотять один одного...\n\n\U0001F4AA '
-                           + str(int(chance1)) + ' | ' + str(int(chance2)))
+                           + str(int(chance1)) + ' | ' + str(int(chance2)), message_thread_id=tid2)
     await sleep(3)
 
     win = choices(['a', 'b'], weights=[chance1, chance2])
@@ -1592,8 +1592,8 @@ async def great_war(cid1, cid2, a, b):
     r.srem('started_battles', cid1)
     r.srem('started_battles', cid2)
 
-    await bot.send_message(cid1, msg1, disable_web_page_preview=True)
-    await bot.send_message(cid2, msg2, disable_web_page_preview=True)
+    await bot.send_message(cid1, msg1, disable_web_page_preview=True, message_thread_id=tid1)
+    await bot.send_message(cid2, msg2, disable_web_page_preview=True, message_thread_id=tid2)
 
 
 async def guard_power(mid):
