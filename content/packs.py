@@ -851,6 +851,15 @@ def check_slot(uid, cdata):
     elif cdata.startswith('pack_jew_'):
         if h in (0, 6):
             return True
+    elif cdata.startswith('gift_box_'):
+        if w in (0, 6, 16):
+            return True
+    elif cdata.startswith('gift_armor_'):
+        if d in (0, 2):
+            return True
+    elif cdata.startswith('gift_notice_'):
+        if s in (0, 11):
+            return True
     return False
 
 
