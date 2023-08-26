@@ -5278,7 +5278,7 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно замовили 5 валіз з бізнес-джета')
         else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
 
     elif call.data.startswith('jew'):
         uid = call.from_user.id
