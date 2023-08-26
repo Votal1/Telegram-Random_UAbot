@@ -5261,6 +5261,25 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
+    elif call.data.startswith('5_salt'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'salt', 5
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно купили 5 солі')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
+
+    elif call.data.startswith('5_gifts'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'packs_2023_3', 5)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно замовили 5 валіз з бізнес-джета')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True
+
     elif call.data.startswith('jew'):
         uid = call.from_user.id
         inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
