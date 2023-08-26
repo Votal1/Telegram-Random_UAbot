@@ -1078,16 +1078,19 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
 
 async def war(cid, location, big_battle):
+    tid = r.hget('battle' + str(cid), 'thread')
+    if tid:
+        tid = int(tid)
     await bot.send_message(cid, '\U0001F5FA Починається ' + location + '!',
-                           reply_to_message_id=int(r.hget('battle' + str(cid), 'start')))
+                           reply_to_message_id=int(r.hget('battle' + str(cid), 'start')), message_thread_id=tid)
     await sleep(2)
     ran = choice(['\U0001F93E\u200D\u2642\uFE0F \U0001F93A', '\U0001F6A3 \U0001F3C7', '\U0001F93C\u200D\u2642\uFE0F'])
-    await bot.send_message(cid, ran + ' Русаки несамовито молотять один одного...')
+    await bot.send_message(cid, ran + ' Русаки несамовито молотять один одного...', message_thread_id=tid)
     await sleep(3)
     msg1 = '\u2694 Йде бій...'
     if randint(1, 10) == 10 and location == 'Штурм Горлівки':
         msg1 += f"\n{r.hget('promo_code', 'battle_promo_code').decode()}"
-    m = await bot.send_message(cid, msg1)
+    m = await bot.send_message(cid, msg1, message_thread_id=tid)
 
     everyone = r.smembers('fighters' + str(cid))
     fighters = {}
@@ -1328,7 +1331,7 @@ async def war(cid, location, big_battle):
     if not r.hexists(f'c{cid}', 'hints') or int(r.hget(f'c{cid}', 'hints')) == 0:
         msg += '\n\n/battle'
     await bot.delete_message(m.chat.id, m.message_id)
-    await bot.send_message(cid, msg, parse_mode='HTML', disable_web_page_preview=True)
+    await bot.send_message(cid, msg, parse_mode='HTML', disable_web_page_preview=True, message_thread_id=tid)
 
 
 async def war_power(sett, cid):

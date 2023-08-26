@@ -1368,6 +1368,7 @@ async def promo_code(message):
 
 @dp.message_handler(commands=['battle'])
 async def battle(message):
+    tid = message.message_thread_id
     if message.chat.type != 'private':
         if r.hexists('battle' + str(message.chat.id), 'start') == 0:
             if r.hexists('battle' + str(message.chat.id), 'ts') == 0:
@@ -1377,7 +1378,10 @@ async def battle(message):
                 try:
                     await bot.delete_message(message.chat.id, message.message_id)
                     a = await bot.send_message(message.chat.id, '\u2694 Починається битва...\n\n',
-                                               reply_markup=battle_button(), disable_web_page_preview=True)
+                                               reply_markup=battle_button(), disable_web_page_preview=True,
+                                               message_thread_id=tid)
+                    if tid:
+                        r.hset('battle' + str(message.chat.id), 'thread', tid)
                     r.hset('battle' + str(message.chat.id), 'start', a.message_id)
                     r.hset('battle' + str(message.chat.id), 'starter', message.from_user.id)
                     try:
