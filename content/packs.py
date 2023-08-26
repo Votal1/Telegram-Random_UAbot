@@ -1129,7 +1129,7 @@ def open_gift3(uid, cdata, edit, cid):
                                                         callback_data=f'gift_notice_{uid}'))
                 elif ran == [6]:
                     increase_trance(20, uid)
-                    msg = f'\U0001f535 В валізі лежить пакетик з білим порошком... русак вирішив спробувати його.\n' \
+                    msg = f'\U0001f535 В валізі лежить пакетик з білим порошком... Русак вирішив спробувати його.\n' \
                           f'\U0001F44A +20'
                 elif ran == [7]:
                     food = 1
