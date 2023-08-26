@@ -1197,7 +1197,7 @@ async def promo_code(message):
                     elif int(r.hget(message.from_user.id, 'weapon')) in (12, 23, 34):
                         r.hincrby(message.from_user.id, 's_weapon', 300)
                     await message.reply('\u26CF Промокод Майнкрафту активовано!\n🧂 +10 \U0001F4E6 +50 \U0001F5E1 +300')
-                elif msg.startswith('kh') and uid not in r.smembers('fifth_code') \
+                elif msg.startswith('ta') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
                     if int(r.hget(message.from_user.id, 'weapon')) == 0:
@@ -1210,10 +1210,15 @@ async def promo_code(message):
                     else:
                         st = 100
                     r.hincrby(message.from_user.id, 'strength', st)
-                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    r.hincrby(message.from_user.id, 'packs', 100)
                     r.hincrby(message.from_user.id, 'money', 200)
-                    await message.reply(f'\u26CF Промокод швайнокарасів активовано!\n\u2708\uFE0F +1 \U0001F4AA +{st} '
-                                        f'\u2622 +100 \U0001F4B5 +200')
+                    msg = f'\u26CF Промокод швайнокарасів активовано!\n\u2708\uFE0F +1 \U0001F4AA +{st} ' \
+                          f'\U0001F4E6 +100 \U0001F4B5 +200'
+
+                    r.hincrby(message.from_user.id, 'packs_2023_3', 10)
+                    msg += '\n🧳 +10'
+
+                    await message.reply(msg)
                 elif msg.startswith('ran') and uid not in r.smembers('seventh_code'):
                     r.sadd('seventh_code', message.from_user.id)
                     if int(r.hget(message.from_user.id, 'weapon')) == 2:
