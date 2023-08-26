@@ -1692,8 +1692,11 @@ async def start_raid(cid):
     title = r.hget(c, 'title').decode()
     raiders = list(r.smembers('fighters_3' + str(cid)))[0:5]
     markup = InlineKeyboardMarkup()
+    tid = r.hget(c, 'thread')
+    if tid:
+        tid = int(tid)
     await sleep(3)
-    await bot.send_message(cid, 'Ціль знайдено')
+    await bot.send_message(cid, 'Ціль знайдено', message_thread_id=tid)
     await sleep(1)
 
     raid_init(cid, raiders, c)
@@ -1826,9 +1829,13 @@ async def start_raid(cid):
                 r.srem('guard' + enemy.decode(), m)
         chance2 = int(r.hget(c2, 'power'))
         msg0 = f'{title} | {title2}\n\n\U0001F4AA {chance1} | {chance2}'.replace('@', '')
+        tid2 = r.hget(c2, 'thread')
+        if tid2:
+            tid2 = int(tid2)
         try:
-            await bot.send_message(cid, msg0, disable_web_page_preview=True)
-            await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0, disable_web_page_preview=True)
+            await bot.send_message(cid, msg0, disable_web_page_preview=True, message_thread_id=tid)
+            await bot.send_message(int(enemy), 'На нас напали!\n\n' + msg0,
+                                   disable_web_page_preview=True, message_thread_id=tid2)
         except:
             pass
         win = choices(['a', 'b'], weights=[chance1, chance2])
@@ -1996,9 +2003,10 @@ async def start_raid(cid):
             r.hincrby(c, 'codes', 1)
             msg += '\n\U0001F916 +1'
         try:
-            a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
+            a = await bot.send_message(cid, msg, disable_web_page_preview=True,
+                                       reply_markup=markup, message_thread_id=tid)
             r.hset(c, 'raid_loot_mid', a.message_id)
-            await bot.send_message(int(enemy), msg2, disable_web_page_preview=True)
+            await bot.send_message(int(enemy), msg2, disable_web_page_preview=True, message_thread_id=tid2)
         except:
             pass
 
@@ -2031,7 +2039,7 @@ async def start_raid(cid):
             chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
-            await bot.send_message(cid, msg0, disable_web_page_preview=True)
+            await bot.send_message(cid, msg0, disable_web_page_preview=True, message_thread_id=tid)
         except:
             pass
         win = choices(['a', 'b'], weights=[chance1, chance2])
@@ -2377,7 +2385,7 @@ async def start_raid(cid):
             reward += '\n\U0001F916 +1'
         await sleep(10)
         msg = 'Проведено рейд на ' + location + '!' + reward
-        a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
+        a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup, message_thread_id=tid)
         r.hset(c, 'raid_loot_mid', a.message_id)
 
     elif mode == [3]:
@@ -2387,7 +2395,7 @@ async def start_raid(cid):
         chance2 = int(r.hget('convoy', 'power'))
         msg0 = f'{title} | Перехоплення гумконвою\n\n\U0001F4AA {chance1} | {chance2}'
         try:
-            await bot.send_message(cid, msg0)
+            await bot.send_message(cid, msg0, message_thread_id=tid)
         except:
             pass
 
@@ -2430,7 +2438,7 @@ async def start_raid(cid):
             msg += '\n\U0001F916 +1'
 
         await sleep(10)
-        a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup)
+        a = await bot.send_message(cid, msg, disable_web_page_preview=True, reply_markup=markup, message_thread_id=tid)
         r.hset(c, 'raid_loot_mid', a.message_id)
         try:
             await bot.send_message(5180155065, f'{msg0}\n{msg}')
@@ -2446,6 +2454,9 @@ async def start_raid(cid):
             for mem in r.smembers('followers'):
                 try:
                     c3 = 'c' + mem.decode()
+                    tid3 = r.hget(c3, 'thread')
+                    if tid3:
+                        tid3 = int(tid3)
                     if int(r.hget(c3, 'not_time')) != datetime.now().day:
                         if int(r.hget(c3, 'technics')) >= 3:
                             r.hset(c3, 'not_time', datetime.now().day)
@@ -2454,7 +2465,7 @@ async def start_raid(cid):
                             r.hset(c3, 'notification', 0)
                             r.srem('followers', mem)
                             continue
-                    await bot.send_message(int(mem), msg)
+                    await bot.send_message(int(mem), msg, message_thread_id=tid3)
                 except:
                     pass
     try:

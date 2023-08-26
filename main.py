@@ -3068,6 +3068,7 @@ async def get_quest(message):
 async def raid(message):
     try:
         c = 'c' + str(message.chat.id)
+        tid = message.message_thread_id
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if message.chat.id == -100:
                 await message.reply('Хватить на сьогодні рейдів.')
@@ -3092,9 +3093,12 @@ async def raid(message):
                             except:
                                 pass
                             a = await bot.send_message(message.chat.id, '\U0001F4B0 Починається рейд...\n\n',
-                                                       reply_markup=battle_button_4(), disable_web_page_preview=True)
+                                                       reply_markup=battle_button_4(), disable_web_page_preview=True,
+                                                       message_thread_id=tid)
                             r.hset(c, 'start', a.message_id)
                             r.hset(c, 'starter', message.from_user.id)
+                            if tid:
+                                r.hset(c, 'thread', tid)
                             try:
                                 await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
                                 r.hset(c, 'pin', a.message_id)
