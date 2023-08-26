@@ -1068,3 +1068,147 @@ def open_gift2(uid, cdata, edit, cid):
             return False
 
     return False
+
+
+def open_gift3(uid, cdata, edit, cid):
+    markup = InlineKeyboardMarkup()
+    msg = ''
+    if uid == int(cdata.split('_')[2]):
+        if cdata.startswith('gift_unpack_'):
+            if r.hexists(uid, 'packs_2023_3') and int(r.hget(uid, 'packs_2023_3')) > 0:
+                r.hincrby(uid, 'packs_2023_3', -1)
+                r.hincrby(uid, 'opened', 1)
+                r.hincrby('suitcases_2023', uid, 1)
+
+                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                              weights=[20, 18, 15, 8, 10, 10, 3, 3, 3, 3, 2, 2, 1, 1, 1])
+                if ran == [1]:
+                    ran = randint(1, 5)
+                    if ran == 1:
+                        r.hincrby(uid, 'strength', 1)
+                        msg = '\u26AA У валізі лежить одна білоруська картоплина.\n\U0001F4AA +1'
+                    elif ran == 2:
+                        r.hincrby(uid, 'injure', 1)
+                        msg = '\u26AA У цій валізі лише столові прибори. Русак вколовся виделкою.\n\U0001fa78 +1'
+                    elif ran == 3:
+                        r.hincrby(uid, 'sch', 1)
+                        msg = '\u26AA Ця валіза смердить лайном.\n\U0001F464 +1'
+                    elif ran == 4:
+                        increase_trance(1, uid)
+                        msg = '\u26AA У валізі знайдено вагнерівський шеврон.\n\U0001F44A +1'
+                    elif ran == 5:
+                        hp(1, uid)
+                        msg = '\u26AA У валізі знайдено пігулку, виготовлену в Африці.\n\U0001fac0 +1'
+                elif ran == [2]:
+                    msg = '\u26AA ВАЛІЗА ЗАМІНОВАНА!\n'
+                    if randint(0, 1):
+                        spirit(3000, uid, 0)
+                        msg += '\nРусак встиг відскочити\n\U0001F54A +3000'
+                    else:
+                        ran = randint(10, 100)
+                        r.hincrby(uid, 'injure', ran)
+                        msg += f'\n\U0001fa78 +{ran}'
+                elif ran == [3]:
+                    msg = '\u26AA У валізі знайдено багато сирійських фунтів.' \
+                          '\n\U0001F4B5 +50'
+                    r.hincrby(uid, 'money', 50)
+                elif ran == [4]:
+                    msg = '\U0001f535 Валіза путінського повара. Повна спецій.\n\U0001F9EA +2'
+                    if int(r.hget(uid, 'support')) == 0:
+                        r.hset(uid, 'support', 7)
+                        r.hset(uid, 's_support', 2)
+                    elif int(r.hget(uid, 'support')) not in (6, 10, 11):
+                        r.hincrby(uid, 's_support', 2)
+                elif ran == [5]:
+                    msg = '\U0001f535 У валізі лежить контракт з вагнером. Тепер це твоя повістка.'
+                    if int(r.hget(uid, 'support')) == 0:
+                        r.hset(uid, 'support', 11)
+                        r.hset(uid, 's_support', 10)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти повістку',
+                                                        callback_data=f'gift_notice_{uid}'))
+                elif ran == [6]:
+                    increase_trance(20, uid)
+                    msg = f'\U0001f535 В валізі лежить пакетик з білим порошком... русак вирішив спробувати його.\n' \
+                          f'\U0001F44A +20'
+                elif ran == [7]:
+                    food = 1
+                    r.hset(uid, 'time', 0)
+                    if r.hexists(uid, 'time22'):
+                        r.hset(uid, 'time22', 0)
+                        food = 2
+                    msg = f'\U0001f7e3 Чергова валіза путінського повара. Наповнена їжею.\n\U0001F957 +{food}'
+                elif ran == [8]:
+                    ran = randint(1, 5)
+                    r.hincrby(uid, 'salt', ran)
+                    msg = f'\U0001f7e3 В валізі знайдено африканську сільничку з наркотичною сумішшю.' \
+                          f'\n\U0001F9C2 +{ran}'
+                elif ran == [9]:
+                    msg = '\U0001f7e3 У валізі знайдено багато валюти різних країн.\n\U0001F4B5 +500'
+                    r.hincrby(uid, 'money', 500)
+                elif ran == [10]:
+                    msg = '\U0001f7e3 Валіза виявилась порожньою коробкою від боєприпасів. Хоча ні, не порожньою.\n🌀 +1'
+                    r.hincrby(uid, 'tape', 1)
+                elif ran == [11]:
+                    try:
+                        for mem in r.smembers(cid):
+                            spirit(5000, mem, 0)
+                    except:
+                        spirit(5000, uid, 0)
+                    msg = '\U0001f7e1 Після відкриття цієї валізи сталася бавовна...\n' \
+                          '\U0001F54A +5000 всім в чаті'
+                elif ran == [12]:
+                    if int(r.hget(uid, 'weapon')) == 6:
+                        r.hincrby(uid, 's_weapon', 10)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти скриньку Пандори',
+                                                        callback_data=f'gift_box_{uid}'))
+                    msg = '\U0001f7e1 Скринька Пандори [Зброя, міцність=10] - дарує ворогу подарунок в дуелі.'
+                elif ran == [13]:
+                    msg = '\U0001f7e1 У валізі запаковано тіло одного з вагнерських командирів\n' \
+                          '\U0001F31F +1 \u2620\uFE0F +1'
+                    r.hincrby(uid, 'strap', 1)
+                    r.hincrby(uid, 'deaths', 1)
+                elif ran == [14]:
+                    if int(r.hget(uid, 'defense')) == 2:
+                        r.hincrby(uid, 's_defense', 100)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти бронежилет вагнерівця',
+                                                        callback_data=f'gift_armor_{uid}'))
+                    msg = '\U0001f7e1 У валізі знайдено кривавий бронежилет і кувалду. Схоже попередні власники' \
+                          ' перевіряли щось на міцність.\n\u2620\uFE0F +1'
+                    r.hincrby(uid, 'deaths', 1)
+                elif ran == [15]:
+                    msg = '\U0001f7e1 Знайдено Чорну скриньку бізнес-джета. Зараз ви не знаєте що з нею робити. ' \
+                          '(Тепер в магазині можете придбати лімітоване фото на русака за 1 погон)'
+                    r.sadd('prigozhin', uid)
+            else:
+                msg = 'Недостатньо валіз.'
+
+            return msg, markup
+
+        elif cdata.startswith('gift_box_'):
+            if int(r.hget(uid, 'weapon')) == 6:
+                r.hincrby(uid, 's_weapon', 10)
+            else:
+                r.hset(uid, 'weapon', 6)
+                r.hset(uid, 's_weapon', 10)
+            return edit, None
+
+        elif cdata.startswith('gift_armor_'):
+            if int(r.hget(uid, 'defense')) == 2:
+                r.hincrby(uid, 's_defense', 100)
+            else:
+                r.hset(uid, 'defense', 2)
+                r.hset(uid, 's_defense', 100)
+            return edit, None
+
+        elif cdata.startswith('gift_notice_'):
+            r.hset(uid, 'support', 11)
+            r.hset(uid, 's_support', 10)
+            return edit, None
+
+        else:
+            return False
+
+    return False
