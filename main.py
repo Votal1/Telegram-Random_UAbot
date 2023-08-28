@@ -1120,10 +1120,10 @@ async def merchant(message):
 async def donate(message):
     try:
         markup = InlineKeyboardMarkup()
-        url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=20'
+        url = f'https://randomuabot.diaka.ua/donate?name={message.from_user.id}&amount=30'
         markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
         msg = 'Якщо хтось хоче підтримати автора, то може задонатити і отримати\n\U0001F31F погон російського ' \
-              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Акційна ціна одного погону — 20 грн!' \
+              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону — 30 грн.' \
               '\n\u274C Не міняйте ім`я (твій айді в тг) в формі оплати, якщо купляєте собі.'
         await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True, parse_mode='HTML')
         if message.chat.type != 'private':
@@ -5286,24 +5286,24 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
-    elif call.data.startswith('5_salt'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hincrby(call.from_user.id, 'salt', 5)
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили 5 солі')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо погонів на рахунку')
-
-    elif call.data.startswith('5_gifts'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hincrby(call.from_user.id, 'packs_2023_3', 5)
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно замовили 5 валіз з бізнес-джета')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
+    #elif call.data.startswith('5_salt'):
+    #    if int(r.hget(call.from_user.id, 'strap')) >= 1:
+    #        r.hincrby(call.from_user.id, 'strap', -1)
+    #        r.hincrby(call.from_user.id, 'salt', 5)
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+    #                                        text='Ви успішно купили 5 солі')
+    #    else:
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+    #                                        text='Недостатньо погонів на рахунку')
+#
+    #elif call.data.startswith('5_gifts'):
+    #    if int(r.hget(call.from_user.id, 'strap')) >= 1:
+    #        r.hincrby(call.from_user.id, 'strap', -1)
+    #        r.hincrby(call.from_user.id, 'packs_2023_3', 5)
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+    #                                        text='Ви успішно замовили 5 валіз з бізнес-джета')
+    #    else:
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
 
     elif call.data.startswith('jew'):
         uid = call.from_user.id
