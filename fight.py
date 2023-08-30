@@ -1595,8 +1595,15 @@ async def great_war(cid1, cid2, a, b, tid1, tid2):
     r.srem('started_battles', cid1)
     r.srem('started_battles', cid2)
 
-    await bot.send_message(cid1, msg1, disable_web_page_preview=True, message_thread_id=tid1)
-    await bot.send_message(cid2, msg2, disable_web_page_preview=True, message_thread_id=tid2)
+    try:
+        await bot.send_message(cid1, msg1, disable_web_page_preview=True, message_thread_id=tid1)
+    except:
+        pass
+    await sleep(1)
+    try:
+        await bot.send_message(cid2, msg2, disable_web_page_preview=True, message_thread_id=tid2)
+    except:
+        pass
 
 
 async def guard_power(mid):
