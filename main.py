@@ -3632,16 +3632,19 @@ async def handle_query(call):
                                 await bot.send_message(int(enemy), msg.replace('@', ''), disable_web_page_preview=True,
                                                        message_thread_id=tid2)
                                 await great_war(call.message.chat.id, int(enemy), a, b, tid1, tid2)
+                                await sleep(1)
                                 try:
                                     mid = int(r.hget('war_battle' + str(call.message.chat.id), 'pin'))
                                     await bot.unpin_chat_message(chat_id=call.message.chat.id, message_id=mid)
                                 except:
                                     pass
+                                await sleep(1)
                                 try:
                                     mid = int(r.hget('war_battle' + enemy.decode(), 'pin'))
                                     await bot.unpin_chat_message(chat_id=int(enemy), message_id=mid)
                                 except:
                                     pass
+                                await call.answer()
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text=msg)
