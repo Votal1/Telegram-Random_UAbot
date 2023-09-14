@@ -1368,7 +1368,10 @@ async def promo_code(message):
 
 @dp.message_handler(commands=['battle'])
 async def battle(message):
-    tid = message.message_thread_id
+    try:
+        tid = message.message_thread_id
+    except:
+        tid = 0
     if message.chat.type != 'private':
         if r.hexists('battle' + str(message.chat.id), 'start') == 0:
             if r.hexists('battle' + str(message.chat.id), 'ts') == 0:
@@ -1414,7 +1417,10 @@ async def battle(message):
 @dp.message_handler(commands=['war'])
 async def war_battle(message):
     c = await bot.get_chat_members_count(message.chat.id)
-    tid = message.message_thread_id
+    try:
+        tid = message.message_thread_id
+    except:
+        tid = 0
     if message.chat.type != 'private' and c >= 10 and '@' not in message.chat.title and \
             str(message.chat.id).encode() not in r.smembers('war_banned') and \
             str(message.from_user.id).encode() not in r.smembers('war_banned'):
@@ -3072,7 +3078,10 @@ async def get_quest(message):
 async def raid(message):
     try:
         c = 'c' + str(message.chat.id)
-        tid = message.message_thread_id
+        try:
+            tid = message.message_thread_id
+        except:
+            tid = 0
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if message.chat.id == -100:
                 await message.reply('Хватить на сьогодні рейдів.')
