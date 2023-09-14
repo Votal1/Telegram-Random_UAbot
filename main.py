@@ -1371,7 +1371,7 @@ async def battle(message):
     try:
         tid = message.message_thread_id
     except:
-        tid = 0
+        tid = 1
     if message.chat.type != 'private':
         if r.hexists('battle' + str(message.chat.id), 'start') == 0:
             if r.hexists('battle' + str(message.chat.id), 'ts') == 0:
@@ -1420,7 +1420,7 @@ async def war_battle(message):
     try:
         tid = message.message_thread_id
     except:
-        tid = 0
+        tid = 1
     if message.chat.type != 'private' and c >= 10 and '@' not in message.chat.title and \
             str(message.chat.id).encode() not in r.smembers('war_banned') and \
             str(message.from_user.id).encode() not in r.smembers('war_banned'):
@@ -3081,7 +3081,7 @@ async def raid(message):
         try:
             tid = message.message_thread_id
         except:
-            tid = 0
+            tid = 1
         if int(r.hget(message.from_user.id, 'clan')) == message.chat.id:
             if message.chat.id == -100:
                 await message.reply('Хватить на сьогодні рейдів.')
