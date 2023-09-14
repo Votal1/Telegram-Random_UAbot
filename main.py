@@ -1392,8 +1392,8 @@ async def battle(message):
                         r.hset('battle' + str(message.chat.id), 'pin', a.message_id)
                     except:
                         pass
-                except:
-                    pass
+                except Exception as e:
+                    await bot.send_message(456514639, str(e))
         else:
             try:
                 await bot.send_message(message.chat.id, '\U0001F5E1 Підготовка до битви тут\n\nКількість бійців: ' +
