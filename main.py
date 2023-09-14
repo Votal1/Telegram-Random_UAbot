@@ -1426,24 +1426,27 @@ async def war_battle(message):
             str(message.from_user.id).encode() not in r.smembers('war_banned'):
         if r.hexists('war_battle' + str(message.chat.id), 'start') == 0:
             try:
-                await bot.delete_message(message.chat.id, message.message_id)
-            except:
-                pass
-            emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
-            a = await bot.send_message(message.chat.id, emoji + ' Починається міжчатова битва...\n\n',
-                                       reply_markup=battle_button_3(), disable_web_page_preview=True,
-                                       message_thread_id=tid)
-            r.hset('war_battle' + str(message.chat.id), 'start', a.message_id,{
-                'title': message.chat.title,
-                'starter': message.from_user.id,
-                'war_ts': int(datetime.now().timestamp()),
-            })
-            if tid:
-                r.hset('war_battle' + str(message.chat.id), 'thread', tid)
-            r.sadd('started_battles', message.chat.id)
-            try:
-                await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
-                r.hset('war_battle' + str(message.chat.id), 'pin', a.message_id)
+                try:
+                    await bot.delete_message(message.chat.id, message.message_id)
+                except:
+                    pass
+                emoji = choice(['\U0001F3DF', '\U0001F3AA', '\U0001F30E', '\U0001F30D', '\U0001F30F'])
+                a = await bot.send_message(message.chat.id, emoji + ' Починається міжчатова битва...\n\n',
+                                           reply_markup=battle_button_3(), disable_web_page_preview=True,
+                                           message_thread_id=tid)
+                r.hset('war_battle' + str(message.chat.id), 'start', a.message_id,{
+                    'title': message.chat.title,
+                    'starter': message.from_user.id,
+                    'war_ts': int(datetime.now().timestamp()),
+                })
+                if tid:
+                    r.hset('war_battle' + str(message.chat.id), 'thread', tid)
+                r.sadd('started_battles', message.chat.id)
+                try:
+                    await bot.pin_chat_message(a.chat.id, a.message_id, disable_notification=True)
+                    r.hset('war_battle' + str(message.chat.id), 'pin', a.message_id)
+                except:
+                    pass
             except:
                 pass
         elif '@' not in message.chat.title:
