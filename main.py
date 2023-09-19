@@ -4571,10 +4571,6 @@ async def handle_query(call):
                 st = int(int(r.hget(call.from_user.id, 'strength')) * 0.75)
                 r.hset(call.from_user.id, 'strength', st)
                 r.hincrby(call.from_user.id, 's3', 1)
-                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                                text='Ви розширили місце в підвалі для додаткового русака.')
-                await bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
-                                                             'Змінити бойового русака можна командою /swap.')
                 r.hset(call.from_user.id, 'name2', choice(list(names)),
                        {'strength2': randint(100, 150),
                         'intellect2': choices([1, 2], weights=[4, 1])[0],
@@ -4582,6 +4578,10 @@ async def handle_query(call):
                         'mushrooms2': 0, 'class2': 0, 'photo2': choice(default), 'injure2': 0, 'hp2': 100,
                         'support2': 0, 's_support2': 0, 'sch2': 0, 'buff2': 0, 'head2': 0, 's_head2': 0})
                 r.sadd('swappers', call.from_user.id)
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='Ви розширили місце в підвалі для додаткового русака.')
+                await bot.send_message(call.message.chat.id, '\U0001F412 У вас з`явився другий русак.\n'
+                                                             'Змінити бойового русака можна командою /swap.')
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='У вас немає русака.')
