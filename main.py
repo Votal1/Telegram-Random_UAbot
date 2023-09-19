@@ -4589,13 +4589,13 @@ async def handle_query(call):
             if int(r.hget(call.from_user.id, 'money')) >= 1500:
                 r.hincrby(call.from_user.id, 'money', -1500)
                 r.hincrby(call.from_user.id, 's3', 1)
+                r.hset(call.from_user.id, 'time22', 0)
+                r.hset(call.from_user.id, 'time23', 0)
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Ви купили припаси.')
                 await bot.send_message(call.message.chat.id,
                                        'Тепер можна по одному годувати двох русаків. Змінити бойового'
                                        ' русака можна командою /swap.')
-                r.hset(call.from_user.id, 'time22', 0)
-                r.hset(call.from_user.id, 'time23', 0)
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Недостатньо коштів на рахунку.')
