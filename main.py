@@ -1286,13 +1286,13 @@ async def promo_code(message):
                         r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
                         msg += '\n🧾 +1'
                     await message.reply(msg)
-                elif msg.startswith('25') and uid not in r.smembers('fifteenth_code'):
+                elif msg.startswith('30') and uid not in r.smembers('fifteenth_code'):
                     r.sadd('fifteenth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'tape', 5)
-                    r.hincrby(message.from_user.id, 'packs', 25)
-                    r.hincrby(message.from_user.id, 'salt', 25)
+                    r.hincrby(message.from_user.id, 'tape', 3)
+                    r.hincrby(message.from_user.id, 'packs', 30)
+                    r.hincrby(message.from_user.id, 'salt', 30)
                     await message.reply('\u26CF Промокод статистики активовано!\n'
-                                        '🌀 +5 \U0001F9C2 +25 \U0001F4E6 +25')
+                                        '🌀 +3 \U0001F9C2 +30 \U0001F4E6 +30')
                 '''
                 elif msg.startswith('bot') and uid not in r.smembers('twelfth_code'):
                     r.sadd('twelfth_code', message.from_user.id)
