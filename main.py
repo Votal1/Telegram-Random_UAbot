@@ -3023,6 +3023,8 @@ async def guard(message):
                                                         'hour': randint(8, 12), 'first': 1})
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
                     value = 500000
+                    if int(r.hget('convoy', 'power')) < 0:
+                        r.hset('convoy', 'power', 0)
                     r.hincrby('convoy', 'power', value)
                     for mem in r.smembers('followers'):
                         try:
