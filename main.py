@@ -57,6 +57,8 @@ async def gruz200(message):
               f'\n\u2708\uFE0F Літаки: {d[5].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F681 Гелікоптери: {d[6].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
+        if '300' in msg:
+            msg += '\nrusnya_skazhy_300'
         await message.reply(title + msg)
     except:
         await message.reply('index.minfin.com.ua/ua/russian-invading/casualties', disable_web_page_preview=True)
@@ -1278,12 +1280,12 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
 
-                elif msg.startswith('1') and uid not in r.smembers('fourteenth_code'):
-                    msg = '\u26CF Промокод двохсот пятидесяти тисяч активовано!\n🧂 +25 ☠ +25 📦 +250'
+                elif msg.startswith('rus') and uid not in r.smembers('fourteenth_code'):
+                    msg = '\u26CF Промокод трьохсот тисяч активовано!\n🧂 +30 ☠ +30 📦 +300'
                     r.sadd('fourteenth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'deaths', 25)
-                    r.hincrby(message.from_user.id, 'salt', 25)
-                    r.hincrby(message.from_user.id, 'packs', 250)
+                    r.hincrby(message.from_user.id, 'deaths', 30)
+                    r.hincrby(message.from_user.id, 'salt', 30)
+                    r.hincrby(message.from_user.id, 'packs', 300)
                     if r.hexists(message.from_user.id, 'name') and not int(r.hget(message.from_user.id, 'support')):
                         r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
                         msg += '\n🧾 +1'
