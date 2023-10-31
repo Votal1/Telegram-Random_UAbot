@@ -910,8 +910,25 @@ async def no_nut(message):
         month = datetime.now().month
         if uid == 456514639 and datetime.now().month in (10, 12):
             day, month = 1, 11
-        if 1 <= day <= 7 and int(r.hget('nnn_2023', uid)) == 30 \
-                and str(uid).encode() in r.smembers('nnn_registered_2023') and month == 12:
+
+        if day == 1 and str(uid).encode() not in r.smembers('nnn_registered_2023') and month == 11:
+            name = names[int(r.hget(uid, 'name'))]
+            r.sadd('nnn_registered_2023', uid)
+            r.hset('nnn_2023', uid, 1)
+            await message.reply(f'\U0001F330 {name} приєднюється до челенджу No Nut November!\n1/30')
+        elif str(uid).encode() in r.smembers('nnn_registered_2023') and month == 11:
+            nnn_day = int(r.hget('nnn_2023', uid))
+            if nnn_day == day:
+                await message.reply(f'{day}/30')
+            elif day - nnn_day == 1:
+                r.hset('nnn_2023', uid, day)
+                await message.reply(f'\U0001F535 {day}/30')
+            else:
+                r.srem('nnn_registered_2023', uid)
+                await message.reply(f'\U0001F534 Твій русак не впорався з цим важким челенджом...')
+
+        if month == 12 and 1 <= day <= 7 and str(uid).encode() in r.smembers('nnn_registered_2023') \
+                and int(r.hget('nnn_2023', uid)) == 30:
             r.sadd('nnn_winners_2023', uid)
             r.srem('nnn_registered_2023', uid)
             power, mind = 200, 0
@@ -939,21 +956,6 @@ async def no_nut(message):
             name = names[int(r.hget(uid, 'name'))]
             msg = f'{name} успішно завершив челендж No Nut November!\n\U0001F4AA +{power}{mind} \U0001F54A +10000 {wom}'
             await message.reply(msg)
-        if day == 1 and str(uid).encode() not in r.smembers('nnn_registered_2023') and month == 11:
-            name = names[int(r.hget(uid, 'name'))]
-            r.sadd('nnn_registered_2023', uid)
-            r.hset('nnn_2023', uid, 1)
-            await message.reply(f'\U0001F330 {name} приєднюється до челенджу No Nut November!\n1/30')
-        elif str(uid).encode() in r.smembers('nnn_registered_2023') and month == 11:
-            nnn_day = int(r.hget('nnn_2023', uid))
-            if nnn_day == day:
-                await message.reply(f'{day}/30')
-            elif day - nnn_day == 1:
-                r.hset('nnn_2023', uid, day)
-                await message.reply(f'\U0001F535 {day}/30')
-            else:
-                r.srem('nnn_registered_2023', uid)
-                await message.reply(f'\U0001F534 Твій русак не впорався з цим важким челенджом...')
 
     except:
         pass
