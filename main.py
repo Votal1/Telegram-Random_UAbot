@@ -867,7 +867,7 @@ async def woman(message):
         if r.hexists(uid, 'time4') == 0:
             r.hset(uid, 'time4', 0)
         if int(r.hget(uid, 'woman')) == 1:
-            if str(uid).encode() in r.smembers('nnn_registered_2023') and datetime.now().month == 11:
+            if str(uid).encode() not in r.smembers('nnn_registered_2023'):
                 quest(uid, 1, -3)
                 if int(r.hget(uid, 'time4')) != datetime.now().day:
                     if r.hexists(uid, 'time5') == 0:
