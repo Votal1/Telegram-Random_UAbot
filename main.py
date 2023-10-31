@@ -1179,12 +1179,14 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply('\u26CF Соледарський промокод активовано!'
                                         '\n\U0001F4E6 +20 \U0001F4B5 +30 \u2622 +50')
-                elif msg.startswith('h') and uid not in r.smembers('second_code'):
-                    msg = '\u26CF Хакерський промокод активовано!\n\U0001F4E6 +20 \u2622 +50 \U0001F4B5 +100'
+                elif msg.startswith('st') and uid not in r.smembers('second_code'):
+                    msg = '\u26CF Хакерський промокод активовано!\n\U0001F4E6 +100 \u2622 +100 ' \
+                          '\U0001F4B5 +100 \U0001F31F +1'
                     r.sadd('second_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'packs', 20)
+                    r.hincrby(message.from_user.id, 'packs', 100)
                     r.hincrby(message.from_user.id, 'money', 100)
-                    r.hincrby(message.from_user.id, 'vodka', 50)
+                    r.hincrby(message.from_user.id, 'vodka', 100)
+                    r.hincrby(message.from_user.id, 'strap', 1)
                     await message.reply(msg)
                 elif msg.startswith('ne') and uid not in r.smembers('third_code'):
                     r.sadd('third_code', message.from_user.id)
