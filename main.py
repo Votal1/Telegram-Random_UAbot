@@ -867,34 +867,94 @@ async def woman(message):
         if r.hexists(uid, 'time4') == 0:
             r.hset(uid, 'time4', 0)
         if int(r.hget(uid, 'woman')) == 1:
-            quest(uid, 1, -3)
-            if int(r.hget(uid, 'time4')) != datetime.now().day:
-                if r.hexists(uid, 'time5') == 0:
-                    r.hset(uid, 'time5', 0)
-                r.hset(uid, 'time4', datetime.now().day)
-                r.hincrby(uid, 'time5', 1)
-                if int(r.hget(uid, 'time5')) >= 9:
-                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                    msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
-                          'В тебе буде смачний сніданок!'
-                    r.hincrby(uid, 'childs', 1)
-                    r.hincrby('all_children', 'children', 1)
-                    r.hset(uid, 'time5', 0)
-                    if int(r.hget(uid, 's5')) >= 4:
-                        if r.hexists(uid, 'time22') == 0:
-                            msg += f'\n{emoji} +1'
-                            r.hset(uid, 'time', 0)
-                        else:
-                            msg += f'\n{emoji} +2'
-                            r.hset(uid, 'time', 0)
-                            r.hset(uid, 'time22', 0)
-                    await message.reply(msg)
+            if str(uid).encode() in r.smembers('nnn_registered_2023') and datetime.now().month == 11:
+                quest(uid, 1, -3)
+                if int(r.hget(uid, 'time4')) != datetime.now().day:
+                    if r.hexists(uid, 'time5') == 0:
+                        r.hset(uid, 'time5', 0)
+                    r.hset(uid, 'time4', datetime.now().day)
+                    r.hincrby(uid, 'time5', 1)
+                    if int(r.hget(uid, 'time5')) >= 9:
+                        emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                        msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
+                              'В тебе буде смачний сніданок!'
+                        r.hincrby(uid, 'childs', 1)
+                        r.hincrby('all_children', 'children', 1)
+                        r.hset(uid, 'time5', 0)
+                        if int(r.hget(uid, 's5')) >= 4:
+                            if r.hexists(uid, 'time22') == 0:
+                                msg += f'\n{emoji} +1'
+                                r.hset(uid, 'time', 0)
+                            else:
+                                msg += f'\n{emoji} +2'
+                                r.hset(uid, 'time', 0)
+                                r.hset(uid, 'time22', 0)
+                        await message.reply(msg)
+                    else:
+                        await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
+                                            r.hget(uid, 'time5').decode() + ' місяці.')
                 else:
-                    await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
+                    await message.reply('\U0001F469\U0001F3FB Ти знову провідав жінку. Вона на ' +
                                         r.hget(uid, 'time5').decode() + ' місяці.')
             else:
-                await message.reply('\U0001F469\U0001F3FB Ти знову провідав жінку. Вона на ' +
-                                    r.hget(uid, 'time5').decode() + ' місяці.')
+                await message.reply('\U0001F330 Жінки під час No Nut November заборонені!')
+    except:
+        pass
+
+
+@dp.message_handler(commands=['no_nut'])
+async def no_nut(message):
+    try:
+        uid = message.from_user.id
+        day = datetime.now().day
+        month = datetime.now().month
+        if uid == 456514639 and datetime.now().month in (10, 12):
+            day, month = 1, 11
+        if 1 <= day <= 7 and int(r.hget('nnn_2023', uid)) == 30 \
+                and str(uid).encode() in r.smembers('nnn_registered_2023') and month == 12:
+            r.sadd('nnn_winners_2023', uid)
+            r.srem('nnn_registered_2023', uid)
+            power, mind = 200, 0
+            if str(uid).encode() in r.smembers('nnn_winners_2021'):
+                power += 200
+            if str(uid).encode() in r.smembers('nnn_winners_2022'):
+                power += 100
+            r.hincrby(uid, 'strength', power)
+            if int(r.hget(uid, 'intellect')) < 5:
+                mind = 3
+            elif int(r.hget(uid, 'intellect')) < 12:
+                mind = 2
+            elif int(r.hget(uid, 'intellect')) < 20:
+                mind = 1
+            intellect(mind, uid)
+            if mind > 0:
+                mind = f' \U0001F9E0 +{mind}'
+            spirit(10000, uid, 0)
+            if r.hexists(uid, 'woman') and int(r.hget(uid, 'woman')) == 1:
+                r.hincrby(uid, 'childs', 5)
+                wom = '\U0001F476 +5'
+            else:
+                r.hset(uid, 'woman', 1)
+                wom = '\U0001F469\U0001F3FB +1'
+            name = names[int(r.hget(uid, 'name'))]
+            msg = f'{name} успішно завершив челендж No Nut November!\n\U0001F4AA +{power}{mind} \U0001F54A +10000 {wom}'
+            await message.reply(msg)
+        if day == 1 and str(uid).encode() not in r.smembers('nnn_registered_2023') and month == 11:
+            name = names[int(r.hget(uid, 'name'))]
+            r.sadd('nnn_registered_2023', uid)
+            r.hset('nnn_2023', uid, 1)
+            await message.reply(f'\U0001F330 {name} приєднюється до челенджу No Nut November!\n1/30')
+        elif str(uid).encode() in r.smembers('nnn_registered_2023') and month == 11:
+            nnn_day = int(r.hget('nnn_2023', uid))
+            if nnn_day == day:
+                await message.reply(f'{day}/30')
+            elif day - nnn_day == 1:
+                r.hset('nnn_2023', uid, day)
+                await message.reply(f'\U0001F535 {day}/30')
+            else:
+                r.srem('nnn_registered_2023', uid)
+                await message.reply(f'\U0001F534 Твій русак не впорався з цим важким челенджом...')
+
     except:
         pass
 
