@@ -2439,13 +2439,13 @@ async def start_raid(cid):
                     reward += ' \U0001F9F1 +' + str(ran)
                     brick(c, ran)
                 if mode == 1:
-                    ran = 30
+                    ran = 20
                     if mar >= 1:
                         ran *= 2
                     reward += f'\n🗡 ВСС +{ran}'
                     markup = raid_loot('weapon', 9, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
                 if mode == 2:
-                    ran = 3
+                    ran = 1
                     if mar >= 1:
                         ran *= 2
                     reward += f'\n🛡 Контакт-1 +{ran}'
