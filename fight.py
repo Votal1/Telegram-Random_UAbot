@@ -390,6 +390,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if damage <= 0:
                     r.hset(uid1, 'defense', 0)
                     r.hset(uid1, 's_defense', 0)
+            elif defense1 == 6:
+                r.hincrby(uid1, 'injure', 300)
+                r.hincrby(uid2, 'injure', 300)
+                damage_defense(uid1, defense1)
+                weapon += f'Вибух був настільки сильним, що постраждав сам {names[name2]}.'
             else:
                 r.hincrby(uid1, 'injure', 300)
                 if c1 not in (6, 16, 26) and weapon1 != 34:
@@ -1077,6 +1082,15 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             return info + win_info
 
 
+def check_vss(uid):
+    stats = r.hmget(uid, 'weapon', 'class')
+    w, cl = int(stats[0]), int(stats[1])
+    if w == 9:
+        damage_weapon(uid, cl)
+        return False
+    return True
+
+
 async def war(cid, location, big_battle):
     tid = r.hget('battle' + str(cid), 'thread')
     if tid:
@@ -1128,6 +1142,9 @@ async def war(cid, location, big_battle):
                     w = 0.25 + 0.5 * mas
                     if choices([1, 0], [100 - 18 * mas, 18 * mas]) == [1]:
                         damage_weapon(member, int(r.hget(member, 'class')))
+                elif w == 9:
+                    w = 0.75
+                    damage_weapon(member, int(r.hget(member, 'class')))
                 else:
                     w = 0.25
             else:
@@ -1198,7 +1215,8 @@ async def war(cid, location, big_battle):
         n = randint(5, 10)
         reward = '\n\n\U0001F3C6 Переможців немає.\n\U0001fa78 +' + str(n)
         for member in r.smembers('fighters' + str(cid)):
-            r.hincrby(member, 'injure', n)
+            if check_vss(member):
+                r.hincrby(member, 'injure', n)
             quest(member, 1, -6)
     else:
         money = 10
@@ -1235,7 +1253,8 @@ async def war(cid, location, big_battle):
             class_reward = '\U0001F52E: \U0001F54A +2000\n\U0001F54A -1000 всім іншим учасникам битви.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
-                spirit(-1000, member, 0)
+                if check_vss(member):
+                    spirit(-1000, member, 0)
             spirit(2000, win, 0)
     elif location == 'Битва біля старого дуба':
         if wc == 4 or wc == 14 or wc == 24:
@@ -1272,11 +1291,13 @@ async def war(cid, location, big_battle):
             class_reward = '\u26D1: \U0001fac0 +100\n\U0001F464 +10 всім іншим учасникам битви.'
             r.srem('fighters' + str(cid), win)
             for member in r.smembers('fighters' + str(cid)):
-                r.hincrby(member, 'sch', 10)
+                if check_vss(member):
+                    r.hincrby(member, 'sch', 10)
             hp(100, win)
         else:
             class_reward = '\U0001F5FA: \U0001F464 +10'
-            r.hincrby(win, 'sch', 10)
+            if check_vss(win):
+                r.hincrby(win, 'sch', 10)
     elif location == 'Битва в темному провулку':
         if wc == 10 or wc == 20 or wc == 30:
             class_reward = '\U0001F6AC: \U0001F3C5 +1 \U0001F44A +1 \u2622 +1 \U0001F4B5 +8'
@@ -1549,15 +1570,21 @@ async def great_war(cid1, cid2, a, b, tid1, tid2):
             for member in a:
                 spirit(-int(int(r.hget(member, 'spirit')) / 20), member, 0)
         for i in range(mal1):
-            r.hincrby(choice(b), 'sch', 3)
+            ran = choice(b)
+            if check_vss(ran):
+                r.hincrby(ran, 'sch', 3)
         for i in range(mal2):
-            r.hincrby(choice(a), 'sch', 3)
+            ran = choice(a)
+            if check_vss(ran):
+                r.hincrby(ran, 'sch', 3)
         if med1 == 2:
             for mem in b:
-                hp(-10, mem)
+                if check_vss(mem):
+                    hp(-10, mem)
         if med2 == 2:
             for mem in a:
-                hp(-10, mem)
+                if check_vss(mem):
+                    hp(-10, mem)
     except:
         pass
 
@@ -1920,7 +1947,8 @@ async def start_raid(cid):
             if int(r.hget(c2, 'mines')) > 0:
                 ran = randint(1, 5)
                 for mem in r.smembers('fighters_3' + str(cid)):
-                    r.hincrby(mem, 'injure', ran)
+                    if check_vss(mem):
+                        r.hincrby(mem, 'injure', ran)
                 r.hincrby(c2, 'mines', -1)
                 reward += f'Русаки підірвались на міні...\n\U0001fa78 +{ran} \U0001fac0 -100'
             else:
@@ -1944,7 +1972,8 @@ async def start_raid(cid):
                     ran = randint(1, 5)
                     drone = f'\n\nОхорона атакована дроном!\n\U0001fa78 +{ran}'
                     for mem2 in r.smembers(f'guard{int(enemy)}'):
-                        r.hincrby(mem2, 'injure', ran)
+                        if check_vss(mem2):
+                            r.hincrby(mem2, 'injure', ran)
                     mas = int(r.hget(mem, 's2'))
                     if choices([1, 0], [100 - 18 * mas, 18 * mas]) == [1]:
                         damage_weapon(mem, int(r.hget(mem, 'class')))
@@ -2021,7 +2050,7 @@ async def start_raid(cid):
             pass
 
     elif mode == [2]:
-        locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївський роднічок']
+        locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївка']
         chances = ['0', '0.1', '0.2', '0.3', '0.5', '0.75']
         s = int(r.hget(c, 'side'))
 
@@ -2214,13 +2243,21 @@ async def start_raid(cid):
                         ran *= 2
                     reward += f'\n🌀 +{ran}'
                     markup = raid_loot('tape', 0, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
-            elif location == 'Макіївський роднічок':
-                reward += 'Русаки вчинили жахливий теракт...\n'
-                ran = randint(10, 20)
-                if mar >= 1:
-                    ran *= 2
-                reward += ' \U0001F47E +' + str(ran)
-                r.hincrby(c, 'r_spirit', ran)
+            elif location == 'Макіївка':
+                reward += 'Русаки атакували Макіївське ПТУ...\n'
+                mode = choice([1, 4])
+                if mode == 1:
+                    reward += '\U0001F5E1 ВСС [Зброя, міцність=20]'
+                    markup = raid_loot('weapon', 9, 20, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 2:
+                    reward += '\U0001F6E1 Контакт-1 [Захист, міцність=1]'
+                    markup = raid_loot('defense', 6, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 3:
+                    reward += '\U0001F9EA Підсумок медичний [Допомога, міцність=40]'
+                    markup = raid_loot('support', 15, 40, 5, int(datetime.now().timestamp()) + 10, markup, c)
+                if mode == 4:
+                    reward += '\U0001F3A9 Тактичний шолом [Шапка, міцність=40]'
+                    markup = raid_loot('head', 2, 40, 5, int(datetime.now().timestamp()) + 10, markup, c)
             '''
             elif location == 'Підвал Сидоровича':
                 reward += 'Русаки завітали до підвалу Сидоровича\n\U0001F4B5 -100\n'
@@ -2375,10 +2412,15 @@ async def start_raid(cid):
                 r.hincrby(c, 'r_spirit', ran)
             '''
         elif win == ['b']:
-            if location == 'Макіївський роднічок':
-                reward += 'Русаки вирішили напитись води...\n\U0001F44A +20 \U0001fac0 -100'
+            if location == 'Макіївка':
+                ran = randint(10, 20)
+                if mar >= 1:
+                    ran *= 2
+                r.hincrby(c, 'r_spirit', ran)
                 for member in r.smembers('fighters_3' + str(cid)):
                     increase_trance(20, member)
+                reward += f'Русаки вичнили жахливий теракт на Макіївському роднічку...' \
+                          f'\n\U0001F44A +20 \U0001fac0 -100 \U0001F47E +{ran}'
             elif location == 'Синагога':
                 reward += 'Жиди вигнали русаків з синагоги...\n\U0001fac0 -100'
             else:
