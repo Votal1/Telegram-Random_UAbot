@@ -394,7 +394,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 r.hincrby(uid1, 'injure', 300)
                 r.hincrby(uid2, 'injure', 300)
                 damage_defense(uid1, defense1)
-                weapon += f'Вибух був настільки сильним, що постраждав сам {names[name2]}.'
+                weapon += f'\nВибух був настільки сильним, що постраждав сам {names[name2]}.'
             else:
                 r.hincrby(uid1, 'injure', 300)
                 if c1 not in (6, 16, 26) and weapon1 != 34:
@@ -2075,6 +2075,8 @@ async def start_raid(cid):
             chance2 = int(r.hget('soledar', 'power'))
         else:
             location = choice(locations)
+            if cid == -1001940826678:
+                location = 'Макіївка'
             chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
