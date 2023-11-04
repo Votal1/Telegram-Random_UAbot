@@ -172,8 +172,51 @@ async def fight(uid1, uid2, un1, un2, t, mid):
         if support1 in (1, 15):
             hp(10, uid1)
             damage_support(uid1)
+        elif support1 in (16, 20):
+            heal = 0
+            if int(r.hget(uid1, 'injure')) > 0:
+                r.hincrby(uid1, 'injure', -1)
+                heal = 1
+            if int(r.hget(uid1, 'sch')) > 0:
+                r.hincrby(uid1, 'sch', -1)
+                heal = 1
+            if heal and support1 == 16:
+                damage_support(uid1)
+        elif support1 == 17:
+            r.hincrby(uid1, 'injure', -6)
+            if int(r.hget(uid1, 'injure')) < 0:
+                r.hset(uid1, 'injure', 0)
+            r.hincrby(uid1, 'sch', 3)
+            damage_support(uid1)
+        elif support1 == 18:
+            hp(100, uid1)
+            r.hincrby(uid1, 'injure', 1)
+            r.hincrby(uid1, 'sch', 1)
+            damage_support(uid1)
+
         if support2 in (1, 15):
             hp(10, uid2)
+            damage_support(uid2)
+        elif support2 in (16, 20):
+            heal = 0
+            if int(r.hget(uid2, 'injure')) > 0:
+                r.hincrby(uid2, 'injure', -1)
+                heal = 1
+            if int(r.hget(uid2, 'sch')) > 0:
+                r.hincrby(uid2, 'sch', -1)
+                heal = 1
+            if heal and support2 == 16:
+                damage_support(uid2)
+        elif support2 == 17:
+            r.hincrby(uid2, 'injure', -6)
+            if int(r.hget(uid2, 'injure')) < 0:
+                r.hset(uid2, 'injure', 0)
+            r.hincrby(uid2, 'sch', 3)
+            damage_support(uid2)
+        elif support2 == 18:
+            hp(100, uid2)
+            r.hincrby(uid2, 'injure', 1)
+            r.hincrby(uid2, 'sch', 1)
             damage_support(uid2)
 
         stats11 = r.hmget(uid1, 'strength', 'intellect', 'spirit', 'hp', 'injure', 'sch')
@@ -463,6 +506,10 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s1 = int(s1 * 1.3)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' прикривається від ударів уламком бронетехніки.'
             damage_defense(uid1, 9)
+        elif defense1 == 10:
+            s1 = int(s1 * 2.2)
+            defense = '\n\n\U0001F6E1 ' + names[name1] + ' б\'ється у важкому екзоскелеті.'
+            damage_defense(uid1, 10)
         elif defense1 in (16, 17, 18):
             s2 = int(s2 * 0.8)
             defense = '\n\n\U0001F6E1 ' + names[name1] + ' захищається поліцейським щитом.'
@@ -471,6 +518,11 @@ async def fight(uid1, uid2, un1, un2, t, mid):
             s2 = int(s2 * 0.25)
             defense += '\n\n\U0001F6E1 ' + names[name1] + ' б`ється в бронежилеті.'
             damage_defense(uid1, 2)
+
+        elif defense2 == 10:
+            s2 = int(s2 * 0.8)
+            weapon += '\n\n\U0001F6E1 ' + names[name2] + ' б\'ється у важкому екзоскелеті.'
+            damage_defense(uid1, 10)
 
         if c1 == 6 or c2 == 6 or c1 == 16 or c2 == 16 or c1 == 26 or c2 == 26:
             if c1 == 6 or c1 == 16 or c1 == 26:
@@ -798,6 +850,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if checkClan(uid1, base=4):
                     if choices([1, 0], weights=[s2 / (s1 + s2), 1 - s2 / (s1 + s2)]) == [1]:
                         m_bonus = [m_bonus[0] * 2]
+                if support1 == 19:
+                    m_bonus = [m_bonus[0] * 1.5]
+                    damage_support(uid1)
                 if steal == 0:
                     r.hincrby(uid1, 'money', m_bonus[0])
                     grn = '\n\U0001F4B5 +' + str(m_bonus[0])
@@ -945,6 +1000,9 @@ async def fight(uid1, uid2, un1, un2, t, mid):
                 if checkClan(uid2, base=4):
                     if choices([1, 0], weights=[s1 / (s1 + s2), 1 - s1 / (s1 + s2)]) == [1]:
                         m_bonus = [m_bonus[0] * 2]
+                if support2 == 19:
+                    m_bonus = [m_bonus[0] * 1.5]
+                    damage_support(uid2)
                 if steal == 0:
                     r.hincrby(uid2, 'money', int(m_bonus[0]))
                     grn = '\n\U0001F4B5 +' + str(int(m_bonus[0]))

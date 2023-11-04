@@ -527,7 +527,7 @@ def open_pack2(uid, cdata, edit, count):
                             msg += '\U0001F6E1 7'
                         else:
                             msg += f'\n\u26AA \U0001F6E1 +{strength * 7}'
-                    elif int(r.hget(uid, 'defense')) not in (1, 3, 4):
+                    elif int(r.hget(uid, 'defense')) not in (1, 3, 4, 6):
                         r.hincrby(uid, 's_defense', strength * 7)
                         if count == 1:
                             msg += '\U0001F6E1 +7'

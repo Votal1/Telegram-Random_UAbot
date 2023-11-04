@@ -383,7 +383,7 @@ async def feed(message):
             r.hincrby(uid, 'eat', 1)
             success = fr[0]
             cl = int(r.hget(uid, 'class'))
-            if cl in (2, 12, 22) or int(r.hget(uid, 'support')) == 10:
+            if cl in (2, 12, 22) or int(r.hget(uid, 'support')) in (10, 20):
                 success = 1
             if success == 1:
                 if r.hexists(uid, 'cabin') and int(r.hget(uid, 'cabin')) == 1 and int(stats[0]) <= 5000:
@@ -412,8 +412,13 @@ async def feed(message):
                 elif r.hexists(uid, 'support2') and int(r.hget(uid, 'support2')) == 12:
                     sugar = 1
                     damage_support(uid, second=True)
+                oaz = 0
+                if int(r.hget(uid, 'support')) == 20:
+                    oaz = 1
+                    ran *= 3
+                    r.hset(uid, 'support', 0, {'s_support': 0})
 
-                if int(stats[0]) > 5000:
+                if int(stats[0]) > 5000 and oaz == 0:
                     if int(stats[0]) > 8000:
                         if sugar:
                             decrease = choices([1, 0], [75, 25])
@@ -434,7 +439,7 @@ async def feed(message):
                                 r.hset(uid, 'head', 5, {'s_head': 1})
                             else:
                                 r.hset(uid, 'head', 0, {'s_head': 0})
-                else:
+                elif oaz == 0:
                     if sugar:
                         ran += 15
                         increase_trance(5, uid)
