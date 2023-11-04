@@ -1857,6 +1857,8 @@ async def start_raid(cid):
         if int(res[0]) < 1500 or int(res[1]) < 1000 or int(res[2]) < 500 or int(res[3]) < 300:
             mode = [2]
 
+    if cid == -1001940826678:
+        mode = [2]
     if mode == [1]:
         title2 = r.hget(c2, 'title').decode()
         if int(r.hget(c2, 'day')) != datetime.now().day:
