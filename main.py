@@ -415,7 +415,7 @@ async def feed(message):
                 oaz = 0
                 if int(r.hget(uid, 'support')) == 20:
                     oaz = 1
-                    ran *= 3
+                    ran *= 2
                     r.hset(uid, 'support', 0, {'s_support': 0})
 
                 if int(stats[0]) > 5000 and oaz == 0:
@@ -473,7 +473,15 @@ async def feed(message):
 
                     await message.reply(msg)
             else:
-                await message.reply(f'\U0001F9A0 Твій {r_name} сьогодні захворів. Сили від їжі не прибавилось.')
+                inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head')
+                w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
+                if check_set(w, d, s, h) == 3:
+                    ran = randint(2, 6)
+                    r.hincrby(uid, 'strength', ran)
+                    msg = f'\U0001F9A0 Твій {r_name} сьогодні захворів.\n\U0001F4AA +{ran}'
+                else:
+                    msg = f'\U0001F9A0 Твій {r_name} сьогодні захворів. Сили від їжі не прибавилось.'
+                await message.reply(msg)
         elif datetime.now().day == int(r.hget(uid, 'time')):
             await message.reply('Твій русак сьогодні їв, хватить з нього')
     except:
@@ -5922,6 +5930,16 @@ async def handle_query(call):
                                 n = r.hincrby(c, 'raid_loot_c', lt)
                                 r.sadd(f'raid_loot{cid}', uid)
                                 r.hincrby(uid, 'tape', r.hget(c, 'raid_loot_s'))
+                                if n > 0:
+                                    markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
+                                                                    callback_data='clan_raid_loot'))
+                                await bot.edit_message_text(call.message.text, call.message.chat.id,
+                                                            call.message.message_id, reply_markup=markup)
+
+                            elif data == 'strap':
+                                n = r.hincrby(c, 'raid_loot_c', lt)
+                                r.sadd(f'raid_loot{cid}', uid)
+                                r.hincrby(uid, 'strap', r.hget(c, 'raid_loot_s'))
                                 if n > 0:
                                     markup.add(InlineKeyboardButton(text=f'Взяти лут. Залишилось {n}',
                                                                     callback_data='clan_raid_loot'))

@@ -1802,7 +1802,7 @@ async def start_raid(cid):
 
     raid_init(cid, raiders, c)
 
-    chance1 = hack = mar = rocket = fish = jew = did = again = ter = soledar = goy = 0
+    chance1 = hack = mar = rocket = fish = jew = did = again = ter = soledar = goy = stalker = oaz = 0
     raid1, raid2, raid3 = 50, 50, 0
     for member in raiders:
         try:
@@ -1826,6 +1826,8 @@ async def start_raid(cid):
                 did += 1
             elif check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 2:
                 ter += 1
+            elif check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 3:
+                stalker += 1
             elif check_set(int(stats[3]), int(stats[4]), int(stats[9]), int(stats[10])) == 4:
                 goy += 1
             if checkClan(member, base=4, building='morgue'):
@@ -1845,7 +1847,7 @@ async def start_raid(cid):
                     i, bd = schizophrenia(int(member), i, bd, True)
             if int(stats[8]) > 0 or int(stats[9]) == 13:
                 s, bd = trance(int(member), s, bd, True)
-
+            oaz += i
             if cl in (10, 20, 30):
                 s = int(s * 1.5)
                 if cl == 30:
@@ -1920,7 +1922,9 @@ async def start_raid(cid):
         res = r.hmget(c2, 'wood', 'stone', 'cloth', 'brick')
         if int(res[0]) < 1500 or int(res[1]) < 1000 or int(res[2]) < 500 or int(res[3]) < 300:
             mode = [2]
-
+    if cid == -1001940826678:
+        mode = [2]
+        stalker = 5
     if mode == [1]:
         title2 = r.hget(c2, 'title').decode()
         if int(r.hget(c2, 'day')) != datetime.now().day:
@@ -2115,6 +2119,7 @@ async def start_raid(cid):
 
     elif mode == [2]:
         locations = ['Відділення монобанку', 'Магазин алкоголю', 'АТБ', 'Сільпо', 'Епіцентр', 'Макіївка']
+        locations2 = ['Підвал Сидоровича', 'Табір бандитів', 'Бар 100 рентген', 'Оаза', 'Завод Юпітер', 'Прип\'ять']
         chances = ['0', '0.1', '0.2', '0.3', '0.5', '0.75']
         s = int(r.hget(c, 'side'))
 
@@ -2140,7 +2145,20 @@ async def start_raid(cid):
         else:
             location = choice(locations)
             chance2 = int(chance1 * float(chances[locations.index(location)]))
+            if stalker > 0:
+                chance = 20 * stalker
+                if choices([0, 1], weights=[100 - chance, chance])[0]:
+                    location = choice(locations2)
+                    chance2 = int(chance1 * float(chances[locations2.index(location)]))
+                    for mem in r.smembers('fighters_3' + str(cid)):
+                        if int(r.hget(mem, 'head')) != 7:
+                            r.hincrby(mem, 'injure', 10)
+                            r.hincrby(mem, 'sch', 10)
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
+        if location == 'Оаза':
+            chance1 = oaz
+            chance2 = 100
+            msg0 = f'{title} | {location}\n\n\U0001F9E0 {chance1} | {chance2}'
         try:
             await bot.send_message(cid, msg0, disable_web_page_preview=True, message_thread_id=tid)
         except:
@@ -2322,7 +2340,7 @@ async def start_raid(cid):
                 if mode == 4:
                     reward += '\U0001F3A9 Тактичний шолом [Шапка, міцність=40]'
                     markup = raid_loot('head', 2, 40, 5, int(datetime.now().timestamp()) + 10, markup, c)
-            '''
+
             elif location == 'Підвал Сидоровича':
                 reward += 'Русаки завітали до підвалу Сидоровича\n\U0001F4B5 -100\n'
                 mode = choice([1, 2, 3, 4])
@@ -2359,9 +2377,9 @@ async def start_raid(cid):
                 if mar >= 1:
                     ran *= 2
                     again = 1
-                    if again:
-                        reward += '\nРусаки готові йти в наступний рейд!'
                 reward += '\u2622 +' + str(ran) + ' \U0001F44A +20 \U0001fac0 +100 \U0001F54A +10000'
+                if again:
+                    reward += '\nРусаки готові йти в наступний рейд!'
                 for mem in r.smembers('fighters_3' + str(cid)):
                     r.hincrby(mem, 'vodka', ran)
                     r.hincrby('all_vodka', 'vodka', ran)
@@ -2371,7 +2389,7 @@ async def start_raid(cid):
 
             elif location == 'Бар 100 рентген':
                 reward += 'Русаки пограбували 100 рентген\n'
-                mode = choice([1, 2])
+                mode = choice([1, 2, 3])
                 items = randint(5, 10)
                 if mode == 1:
                     s = 10
@@ -2389,38 +2407,9 @@ async def start_raid(cid):
                     emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
                     reward += emoji + ' +1'
                     markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
-                for mem in r.smembers('fighters_3' + str(cid)):
-                    r.hset(mem, 'time', 0)
-            elif location == 'Сільпо':
-                reward += 'Русаки пограбували Сільпо\n'
-                mode = choice([1, 2, 3, 4])
-                mode2 = choice([1, 2])
-                if mode == 1:
-                    s = 6
-                    if mar >= 1:
-                        s *= 2
-                    reward += f'\U0001F37A Квас [Допомога, міцність={s}]'
-                    markup = raid_loot('support', 8, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
-                if mode == 2:
-                    s = 4
-                    if mar >= 1:
-                        s *= 2
-                    reward += f'\U0001F9EA Цукор [Допомога, міцність={s}]'
-                    markup = raid_loot('support', 7, s, 5, int(datetime.now().timestamp()) + 10, markup, c)
-                if mode == 3:
-                    reward += '\U0001F349 Кавун базований [Шапка, міцність=∞]'
-                    markup = raid_loot('head', 3, 1, 5, int(datetime.now().timestamp()) + 10, markup, c)
-                if mode == 4:
-                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                    reward += emoji + ' +1'
-                    markup = raid_loot('food', 0, 0, 5, int(datetime.now().timestamp()) + 10, markup, c)
-                if mode2 == 1:
-                    ran = randint(100, 200)
-                    if mar >= 1:
-                        ran *= 2
-                    reward += '\n\U0001F4B5 +' + str(ran)
-                    for mem in r.smembers('fighters_3' + str(cid)):
-                        r.hincrby(mem, 'money', ran)
+            elif location == 'Оаза':
+                reward += '\U0001f7e1 Русаки знайшли Серце Оази! Але їм варто вирішити, хто забере артефакт собі...\n'
+                markup = raid_loot('support', 20, 1, 1, int(datetime.now().timestamp()) + 10, markup, c)
             elif location == 'Завод Юпітер':
                 reward += 'Русаки знайшли щось корисне на заводі Юпітер\n'
                 base = int(r.hget(c, 'base'))
@@ -2467,14 +2456,16 @@ async def start_raid(cid):
                         ran *= 2
                     reward += f'\n🌀 +{ran}'
                     markup = raid_loot('tape', 0, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
-            elif location == 'Макіївський роднічок':
-                reward += 'Русаки вчинили жахливий теракт...\n'
-                ran = randint(10, 20)
-                if mar >= 1:
-                    ran *= 2
-                reward += ' \U0001F47E +' + str(ran)
-                r.hincrby(c, 'r_spirit', ran)
-            '''
+            elif location == 'Прип\'ять':
+                reward += 'Русаки перемогли загін Моноліту...\n'
+                if int(r.hget(c, 'war')) == 1:
+                    r.hincrby(c, 'points', 10)
+                    reward += '\U0001fa99 +10 '
+                reward += '\u2620\uFE0F +5 \U0001F31F +1'
+                for member in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(member, 'deaths', 5)
+                markup = raid_loot('strap', 0, 1, 1, int(datetime.now().timestamp()) + 10, markup, c)
+
         elif win == ['b']:
             if location == 'Макіївка':
                 ran = randint(10, 20)

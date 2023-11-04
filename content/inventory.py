@@ -575,7 +575,8 @@ def check_set(w, d, s, h):
         return 1
     elif w in (2, 8, 33, 37, 39, 40) and d in (2, 18) and s == 15 and h == 2:
         return 2
-
+    elif w in (9, 43, 36, 41) and d == 10 and s in (16, 17, 18, 19, 20) and h == 7:
+        return 3
     elif w in (10, 42) and d == 5 and s == 12 and h == 6:
         return 4
     return 0
