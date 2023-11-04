@@ -415,7 +415,7 @@ async def feed(message):
                 oaz = 0
                 if int(r.hget(uid, 'support')) == 20:
                     oaz = 1
-                    ran *= 2
+                    ran *= 3
                     r.hset(uid, 'support', 0, {'s_support': 0})
 
                 if int(stats[0]) > 5000 and oaz == 0:
