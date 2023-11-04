@@ -2386,7 +2386,7 @@ async def start_raid(cid):
                     spirit(10000, mem, 0)
 
             elif location == 'Бар 100 рентген':
-                reward += 'Русаки пограбували 100 рентген\n'
+                reward += 'Русаки сходили в 100 рентген\n'
                 mode = choice([1, 2, 3])
                 items = randint(5, 10)
                 if mode == 1:
