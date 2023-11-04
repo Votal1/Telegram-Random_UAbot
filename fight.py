@@ -2478,6 +2478,14 @@ async def start_raid(cid):
                           f'\n\U0001F44A +20 \U0001fac0 -100 \U0001F47E +{ran}'
             elif location == 'Синагога':
                 reward += 'Жиди вигнали русаків з синагоги...\n\U0001fac0 -100'
+            elif location == 'Оаза':
+                reward += 'Русаки застрягли в аномалії...\n\U0001fac0 -100 \U0001F464 +10'
+                for member in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(member, 'sch', 10)
+            elif location == 'Прип\'ять':
+                reward += 'Русаків перемогли монолітовці...\n\U0001fac0 -100 \U0001F464 +30'
+                for member in r.smembers('fighters_3' + str(cid)):
+                    r.hincrby(member, 'sch', 30)
             else:
                 reward += 'Русаків затримала охорона...\n\U0001fac0 -100'
             for member in r.smembers('fighters_3' + str(cid)):
