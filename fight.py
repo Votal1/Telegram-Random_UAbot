@@ -2472,7 +2472,7 @@ async def start_raid(cid):
                 r.hincrby(c, 'r_spirit', ran)
                 for member in r.smembers('fighters_3' + str(cid)):
                     increase_trance(20, member)
-                reward += f'Русаки вичнили жахливий теракт на Макіївському роднічку...' \
+                reward += f'Русаки вчинили жахливий теракт на Макіївському роднічку...' \
                           f'\n\U0001F44A +20 \U0001fac0 -100 \U0001F47E +{ran}'
             elif location == 'Синагога':
                 reward += 'Жиди вигнали русаків з синагоги...\n\U0001fac0 -100'
