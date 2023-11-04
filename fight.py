@@ -1395,6 +1395,12 @@ async def war(cid, location, big_battle):
         for member in r.smembers('fighters' + str(cid)):
             if int(member) != win and randint(0, 1):
                 r.hincrby(member, 'packs_2023_3')
+    elif location == 'Битва на аномальному полі':
+        class_reward = '☢ Деякі учасники знайшли артефакти'
+        for member in r.smembers('fighters' + str(cid)):
+            if int(r.hget(member, 'support')) == 0:
+                if randint(0, 2) == 2 or int(r.hget(member, 'weapon')) == 43:
+                    r.hset(member, 'support', randint(16, 19), {'s_support': 30})
 
     if class_reward:
         class_reward = '\n' + class_reward
@@ -1853,7 +1859,7 @@ async def start_raid(cid):
 
             w = int(stats[3])
             if w > 0:
-                if w == 3:
+                if w in (3, 43):
                     w = 0.58 if r.hexists(member, 'woman') == 0 or int(r.hget(member, 'woman')) == 0 else 0.4
                     damage_weapon(member, cl)
                 else:
@@ -1915,8 +1921,6 @@ async def start_raid(cid):
         if int(res[0]) < 1500 or int(res[1]) < 1000 or int(res[2]) < 500 or int(res[3]) < 300:
             mode = [2]
 
-    if cid == -1001940826678:
-        mode = [2]
     if mode == [1]:
         title2 = r.hget(c2, 'title').decode()
         if int(r.hget(c2, 'day')) != datetime.now().day:
@@ -2135,8 +2139,6 @@ async def start_raid(cid):
             chance2 = int(r.hget('soledar', 'power'))
         else:
             location = choice(locations)
-            if cid == -1001940826678:
-                location = 'Макіївка'
             chance2 = int(chance1 * float(chances[locations.index(location)]))
         msg0 = f'{title} | {location}\n\n\U0001F4AA {chance1} | {chance2}'
         try:
