@@ -921,8 +921,8 @@ async def no_nut(message):
         uid = message.from_user.id
         day = datetime.now().day
         month = datetime.now().month
-        if uid == 456514639 and datetime.now().month in (10, 12):
-            day, month = 1, 11
+        if uid == 456514639 and datetime.now().month in (10, 11, 12):
+            day, month = 1, 12
 
         if day == 1 and str(uid).encode() not in r.smembers('nnn_registered_2023') and month == 11:
             name = names[int(r.hget(uid, 'name'))]
