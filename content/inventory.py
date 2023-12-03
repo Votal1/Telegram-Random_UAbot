@@ -201,85 +201,125 @@ def show_backpack(uid):
                   'backpack_3', 'backpack_3_s', 'backpack_3_type',
                   'backpack_4', 'backpack_4_s', 'backpack_4_type')
     extra_slot = int(inv[0])
-    b1, b1s, b1t = int(inv[1]), int(inv[2]), inv[3].decode()
-    b2, b2s, b2t = int(inv[4]), int(inv[5]), inv[6].decode()
-    b3, b3s, b3t = int(inv[7]), int(inv[8]), inv[9].decode()
-    b4, b4s, b4t = int(inv[10]), int(inv[11]), inv[12].decode()
+    if uid == 456514639:
+        empty = 0
+        free_slots = extra_slot + 1
+        for item in range(1, extra_slot + 2):
+            inv = r.hmget(uid, f'backpack_{item}', f'backpack_{item}_s', f'backpack_{item}_type')
+            b1, b1s, b1t = int(inv[0]), int(inv[1]), inv[2].decode()
 
-    if not b1 and not b2 and not b3 and not b4:
-        msg += '[Порожньо]'
-        markup = put_in_backpack(markup, w, d, s, h)
-    else:
-        item1, item2, item3, item4 = False, False, False, False
-
-        if b1t == 'weapon':
-            item1 = weapons[b1]
-            msg += f'\U0001F5E1 Зброя: {item1}\nМіцність: {b1s}\n'
-        elif b1t == 'defense':
-            item1 = defenses[b1]
-            msg += f'\U0001F6E1 Захист: {item1}\nМіцність: {b1s}\n'
-        elif b1t == 'support':
-            item1 = supports[b1]
-            msg += f'\U0001F9EA Допомога: {item1}\nМіцність: {b1s}\n'
-        elif b1t == 'head':
-            item1 = heads[b1]
-            if b1 == 3:
-                b1s = '∞'
-            msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
-
-        if b2t == 'weapon':
-            item2 = weapons[b2]
-            msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}\n'
-        elif b2t == 'defense':
-            item2 = defenses[b2]
-            msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}\n'
-        elif b2t == 'support':
-            item2 = supports[b2]
-            msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
-        elif b2t == 'head':
-            item2 = heads[b2]
-            if b2 == 3:
-                b2s = '∞'
-            msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
-
-        if b3t == 'weapon':
-            item3 = weapons[b3]
-            msg += f'\U0001F5E1 Зброя: {weapons[b3]}\nМіцність: {b3s}\n'
-        elif b3t == 'defense':
-            item3 = defenses[b3]
-            msg += f'\U0001F6E1 Захист: {defenses[b3]}\nМіцність: {b3s}\n'
-        elif b3t == 'support':
-            item3 = supports[b3]
-            msg += f'\U0001F9EA Допомога: {supports[b3]}\nМіцність: {b3s}\n'
-        elif b3t == 'head':
-            item3 = heads[b3]
-            if b3 == 3:
-                b3s = '∞'
-            msg += f'\U0001F3A9 Шапка: {heads[b3]}\nМіцність: {b3s}\n'
-
-        if b4t == 'weapon':
-            item4 = weapons[b4]
-            msg += f'\U0001F5E1 Зброя: {weapons[b4]}\nМіцність: {b4s}\n'
-        elif b4t == 'defense':
-            item4 = defenses[b4]
-            msg += f'\U0001F6E1 Захист: {defenses[b4]}\nМіцність: {b4s}\n'
-        elif b4t == 'support':
-            item4 = supports[b4]
-            msg += f'\U0001F9EA Допомога: {supports[b4]}\nМіцність: {b4s}\n'
-        elif b4t == 'head':
-            item4 = heads[b4]
-            if b4 == 3:
-                b4s = '∞'
-            msg += f'\U0001F3A9 Шапка: {heads[b4]}\nМіцність: {b4s}\n'
-
-        free_slots = 4
-        for n in (b1, b2, b3, b4):
-            if n:
+            if not b1:
+                empty += 1
+                msg += '[Порожньо]'
+                markup = put_in_backpack(markup, w, d, s, h)
+            else:
                 free_slots -= 1
-        if extra_slot >= 4 - free_slots:
-            markup = put_in_backpack(markup, w, d, s, h)
+                item1 = False
 
-        markup = take_from_backpack(markup, item1, item2, item3, item4)
+                if b1t == 'weapon':
+                    item1 = weapons[b1]
+                    msg += f'\U0001F5E1 Зброя: {item1}\nМіцність: {b1s}\n'
+                elif b1t == 'defense':
+                    item1 = defenses[b1]
+                    msg += f'\U0001F6E1 Захист: {item1}\nМіцність: {b1s}\n'
+                elif b1t == 'support':
+                    item1 = supports[b1]
+                    msg += f'\U0001F9EA Допомога: {item1}\nМіцність: {b1s}\n'
+                elif b1t == 'head':
+                    item1 = heads[b1]
+                    if b1 == 3:
+                        b1s = '∞'
+                    msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
+
+                if extra_slot >= extra_slot + 1 - free_slots:
+                    markup = put_in_backpack(markup, w, d, s, h)
+
+                markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}',
+                                                callback_data=f'backpack_take_{item}'))
+
+        if empty == extra_slot + 1:
+            msg += '[Порожньо]'
+            markup = put_in_backpack(markup, w, d, s, h)
+    else:
+        b1, b1s, b1t = int(inv[1]), int(inv[2]), inv[3].decode()
+        b2, b2s, b2t = int(inv[4]), int(inv[5]), inv[6].decode()
+        b3, b3s, b3t = int(inv[7]), int(inv[8]), inv[9].decode()
+        b4, b4s, b4t = int(inv[10]), int(inv[11]), inv[12].decode()
+
+        if not b1 and not b2 and not b3 and not b4:
+            msg += '[Порожньо]'
+            markup = put_in_backpack(markup, w, d, s, h)
+        else:
+            item1, item2, item3, item4 = False, False, False, False
+
+            if b1t == 'weapon':
+                item1 = weapons[b1]
+                msg += f'\U0001F5E1 Зброя: {item1}\nМіцність: {b1s}\n'
+            elif b1t == 'defense':
+                item1 = defenses[b1]
+                msg += f'\U0001F6E1 Захист: {item1}\nМіцність: {b1s}\n'
+            elif b1t == 'support':
+                item1 = supports[b1]
+                msg += f'\U0001F9EA Допомога: {item1}\nМіцність: {b1s}\n'
+            elif b1t == 'head':
+                item1 = heads[b1]
+                if b1 == 3:
+                    b1s = '∞'
+                msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
+
+            if b2t == 'weapon':
+                item2 = weapons[b2]
+                msg += f'\U0001F5E1 Зброя: {weapons[b2]}\nМіцність: {b2s}\n'
+            elif b2t == 'defense':
+                item2 = defenses[b2]
+                msg += f'\U0001F6E1 Захист: {defenses[b2]}\nМіцність: {b2s}\n'
+            elif b2t == 'support':
+                item2 = supports[b2]
+                msg += f'\U0001F9EA Допомога: {supports[b2]}\nМіцність: {b2s}\n'
+            elif b2t == 'head':
+                item2 = heads[b2]
+                if b2 == 3:
+                    b2s = '∞'
+                msg += f'\U0001F3A9 Шапка: {heads[b2]}\nМіцність: {b2s}\n'
+
+            if b3t == 'weapon':
+                item3 = weapons[b3]
+                msg += f'\U0001F5E1 Зброя: {weapons[b3]}\nМіцність: {b3s}\n'
+            elif b3t == 'defense':
+                item3 = defenses[b3]
+                msg += f'\U0001F6E1 Захист: {defenses[b3]}\nМіцність: {b3s}\n'
+            elif b3t == 'support':
+                item3 = supports[b3]
+                msg += f'\U0001F9EA Допомога: {supports[b3]}\nМіцність: {b3s}\n'
+            elif b3t == 'head':
+                item3 = heads[b3]
+                if b3 == 3:
+                    b3s = '∞'
+                msg += f'\U0001F3A9 Шапка: {heads[b3]}\nМіцність: {b3s}\n'
+
+            if b4t == 'weapon':
+                item4 = weapons[b4]
+                msg += f'\U0001F5E1 Зброя: {weapons[b4]}\nМіцність: {b4s}\n'
+            elif b4t == 'defense':
+                item4 = defenses[b4]
+                msg += f'\U0001F6E1 Захист: {defenses[b4]}\nМіцність: {b4s}\n'
+            elif b4t == 'support':
+                item4 = supports[b4]
+                msg += f'\U0001F9EA Допомога: {supports[b4]}\nМіцність: {b4s}\n'
+            elif b4t == 'head':
+                item4 = heads[b4]
+                if b4 == 3:
+                    b4s = '∞'
+                msg += f'\U0001F3A9 Шапка: {heads[b4]}\nМіцність: {b4s}\n'
+
+            free_slots = 4
+            for n in (b1, b2, b3, b4):
+                if n:
+                    free_slots -= 1
+            if extra_slot >= 4 - free_slots:
+                markup = put_in_backpack(markup, w, d, s, h)
+
+            markup = take_from_backpack(markup, item1, item2, item3, item4)
 
     markup.add(InlineKeyboardButton(text='\u21A9\uFE0F', callback_data='backpack_return'))
 
@@ -376,12 +416,11 @@ def change_item(cdata, uid):
                  'support': (2, 6, 9, 11, 14),
                  'head': ()}
     if cdata.startswith('backpack_open'):
-        if not r.hexists(uid, 'backpack_1'):
-            r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty', 'extra_slot': 0,
-                                          'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty'})
-        if not r.hexists(uid, 'backpack_3'):
-            r.hset(uid, 'backpack_3', 0, {'backpack_3_s': 0, 'backpack_3_type': 'empty',
-                                          'backpack_4': 0, 'backpack_4_s': 0, 'backpack_4_type': 'empty'})
+        if not r.hexists(uid, 'extra_slot'):
+            r.hset(uid, 'extra_slot', 0)
+        for slot in range(1, 6):
+            if not r.hexists(uid, f'backpack_{slot}'):
+                r.hset(uid, f'backpack_{slot}', 0, {f'backpack_{slot}_s': 0, f'backpack_{slot}_type': 'empty'})
 
         msg, markup = show_backpack(uid)
         return msg, markup, True, False
@@ -395,11 +434,10 @@ def change_item(cdata, uid):
         item, s_item = int(r.hget(uid, item_type)), int(r.hget(uid, f's_{item_type}'))
         extra = int(r.hget(uid, 'extra_slot'))
 
-        for n in range(5):
-            if n > 0:
-                if extra >= n - 1 and not int(r.hget(uid, f'backpack_{n}')):
-                    slot = n
-                    break
+        for n in range(1, 6):
+            if extra >= n - 1 and not int(r.hget(uid, f'backpack_{n}')):
+                slot = n
+                break
         else:
             slot = 0
 
@@ -433,6 +471,8 @@ def change_item(cdata, uid):
             slot = 3
         elif place == 'fourth':
             slot = 4
+        elif place in ('1', '2', '3', '4', '5'):
+            slot = int(place)
 
         inv = r.hmget(uid, f'backpack_{slot}', f'backpack_{slot}_s', f'backpack_{slot}_type')
         b, bs, item_type = int(inv[0]), int(inv[1]), inv[2].decode()
