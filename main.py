@@ -880,37 +880,37 @@ async def woman(message):
         if r.hexists(uid, 'time4') == 0:
             r.hset(uid, 'time4', 0)
         if int(r.hget(uid, 'woman')) == 1:
-            if str(uid).encode() not in r.smembers('nnn_registered_2023'):
-                quest(uid, 1, -3)
-                if int(r.hget(uid, 'time4')) != datetime.now().day:
-                    if r.hexists(uid, 'time5') == 0:
-                        r.hset(uid, 'time5', 0)
-                    r.hset(uid, 'time4', datetime.now().day)
-                    r.hincrby(uid, 'time5', 1)
-                    if int(r.hget(uid, 'time5')) >= 9:
-                        emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
-                        msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
-                              'В тебе буде смачний сніданок!'
-                        r.hincrby(uid, 'childs', 1)
-                        r.hincrby('all_children', 'children', 1)
-                        r.hset(uid, 'time5', 0)
-                        if int(r.hget(uid, 's5')) >= 4:
-                            if r.hexists(uid, 'time22') == 0:
-                                msg += f'\n{emoji} +1'
-                                r.hset(uid, 'time', 0)
-                            else:
-                                msg += f'\n{emoji} +2'
-                                r.hset(uid, 'time', 0)
-                                r.hset(uid, 'time22', 0)
-                        await message.reply(msg)
-                    else:
-                        await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
-                                            r.hget(uid, 'time5').decode() + ' місяці.')
+            # if str(uid).encode() not in r.smembers('nnn_registered_2023'):
+            quest(uid, 1, -3)
+            if int(r.hget(uid, 'time4')) != datetime.now().day:
+                if r.hexists(uid, 'time5') == 0:
+                    r.hset(uid, 'time5', 0)
+                r.hset(uid, 'time4', datetime.now().day)
+                r.hincrby(uid, 'time5', 1)
+                if int(r.hget(uid, 'time5')) >= 9:
+                    emoji = choice(['\U0001F35C', '\U0001F35D', '\U0001F35B', '\U0001F957', '\U0001F32D'])
+                    msg = '\U0001F469\U0001F3FB Ти провідав жінку. Вона народила \U0001F476 немовля. ' \
+                          'В тебе буде смачний сніданок!'
+                    r.hincrby(uid, 'childs', 1)
+                    r.hincrby('all_children', 'children', 1)
+                    r.hset(uid, 'time5', 0)
+                    if int(r.hget(uid, 's5')) >= 4:
+                        if r.hexists(uid, 'time22') == 0:
+                            msg += f'\n{emoji} +1'
+                            r.hset(uid, 'time', 0)
+                        else:
+                            msg += f'\n{emoji} +2'
+                            r.hset(uid, 'time', 0)
+                            r.hset(uid, 'time22', 0)
+                    await message.reply(msg)
                 else:
-                    await message.reply('\U0001F469\U0001F3FB Ти знову провідав жінку. Вона на ' +
+                    await message.reply('\U0001F469\U0001F3FB Ти провідав жінку. Вона на ' +
                                         r.hget(uid, 'time5').decode() + ' місяці.')
             else:
-                await message.reply('\U0001F330 Жінки під час No Nut November заборонені!')
+                await message.reply('\U0001F469\U0001F3FB Ти знову провідав жінку. Вона на ' +
+                                    r.hget(uid, 'time5').decode() + ' місяці.')
+            #else:
+            #    await message.reply('\U0001F330 Жінки під час No Nut November заборонені!')
     except:
         pass
 
