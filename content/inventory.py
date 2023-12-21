@@ -431,7 +431,7 @@ def change_item(cdata, uid):
         item, s_item = int(r.hget(uid, item_type)), int(r.hget(uid, f's_{item_type}'))
         extra = int(r.hget(uid, 'extra_slot'))
 
-        for n in range(1, 6):
+        for n in range(1, extra + 2):
             if extra >= n - 1 and not int(r.hget(uid, f'backpack_{n}')):
                 slot = n
                 break
@@ -468,7 +468,7 @@ def change_item(cdata, uid):
             slot = 3
         elif place == 'fourth':
             slot = 4
-        elif place in ('1', '2', '3', '4', '5'):
+        elif place in ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'):
             slot = int(place)
 
         inv = r.hmget(uid, f'backpack_{slot}', f'backpack_{slot}_s', f'backpack_{slot}_type')
