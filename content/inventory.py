@@ -200,7 +200,7 @@ def show_backpack(uid):
                   'backpack_2', 'backpack_2_s', 'backpack_2_type',
                   'backpack_3', 'backpack_3_s', 'backpack_3_type',
                   'backpack_4', 'backpack_4_s', 'backpack_4_type')
-    extra_slot = int(inv[0])
+    extra_slot = int(r.hget(uid, 'extra_slot'))
     if uid == 456514639:
         empty = 0
         free_slots = extra_slot + 1
@@ -396,10 +396,10 @@ def empty_backpack(cdata, uid):
         return msg, markup
 
     if cdata.startswith('backpack_empty'):
-        r.hset(uid, 'backpack_1', 0, {'backpack_1_s': 0, 'backpack_1_type': 'empty',
-                                      'backpack_2': 0, 'backpack_2_s': 0, 'backpack_2_type': 'empty',
-                                      'backpack_3': 0, 'backpack_3_s': 0, 'backpack_3_type': 'empty',
-                                      'backpack_4': 0, 'backpack_4_s': 0, 'backpack_4_type': 'empty'})
+        if r.hexists(uid, 'extra_slot'):
+            extra_slot = int(r.hget(uid, 'extra_slot'))
+            for slot in range(1, extra_slot + 2):
+                r.hset(uid, f'backpack_{slot}', 0, {f'backpack_{slot}_s': 0, f'backpack_{slot}_type': 'empty'})
         answer = 'Рюкзак очищено'
         msg, markup = show_inventory(uid)
         return msg, markup, True, answer
@@ -414,7 +414,8 @@ def change_item(cdata, uid):
     if cdata.startswith('backpack_open'):
         if not r.hexists(uid, 'extra_slot'):
             r.hset(uid, 'extra_slot', 0)
-        for slot in range(1, 6):
+        extra_slot = int(r.hget(uid, 'extra_slot'))
+        for slot in range(1, extra_slot + 2):
             if not r.hexists(uid, f'backpack_{slot}'):
                 r.hset(uid, f'backpack_{slot}', 0, {f'backpack_{slot}_s': 0, f'backpack_{slot}_type': 'empty'})
 
