@@ -231,15 +231,13 @@ def show_backpack(uid):
                         b1s = '∞'
                     msg += f'\U0001F3A9 Шапка: {item1}\nМіцність: {b1s}\n'
 
-                if extra_slot >= extra_slot + 1 - free_slots:
-                    markup = put_in_backpack(markup, w, d, s, h)
-
                 markup.add(InlineKeyboardButton(text=f'\u2B05\uFE0F\U0001F392 {item1}',
                                                 callback_data=f'backpack_take_{item}'))
+        if extra_slot >= extra_slot + 1 - free_slots:
+            markup = put_in_backpack(markup, w, d, s, h)
 
         if empty == extra_slot + 1:
             msg += '[Порожньо]'
-            markup = put_in_backpack(markup, w, d, s, h)
     else:
         b1, b1s, b1t = int(inv[1]), int(inv[2]), inv[3].decode()
         b2, b2s, b2t = int(inv[4]), int(inv[5]), inv[6].decode()
