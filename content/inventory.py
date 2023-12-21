@@ -210,8 +210,6 @@ def show_backpack(uid):
 
             if not b1:
                 empty += 1
-                msg += '[Порожньо]'
-                markup = put_in_backpack(markup, w, d, s, h)
             else:
                 free_slots -= 1
                 item1 = False
