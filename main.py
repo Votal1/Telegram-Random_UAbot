@@ -1687,52 +1687,58 @@ async def inventory(message):
 
 @dp.message_handler(commands=['pack'])
 async def pack(message):
-    if r.hexists(message.from_user.id, 'name') == 1:
-        try:
-            n = int(message.text.split()[1])
-            if 0 < n < 2000:
-                markup = InlineKeyboardMarkup()
-                markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
-                await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
-                                    reply_markup=markup)
-        except:
-            packs = int(r.hget(message.from_user.id, 'packs'))
-            if packs != 0:
-                await message.reply('\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
-                                    reply_markup=unpack(message.from_user.id))
-            else:
-                await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
-                                    '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
+    if message.chat.id == -1001211933154:
+        if r.hexists(message.from_user.id, 'name') == 1:
+            try:
+                n = int(message.text.split()[1])
+                if 0 < n < 2000:
+                    markup = InlineKeyboardMarkup()
+                    markup.add(InlineKeyboardButton(text='Купити', callback_data=f'buy_pack_{n}'))
+                    await message.reply(f'\U0001F4E6 Купити {n} пакунків за \U0001F4B5 {n * 20} гривень?',
+                                        reply_markup=markup)
+            except:
+                packs = int(r.hget(message.from_user.id, 'packs'))
+                if packs != 0:
+                    await message.reply('\U0001F4E6 Донбаські пакунки: ' + str(packs) + '\n\nВідкрити?',
+                                        reply_markup=unpack(message.from_user.id))
+                else:
+                    await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
+                                        '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
+        else:
+            await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
     else:
-        await message.reply('\U0001F3DA У тебе немає русака.\n\nРусака можна отримати, сходивши на \n/donbass')
+        await message.reply('Відкривайте в іншому місці')
 
 
 @dp.message_handler(commands=['openpack'])
 async def pack(message):
     try:
-        packs = int(r.hget(message.from_user.id, 'packs'))
-        if r.hexists('pack_ts2', message.from_user.id) == 0:
-            r.hset('pack_ts2', message.from_user.id, 0)
-        timestamp = int(datetime.now().timestamp())
-        if timestamp - int(r.hget('pack_ts2', message.from_user.id)) < 0.2:
-            pass
-        elif packs > 0:
-            r.hset('pack_ts2', message.from_user.id, timestamp)
-            count = 1
-            try:
-                #if message.from_user.id in [456514639, 764407699, 1760585978, 1042645070,
-                 #                           721627017, 1290022349, 354277131]:
-                count = int(message.text.split()[1])
-                if count > 20 or count < 1:
-                    count = 1
-            except:
+        if message.chat.id == -1001211933154:
+            packs = int(r.hget(message.from_user.id, 'packs'))
+            if r.hexists('pack_ts2', message.from_user.id) == 0:
+                r.hset('pack_ts2', message.from_user.id, 0)
+            timestamp = int(datetime.now().timestamp())
+            if timestamp - int(r.hget('pack_ts2', message.from_user.id)) < 0.2:
                 pass
-            msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
-            if msg:
-                await message.reply(msg[0], reply_markup=msg[1])
+            elif packs > 0:
+                r.hset('pack_ts2', message.from_user.id, timestamp)
+                count = 1
+                try:
+                    #if message.from_user.id in [456514639, 764407699, 1760585978, 1042645070,
+                     #                           721627017, 1290022349, 354277131]:
+                    count = int(message.text.split()[1])
+                    if count > 20 or count < 1:
+                        count = 1
+                except:
+                    pass
+                msg = open_pack2(message.from_user.id, f'pack_unpack_{message.from_user.id}', None, count)
+                if msg:
+                    await message.reply(msg[0], reply_markup=msg[1])
+            else:
+                await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
+                                    '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
         else:
-            await message.reply('\U0001F4E6 Донбаський пакунок коштує \U0001F4B5 20 гривень.'
-                                '\n\nКупити один і відкрити?', reply_markup=unpack(message.from_user.id))
+            await message.reply('Відкривайте в іншому місці')
     except:
         pass
 
@@ -1743,8 +1749,11 @@ async def pack(message):
         if r.hexists(message.from_user.id, 'packs_2024'):
             packs = int(r.hget(message.from_user.id, 'packs_2024'))
             if packs != 0:
-                await message.reply('🎁 Донбаський подарунок: ' + str(packs) + '\n\nВідкрити?',
-                                    reply_markup=gift_unpack(message.from_user.id))
+                if message.chat.id == -1001211933154:
+                    await message.reply('🎁 Донбаський подарунок: ' + str(packs) + '\n\nВідкрити?',
+                                        reply_markup=gift_unpack(message.from_user.id))
+                else:
+                    await message.reply('Відкривайте в іншому місці')
 
 
 @dp.message_handler(commands=['skills'])
