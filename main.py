@@ -1687,7 +1687,7 @@ async def inventory(message):
 
 @dp.message_handler(commands=['pack'])
 async def pack(message):
-    if message.chat.id == -1001211933154:
+    if message.chat.id != -1001211933154:
         if r.hexists(message.from_user.id, 'name') == 1:
             try:
                 n = int(message.text.split()[1])
@@ -1713,7 +1713,7 @@ async def pack(message):
 @dp.message_handler(commands=['openpack'])
 async def pack(message):
     try:
-        if message.chat.id == -1001211933154:
+        if message.chat.id != -1001211933154:
             packs = int(r.hget(message.from_user.id, 'packs'))
             if r.hexists('pack_ts2', message.from_user.id) == 0:
                 r.hset('pack_ts2', message.from_user.id, 0)
@@ -1749,7 +1749,7 @@ async def pack(message):
         if r.hexists(message.from_user.id, 'packs_2024'):
             packs = int(r.hget(message.from_user.id, 'packs_2024'))
             if packs != 0:
-                if message.chat.id == -1001211933154:
+                if message.chat.id != -1001211933154:
                     await message.reply('🎁 Донбаський подарунок: ' + str(packs) + '\n\nВідкрити?',
                                         reply_markup=gift_unpack(message.from_user.id))
                 else:
