@@ -1382,7 +1382,7 @@ async def war(cid, location, big_battle):
         class_reward = '\U0001F381: Всі бійці отримали подарунок.'
         # winners = r.srandmember('fighters' + str(cid), 3)
         for member in r.smembers('fighters' + str(cid)):
-            r.hincrby(member, 'packs_2023')
+            r.hincrby(member, 'packs_2024')
 
     elif location == 'Битва біля Києво-Печерської Лаври':
         class_reward = '🧺: Всі інші вкрали по кошику.'

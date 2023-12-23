@@ -3563,7 +3563,7 @@ async def handle_query(call):
 
             maximum = 10
             if call.message.chat.id == -1001211933154:
-                maximum = 10
+                maximum = 20
 
             if r.scard('fighters' + str(call.message.chat.id)) < maximum:
                 r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
@@ -3608,7 +3608,8 @@ async def handle_query(call):
                                   'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
                                   'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні',
                                   'Висадка в Чорнобаївці', 'Битва в темному провулку', 'Битва біля розбитої колони',
-                                  'Розгром командного пункту', 'Битва на аномальному полі'])
+                                  'Розгром командного пункту', 'Битва на аномальному полі',
+                                  'Битва біля новорічної ялинки', 'Битва біля новорічної ялинки', 'Битва біля новорічної ялинки'])
                     big_battle = True
                     try:
                         mid = int(r.hget('battle' + str(call.message.chat.id), 'pin'))
