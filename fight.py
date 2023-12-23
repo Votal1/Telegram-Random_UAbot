@@ -421,7 +421,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if weapon2 == 6:
             weapon = '\n\n\U0001F381 ' + names[name1] + ' отримав подарунок від свого суперника...'
-            r.hincrby(uid1, 'packs_2023_3', 1)
+            r.hincrby(uid1, 'packs_2024', 1)
             damage_weapon(uid2, c2)
 
         if weapon2 == 2 and t == 1 and int(r.hget(uid1, 'strength')) > 2000:
