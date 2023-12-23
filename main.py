@@ -24,7 +24,7 @@ from content.buttons import battle_button, battle_button_2, battle_button_3, \
 from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set, empty_backpack
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack, open_pack2, check_slot, open_gift3
+from content.packs import open_pack, open_pack2, check_slot, open_gift
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
 
@@ -1739,10 +1739,10 @@ async def pack(message):
 @dp.message_handler(commands=['gift'])
 async def pack(message):
     if r.hexists(message.from_user.id, 'name'):
-        if r.hexists(message.from_user.id, 'packs_2023_3'):
-            packs = int(r.hget(message.from_user.id, 'packs_2023_3'))
+        if r.hexists(message.from_user.id, 'packs_2024'):
+            packs = int(r.hget(message.from_user.id, 'packs_2024'))
             if packs != 0:
-                await message.reply('🧳 Валізи з бізнес-джета: ' + str(packs) + '\n\nВідкрити?',
+                await message.reply('🎁 Донбаський подарунок: ' + str(packs) + '\n\nВідкрити?',
                                     reply_markup=gift_unpack(message.from_user.id))
 
 
@@ -5806,7 +5806,7 @@ async def handle_query(call):
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
                 if call.data.startswith('gift_unpack'):
-                    msg = open_gift3(call.from_user.id, call.data, call.message.text, call.message.chat.id)
+                    msg = open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                     if msg:
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
@@ -5814,7 +5814,7 @@ async def handle_query(call):
                     if check_slot(call.from_user.id, call.data):
                         await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                     call.message.message_id, reply_markup=None)
-                        open_gift3(call.from_user.id, call.data, call.message.text, call.message.chat.id)
+                        open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Неможливо взяти спорядження, '

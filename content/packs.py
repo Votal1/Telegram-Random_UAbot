@@ -868,10 +868,11 @@ def open_gift(uid, cdata, edit, cid):
     msg = ''
     if uid == int(cdata.split('_')[2]):
         if cdata.startswith('gift_unpack_'):
-            if int(r.hget(uid, 'packs_2023')) > 0:
-                r.hincrby(uid, 'packs_2023', -1)
+            if int(r.hget(uid, 'packs_2024')) > 0:
+                r.hincrby(uid, 'packs_2024', -1)
                 r.hincrby(uid, 'opened', 1)
                 r.hincrby('all_opened', 'packs', 1)
+                r.hincrby('packs_2024', uid, 1)
 
                 ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                               weights=[20, 18, 15, 10, 10, 10, 4, 4, 4, 2, 2, 1])
@@ -899,12 +900,12 @@ def open_gift(uid, cdata, edit, cid):
                     msg = '\u26AA Знайдено конверт, всередині якого...\n\U0001F4B5 50 гривень.'
                     r.hincrby(uid, 'money', 50)
                 elif ran == [4]:
-                    msg = '\U0001f535 Знайдено: Рязанський цукор \U0001F92F\n\U0001F9EA +1'
+                    msg = '\U0001f535 Знайдено упаковку цукерок Рошен!\n\U0001F92F\n\U0001F9EA +2'
                     if int(r.hget(uid, 'support')) == 0:
-                        r.hset(uid, 'support', 7)
-                        r.hset(uid, 's_support', 1)
-                    elif int(r.hget(uid, 'support')) != 10:
-                        r.hincrby(uid, 's_support', 1)
+                        r.hset(uid, 'support', 12)
+                        r.hset(uid, 's_support', 2)
+                    elif int(r.hget(uid, 'support')) not in (6, 10, 11, 20):
+                        r.hincrby(uid, 's_support', 2)
                 elif ran == [5]:
                     msg = '\U0001f535 Знайдено новорічну шапку.\n\U0001F3A9 +1'
                     if int(r.hget(uid, 'head')) == 0:
@@ -914,9 +915,7 @@ def open_gift(uid, cdata, edit, cid):
                         r.hincrby(uid, 's_head', 1)
                 elif ran == [6]:
                     increase_trance(20, uid)
-                    vo = 0
-                    for v in range(20):
-                        vo += int(vodka(uid))
+                    vo = int(vodka(uid, 20))
                     msg = f'\U0001f535 Цей пакунок виявився ящиком Львівського Різдвяного!\n' \
                           f'\U0001F44A +20 \u2622 +20 \U0001F54A +{vo}'
                 elif ran == [7]:
@@ -942,7 +941,7 @@ def open_gift(uid, cdata, edit, cid):
                         r.hincrby(uid, 's_weapon', 10)
                     else:
                         markup.add(InlineKeyboardButton(text='Взяти скриньку Пандори',
-                                                        callback_data=f'gift_stick_{uid}'))
+                                                        callback_data=f'gift_box_{uid}'))
                     msg = '\U0001f7e1 Скринька Пандори [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
                           'подарунок в дуелі.'
                 elif ran == [12]:
@@ -954,7 +953,7 @@ def open_gift(uid, cdata, edit, cid):
 
             return msg, markup
 
-        elif cdata.startswith('gift_stick_'):
+        elif cdata.startswith('gift_box_'):
             if int(r.hget(uid, 'weapon')) == 6:
                 r.hincrby(uid, 's_weapon', 10)
             else:
