@@ -828,6 +828,8 @@ async def passport(message):
         s6 = sk[5]
         if s6:
             s6 = int(s6) + 1
+            if s6 > 4:
+                s6 = 4
         else:
             s6 = 1
         skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4]) + s6) * 100 / 34)
