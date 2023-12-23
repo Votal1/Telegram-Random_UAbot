@@ -874,8 +874,8 @@ def open_gift(uid, cdata, edit, cid):
                 r.hincrby('all_opened', 'packs', 1)
                 r.hincrby('packs_2024', uid, 1)
 
-                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                              weights=[20, 18, 15, 10, 10, 10, 4, 4, 4, 2, 2, 1])
+                ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                              weights=[20, 18, 15, 10, 10, 5, 5, 3, 3, 3, 3, 2, 2, 1])
                 if ran == [1]:
                     ran = randint(1, 5)
                     if ran == 1:
@@ -919,16 +919,27 @@ def open_gift(uid, cdata, edit, cid):
                     msg = f'\U0001f535 Цей пакунок виявився ящиком Львівського Різдвяного!\n' \
                           f'\U0001F44A +20 \u2622 +20 \U0001F54A +{vo}'
                 elif ran == [7]:
+                    msg = '\U0001f535 Ти думав що тут буде подарунок? Тримай повістку!'
+                    if int(r.hget(uid, 'support')) == 0:
+                        r.hset(uid, 'support', 11)
+                        r.hset(uid, 's_support', 10)
+                    else:
+                        markup.add(InlineKeyboardButton(text='Взяти повістку',
+                                                        callback_data=f'gift_notice_{uid}'))
+                elif ran == [8]:
                     msg = '\U0001f7e3 В цьому подарунку знаходиться повне відро олів`є\n\U0001F957 +1'
                     r.hset(uid, 'time', 0)
-                elif ran == [8]:
+                elif ran == [9]:
                     ran = randint(1, 5)
                     r.hincrby(uid, 'salt', ran)
                     msg = f'\U0001f7e3 В цьому подарунку знаходиться кілька банок солоної карамелі\n\U0001F9C2 +{ran}'
-                elif ran == [9]:
+                elif ran == [10]:
                     msg = '\U0001f7e3 Знайдено зимову куртку, а в ній заначку...\n\U0001F4B5 500 гривень.'
                     r.hincrby(uid, 'money', 500)
-                elif ran == [10]:
+                elif ran == [11]:
+                    msg = '\U0001f7e3 В подарунку нічого немає, лише багато стрічки. Липкої.\n🌀 +1'
+                    r.hincrby(uid, 'tape', 1)
+                elif ran == [12]:
                     try:
                         for mem in r.smembers(cid):
                             spirit(5000, mem, 0)
@@ -936,7 +947,7 @@ def open_gift(uid, cdata, edit, cid):
                         spirit(5000, uid, 0)
                     msg = '\U0001f7e1 Після відкриття цього подарунка сталася бавовна...\n' \
                           '\U0001F54A +5000 всім в чаті'
-                elif ran == [11]:
+                elif ran == [13]:
                     if int(r.hget(uid, 'weapon')) == 6:
                         r.hincrby(uid, 's_weapon', 10)
                     else:
@@ -944,7 +955,7 @@ def open_gift(uid, cdata, edit, cid):
                                                         callback_data=f'gift_box_{uid}'))
                     msg = '\U0001f7e1 Скринька Пандори [Зброя, міцність=10] - дарує ворогу \U0001F381 Донбаський ' \
                           'подарунок в дуелі.'
-                elif ran == [12]:
+                elif ran == [14]:
                     msg = '\U0001f7e1 На передодні Різдва на Донбасі стається справжнє диво, святкове як зимова ' \
                           'ніч веселе як коляда!\n\U0001F31F +1'
                     r.hincrby(uid, 'strap', 1)
@@ -952,6 +963,11 @@ def open_gift(uid, cdata, edit, cid):
                 msg = 'Недостатньо подарунків.'
 
             return msg, markup
+
+        elif cdata.startswith('gift_notice_'):
+            r.hset(uid, 'support', 11)
+            r.hset(uid, 's_support', 10)
+            return edit, None
 
         elif cdata.startswith('gift_box_'):
             if int(r.hget(uid, 'weapon')) == 6:
