@@ -1297,7 +1297,7 @@ async def promo_code(message):
                     msg = f'\u26CF Промокод швайнокарасів активовано!\n\u2708\uFE0F +1 \U0001F4AA +{st} ' \
                           f'\U0001F4E6 +100 \U0001F4B5 +200'
 
-                    r.hincrby(message.from_user.id, 'packs_2023_3', 10)
+                    r.hincrby(message.from_user.id, 'packs_2024', 10)
                     msg += '\n🧳 +10'
 
                     await message.reply(msg)
