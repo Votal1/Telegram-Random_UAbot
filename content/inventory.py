@@ -196,12 +196,8 @@ def show_backpack(uid):
     inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head', 's_weapon', 's_defense', 's_support', 's_head')
     w, d, s, h = int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])
 
-    inv = r.hmget(uid, 'extra_slot', 'backpack_1', 'backpack_1_s', 'backpack_1_type',
-                  'backpack_2', 'backpack_2_s', 'backpack_2_type',
-                  'backpack_3', 'backpack_3_s', 'backpack_3_type',
-                  'backpack_4', 'backpack_4_s', 'backpack_4_type')
     extra_slot = int(r.hget(uid, 'extra_slot'))
-    if uid == 456514639:
+    if True:
         empty = 0
         free_slots = extra_slot + 1
         for item in range(1, extra_slot + 2):
@@ -237,6 +233,10 @@ def show_backpack(uid):
         if empty == extra_slot + 1:
             msg += '[Порожньо]'
     else:
+        inv = r.hmget(uid, 'extra_slot', 'backpack_1', 'backpack_1_s', 'backpack_1_type',
+                      'backpack_2', 'backpack_2_s', 'backpack_2_type',
+                      'backpack_3', 'backpack_3_s', 'backpack_3_type',
+                      'backpack_4', 'backpack_4_s', 'backpack_4_type')
         b1, b1s, b1t = int(inv[1]), int(inv[2]), inv[3].decode()
         b2, b2s, b2t = int(inv[4]), int(inv[5]), inv[6].decode()
         b3, b3s, b3t = int(inv[7]), int(inv[8]), inv[9].decode()
