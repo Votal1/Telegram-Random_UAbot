@@ -1375,6 +1375,11 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'salt', 30)
                     await message.reply('\u26CF Промокод статистики активовано!\n'
                                         '🌀 +3 \U0001F9C2 +30 \U0001F4E6 +30')
+                elif msg.startswith('riz') and uid not in r.smembers('sixteenth_code'):
+                    r.sadd('sixteenth_code', message.from_user.id)
+                    r.hincrby(message.from_user.id, 'packs_2024', 24)
+                    await message.reply('\u26CF Різдвяний промокод активовано!\n'
+                                        '🎁 +24')
                 '''
                 elif msg.startswith('bot') and uid not in r.smembers('twelfth_code'):
                     r.sadd('twelfth_code', message.from_user.id)
