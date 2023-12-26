@@ -3577,7 +3577,7 @@ async def handle_query(call):
 
             maximum = 10
             if call.message.chat.id == -1001211933154:
-                maximum = 20
+                maximum = 10
 
             if r.scard('fighters' + str(call.message.chat.id)) < maximum:
                 r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
