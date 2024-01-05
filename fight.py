@@ -1634,13 +1634,13 @@ async def great_war(cid1, cid2, a, b, tid1, tid2):
             for member in a:
                 spirit(-int(int(r.hget(member, 'spirit')) / 20), member, 0)
         for i in range(mal1):
-            ran = choice(b)
-            if check_vss(ran):
-                r.hincrby(ran, 'sch', 3)
+            ran2 = choice(b)
+            if check_vss(ran2):
+                r.hincrby(ran2, 'sch', 3)
         for i in range(mal2):
-            ran = choice(a)
-            if check_vss(ran):
-                r.hincrby(ran, 'sch', 3)
+            ran2 = choice(a)
+            if check_vss(ran2):
+                r.hincrby(ran2, 'sch', 3)
         if med1 == 2:
             for mem in b:
                 if check_vss(mem):
