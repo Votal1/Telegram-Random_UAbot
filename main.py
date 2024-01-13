@@ -53,7 +53,7 @@ async def gruz200(message):
         msg = f'\n\n\u2620\uFE0F Вбито: {d[13].text.split()[4]} {d[13].text.split()[6]}' \
               f'\n\U0001F690 ББМ: {d[1].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F69C Танки: {d[0].text.split(maxsplit=2)[2]}' \
-              f'\n\U0001F525 Артилерія: {d[2].text.split(maxsplit=2)[2]}' \
+              f'\n\U0001F525 Артилерія: {d[2].text.split(maxsplit=3)[3]}' \
               f'\n\u2708\uFE0F Літаки: {d[5].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F681 Гелікоптери: {d[6].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
