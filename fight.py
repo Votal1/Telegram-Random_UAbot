@@ -1288,7 +1288,7 @@ async def war(cid, location, big_battle):
         r.hincrby(win, 'trophy', 1)
         r.hincrby('all_trophy', 'trophy', 1)
         r.hincrby(win, 'wins', 1)
-        r.hincrby(win, 'money', 10)
+        r.hincrby(win, 'money', money)
     class_reward = ''
 
     if wc in (31, 32, 33) and location != 'Висадка в Чорнобаївці' and big_battle:
