@@ -6822,6 +6822,11 @@ async def echo(message):
         elif message.text == 'Чат хуйня':
             await message.reply('+')
 
+        elif message.chat.id == -1001472378112 and message.from_user.id == 692120889 and randint(1, 20) == 20:
+            await bot.send_sticker(message.chat.id,
+                                   'CAACAgIAAxkBAAEd0kRl54LEb8ip8D1-_DGabzf4mUOqiAACYEcAAtL_MEv4tpiSWICEyjQE',
+                                   reply_to_message_id=message.message_id)
+
         elif message.text == 'N':
             await message.answer('I')
 
