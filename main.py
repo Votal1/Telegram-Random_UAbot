@@ -2176,7 +2176,11 @@ async def clan_war(message):
                     tier = int(r.hget(c, 'tier'))
                     c2 = f'c{r.hget(c, "enemy").decode()}'
                     points1 = int(r.hget(c, "points"))
-                    points2 = int(r.hget(c2, "points"))
+
+                    try:
+                        points2 = int(r.hget(c2, "points"))
+                    except:
+                        points2 = 0
                     packs = points1 // 10
                     salt, codes = 0, 0
                     msg = f'\U0001f4ef Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
