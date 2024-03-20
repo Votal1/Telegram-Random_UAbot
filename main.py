@@ -830,11 +830,11 @@ async def passport(message):
         s6 = sk[5]
         if s6:
             s6 = int(s6) + 1
-            if s6 > 4:
-                s6 = 4
+            if s6 > 5:
+                s6 = 5
         else:
             s6 = 1
-        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4]) + s6) * 100 / 34)
+        skill = int((int(sk[0]) + int(sk[1]) + int(sk[2]) + int(sk[3]) + int(sk[4]) + s6) * 100 / 35)
         ac = 0
         acs = r.hmget(message.from_user.id, 'ac1', 'ac2', 'ac3', 'ac4', 'ac5',
                       'ac6', 'ac7', 'ac8', 'ac9', 'ac10', 'ac11', 'ac12', 'ac13', 'ac14', 'ac15', 'ac16')
