@@ -3069,6 +3069,7 @@ async def guard(message):
                     if int(r.hget('convoy', 'power')) < 0:
                         r.hset('convoy', 'power', 0)
                     r.hincrby('convoy', 'power', value)
+                    await sleep(10)
                     for mem in r.smembers('followers'):
                         try:
                             c3 = 'c' + mem.decode()
