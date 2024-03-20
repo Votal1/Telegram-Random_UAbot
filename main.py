@@ -3064,27 +3064,14 @@ async def guard(message):
                 if int(r.hget('convoy', 'day')) != datetime.now().day:
                     r.hset('convoy', 'power', 5000000, {'day': datetime.now().day,
                                                         'hour': randint(8, 12), 'first': 1})
+                convoy = False
                 if int(r.hget(mid, 'class')) == 36 and int(r.hget(c, 'side')) == 3:
                     value = 500000
                     if int(r.hget('convoy', 'power')) < 0:
                         r.hset('convoy', 'power', 0)
                     r.hincrby('convoy', 'power', value)
-                    await sleep(10)
-                    for mem in r.smembers('followers'):
-                        try:
-                            c3 = 'c' + mem.decode()
-                            if int(r.hget(c3, 'not_time')) != datetime.now().day:
-                                if int(r.hget(c3, 'technics')) >= 3:
-                                    r.hset(c3, 'not_time', datetime.now().day)
-                                    r.hincrby(c3, 'technics', -3)
-                                else:
-                                    r.hset(c3, 'notification', 0)
-                                    r.srem('followers', mem)
-                                    continue
-                            await bot.send_message(int(mem), '\U0001F69B Додатковий гумконвой вже в дорозі!')
-                        except:
-                            pass
                     msg += f'\n\U0001F396 Генерал викликав додатковий гумконвой.\n\U0001F69B +{value}'
+                    convoy = True
                 elif int(r.hget(mid, 'class')) in (8, 18, 28) and int(r.hget(mid, 'weapon')) == 39:
                     chance = int(r.hget(mid, 'intellect'))
                     if choices([1, 0], weights=[chance, 100 - chance])[0]:
@@ -3102,6 +3089,22 @@ async def guard(message):
                 if mines > 0:
                     msg += f'\n\U0001F6A7 Кількість мін: {mines}'
                 await message.reply(msg)
+                if convoy:
+                    await sleep(10)
+                    for mem in r.smembers('followers'):
+                        try:
+                            c3 = 'c' + mem.decode()
+                            if int(r.hget(c3, 'not_time')) != datetime.now().day:
+                                if int(r.hget(c3, 'technics')) >= 3:
+                                    r.hset(c3, 'not_time', datetime.now().day)
+                                    r.hincrby(c3, 'technics', -3)
+                                else:
+                                    r.hset(c3, 'notification', 0)
+                                    r.srem('followers', mem)
+                                    continue
+                            await bot.send_message(int(mem), '\U0001F69B Додатковий гумконвой вже в дорозі!')
+                        except:
+                            pass
             else:
                 msg = f"Твій русак сьогодні вже своє відпрацював\n\n\U0001F4AA Загальна сила: " \
                       f"{r.hget(c, 'power').decode()}\n\U0001F5E1 Кількість сторожів: {r.scard(g)}/5"
