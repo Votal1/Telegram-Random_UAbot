@@ -4072,7 +4072,7 @@ async def handle_query(call):
         if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
                 str(call.from_user.id).encode() in r.smembers('sudoers'):
             msg = ''
-            raid_loot = r.smembers(f'raid_loot{r.hget(call.from_user.id, "clan")}')
+            raid_loot = r.smembers(f'raid_loot{int(r.hget(call.from_user.id, "clan"))}')
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
                 if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:
                     msg += '\U0001f7e9 '
