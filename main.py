@@ -1381,7 +1381,7 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'packs', 35)
                     r.hincrby(message.from_user.id, 'salt', 35)
                     await message.reply('\u26CF Промокод статистики активовано!\n'
-                                        '🌀 +3 \U0001F9C2 +35 \U0001F4E6 +35')
+                                        '🌀 +5 \U0001F9C2 +35 \U0001F4E6 +35')
                 elif msg.startswith('peremoha_b') and uid not in r.smembers('seventeenth_code'):
                     inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head')
                     if check_set(int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])) == 5:
