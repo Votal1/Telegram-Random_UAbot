@@ -2325,7 +2325,7 @@ async def start_raid(cid):
                     markup = raid_loot('tape', 0, ran, 5, int(datetime.now().timestamp()) + 10, markup, c)
             elif location == 'Макіївка':
                 reward += 'Русаки атакували Макіївське ПТУ...\n'
-                mode = choice([1, 4])
+                mode = randint(1, 4)
                 if mode == 1:
                     reward += '\U0001F5E1 ВСС [Зброя, міцність=20]'
                     markup = raid_loot('weapon', 9, 20, 5, int(datetime.now().timestamp()) + 10, markup, c)
