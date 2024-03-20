@@ -4074,6 +4074,8 @@ async def handle_query(call):
                 str(call.from_user.id).encode() in r.smembers('sudoers'):
             msg = ''
             raid_loot = r.smembers(f'raid_loot{int(r.hget(call.from_user.id, "clan"))}')
+            leaders = r.smembers(f'cl2{int(r.hget(call.from_user.id, "clan"))}')
+            leaders.add(r.hget('c' + r.hget(call.from_user.id, "clan").decode(), 'leader'))
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
                 if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:
                     msg += '\U0001f7e9 '
@@ -4084,6 +4086,8 @@ async def handle_query(call):
                 else:
                     name = '?'
                 msg += f'<a href="tg://user?id={int(mem)}">{name}</a>'
+                if mem in leaders:
+                    msg += ' (👑)'
                 if mem in raid_loot:
                     msg += ' (💰)'
                 msg += '\n'
