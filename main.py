@@ -3090,7 +3090,7 @@ async def guard(message):
                     msg += f'\n\U0001F6A7 Кількість мін: {mines}'
                 await message.reply(msg)
                 if convoy:
-                    await sleep(10)
+                    # await sleep(10)
                     for mem in r.smembers('followers'):
                         try:
                             c3 = 'c' + mem.decode()
