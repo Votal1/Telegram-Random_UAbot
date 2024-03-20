@@ -616,4 +616,6 @@ def check_set(w, d, s, h):
         return 3
     elif w in (10, 42) and d == 5 and s == 12 and h == 6:
         return 4
+    elif w in (6, 34, 35) and d == 6 and s in (10, 11) and h == 3:
+        return 5
     return 0

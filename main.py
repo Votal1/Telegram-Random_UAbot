@@ -848,7 +848,7 @@ async def passport(message):
         deaths = f'\n\u2620\uFE0F Вбито русаків: {stats[2].decode()}\n\U0001F476 З`їдено немовлят: {stats[3].decode()}'
         if message.text.endswith(' -all'):
             active_promos = ['first_code', 'second_code', 'third_code', 'fifth_code', 'seventh_code',
-                             'ninth_code', 'fourteenth_code', 'fifteenth_code']
+                             'ninth_code', 'fourteenth_code', 'fifteenth_code', 'seventeenth_code']
             activated = 0
             for code in active_promos:
                 if str(message.from_user.id).encode() in r.smembers(code):
@@ -1375,13 +1375,23 @@ async def promo_code(message):
                         r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
                         msg += '\n🧾 +1'
                     await message.reply(msg)
-                elif msg.startswith('30') and uid not in r.smembers('fifteenth_code'):
+                elif msg.startswith('35') and uid not in r.smembers('fifteenth_code'):
                     r.sadd('fifteenth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'tape', 3)
-                    r.hincrby(message.from_user.id, 'packs', 30)
-                    r.hincrby(message.from_user.id, 'salt', 30)
+                    r.hincrby(message.from_user.id, 'tape', 5)
+                    r.hincrby(message.from_user.id, 'packs', 35)
+                    r.hincrby(message.from_user.id, 'salt', 35)
                     await message.reply('\u26CF Промокод статистики активовано!\n'
-                                        '🌀 +3 \U0001F9C2 +30 \U0001F4E6 +30')
+                                        '🌀 +3 \U0001F9C2 +35 \U0001F4E6 +35')
+                elif msg.startswith('peremoha_b') and uid not in r.smembers('seventeenth_code'):
+                    inv = r.hmget(uid, 'weapon', 'defense', 'support', 'head')
+                    if check_set(int(inv[0]), int(inv[1]), int(inv[2]), int(inv[3])) == 5:
+                        r.sadd('seventeenth_code', message.from_user.id)
+                        r.hincrby(message.from_user.id, 'strap', 5)
+                        r.hincrby(message.from_user.id, 'salt', 150)
+                        await message.reply('\u26CF Містичний промокод активовано!\n'
+                                            '\U0001F31F +5\n\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n'
+                                            '\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n'
+                                            '\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n')
     except:
         pass
 
