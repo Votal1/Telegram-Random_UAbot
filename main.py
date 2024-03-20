@@ -4072,6 +4072,7 @@ async def handle_query(call):
         if checkClan(uid) and checkLeader(uid, int(r.hget(uid, 'clan'))) or \
                 str(call.from_user.id).encode() in r.smembers('sudoers'):
             msg = ''
+            raid_loot = r.smembers(f'raid_loot{r.hget(call.from_user.id, "clan")}')
             for mem in r.smembers('cl' + r.hget(call.from_user.id, 'clan').decode()):
                 if r.hexists(mem, 'clan_time') and int(r.hget(mem, 'clan_time')) == datetime.now().day:
                     msg += '\U0001f7e9 '
@@ -4081,7 +4082,10 @@ async def handle_query(call):
                     name = r.hget(mem, 'firstname').decode().replace('<', '.').replace('>', '.')
                 else:
                     name = '?'
-                msg += f'<a href="tg://user?id={int(mem)}">{name}</a>\n'
+                msg += f'<a href="tg://user?id={int(mem)}">{name}</a>'
+                if mem in raid_loot:
+                    msg += ' (💰)'
+                msg += '\n'
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton(text='Отримати список з id та силою', callback_data='get_id_members'))
             await bot.send_message(call.message.chat.id, msg, parse_mode='HTML', reply_markup=markup)
