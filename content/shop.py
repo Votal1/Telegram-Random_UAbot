@@ -51,7 +51,8 @@ def shop_msg(uid, mode):
                  '\U0001F3E0 Велике будівництво - \U0001F31F 3': 'fast_cellar',
                  '\U0001F392 Тактичний рюкзак - \U0001F31F 5': 'expand_backpack1',
                  '\U0001F392 Тактичний рюкзак - \U0001F31F 10': 'expand_backpack2',
-                 '\U0001F392 Тактичний рюкзак - \U0001F31F 20': 'expand_backpack3'}
+                 '\U0001F392 Тактичний рюкзак - \U0001F31F 15': 'expand_backpack3',
+                 '\U0001F392 Тактичний рюкзак - \U0001F31F 20': 'expand_backpack4'}
         markup.add(InlineKeyboardButton(text='\U0001F304 - \U0001F31F 1', callback_data='premium1'),
                    InlineKeyboardButton(text='\U0001F307 - \U0001F31F 1', callback_data='premium3'),
                    InlineKeyboardButton(text='\U0001F309 - \U0001F31F 1', callback_data='premium4'))
@@ -67,10 +68,13 @@ def shop_msg(uid, mode):
             elif value == 'expand_backpack3':
                 if r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 2:
                     markup.add(InlineKeyboardButton(text=key, callback_data=value))
+            elif value == 'expand_backpack4':
+                if r.hexists(uid, 'extra_slot') and int(r.hget(uid, 'extra_slot')) == 3:
+                    markup.add(InlineKeyboardButton(text=key, callback_data=value))
             else:
                 markup.add(InlineKeyboardButton(text=key, callback_data=value))
-        if str(uid).encode() in r.smembers('prigozhin'):
-            markup.add(InlineKeyboardButton(text='\U0001F304 Пригожин - \U0001F31F 1', callback_data='prigozhin'))
+        #if str(uid).encode() in r.smembers('prigozhin'):
+        #    markup.add(InlineKeyboardButton(text='\U0001F304 Пригожин - \U0001F31F 1', callback_data='prigozhin'))
         #markup.add(InlineKeyboardButton(text='\U0001F9C2 5 - \U0001F31F 1', callback_data='5_salt'),
         #           InlineKeyboardButton(text='🎁 5 - \U0001F31F 1', callback_data='5_gifts'))
         markup.add(InlineKeyboardButton(text='\U0001F4B5', callback_data='switch1'),

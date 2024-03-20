@@ -1172,7 +1172,7 @@ async def merchant(message):
             r.hset('soledar', 'merchant_hour', randint(18, 22))
         if int(r.hget('soledar', 'merchant_day')) != datetime.now().day and \
                 int(r.hget('soledar', 'merchant_hour')) == datetime.now().hour:
-            slot, strap, tape = randint(1, 3), randint(1, 3), randint(20, 50)
+            slot, strap, tape = randint(1, 4), randint(1, 3), randint(20, 50)
             r.hset('soledar', 'merchant_slot', slot)
             r.hset('soledar', 'merchant_strap', strap)
             r.hset('soledar', 'merchant_tape', tape)
@@ -1781,7 +1781,7 @@ async def skills(message):
             up4 = ''
         if s5 >= 5:
             up5 = ''
-        if s6 >= 4:
+        if s6 >= 5:
             up6 = ''
         msg = '\u2622 Алкоголізм:\n\nГорілка додає від ' + str(10 * s1) + ' до ' + str(70 * s1) + \
               ' бойового духу.' + up1 + '\n'
@@ -1828,7 +1828,7 @@ async def skills(message):
 
         msg = msg + '\n\n🎒 Тактичний рюкзак\n\nЗбільшує кількість слотів спорядження та кількість можливої ' \
                     'ізострічки з пакунків.\n' + up6
-        for a in range(4):
+        for a in range(5):
             if s6 <= 0:
                 msg = msg + '⬜'
             else:
@@ -5118,6 +5118,8 @@ async def handle_query(call):
                 tape *= 2
             elif slot == 3:
                 tape *= 4
+            elif slot == 4:
+                tape *= 8
             if extra:
                 extra = int(extra)
             else:
@@ -5659,8 +5661,8 @@ async def handle_query(call):
                                                 text='У вас вже є тактичний рюкзак з третім слотом')
         elif call.data.startswith('expand_backpack3'):
             if int(r.hget(uid, 'extra_slot')) == 2:
-                if int(r.hget(uid, 'strap')) >= 20:
-                    r.hincrby(uid, 'strap', -20)
+                if int(r.hget(uid, 'strap')) >= 15:
+                    r.hincrby(uid, 'strap', -15)
                     r.hset(uid, 'extra_slot', 3)
                     r.sadd('backpackers', uid)
                     await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
@@ -5671,6 +5673,20 @@ async def handle_query(call):
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='У вас вже є тактичний рюкзак з четвертим слотом')
+        elif call.data.startswith('expand_backpack4'):
+            if int(r.hget(uid, 'extra_slot')) == 3:
+                if int(r.hget(uid, 'strap')) >= 20:
+                    r.hincrby(uid, 'strap', -20)
+                    r.hset(uid, 'extra_slot', 4)
+                    r.sadd('backpackers', uid)
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Ви успішно купили тактичний рюкзак з п\'ятим слотом!')
+                else:
+                    await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                    text='Недостатньо погонів на рахунку')
+            else:
+                await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                                text='У вас вже є тактичний рюкзак з п\'ятим слотом')
 
     elif call.data.startswith('zero_time') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
