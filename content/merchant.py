@@ -7,12 +7,14 @@ def merchant_msg(slot, strap, tape):
     slot2 = choice([1, 2, 3])
     slot3 = choice([1, 2, 3])
     markup = InlineKeyboardMarkup()
+    strap = strap * 10
     if slot == 2:
-        tape *= 2
+        tape *= 20
     elif slot == 3:
-        tape *= 4
+        tape *= 40
     elif slot == 4:
-        tape *= 8
+        tape *= 80
+    slot = slot * 10
     msg = 'Прийшов мандрівний торговець, приніс різноманітні товари.\n\n'
     if slot1 == 1:
         msg += '🗡 Батіг [Зброя, міцність=5, ціна=125] - +15% сили в рейді, +33% якщо в русака нема жінки.'
