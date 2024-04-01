@@ -1,5 +1,5 @@
 from config import r
-from methods import checkClan
+from methods import checkClan, cloth, brick
 from random import choices, choice
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from constants.photos import default, chmonya, girkin, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12
@@ -200,8 +200,8 @@ def salt_shop(uid, cdata):
                 r.hincrby(uid, 'salt', -20)
                 r.hincrby(uid, 'purchase', 1)
                 r.hincrby(c, 'technics', 22)
-                r.hincrby(c, 'brick', 55)
-                r.hincrby(c, 'cloth', 111)
+                brick(c, 55)
+                cloth(c, 111)
                 return 'Ви успішно купили ресурси для клану.'
             else:
                 return 'Для купівлі ресурсів треба бути в клані'
