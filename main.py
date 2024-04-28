@@ -2117,15 +2117,17 @@ async def clan_war(message):
                 if r.hexists(c, 'result'):
                     tier = int(r.hget(c, 'tier'))
                     c2 = f'c{r.hget(c, "enemy").decode()}'
-                    points1 = int(r.hget(c, "points"))
+                    points1 = int(r.hget(c, 'points'))
 
                     try:
-                        points2 = int(r.hget(c2, "points"))
+                        points2 = int(r.hget(c2, 'points'))
+                        title2 = r.hget(c2, 'title').decode()
                     except:
                         points2 = 0
+                        title2 = '???'
                     packs = points1 // 10
                     salt, codes = 0, 0
-                    msg = f'\U0001f4ef Війна з кланом {r.hget(c2, "title").decode()} завершена.\n\n' \
+                    msg = f'\U0001f4ef Війна з кланом {title2} завершена.\n\n' \
                           f'\U0001fa99 Ваші очки: {points1}\n' \
                           f'\U0001fa99 Очки ворога: {points2}\n\n'
                     if points1 < points2:
