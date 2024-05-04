@@ -51,7 +51,7 @@ async def dice(message):
                     r.hincrby(selected_dice, uid, -1)
                 elif money >= prices[selected_dice]:
                     spin = True
-                    r.hincrby(uid, 'money', prices[selected_dice])
+                    r.hincrby(uid, 'money', -prices[selected_dice])
                 else:
                     spin = False
                     await message.reply('Недостатньо коштів на рахунку.')
