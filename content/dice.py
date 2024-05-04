@@ -12,7 +12,7 @@ async def select_casino(message):
         msg = '🌝 Вітаємо вас у RandomUAbotCasino!\n\n' \
               'Ціни за участь та суми виграшу:\n' \
               '🎲 - 💵 30 -> 150'
-        await bot.send_message(uid, msg, reply_to_message_id=mid)
+        await bot.send_message(uid, msg, reply_to_message_id=mid, reply_markup=markup)
 
         if message.chat.type != 'private':
             await message.reply('Надіслано в пп.')
