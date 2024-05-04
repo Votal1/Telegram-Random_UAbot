@@ -133,7 +133,7 @@ async def callback_dice(call):
         msg = 'Вибрано кубик'
     if cdata == 'selected_dice_3':
         r.hset(uid, 'selected_dice', '🎳')
-        msg = 'Вибрано боулінг'
+        msg = 'Вибрано булінг'
     if cdata == 'selected_dice_4':
         r.hset(uid, 'selected_dice', '⚽')
         msg = 'Вибрано ГОООООЛ'
