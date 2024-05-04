@@ -31,13 +31,14 @@ async def dice(message):
             selected_dice = selected_dice.decode()
             if selected_dice == '🎲':
                 text = message.text.split()
-                if len(text) == 1 or int(text[1]) not in range(1, 7):
+                input_number = int(text[1])
+                if len(text) == 1 or input_number not in range(1, 7):
                     await message.reply('Виберіть число від 1 до 6')
                 else:
                     if money >= 30:
                         d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
                         value = d.dice.value
-                        if value == text[1]:
+                        if value == input_number:
                             r.hincrby(uid, money, 120)
                         else:
                             r.hincrby(uid, money, -30)
