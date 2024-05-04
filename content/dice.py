@@ -39,9 +39,11 @@ async def dice(message):
                         d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
                         value = d.dice.value
                         if value == input_number:
-                            r.hincrby(uid, money, 120)
+                            r.hincrby(uid, 'money', 120)
                         else:
-                            r.hincrby(uid, money, -30)
+                            r.hincrby(uid, 'money', -30)
+                    else:
+                        await message.reply('Недостатньо коштів на рахунку.')
 
         else:
             await message.reply('/casino - вибрати гру')
