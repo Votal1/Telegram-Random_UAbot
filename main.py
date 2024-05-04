@@ -27,6 +27,7 @@ from content.shop import shop_msg, salt_shop
 from content.packs import open_pack, open_pack2, check_slot, open_gift
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
+from content.dice import select_casino, dice, callback_dice
 
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
@@ -3204,6 +3205,16 @@ async def raid(message):
         pass
 
 
+@dp.message_handler(commands=['casino'])
+async def casino(message):
+    await select_casino(message)
+
+
+@dp.message_handler(commands=['dice'])
+async def casino_dice(message):
+    await dice(message)
+
+
 @dp.message_handler(commands=['status'])
 async def status(message):
     uid = message.from_user.id
@@ -5701,6 +5712,9 @@ async def handle_query(call):
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='У вас вже є тактичний рюкзак з п\'ятим слотом')
+
+    elif call.data.startswith('selected_dice'):
+        await callback_dice(call)
 
     elif call.data.startswith('zero_time') and call.from_user.id == call.message.reply_to_message.from_user.id:
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
