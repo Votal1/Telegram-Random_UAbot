@@ -35,6 +35,7 @@ async def select_casino(message, hour):
                 free_spins += f'{emoji} {int(fs)}, '
         if msg2:
             msg += free_spins[:-2]
+        msg += '\n\n⬇ Виберіть гру та натискайте /dice'
         await bot.send_message(uid, msg, reply_to_message_id=mid, reply_markup=markup)
 
         if message.chat.type != 'private':
