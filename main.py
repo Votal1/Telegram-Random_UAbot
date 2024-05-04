@@ -3212,7 +3212,13 @@ async def casino(message):
 
 @dp.message_handler(commands=['dice'])
 async def casino_dice(message):
-    await dice(message)
+    if r.hexists('dice_ts', message.from_user.id) == 0:
+        r.hset('dice_ts', message.from_user.id, 0)
+    timestamp = int(datetime.now().timestamp())
+    if timestamp - int(r.hget('dice_ts', message.from_user.id)) < 1:
+        pass
+    else:
+        await dice(message)
 
 
 @dp.message_handler(commands=['status'])
