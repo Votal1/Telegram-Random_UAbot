@@ -5,7 +5,7 @@ from config import r, bot
 async def select_casino(message):
     try:
         uid = message.from_user.id
-        mid = message.message.id
+        mid = message.message_id
 
         markup = InlineKeyboardMarkup()
         markup.add(InlineKeyboardButton(text='🎲', callback_data='selected_dice_2'))
@@ -23,7 +23,7 @@ async def select_casino(message):
 async def dice(message):
     try:
         uid = message.from_user.id
-        mid = message.message.id
+        mid = message.message_id
         cid = message.chat.id
         selected_dice = r.hget(uid, 'selected_dice')
         money = int(r.hget(uid, 'money'))
