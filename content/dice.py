@@ -8,13 +8,12 @@ async def select_casino(message):
         mid = message.message_id
 
         markup = InlineKeyboardMarkup()
-        markup.add([InlineKeyboardButton(text='🎯', callback_data='selected_dice_1'),
-                    InlineKeyboardButton(text='🎲', callback_data='selected_dice_2'),
-                    InlineKeyboardButton(text='🎳', callback_data='selected_dice_3')],
-                   [InlineKeyboardButton(text='⚽', callback_data='selected_dice_4'),
-                    InlineKeyboardButton(text='🏀', callback_data='selected_dice_5'),
-                    InlineKeyboardButton(text='🎰', callback_data='selected_dice_6')]
-                   )
+        markup.add(InlineKeyboardButton(text='🎯', callback_data='selected_dice_1'),
+                   InlineKeyboardButton(text='🎲', callback_data='selected_dice_2'),
+                   InlineKeyboardButton(text='🎳', callback_data='selected_dice_3'))
+        markup.add(InlineKeyboardButton(text='⚽', callback_data='selected_dice_4'),
+                   InlineKeyboardButton(text='🏀', callback_data='selected_dice_5'),
+                   InlineKeyboardButton(text='🎰', callback_data='selected_dice_6'))
         msg = '🌝 Вітаємо вас у RandomUAbotCasino!\n\n' \
               'Ціни за участь та суми виграшу:\n' \
               '🎯 - 💵 10 -> 50\n' \
