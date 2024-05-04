@@ -32,89 +32,58 @@ async def select_casino(message):
 
 async def dice(message):
     try:
+        prices = {'🎯': 10, '🎲': 30, '🎳': 50, '⚽': 100, '🏀': 100, '🎰': 25}
         uid = message.from_user.id
         mid = message.message_id
         cid = message.chat.id
         selected_dice = r.hget(uid, 'selected_dice')
         money = int(r.hget(uid, 'money'))
         if selected_dice:
-            selected_dice = selected_dice.decode()
+            if selected_dice == '🎲' and len(message.text.split()) == 1 \
+                    and int(message.text.split()[1]) not in range(1, 7):
+                await message.reply('Виберіть число від 1 до 6')
+            else:
+                selected_dice = selected_dice.decode()
+                free_spin = r.hget(selected_dice, uid)
 
-            if selected_dice == '🎯':
-                if money >= 10:
-                    d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
-                    value = d.dice.value
-                    if value == 6:
-                        r.hincrby(uid, 'money', 40)
-                    else:
-                        r.hincrby(uid, 'money', -10)
+                if free_spin and int(free_spin) > 0:
+                    spin = True
+                    r.hincrby(selected_dice, uid, -1)
+                elif money >= prices[selected_dice]:
+                    spin = True
+                    r.hincrby(uid, 'money', prices[selected_dice])
                 else:
+                    spin = False
                     await message.reply('Недостатньо коштів на рахунку.')
 
-            elif selected_dice == '🎲':
-                text = message.text.split()
-                if len(text) == 1 or int(text[1]) not in range(1, 7):
-                    await message.reply('Виберіть число від 1 до 6')
-                else:
-                    if money >= 30:
-                        d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
-                        value = d.dice.value
-                        if value == int(text[1]):
-                            r.hincrby(uid, 'money', 120)
-                        else:
-                            r.hincrby(uid, 'money', -30)
-                    else:
-                        await message.reply('Недостатньо коштів на рахунку.')
-
-            elif selected_dice == '🎳':
-                if money >= 50:
+                if spin:
                     d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
                     value = d.dice.value
-                    if value == 6:
-                        r.hincrby(uid, 'money', 200)
-                    else:
-                        r.hincrby(uid, 'money', -50)
-                else:
-                    await message.reply('Недостатньо коштів на рахунку.')
 
-            elif selected_dice == '⚽':
-                if money >= 100:
-                    d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
-                    value = d.dice.value
-                    if value >= 3:
-                        r.hincrby(uid, 'money', 50)
-                    else:
-                        r.hincrby(uid, 'money', -100)
-                else:
-                    await message.reply('Недостатньо коштів на рахунку.')
-
-            elif selected_dice == '🏀':
-                if money >= 50:
-                    d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
-                    value = d.dice.value
-                    if value >= 4:
-                        r.hincrby(uid, 'money', 100)
-                    else:
-                        r.hincrby(uid, 'money', -100)
-                else:
-                    await message.reply('Недостатньо коштів на рахунку.')
-
-            elif selected_dice == '🎰':
-                if money >= 25:
-                    d = await bot.send_dice(cid, reply_to_message_id=mid, emoji=selected_dice)
-                    value = d.dice.value
-                    if value == 1:
-                        r.hincrby(uid, 'packs', 1)
-                    elif value == 22:
-                        r.hincrby(uid, 'tape', 1)
-                    elif value == 43:
-                        r.hincrby(uid, 'strap', 1)
-                    elif value == 64:
-                        r.hincrby(uid, 'money', 777)
-                    r.hincrby(uid, 'money', -25)
-                else:
-                    await message.reply('Недостатньо коштів на рахунку.')
-
+                    if selected_dice == '🎯':
+                        if value == 6:
+                            r.hincrby(uid, 'money', 50)
+                    elif selected_dice == '🎲':
+                        if value == int(message.text.split()[1]):
+                            r.hincrby(uid, 'money', 150)
+                    elif selected_dice == '🎳':
+                        if value == 6:
+                            r.hincrby(uid, 'money', 250)
+                    elif selected_dice == '⚽':
+                        if value >= 3:
+                            r.hincrby(uid, 'money', 150)
+                    elif selected_dice == '🏀':
+                        if value >= 4:
+                            r.hincrby(uid, 'money', 200)
+                    elif selected_dice == '🎰':
+                        if value == 1:
+                            r.hincrby(uid, 'packs', 1)
+                        elif value == 22:
+                            r.hincrby(uid, 'tape', 1)
+                        elif value == 43:
+                            r.hincrby(uid, 'strap', 1)
+                        elif value == 64:
+                            r.hincrby(uid, 'money', 777)
         else:
             await message.reply('/casino - вибрати гру')
     except:
