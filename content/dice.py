@@ -28,9 +28,9 @@ async def select_casino(message):
             fs = r.hget(emoji, uid)
             if fs and int(fs) > 0:
                 msg2 = True
-                freespins += f'{emoji} {int(fs)},'
+                freespins += f'{emoji} {int(fs)}, '
         if msg2:
-            msg += freespins[:-1]
+            msg += freespins[:-2]
         await bot.send_message(uid, msg, reply_to_message_id=mid, reply_markup=markup)
 
         if message.chat.type != 'private':
