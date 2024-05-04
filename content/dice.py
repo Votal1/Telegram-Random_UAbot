@@ -78,7 +78,7 @@ async def dice(message):
                             r.hincrby(uid, 'money', 50)
                     elif selected_dice == '🎲':
                         if value == int(message.text.split()[1]):
-                            r.hincrby(uid, 'money', 50)
+                            r.hincrby(uid, 'money', 150)
                     elif selected_dice == '🎳':
                         if value == 6:
                             r.hincrby(uid, 'money', 250)
