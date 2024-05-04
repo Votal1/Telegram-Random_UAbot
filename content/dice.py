@@ -39,11 +39,11 @@ async def dice(message):
         selected_dice = r.hget(uid, 'selected_dice')
         money = int(r.hget(uid, 'money'))
         if selected_dice:
+            selected_dice = selected_dice.decode()
             if selected_dice == '🎲' and len(message.text.split()) == 1 \
                     and int(message.text.split()[1]) not in range(1, 7):
                 await message.reply('Виберіть число від 1 до 6')
             else:
-                selected_dice = selected_dice.decode()
                 free_spin = r.hget(selected_dice, uid)
 
                 if free_spin and int(free_spin) > 0:
