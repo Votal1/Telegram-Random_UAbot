@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import r, bot
 
 
-async def select_casino(message):
+async def select_casino(message, hour):
     try:
         uid = message.from_user.id
         mid = message.message_id
@@ -14,7 +14,11 @@ async def select_casino(message):
         markup.add(InlineKeyboardButton(text='⚽', callback_data='selected_dice_4'),
                    InlineKeyboardButton(text='🏀', callback_data='selected_dice_5'),
                    InlineKeyboardButton(text='🎰', callback_data='selected_dice_6'))
-        msg = '🌝 Вітаємо вас у RandomUAbotCasino!\n\n' \
+        if 8 < hour < 20:
+            emoji = '🌝'
+        else:
+            emoji = '🌚'
+        msg = f'{emoji} Вітаємо вас у RandomUAbotCasino!\n\n' \
               'Ціни за участь та суми виграшу:\n' \
               '🎯 - 💵 10 -> 50\n' \
               '🎲 - 💵 30 -> 150\n' \
@@ -23,14 +27,14 @@ async def select_casino(message):
               '🏀 - 💵 100 -> 200 \n' \
               '🎰 - 💵 25 -> 777 / 📦 / 🌀 / 🌟'
         msg2 = False
-        freespins = '\n\nФріспіни:\n'
+        free_spins = '\n\nФріспіни:\n'
         for emoji in ['🎯', '🎲', '🎳', '⚽', '🏀', '🎰']:
             fs = r.hget(emoji, uid)
             if fs and int(fs) > 0:
                 msg2 = True
-                freespins += f'{emoji} {int(fs)}, '
+                free_spins += f'{emoji} {int(fs)}, '
         if msg2:
-            msg += freespins[:-2]
+            msg += free_spins[:-2]
         await bot.send_message(uid, msg, reply_to_message_id=mid, reply_markup=markup)
 
         if message.chat.type != 'private':

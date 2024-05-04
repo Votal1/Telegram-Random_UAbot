@@ -3207,7 +3207,7 @@ async def raid(message):
 
 @dp.message_handler(commands=['casino'])
 async def casino(message):
-    await select_casino(message)
+    await select_casino(message, datetime.now().hour)
 
 
 @dp.message_handler(commands=['dice'])
