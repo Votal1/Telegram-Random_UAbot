@@ -25,7 +25,7 @@ async def select_casino(message, hour):
               f'🎳 - 💵 50 -> 250\n' \
               f'⚽ - 💵 100 -> 150\n' \
               f'🏀 - 💵 100 -> 200 \n' \
-              f'🎰 - 💵 25 -> 777 / 📦 / 🌀 / 🌟'
+              f'🎰 - 💵 25 -> 777 / 📦 / 🌀 / 🧂'
         msg2 = False
         free_spins = '\n\nФріспіни:\n'
         for emoji in ['🎯', '🎲', '🎳', '⚽', '🏀', '🎰']:
@@ -94,7 +94,7 @@ async def dice(message):
                         elif value == 22:
                             r.hincrby(uid, 'tape', 1)
                         elif value == 43:
-                            r.hincrby(uid, 'strap', 1)
+                            r.hincrby(uid, 'salt', 1)
                         elif value == 64:
                             r.hincrby(uid, 'money', 777)
         else:
