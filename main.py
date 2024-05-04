@@ -3218,6 +3218,7 @@ async def casino_dice(message):
     if timestamp - int(r.hget('dice_ts', message.from_user.id)) < 1:
         pass
     else:
+        r.hset('dice_ts', message.from_user.id, timestamp)
         await dice(message)
 
 
