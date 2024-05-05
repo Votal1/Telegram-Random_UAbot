@@ -5819,7 +5819,7 @@ async def handle_query(call):
             else:
                 r.hset('pack_ts', call.from_user.id, timestamp)
                 if call.data.startswith('gift_unpack'):
-                    msg = open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
+                    msg = open_gift2(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                     if msg:
                         await bot.edit_message_text(msg[0], call.message.chat.id, call.message.message_id,
                                                     reply_markup=msg[1])
@@ -5827,7 +5827,7 @@ async def handle_query(call):
                     if check_slot(call.from_user.id, call.data):
                         await bot.edit_message_text(call.message.text, call.message.chat.id,
                                                     call.message.message_id, reply_markup=None)
-                        open_gift(call.from_user.id, call.data, call.message.text, call.message.chat.id)
+                        open_gift2(call.from_user.id, call.data, call.message.text, call.message.chat.id)
                     else:
                         await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                         text='Неможливо взяти спорядження, '
