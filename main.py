@@ -1398,7 +1398,7 @@ async def promo_code(message):
                     msg = '\u26CF Великодній промокод активовано!\n🧺 +10 🎰 +20 🧂 +30'
                     r.sadd('eighteenth_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'packs_2024_2', 10)
-                    r.hincrby(message.from_user.id, 'salt', 40)
+                    r.hincrby(message.from_user.id, 'salt', 30)
                     r.hincrby('🎰', message.from_user.id, 20)
                     await message.reply(msg)
     except:
