@@ -91,13 +91,17 @@ async def dice(message):
                             r.hincrby(uid, 'money', 200)
                     elif selected_dice == '🎰':
                         if value == 1:
-                            r.hincrby(uid, 'packs', 1)
+                            r.hincrby(uid, 'packs', 5)
+                            await message.reply('<span class="tg-spoiler">📦 +5</span>', parse_mode='html')
                         elif value == 22:
                             r.hincrby(uid, 'tape', 1)
+                            await message.reply('<span class="tg-spoiler">🌀 +1</span>', parse_mode='html')
                         elif value == 43:
                             r.hincrby(uid, 'salt', 1)
+                            await message.reply('<span class="tg-spoiler">🧂 +1</span>', parse_mode='html')
                         elif value == 64:
                             r.hincrby(uid, 'money', 777)
+                            await message.reply('<span class="tg-spoiler">💵 +777</span>', parse_mode='html')
         else:
             await message.reply('/casino - вибрати гру')
     except:
