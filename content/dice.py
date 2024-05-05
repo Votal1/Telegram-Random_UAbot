@@ -55,7 +55,8 @@ async def dice(message):
         if selected_dice:
             selected_dice = selected_dice.decode()
             if selected_dice == '🎲' and len(message.text.split()) == 1:
-                await message.reply('Виберіть число від 1 до 6')
+                await message.reply('Виберіть значення кубика від 1 до 6:\n'
+                                    '/dice <число>')
             else:
                 free_spin = r.hget(selected_dice, uid)
 
