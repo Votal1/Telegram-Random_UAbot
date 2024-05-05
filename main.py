@@ -3549,7 +3549,7 @@ async def handle_query(call):
 
             maximum = 10
             if call.message.chat.id == -1001211933154:
-                maximum = 10
+                maximum = 15
 
             if r.scard('fighters' + str(call.message.chat.id)) < maximum:
                 r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
@@ -5382,24 +5382,24 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
-    #elif call.data.startswith('5_salt'):
-    #    if int(r.hget(call.from_user.id, 'strap')) >= 1:
-    #        r.hincrby(call.from_user.id, 'strap', -1)
-    #        r.hincrby(call.from_user.id, 'salt', 5)
-    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-    #                                        text='Ви успішно купили 5 солі')
-    #    else:
-    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-    #                                        text='Недостатньо погонів на рахунку')
+    elif call.data.startswith('5_salt'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'salt', 5)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно купили 5 солі')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Недостатньо погонів на рахунку')
 
-    #elif call.data.startswith('5_gifts'):
-    #    if int(r.hget(call.from_user.id, 'strap')) >= 1:
-    #        r.hincrby(call.from_user.id, 'strap', -1)
-    #        r.hincrby(call.from_user.id, 'packs_2024', 5)
-    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-    #                                        text='Ви успішно замовили 5 донбаських подарунків!')
-    #    else:
-    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
+    elif call.data.startswith('5_gifts'):
+        if int(r.hget(call.from_user.id, 'strap')) >= 1:
+            r.hincrby(call.from_user.id, 'strap', -1)
+            r.hincrby(call.from_user.id, 'packs_2024_5', 5)
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+                                            text='Ви успішно замовили 5 донбаських кошиків!')
+        else:
+            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
 
     elif call.data.startswith('jew'):
         uid = call.from_user.id
