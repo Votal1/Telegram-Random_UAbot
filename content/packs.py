@@ -991,7 +991,7 @@ def open_gift2(uid, cdata, edit, cid):
             if r.hexists(uid, 'packs_2024_2') and int(r.hget(uid, 'packs_2024_2')) > 0:
                 r.hincrby(uid, 'packs_2024_2', -1)
                 r.hincrby(uid, 'opened', 1)
-                r.hincrby('baskets_2023', uid, 1)
+                r.hincrby('baskets_2024', uid, 1)
 
                 ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                               weights=[20, 18, 15, 9, 9, 10, 3, 3, 3, 5, 2, 2, 1])
