@@ -5395,7 +5395,7 @@ async def handle_query(call):
     elif call.data.startswith('5_gifts'):
         if int(r.hget(call.from_user.id, 'strap')) >= 1:
             r.hincrby(call.from_user.id, 'strap', -1)
-            r.hincrby(call.from_user.id, 'packs_2024_5', 5)
+            r.hincrby(call.from_user.id, 'packs_2024_2', 5)
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Ви успішно замовили 5 донбаських кошиків!')
         else:
