@@ -1394,7 +1394,7 @@ async def war(cid, location, big_battle):
                 r.hincrby(member, 'packs_2024_2')
     elif location == 'Битва за фріспіни':
         ran = choice(['🎯', '🎲', '🎳', '⚽', '🏀', '🎰'])
-        class_reward = f'{ran}: Всі учасники отримали фріспін.'
+        class_reward = f'{ran}: Всі учасники отримали фріспін.\n/casino'
         for member in r.smembers('fighters' + str(cid)):
             r.hincrby(ran, member, 1)
     elif location == 'Битва на борту бізнес-літака Embraer Legacy 600':
