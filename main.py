@@ -1211,7 +1211,7 @@ async def donate(message):
         url = f'https://send.monobank.ua/jar/8qvBnkcdkp?t={message.from_user.id}+'
         markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
         msg = 'Якщо хтось хоче підтримати автора, то може задонатити і отримати\n\U0001F31F погон російського ' \
-              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону — 30 грн.' \
+              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону — 20 грн.' \
               '\n\u274C <b>Не стирайте введені дані в описі!</b> ' \
               'Це ваш айді в тг, після нього можна додати кілька слів для автора.'
         await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True, parse_mode='HTML')
