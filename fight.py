@@ -421,7 +421,7 @@ async def fight(uid1, uid2, un1, un2, t, mid):
 
         if weapon2 == 6:
             weapon = '\n\n\U0001F381 ' + names[name1] + ' отримав подарунок від свого суперника...'
-            r.hincrby(uid1, 'packs_2024', 1)
+            r.hincrby(uid1, 'packs_2024_2', 1)
             damage_weapon(uid2, c2)
 
         if weapon2 == 2 and t == 1 and int(r.hget(uid1, 'strength')) > 2000:
@@ -1384,11 +1384,19 @@ async def war(cid, location, big_battle):
         for member in r.smembers('fighters' + str(cid)):
             r.hincrby(member, 'packs_2024')
 
+    elif location == 'Битва за великодній кошик':
+        class_reward = '🧺: Переможець отримав кошик.'
+        r.hincrby(win, 'packs_2024_2')
     elif location == 'Битва біля Києво-Печерської Лаври':
         class_reward = '🧺: Всі інші вкрали по кошику.'
         for member in r.smembers('fighters' + str(cid)):
             if int(member) != win:
-                r.hincrby(member, 'packs_2023_2')
+                r.hincrby(member, 'packs_2024_2')
+    elif location == 'Битва за фріспіни':
+        ran = choice(['🎯', '🎲', '🎳', '⚽', '🏀', '🎰'])
+        class_reward = f'{ran}: Всі учасники отримали фріспін.'
+        for member in r.smembers('fighters' + str(cid)):
+            r.hincrby(ran, member, 1)
     elif location == 'Битва на борту бізнес-літака Embraer Legacy 600':
         class_reward = '🧳 +1\nПоловина учасників також отримала по валізі'
         r.hincrby(win, 'packs_2023_3')

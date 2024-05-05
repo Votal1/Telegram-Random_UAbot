@@ -24,7 +24,7 @@ from content.buttons import battle_button, battle_button_2, battle_button_3, \
 from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set, empty_backpack
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack, open_pack2, check_slot, open_gift
+from content.packs import open_pack, open_pack2, check_slot, open_gift2
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
 from content.dice import select_casino, dice, callback_dice
@@ -1695,11 +1695,11 @@ async def pack(message):
 @dp.message_handler(commands=['gift'])
 async def pack(message):
     if r.hexists(message.from_user.id, 'name'):
-        if r.hexists(message.from_user.id, 'packs_2024'):
-            packs = int(r.hget(message.from_user.id, 'packs_2024'))
+        if r.hexists(message.from_user.id, 'packs_2024_2'):
+            packs = int(r.hget(message.from_user.id, 'packs_2024_2'))
             if packs != 0:
                 if message.chat.id != -1001211933154:
-                    await message.reply('🎁 Донбаський подарунок: ' + str(packs) + '\n\nВідкрити?',
+                    await message.reply('🧺 Донбаські кошики: ' + str(packs) + '\n\nВідкрити?',
                                         reply_markup=gift_unpack(message.from_user.id))
                 else:
                     await message.reply('Відкривайте в іншому місці')

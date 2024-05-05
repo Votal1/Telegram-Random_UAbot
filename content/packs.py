@@ -988,13 +988,13 @@ def open_gift2(uid, cdata, edit, cid):
     msg = ''
     if uid == int(cdata.split('_')[2]):
         if cdata.startswith('gift_unpack_'):
-            if r.hexists(uid, 'packs_2023_2') and int(r.hget(uid, 'packs_2023_2')) > 0:
-                r.hincrby(uid, 'packs_2023_2', -1)
+            if r.hexists(uid, 'packs_2024_2') and int(r.hget(uid, 'packs_2024_2')) > 0:
+                r.hincrby(uid, 'packs_2024_2', -1)
                 r.hincrby(uid, 'opened', 1)
                 r.hincrby('baskets_2023', uid, 1)
 
                 ran = choices([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-                              weights=[20, 18, 15, 10, 10, 10, 3, 3, 3, 3, 2, 2, 1])
+                              weights=[20, 18, 15, 9, 9, 10, 3, 3, 3, 5, 2, 2, 1])
                 if ran == [1]:
                     ran = randint(1, 5)
                     if ran == 1:
@@ -1049,8 +1049,9 @@ def open_gift2(uid, cdata, edit, cid):
                     msg = '\U0001f7e3 Знайдено цілих 10 крашанок з заначками...\n\U0001F4B5 500 гривень'
                     r.hincrby(uid, 'money', 500)
                 elif ran == [10]:
-                    msg = '\U0001f7e3 В кошику знайдено ізострічку. Можливо, вона колись знадобиться?\n🌀 +1'
-                    r.hincrby(uid, 'tape', 1)
+                    ran = choice(['🎯', '🎲', '🎳', '⚽', '🏀', '🎰'])
+                    r.hincrby(ran, uid, 5)
+                    msg = f'\U0001f7e3 В кошику були крашанки, в яких заховані фріспіни\n{ran} +5'
                 elif ran == [11]:
                     try:
                         for mem in r.smembers(cid):
