@@ -24,7 +24,7 @@ from content.buttons import battle_button, battle_button_2, battle_button_3, \
 from content.inventory import show_inventory, drop_item, change_item, upgrade_item, check_set, empty_backpack
 from content.merchant import merchant_msg
 from content.shop import shop_msg, salt_shop
-from content.packs import open_pack, open_pack2, check_slot, open_gift2
+from content.packs import open_pack2, check_slot, open_gift2
 from content.quests import quests, quest, re_roll
 from content.wiki import wiki_text
 from content.dice import select_casino, dice, callback_dice
@@ -984,7 +984,7 @@ async def no_nut(message):
     except:
         pass
 
-'''
+
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
@@ -1025,7 +1025,7 @@ async def c_top(message):
         await message.reply(msg, parse_mode='HTML')
     except:
         pass
-'''
+
 
 @dp.message_handler(commands=['class'])
 async def classes(message):
@@ -1211,7 +1211,7 @@ async def donate(message):
         url = f'https://send.monobank.ua/jar/8qvBnkcdkp?t={message.from_user.id}+'
         markup.add(InlineKeyboardButton(text='\U0001F349 Задонатити', url=url))
         msg = 'Якщо хтось хоче підтримати автора, то може задонатити і отримати\n\U0001F31F погон російського ' \
-              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону — 20 грн.' \
+              'генерала, який можна витратити в \n/donate_shop.\n\n\U0001F4B3 Ціна одного погону — 30 грн.' \
               '\n\u274C <b>Не стирайте введені дані в описі!</b> ' \
               'Це ваш айді в тг, після нього можна додати кілька слів для автора.'
         await bot.send_message(message.from_user.id, msg, reply_markup=markup, protect_content=True, parse_mode='HTML')
@@ -3556,7 +3556,7 @@ async def handle_query(call):
 
             maximum = 10
             if call.message.chat.id == -1001211933154:
-                maximum = 15
+                maximum = 10
 
             if r.scard('fighters' + str(call.message.chat.id)) < maximum:
                 r.sadd('fighters' + str(call.message.chat.id), call.from_user.id)
@@ -3601,9 +3601,7 @@ async def handle_query(call):
                                   'Битва біля поліцейського відділку', 'Битва в офісі ОПЗЖ',
                                   'Битва в серверній кімнаті', 'Штурм Горлівки', 'Штурм ДАП', 'Битва в психлікарні',
                                   'Висадка в Чорнобаївці', 'Битва в темному провулку', 'Битва біля розбитої колони',
-                                  'Розгром командного пункту', 'Битва на аномальному полі',
-                                  'Битва за великодній кошик', 'Битва біля Києво-Печерської Лаври', 'Битва за фріспіни',
-                                  'Битва за великодній кошик', 'Битва біля Києво-Печерської Лаври', 'Битва за фріспіни'])
+                                  'Розгром командного пункту', 'Битва на аномальному полі', 'Битва за фріспіни'])
                     big_battle = True
                     try:
                         mid = int(r.hget('battle' + str(call.message.chat.id), 'pin'))
@@ -5389,24 +5387,23 @@ async def handle_query(call):
             await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                             text='Недостатньо погонів на рахунку')
 
-    elif call.data.startswith('5_salt'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hincrby(call.from_user.id, 'salt', 5)
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно купили 5 солі')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Недостатньо погонів на рахунку')
-
-    elif call.data.startswith('5_gifts'):
-        if int(r.hget(call.from_user.id, 'strap')) >= 1:
-            r.hincrby(call.from_user.id, 'strap', -1)
-            r.hincrby(call.from_user.id, 'packs_2024_2', 5)
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
-                                            text='Ви успішно замовили 5 донбаських кошиків!')
-        else:
-            await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
+    #elif call.data.startswith('5_salt'):
+    #    if int(r.hget(call.from_user.id, 'strap')) >= 1:
+    #        r.hincrby(call.from_user.id, 'strap', -1)
+    #        r.hincrby(call.from_user.id, 'salt', 5)
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+    #                                        text='Ви успішно купили 5 солі')
+    #    else:
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+    #                                        text='Недостатньо погонів на рахунку')
+    #elif call.data.startswith('5_gifts'):
+    #    if int(r.hget(call.from_user.id, 'strap')) >= 1:
+    #        r.hincrby(call.from_user.id, 'strap', -1)
+    #        r.hincrby(call.from_user.id, 'packs_2024_2', 5)
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
+    #                                        text='Ви успішно замовили 5 донбаських кошиків!')
+    #    else:
+    #        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True)
 
     elif call.data.startswith('jew'):
         uid = call.from_user.id
