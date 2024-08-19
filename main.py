@@ -58,7 +58,7 @@ async def gruz200(message):
               f'\n\u2708\uFE0F Літаки: {d[5].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F681 Гелікоптери: {d[6].text.split(maxsplit=2)[2]}' \
               f'\n\U0001F6A2 Кораблі та катери: {d[9].text.split(maxsplit=3)[3]}'
-        if '500' in msg:
+        if '600' in msg:
             msg += f'\n{r.hget("promo_code", "death_promo_code").decode()}'
         await message.reply(title + msg)
     except:
@@ -848,7 +848,7 @@ async def passport(message):
         wins = f'\U0001F3C6 Кількість перемог: {stats[0].decode()}\n\U0001F3C5 Кількість трофеїв: {stats[1].decode()}'
         deaths = f'\n\u2620\uFE0F Вбито русаків: {stats[2].decode()}\n\U0001F476 З`їдено немовлят: {stats[3].decode()}'
         if message.text.endswith(' -all'):
-            active_promos = ['first_code', 'second_code', 'third_code', 'fifth_code', 'seventh_code',
+            active_promos = ['first_code', 'second_code', 'fifth_code', 'seventh_code',
                              'ninth_code', 'fourteenth_code', 'fifteenth_code', 'seventeenth_code']
             activated = 0
             for code in active_promos:
@@ -1277,17 +1277,17 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 100)
                     r.hincrby(message.from_user.id, 'strap', 1)
                     await message.reply(msg)
-                elif msg.startswith('ne') and uid not in r.smembers('third_code'):
-                    r.sadd('third_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'salt', 10)
-                    r.hincrby(message.from_user.id, 'packs', 50)
-                    if not r.hexists(message.from_user.id, 'weapon') or \
-                            int(r.hget(message.from_user.id, 'weapon')) == 0:
-                        r.hset(message.from_user.id, 'weapon', 23)
-                        r.hset(message.from_user.id, 's_weapon', 300)
-                    elif int(r.hget(message.from_user.id, 'weapon')) in (12, 23, 34):
-                        r.hincrby(message.from_user.id, 's_weapon', 300)
-                    await message.reply('\u26CF Промокод Майнкрафту активовано!\n🧂 +10 \U0001F4E6 +50 \U0001F5E1 +300')
+                #elif msg.startswith('ne') and uid not in r.smembers('third_code'):
+                #    r.sadd('third_code', message.from_user.id)
+                #    r.hincrby(message.from_user.id, 'salt', 10)
+                #    r.hincrby(message.from_user.id, 'packs', 50)
+                #    if not r.hexists(message.from_user.id, 'weapon') or \
+                #            int(r.hget(message.from_user.id, 'weapon')) == 0:
+                #        r.hset(message.from_user.id, 'weapon', 23)
+                #        r.hset(message.from_user.id, 's_weapon', 300)
+                #    elif int(r.hget(message.from_user.id, 'weapon')) in (12, 23, 34):
+                #        r.hincrby(message.from_user.id, 's_weapon', 300)
+                #    await message.reply('\u26CF Промокод Майнкрафту активовано!\n🧂 +10 \U0001F4E6 +50 \U0001F5E1 +300')
                 elif msg.startswith('ta') and uid not in r.smembers('fifth_code') \
                         and r.hget(message.from_user.id, 'clan') in r.smembers('fifth_code_allowed'):
                     r.sadd('fifth_code', message.from_user.id)
@@ -1367,12 +1367,12 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
 
-                elif msg.startswith('500') and uid not in r.smembers('fourteenth_code'):
-                    msg = "\u26CF Промокод п'ятиста тисяч активовано!\n🧂 +50 ☠ +50 📦 +500"
+                elif msg.startswith('600') and uid not in r.smembers('fourteenth_code'):
+                    msg = "\u26CF Промокод шестиста тисяч активовано!\n🧂 +6 ☠ +60 📦 +600"
                     r.sadd('fourteenth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'deaths', 50)
-                    r.hincrby(message.from_user.id, 'salt', 50)
-                    r.hincrby(message.from_user.id, 'packs', 500)
+                    r.hincrby(message.from_user.id, 'deaths', 60)
+                    r.hincrby(message.from_user.id, 'salt', 6)
+                    r.hincrby(message.from_user.id, 'packs', 600)
                     if r.hexists(message.from_user.id, 'name') and not int(r.hget(message.from_user.id, 'support')):
                         r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
                         msg += '\n🧾 +1'
@@ -1394,13 +1394,13 @@ async def promo_code(message):
                                             '\U0001F31F +5\n\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n'
                                             '\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n'
                                             '\U0001F9C2 +15\n\U0001F9C2 +15\n\U0001F9C2 +15\n')
-                elif msg.startswith('east') and uid not in r.smembers('eighteenth_code'):
-                    msg = '\u26CF Великодній промокод активовано!\n🧺 +10 🎰 +20 🧂 +30'
-                    r.sadd('eighteenth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'packs_2024_2', 10)
-                    r.hincrby(message.from_user.id, 'salt', 30)
-                    r.hincrby('🎰', message.from_user.id, 20)
-                    await message.reply(msg)
+                #elif msg.startswith('east') and uid not in r.smembers('eighteenth_code'):
+                #    msg = '\u26CF Великодній промокод активовано!\n🧺 +10 🎰 +20 🧂 +30'
+                #    r.sadd('eighteenth_code', message.from_user.id)
+                #    r.hincrby(message.from_user.id, 'packs_2024_2', 10)
+                #    r.hincrby(message.from_user.id, 'salt', 30)
+                #    r.hincrby('🎰', message.from_user.id, 20)
+                #    await message.reply(msg)
     except:
         pass
 
