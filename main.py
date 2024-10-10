@@ -6781,6 +6781,11 @@ async def handle_query(call):
             else:
                 await bot.answer_callback_query(callback_query_id=call.id, show_alert=True,
                                                 text='Клановий магазин тільки для учасників клану.')
+    elif call.data.startswith('poll_'):
+        for vote in ('poll_1', 'poll_2', 'poll_3', 'poll_4'):
+            r.srem(vote, call.from_user.id)
+        r.sadd(call.data, call.from_user.id)
+        await bot.answer_callback_query(callback_query_id=call.id, show_alert=True, text='Ваш голос враховано.')
 
     #  await call.answer()
 
