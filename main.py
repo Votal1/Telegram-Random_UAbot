@@ -923,7 +923,7 @@ async def woman(message):
     except:
         pass
 
-
+'''
 @dp.message_handler(commands=['no_nut'])
 async def no_nut(message):
     try:
@@ -983,7 +983,7 @@ async def no_nut(message):
 
     except:
         pass
-
+'''
 
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
