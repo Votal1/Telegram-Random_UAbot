@@ -1367,12 +1367,12 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
 
-                elif msg.startswith('600') and uid not in r.smembers('fourteenth_code'):
-                    msg = "\u26CF Промокод шестиста тисяч активовано!\n🧂 +60 ☠ +60 📦 +600"
+                elif msg.startswith('700') and uid not in r.smembers('fourteenth_code'):
+                    msg = "\u26CF Промокод семиста тисяч активовано!\n🧂 +70 ☠ +70 📦 +700"
                     r.sadd('fourteenth_code', message.from_user.id)
-                    r.hincrby(message.from_user.id, 'deaths', 60)
-                    r.hincrby(message.from_user.id, 'salt', 60)
-                    r.hincrby(message.from_user.id, 'packs', 600)
+                    r.hincrby(message.from_user.id, 'deaths', 70)
+                    r.hincrby(message.from_user.id, 'salt', 70)
+                    r.hincrby(message.from_user.id, 'packs', 700)
                     if r.hexists(message.from_user.id, 'name') and not int(r.hget(message.from_user.id, 'support')):
                         r.hset(message.from_user.id, 'support', 11, {'s_support': 10})
                         msg += '\n🧾 +1'
