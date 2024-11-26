@@ -984,7 +984,7 @@ async def no_nut(message):
     except:
         pass
 '''
-
+'''
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
@@ -1013,7 +1013,7 @@ async def i_top(message):
         await message.reply(msg)
     except:
         pass
-
+'''
 
 @dp.message_handler(commands=['ctop'])
 async def c_top(message):
