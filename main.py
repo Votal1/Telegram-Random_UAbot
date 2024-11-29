@@ -32,7 +32,7 @@ from content.dice import select_casino, dice, callback_dice
 from cloudscraper import create_scraper
 from bs4 import BeautifulSoup
 
-from PIL import Image
+#from PIL import Image
 import requests
 import logging
 #import sentry_sdk
@@ -984,7 +984,7 @@ async def no_nut(message):
     except:
         pass
 '''
-'''
+
 @dp.message_handler(commands=['ltop'])
 async def l_top(message):
     try:
@@ -1013,7 +1013,7 @@ async def i_top(message):
         await message.reply(msg)
     except:
         pass
-'''
+
 
 @dp.message_handler(commands=['ctop'])
 async def c_top(message):
@@ -6835,8 +6835,8 @@ async def echo(message):
             await message.answer('I')
 
         elif message.text.lower() in ('тривога', '/alert'):
-            with open('pic.png', 'wb') as handle:
-                response = requests.get('https://alerts.com.ua/map.png', stream=True)
+            with open('pic.webp', 'wb') as handle:
+                response = requests.get('https://ubilling.net.ua/aerialalerts/?map=webp', stream=True)
                 if not response.ok:
                     print(response)
                 for block in response.iter_content(1024):
@@ -6844,8 +6844,8 @@ async def echo(message):
                         break
                     handle.write(block)
 
-            webp = Image.open('pic.png')
-            webp.save('pic.webp', format="webp")
+            # webp = Image.open('pic.png')
+            # webp.save('pic.webp', format="webp")
 
             await bot.send_sticker(message.chat.id,
                                    open("pic.webp", "rb"),
