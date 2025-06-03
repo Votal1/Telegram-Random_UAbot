@@ -1368,7 +1368,7 @@ async def promo_code(message):
                     await message.reply(msg)
 
                 elif msg.startswith('bom') and uid not in r.smembers('fourteenth_code'):
-                    msg = "\u26CF Промокод фури з дронами тисяч активовано!\n🧂 +41 ☠ +41 📦 +410"
+                    msg = "\u26CF Промокод фури з дронами активовано!\n🧂 +41 ☠ +41 📦 +410"
                     r.sadd('fourteenth_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'deaths', 41)
                     r.hincrby(message.from_user.id, 'salt', 41)
