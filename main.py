@@ -1367,7 +1367,7 @@ async def promo_code(message):
                     r.hincrby(message.from_user.id, 'vodka', 50)
                     await message.reply(msg)
 
-                elif msg.startswith('1_') and uid not in r.smembers('fourteenth_code'):
+                elif msg.startswith('mil') and uid not in r.smembers('fourteenth_code'):
                     msg = "\u26CF Промокод МІЛЬЙОНА активовано!\n🌟 +1 🧂 +100 ☠ +100 📦 +1000"
                     r.sadd('fourteenth_code', message.from_user.id)
                     r.hincrby(message.from_user.id, 'strap', 1)
