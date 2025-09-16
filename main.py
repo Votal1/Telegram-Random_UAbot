@@ -1,6 +1,6 @@
 from random import randint, choice, choices
 from datetime import datetime, timedelta
-from os import environ
+from os import environ, path
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputTextMessageContent, \
     InlineQueryResultArticle, ChatPermissions
 from aiogram.utils.executor import start_webhook
@@ -6857,7 +6857,17 @@ async def echo(message):
         elif message.text.lower() in ('тривога25'):
             input_svg = "alerts/ua_regions.svg"
             webp_file = "ua_regions.webp"
-            generate_map(input_svg, webp_file)
+
+            ts = int(datetime.now().timestamp())
+            alert_info = r.hget('alerts_in_ua', 'timestamp', 'alert')
+
+            if not alert_info[0] or ts - int(alert_info[0].decode()) > 7 or not path.isfile(webp_file):
+                r.hset('alerts_in_ua', 'timestamp', ts)
+                response = requests.get(f'https://api.alerts.in.ua/v1/iot/active_air_raid_alerts_by_oblast.json?token={environ.get("ALERTS_TOKEN")}')
+                current_alert = response.text
+                if not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
+                    r.hset('alerts_in_ua', 'alert', current_alert)
+                    generate_map(input_svg, webp_file, current_alert)
 
             await bot.send_sticker(message.chat.id,
                                    open(webp_file, "rb"),

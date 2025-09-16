@@ -3,8 +3,7 @@ from PIL import Image
 from io import BytesIO
 
 
-def generate_map(input_svg, webp_file):
-    current_alert = "ANNPANNANNNNANNNPNNPNPANNNP"
+def generate_map(input_svg, webp_file, current_alert):
     regions = ["UA43", "UA07", "UA05", "UA12", "UA14", "UA18", "UA21", "UA23", "UA26",
                "UA32", "UA30", "UA35", "UA09", "UA46", "UA48", "UA51", "UA53", "UA56",
                "UA40", "UA59", "UA61", "UA63", "UA65", "UA68", "UA71", "UA77", "UA74"]
