@@ -6857,7 +6857,6 @@ async def echo(message):
         elif message.text.lower() in ('тривога25'):
             input_svg = "alerts/ua_regions.svg"
             webp_file = "ua_regions.webp"
-            print('user', message.from_user.id, message.from_user.first_name)
 
             ts = int(datetime.now().timestamp())
             alert_info = r.hmget('alerts_in_ua', 'timestamp', 'alert')
