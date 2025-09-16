@@ -6857,6 +6857,7 @@ async def echo(message):
         elif message.text.lower() in ('тривога25'):
             input_svg = "alerts/ua_regions.svg"
             webp_file = "ua_regions.webp"
+            print('user', message.from_user.id, message.from_user.first_name)
 
             ts = int(datetime.now().timestamp())
             alert_info = r.hmget('alerts_in_ua', 'timestamp', 'alert')
@@ -6866,9 +6867,8 @@ async def echo(message):
                 response = requests.get(f'https://api.alerts.in.ua/v1/iot/active_air_raid_alerts_by_oblast.json'
                                         f'?token={environ.get("ALERTS_TOKEN")}')
                 current_alert = response.text.replace('"', '')
-                if True or not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
+                if not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
                     r.hset('alerts_in_ua', 'alert', current_alert)
-                    print(message.from_user.id, message.from_user.first_name)
                     generate_map(input_svg, webp_file, current_alert)
 
             await bot.send_sticker(message.chat.id,
