@@ -6854,7 +6854,7 @@ async def echo(message):
                                    reply_to_message_id=message.message_id)
             r.hincrby('logs', 'alert_count', 1)
 
-        elif message.text.lower() in ('тривога25'):
+        elif message.text.lower() == 'тривога25':
             input_svg = "alerts/ua_regions.svg"
             webp_file = "ua_regions.webp"
 
