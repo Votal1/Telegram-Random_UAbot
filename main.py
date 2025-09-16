@@ -16,6 +16,7 @@ from methods import feed_rusak, mine_salt, checkClan, checkLeader, com, c_shop, 
     wood, stone, cloth, brick, auto_clan_settings, q_points, anti_clicker, msg_fmt
 
 
+from alerts.alert import generate_map
 from constants.names import names, names_case
 from constants.classes import class_name, icons, icons_simple
 from constants.photos import p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, premium, premium2, premium3, default
@@ -6850,6 +6851,16 @@ async def echo(message):
 
             await bot.send_sticker(message.chat.id,
                                    open("pic.webp", "rb"),
+                                   reply_to_message_id=message.message_id)
+            r.hincrby('logs', 'alert_count', 1)
+
+        elif message.text.lower() in ('тривога25'):
+            input_svg = "alerts/ua_regions.svg"
+            webp_file = "ua_regions.webp"
+            generate_map(input_svg, webp_file)
+
+            await bot.send_sticker(message.chat.id,
+                                   open(webp_file, "rb"),
                                    reply_to_message_id=message.message_id)
             r.hincrby('logs', 'alert_count', 1)
 
