@@ -6868,7 +6868,7 @@ async def echo(message):
                                         f'?token={environ.get("ALERTS_TOKEN")}')
                 current_alert = response.text
                 print(current_alert)
-                if not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
+                if True or not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
                     r.hset('alerts_in_ua', 'alert', current_alert)
                     print(current_alert)
                     generate_map(input_svg, webp_file, current_alert)
