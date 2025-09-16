@@ -6860,18 +6860,16 @@ async def echo(message):
 
             ts = int(datetime.now().timestamp())
             alert_info = r.hmget('alerts_in_ua', 'timestamp', 'alert')
-            print(alert_info)
 
             if not alert_info[0] or ts - int(alert_info[0].decode()) > 7 or not path.isfile(webp_file):
                 r.hset('alerts_in_ua', 'timestamp', ts)
                 response = requests.get(f'https://api.alerts.in.ua/v1/iot/active_air_raid_alerts_by_oblast.json'
                                         f'?token={environ.get("ALERTS_TOKEN")}')
-                current_alert = response.text
-                print(current_alert)
+                current_alert = response.text.replace('"', '')
                 if True or not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
                     r.hset('alerts_in_ua', 'alert', current_alert)
-                    print(current_alert)
-                    generate_map(input_svg, webp_file, "ANNNNNNNNNNNANNNPNNANPNNNNP")
+                    print(message.from_user.id, message.from_user.first_name)
+                    generate_map(input_svg, webp_file, current_alert)
 
             await bot.send_sticker(message.chat.id,
                                    open(webp_file, "rb"),
