@@ -10,6 +10,7 @@ def generate_map(input_svg, webp_file, current_alert):
 
     filtered_alert = "".join([ch for ch in current_alert if ch != "N"])
     filtered_regions = [val for ch, val in zip(current_alert, regions) if ch != "N"]
+    print(current_alert, filtered_alert, filtered_regions)
 
     with open(input_svg, "r", encoding="utf-8") as f:
         lines = f.readlines()

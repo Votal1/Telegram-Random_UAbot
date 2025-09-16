@@ -6864,7 +6864,8 @@ async def echo(message):
 
             if not alert_info[0] or ts - int(alert_info[0].decode()) > 7 or not path.isfile(webp_file):
                 r.hset('alerts_in_ua', 'timestamp', ts)
-                response = requests.get(f'https://api.alerts.in.ua/v1/iot/active_air_raid_alerts_by_oblast.json?token={environ.get("ALERTS_TOKEN")}')
+                response = requests.get(f'https://api.alerts.in.ua/v1/iot/active_air_raid_alerts_by_oblast.json'
+                                        f'?token={environ.get("ALERTS_TOKEN")}')
                 current_alert = response.text
                 print(current_alert)
                 if not alert_info[1] or alert_info[1].decode() != current_alert or not path.isfile(webp_file):
