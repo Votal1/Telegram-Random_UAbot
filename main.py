@@ -6859,7 +6859,7 @@ async def echo(message):
             webp_file = "ua_regions.webp"
 
             ts = int(datetime.now().timestamp())
-            alert_info = r.hget('alerts_in_ua', 'timestamp', 'alert')
+            alert_info = r.hmget('alerts_in_ua', 'timestamp', 'alert')
             print(alert_info)
 
             if not alert_info[0] or ts - int(alert_info[0].decode()) > 7 or not path.isfile(webp_file):
