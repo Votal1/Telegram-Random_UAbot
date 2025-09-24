@@ -6836,25 +6836,25 @@ async def echo(message):
         elif message.text == 'N':
             await message.answer('I')
 
-        elif message.text.lower() in ('тривога', '/alert'):
-            with open('pic.webp', 'wb') as handle:
-                response = requests.get('https://ubilling.net.ua/aerialalerts/?map=webp', stream=True)
-                if not response.ok:
-                    print(response)
-                for block in response.iter_content(1024):
-                    if not block:
-                        break
-                    handle.write(block)
+        # elif message.text.lower() in ('тривога', '/alert'):
+        #     with open('pic.webp', 'wb') as handle:
+        #         response = requests.get('https://ubilling.net.ua/aerialalerts/?map=webp', stream=True)
+        #         if not response.ok:
+        #             print(response)
+        #         for block in response.iter_content(1024):
+        #             if not block:
+        #                 break
+        #             handle.write(block)
 
             # webp = Image.open('pic.png')
             # webp.save('pic.webp', format="webp")
 
-            await bot.send_sticker(message.chat.id,
-                                   open("pic.webp", "rb"),
-                                   reply_to_message_id=message.message_id)
-            r.hincrby('logs', 'alert_count', 1)
+        #     await bot.send_sticker(message.chat.id,
+        #                            open("pic.webp", "rb"),
+        #                            reply_to_message_id=message.message_id)
+        #     r.hincrby('logs', 'alert_count', 1)
 
-        elif message.text.lower() == 'тривога25':
+        elif message.text.lower() in ('тривога', '/alert'):
             input_svg = "alerts/ua_regions.svg"
             webp_file = "ua_regions.webp"
 
